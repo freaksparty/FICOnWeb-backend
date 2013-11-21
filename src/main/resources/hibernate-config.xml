@@ -5,22 +5,16 @@
 <hibernate-configuration>
 
 	<session-factory>
-		<!-- Test DB connection -->
-		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
- 		<property name="connection.url">jdbc:mysql://localhost:3306/test</property>
-        <property name="connection.username">test</property>
-        <property name="connection.password">test</property>
-        <property name="connection.pool_size">10</property>
-        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
 
 		<!-- Show and print SQL on stdout -->
-		<property name="hibernate.show_sql"></property>
-		<property name="hibernate.format_sql"></property>
-		<property name="hibernate.use_sql_comments"></property>
+		<property name="hibernate.show_sql" />
+		<property name="hibernate.format_sql" />
+		<property name="hibernate.use_sql_comments" />
 
 		<!-- List of persistent classes -->
 		<mapping class="es.ficonlan.web.backend.model.user.User" />
-		
+		<mapping class="es.ficonlan.web.backend.model.role.Role" />
+
 	</session-factory>
 
 </hibernate-configuration>

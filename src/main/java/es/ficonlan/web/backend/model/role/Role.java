@@ -45,4 +45,10 @@ public class Role {
 		return this.roleName;
 	}
 
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
+	
+	
+
 }
