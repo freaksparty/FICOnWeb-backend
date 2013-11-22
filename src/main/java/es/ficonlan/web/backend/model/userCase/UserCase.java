@@ -45,4 +45,7 @@ public class UserCase {
 		return this.userCaseName;
 	}
 
+	public void setUserCaseName(String newName) {
+		this.userCaseName = newName;
+	}
 }
