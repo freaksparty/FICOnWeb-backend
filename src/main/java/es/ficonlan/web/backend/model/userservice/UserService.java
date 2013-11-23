@@ -10,7 +10,7 @@ import es.ficonlan.web.backend.model.user.User;
  */
 public interface UserService {
 
-	public User addUser(long sessionId, String name, String login, String password, String dni, String email, String phoneNumber);
+	public User addUser(long sessionId, String name, String login, String password, String dni, String email, String phoneNumber, int shirtSize);
 	
 	public List<User> getAllUsers(long sessionId);
 	

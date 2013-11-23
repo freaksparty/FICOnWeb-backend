@@ -26,7 +26,7 @@ public class UserCase {
 		this.userCaseName = name;
 	}
 	
-	@Column(name = "userCaseId")
+	@Column(name = "userCase_id")
 	@SequenceGenerator(name = "userCaseIdGenerator", sequenceName = "userCaseSeq")
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "userCaseIdGenerator")
@@ -39,7 +39,7 @@ public class UserCase {
 		this.userCaseId = newId;
 	}
 	
-	@Column(name = "userCaseName")
+	@Column(name = "userCase_name")
 	public String getUserCaseName()
 	{
 		return this.userCaseName;

@@ -10,8 +10,10 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
+import javax.persistence.SequenceGenerator;
 
 import es.ficonlan.web.backend.model.role.Role;
+import es.ficonlan.web.backend.model.activity.Activity;
 
 /**
  * @author Daniel Gómez Silva
@@ -30,10 +32,12 @@ public class User {
 	public String phoneNumber;
 	public boolean deleted;
 	public Set<Role> roles;
+	public Set<Activity> participation;
+	public int shirtSize ;
 	
 	public User(){};
 	
-	public User(String name, String login, String password, String dni, String email, String phoneNumber) {
+	public User(String name, String login, String password, String dni, String email, String phoneNumber, int shirtSize) {
 		this.name = name;
 		this.login = login;
 		this.password = password;
@@ -41,11 +45,13 @@ public class User {
 		this.email = email;
 		this.phoneNumber = phoneNumber;
 		this.deleted=false;
+		this.shirtSize = shirtSize;
 	}
 
+	@Column(name = "User_id")
+	@SequenceGenerator(name = "userIdGenerator", sequenceName = "userSeq")
 	@Id
-	@Column(name="id")
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "userIdGenerator")
 	public int getUserId() {
 		return userId;
 	}
@@ -53,7 +59,7 @@ public class User {
 		this.userId = userId;
 	}
 	
-	@Column
+	@Column(name = "User_name")
 	public String getName() {
 		return name;
 	}
@@ -61,7 +67,7 @@ public class User {
 		this.name = name;
 	}
 	
-	@Column
+	@Column(name = "User_login")
 	public String getLogin() {
 		return login;
 	}
@@ -69,7 +75,7 @@ public class User {
 		this.login = login;
 	}
 	
-	@Column
+	@Column(name = "User_password")
 	public String getPassword() {
 		return password;
 	}
@@ -77,7 +83,7 @@ public class User {
 		this.password = password;
 	}
 	
-	@Column
+	@Column(name = "User_dni")
 	public String getDni() {
 		return dni;
 	}
@@ -85,7 +91,7 @@ public class User {
 		this.dni = dni;
 	}
 	
-	@Column
+	@Column(name = "User_email")
 	public String getEmail() {
 		return email;
 	}
@@ -93,7 +99,7 @@ public class User {
 		this.email = email;
 	}
 	
-	@Column(name="telf")
+	@Column(name="User_telf")
 	public String getPhoneNumber() {
 		return phoneNumber;
 	}
@@ -101,7 +107,7 @@ public class User {
 		this.phoneNumber = phoneNumber;
 	}
 	
-	@Column(name="checked")
+	@Column(name="User_checked")
 	public boolean isDeleted() {
 		return deleted;
 	}
@@ -110,13 +116,32 @@ public class User {
 	}
 	
 	@ManyToMany
-	@JoinTable (name = "mn_role_user", joinColumns = { @JoinColumn(name = "id_user") }, inverseJoinColumns = { @JoinColumn(name = "id_role") })
+	@JoinTable (name = "Role_User", joinColumns = { @JoinColumn(name = "Role_User_User_id") }, inverseJoinColumns = { @JoinColumn(name = "Role_User_Role_id") })
 	public Set<Role> getRoles() {
 		return roles;
 	}
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}
+	
+	@Column(name="User_shirtSize")
+	public void setSirtSize(int sirtSize) {
+		this.shirtSize = sirtSize;
+	}
+	
+	public int getSirtSize() {
+		return this.shirtSize;
+	}
+	
+	@ManyToMany
+	@JoinTable (name = "User_Activity", joinColumns = { @JoinColumn(name = "User_Activity_User_id") }, inverseJoinColumns = { @JoinColumn(name = "User_Activity_Activity_id") })
+	public Set<Activity> getParticipation() {
+		return participation;
+	}
+	
+	public void setParticipation(Set<Activity> participation) {
+		this.participation = participation;
 	}
 
 }

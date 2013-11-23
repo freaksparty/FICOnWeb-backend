@@ -26,7 +26,7 @@ public class Role {
 		this.roleName = name;
 	}
 	
-	@Column(name = "roleId")
+	@Column(name = "Role_id")
 	@SequenceGenerator(name = "roleIdGenerator", sequenceName = "RoleSeq")
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "roleIdGenerator")
@@ -39,7 +39,7 @@ public class Role {
 		this.roleId = newId;
 	}
 	
-	@Column(name = "roleName")
+	@Column(name = "role_Name")
 	public String getRoleName()
 	{
 		return this.roleName;

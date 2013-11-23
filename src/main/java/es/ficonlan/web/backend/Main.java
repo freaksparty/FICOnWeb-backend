@@ -23,9 +23,9 @@ public class Main {
 		}
 		
 		System.out.println("Test registrar usuario:");
-	    User u1 = userService.addUser(0, "Pepito", "pep01", "pass", "123456789Y", "pep@yopmail.com", "666666666");
+	    User u1 = userService.addUser(0, "Pepito", "pep01", "pass", "123456789Y", "pep@yopmail.com", "666666666", 1);
         System.out.println("Usuario "+ u1.getName()+" añadido.");
-	    User u2 = userService.addUser(0, "Pepito2", "pep02", "pass", "123456789Y", "pep@yopmail.com", "666666666");
+	    User u2 = userService.addUser(0, "Pepito2", "pep02", "pass", "123456789Y", "pep@yopmail.com", "666666666", 1);
         System.out.println("Usuario "+ u2.getName()+" añadido.");
         
         List<User> users = userService.getAllUsers(0);

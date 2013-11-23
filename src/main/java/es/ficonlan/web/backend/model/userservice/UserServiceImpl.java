@@ -20,9 +20,9 @@ public class UserServiceImpl implements UserService {
 	private UserDao userDao;
 	
 	@Transactional
-	public User addUser(long sessionId, String name, String login, String password, String dni, String email, String phoneNumber){
+	public User addUser(long sessionId, String name, String login, String password, String dni, String email, String phoneNumber, int shirtSize){
 		//TODO: Comprobar permisoso con sessionId
-		User u = new User(name, login, password, dni, email, phoneNumber);
+		User u = new User(name, login, password, dni, email, phoneNumber, shirtSize);
 		userDao.save(u);
 		return u;
 	}
