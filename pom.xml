@@ -13,9 +13,64 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jersey.version>2.4.1</jersey.version>
-        
+		
+        <!-- Data source properties -->
+		<dataSource.user>rcasares</dataSource.user>
+		<dataSource.password>pojo77725_ramon</dataSource.password>
+		<dataSource.jndiName>jdbc/pojo-examples-ds</dataSource.jndiName>
+		<testDataSource.user>rcasares</testDataSource.user>
+		<testDataSource.password>pojo77725_ramon</testDataSource.password>
+
+		<!-- Hibernate properties -->
+		<hibernate.show_sql>true</hibernate.show_sql>
+		<hibernate.format_sql>true</hibernate.format_sql>
+		<hibernate.use_sql_comments>true</hibernate.use_sql_comments>
+
+		<!-- Encoding -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<!-- Package versions (except those defined in "profiles" section) -->
+		<slf4j.version>1.6.1</slf4j.version>
+		<javassist.version>3.9.0.GA</javassist.version>
+		<cglib.version>2.2</cglib.version>
+		<hibernate.version>3.5.6-Final</hibernate.version>
+		<junit.version>4.7</junit.version>
+		<spring.version>3.0.5.RELEASE</spring.version>
+		<servletApi.version>2.3</servletApi.version>
+		<tapestry.version>5.3.6</tapestry.version>
+
+		<!-- Plugin versions -->
+		<mavenCompilerPlugin.version>3.0</mavenCompilerPlugin.version>
+		<mavenResourcesPlugin.version>2.6</mavenResourcesPlugin.version>
+		<sqlMavenPlugin.version>1.5</sqlMavenPlugin.version>
+		<mavenAssemblyPlugin.version>2.4</mavenAssemblyPlugin.version>
+		<jettyMavenPlugin>7.3.1.v20110307</jettyMavenPlugin>
 	</properties>
 
+	<profiles>
+		<profile>
+			<id>mysql</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<!-- JDBC driver properties -->
+				<jdbcDriver.groupId>mysql</jdbcDriver.groupId>
+				<jdbcDriver.artifactId>mysql-connector-java</jdbcDriver.artifactId>
+				<jdbcDriver.version>5.1.16</jdbcDriver.version>
+				<jdbcDriver.className>com.mysql.jdbc.Driver</jdbcDriver.className>
+
+				<!-- Data source properties -->
+				<dataSource.url>jdbc:mysql://localhost/pdftranslation</dataSource.url>
+				<testDataSource.url>jdbc:mysql://localhost/pdftranslation</testDataSource.url>
+				<dataSource.createTablesScript>CreateTables.sql</dataSource.createTablesScript>
+
+				<!-- Hibernate properties -->
+				<hibernate.dialect>org.hibernate.dialect.MySQLDialect</hibernate.dialect>
+			</properties>
+		</profile>
+	</profiles>
+	
 	<dependencyManagement>
         <dependencies>
             <dependency>
@@ -70,6 +125,13 @@
 			<artifactId>spring-orm</artifactId>
 			<version>3.2.5.RELEASE</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>3.2.5.RELEASE</version>
+			<scope>test</scope>
+		</dependency>
+		
 		<!-- Dependencias de Jersey -->
 		  
 		<dependency>

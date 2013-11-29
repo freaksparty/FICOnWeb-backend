@@ -18,7 +18,7 @@ public class UserDaoHibernate extends GenericDaoHibernate<User,Integer> implemen
 		return getSession().createQuery(
 	        	"SELECT u " +
 		        "FROM User u " +
-	        	"ORDER BY u.userId").list();
+	        	"ORDER BY u.User_id").list();
 	}
 
 }
