@@ -105,9 +105,9 @@ CREATE TABLE Event (
  -- ------------------------------ USER_ACTIVITY -------------------------------------
  
  CREATE TABLE User_Activity (
-	User_Activity_id bigint UNSIGNED NOT NULL AUTO_INCREMENT,
-	User_Activity_User_id bigint UNSIGNED NOT NULL  ,
-	User_Activity_Activity_id bigint UNSIGNED NOT NULL  ,
+	User_Activity_id				bigint UNSIGNED NOT NULL  AUTO_INCREMENT  ,
+	User_Activity_User_id			bigint UNSIGNED NOT NULL  ,
+	User_Activity_Activity_id		bigint UNSIGNED NOT NULL  ,
 	CONSTRAINT pk_User_Activity PRIMARY KEY ( User_Activity_id )
  )  engine=InnoDB;
  
