@@ -8,9 +8,9 @@
 
 	 <!-- Database connection settings -->
         <property name="hibernate.connection.driver_class">${jdbcDriver.className}</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost/pdftranslation</property>
-        <property name="hibernate.connection.username">rcasares</property>
-        <property name="hibernate.connection.password">pojo77725_ramon</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost/backendtest</property>
+        <property name="hibernate.connection.username">fpbackend</property>
+        <property name="hibernate.connection.password">fpbackendtestps</property>
 		<!-- JDBC connection pool (use the built-in) -->
 		<property name="hibernate.connection.pool_size">1</property>
 		<!-- SQL dialect -->

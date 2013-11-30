@@ -19,9 +19,9 @@
 	<!-- Data source. -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost/pdftranslation"/>
-        <property name="username" value="rcasares"/>
-        <property name="password" value="pojo77725_ramon"/>
+		<property name="url" value="jdbc:mysql://localhost/backend"/>
+        <property name="username" value="fpbackend"/>
+        <property name="password" value="fpbackendtestps"/>
 	</bean>
 
 	<!-- Hibernate Session Factory -->

@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {SPRING_CONFIG_FILE, SPRING_CONFIG_TEST_FILE})
 @Transactional
-
 public class UserServiceTest {
 
     private final int NON_EXISTENT_USER_ID = -1;

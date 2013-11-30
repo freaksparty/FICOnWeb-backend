@@ -20,5 +20,12 @@ public class UserDaoHibernate extends GenericDaoHibernate<User,Integer> implemen
 		        "FROM User u " +
 	        	"ORDER BY u.User_id").list();
 	}
+	
+	@Override
+	public User findUserBylogin(String login) {
+		return (User) getSession()
+				.createQuery("SELECT u FROM User u Where User_login = :login")
+				.setParameter("login", login).uniqueResult();
+	}
 
 }

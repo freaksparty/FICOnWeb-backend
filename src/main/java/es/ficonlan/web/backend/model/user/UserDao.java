@@ -11,5 +11,7 @@ import es.ficonlan.web.backend.util.dao.GenericDao;
 public interface UserDao extends GenericDao<User,Integer> {
 	
 	public List<User> getAllUsers();
+	
+	public User findUserBylogin(String login);
 
 }

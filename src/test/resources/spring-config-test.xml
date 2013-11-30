@@ -10,8 +10,8 @@
 	<!-- Data source. -->
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.SingleConnectionDataSource"
-		p:driverClassName="com.mysql.jdbc.Driver" p:url="jdbc:mysql://localhost/pdftranslationtest"
-		p:username="rcasares" p:password="pojo77725_ramon"
+		p:driverClassName="com.mysql.jdbc.Driver" p:url="jdbc:mysql://localhost/backendtest"
+		p:username="fpbackend" p:password="fpbackendtestps"
 		p:suppressClose="true" />
         
 	<!-- Enable component scanning for defining beans with annotations. -->

@@ -15,11 +15,11 @@
 		<jersey.version>2.4.1</jersey.version>
 		
         <!-- Data source properties -->
-		<dataSource.user>rcasares</dataSource.user>
-		<dataSource.password>pojo77725_ramon</dataSource.password>
-		<dataSource.jndiName>jdbc/pojo-examples-ds</dataSource.jndiName>
-		<testDataSource.user>rcasares</testDataSource.user>
-		<testDataSource.password>pojo77725_ramon</testDataSource.password>
+		<dataSource.user>fpbackend</dataSource.user>
+		<dataSource.password>fpbackendps</dataSource.password>
+		
+		<testDataSource.user>fpbackend</testDataSource.user>
+		<testDataSource.password>fpbackendtestps</testDataSource.password>
 
 		<!-- Hibernate properties -->
 		<hibernate.show_sql>true</hibernate.show_sql>
@@ -61,8 +61,8 @@
 				<jdbcDriver.className>com.mysql.jdbc.Driver</jdbcDriver.className>
 
 				<!-- Data source properties -->
-				<dataSource.url>jdbc:mysql://localhost/pdftranslation</dataSource.url>
-				<testDataSource.url>jdbc:mysql://localhost/pdftranslation</testDataSource.url>
+				<dataSource.url>jdbc:mysql://localhost/backendtest</dataSource.url>
+				<testDataSource.url>jdbc:mysql://localhost/backendtest</testDataSource.url>
 				<dataSource.createTablesScript>CreateTables.sql</dataSource.createTablesScript>
 
 				<!-- Hibernate properties -->

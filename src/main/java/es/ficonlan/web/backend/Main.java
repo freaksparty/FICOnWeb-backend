@@ -7,12 +7,13 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.userservice.UserService;
+import es.ficonlan.web.backend.util.exceptions.DuplicatedInstanceException;
 
 public class Main {
 
 	static private UserService userService;
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws DuplicatedInstanceException {
 		
 		try {
 			@SuppressWarnings("resource")
