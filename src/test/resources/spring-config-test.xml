@@ -10,10 +10,10 @@
 	<!-- Data source. -->
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.SingleConnectionDataSource"
-		p:driverClassName="${jdbcDriver.className}" p:url="${testDataSource.url}"
-		p:username="${testDataSource.user}" p:password="${testDataSource.password}"
+		p:driverClassName="com.mysql.jdbc.Driver" p:url="jdbc:mysql://localhost/pdftranslationtest"
+		p:username="rcasares" p:password="pojo77725_ramon"
 		p:suppressClose="true" />
-
+        
 	<!-- Enable component scanning for defining beans with annotations. -->
 	<context:component-scan
 		base-package="es.ficonlan.web.backend.model" />

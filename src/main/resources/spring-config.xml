@@ -19,9 +19,9 @@
 	<!-- Data source. -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<Set name="url">jdbc:mysql://localhost/pdftranslation</Set>
-        <Set name="username">rcasares</Set>
-        <Set name="password">pojo77725_ramon</Set>
+		<property name="url" value="jdbc:mysql://localhost/pdftranslation"/>
+        <property name="username" value="rcasares"/>
+        <property name="password" value="pojo77725_ramon"/>
 	</bean>
 
 	<!-- Hibernate Session Factory -->
