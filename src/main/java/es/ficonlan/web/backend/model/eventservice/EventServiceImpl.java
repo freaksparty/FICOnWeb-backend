@@ -2,7 +2,8 @@ package es.ficonlan.web.backend.model.eventservice;
 
 import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.event.EventDao;
-import es.ficonlan.web.backend.util.exceptions.InstanceNotFoundException;
+import es.ficonlan.web.backend.model.util.exceptions.InstanceNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,6 @@ public class EventServiceImpl implements EventService {
     @Autowired
     private EventDao eventDao;
 
-    @Override
     @Transactional(readOnly = true)
     public Event findEventByName(long sessionId, String name) throws InstanceNotFoundException {
         //TODO: Implementación tonta para probar que todo funciona.

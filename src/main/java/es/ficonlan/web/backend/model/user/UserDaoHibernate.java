@@ -4,7 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import es.ficonlan.web.backend.util.dao.GenericDaoHibernate;
+import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
+import es.ficonlan.web.backend.model.util.dao.GenericDaoHibernate;
 
 /**
  * @author Daniel Gómez Silva
@@ -21,11 +22,24 @@ public class UserDaoHibernate extends GenericDaoHibernate<User,Integer> implemen
 	        	"ORDER BY u.User_id").list();
 	}
 	
-	@Override
 	public User findUserBylogin(String login) {
 		return (User) getSession()
 				.createQuery("SELECT u FROM User u Where User_login = :login")
 				.setParameter("login", login).uniqueResult();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<User> getUsersByEvet(int eventId, RegistrationState state) {
+		if (state==null) return getSession().createQuery( "SELECT u " +
+   			                                             "FROM User u JOIN Registration r" +
+	                                                     "WHERE r.Event.id = :eventId" +
+                                                         "ORDER BY u.User_id" 
+	                                                    ).setParameter("eventId",eventId).list();
+		else return getSession().createQuery( "SELECT u " +
+                   							  "FROM User u JOIN Registration r" +
+                   							  "WHERE r.Event.id = :eventId AND r.state = :state" +
+                   							  "ORDER BY u.User_id" 
+				 						    ).setParameter("eventId",eventId).setParameter("state",state).list(); 			
 	}
 
 }

@@ -5,7 +5,7 @@
  */
 package es.ficonlan.web.backend.model.event;
 
-import es.ficonlan.web.backend.util.dao.GenericDao;
+import es.ficonlan.web.backend.model.util.dao.GenericDao;
 
 /**
  *

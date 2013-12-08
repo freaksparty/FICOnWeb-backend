@@ -1,7 +1,7 @@
 package es.ficonlan.web.backend.model.eventservice;
 
 import es.ficonlan.web.backend.model.event.Event;
-import es.ficonlan.web.backend.util.exceptions.InstanceNotFoundException;
+import es.ficonlan.web.backend.model.util.exceptions.InstanceNotFoundException;
 
 /**
  *

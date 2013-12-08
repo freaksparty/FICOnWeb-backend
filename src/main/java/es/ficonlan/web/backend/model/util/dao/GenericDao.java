@@ -1,8 +1,8 @@
-package es.ficonlan.web.backend.util.dao;
+package es.ficonlan.web.backend.model.util.dao;
 
 import java.io.Serializable;
 
-import es.ficonlan.web.backend.util.exceptions.InstanceException;
+import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
 
 /**
  * @author Daniel Gómez Silva

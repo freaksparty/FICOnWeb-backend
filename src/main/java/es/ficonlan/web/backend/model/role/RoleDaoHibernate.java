@@ -4,9 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import es.ficonlan.web.backend.model.user.User;
-import es.ficonlan.web.backend.model.user.UserDao;
-import es.ficonlan.web.backend.util.dao.GenericDaoHibernate;
+import es.ficonlan.web.backend.model.util.dao.GenericDaoHibernate;
 
 /**
  * @author Ramón José Casares Porto

@@ -1,4 +1,4 @@
-package es.ficonlan.web.backend.util.exceptions;
+package es.ficonlan.web.backend.model.util.exceptions;
 
 @SuppressWarnings("serial")
 public class DuplicatedInstanceException extends InstanceException {

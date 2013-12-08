@@ -3,12 +3,14 @@ package es.ficonlan.web.backend.test.userservice;
 import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.user.UserDao;
 import es.ficonlan.web.backend.model.userservice.UserService;
+import es.ficonlan.web.backend.model.util.exceptions.DuplicatedInstanceException;
+import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
+import es.ficonlan.web.backend.model.util.exceptions.InstanceNotFoundException;
+import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import static es.ficonlan.web.backend.model.util.GlobalNames.SPRING_CONFIG_FILE;
 import static es.ficonlan.web.backend.test.util.GlobalNames.SPRING_CONFIG_TEST_FILE;
-import es.ficonlan.web.backend.util.exceptions.DuplicatedInstanceException;
-import es.ficonlan.web.backend.util.exceptions.InstanceException;
-import es.ficonlan.web.backend.util.exceptions.InstanceNotFoundException;
 import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceTest {
 
     private final int NON_EXISTENT_USER_ID = -1;
-    private final String NON_EXISTENT_PASSWORD = "-2";
+    //private final String NON_EXISTENT_PASSWORD = "-2";
 
     @Autowired
     private UserDao userDao;
@@ -31,8 +33,7 @@ public class UserServiceTest {
     private UserService userService;
 
     @Test
-    public void testCreateRegisterAndFindUser()
-            throws InstanceException {
+    public void testCreateRegisterAndFindUser() throws ServiceException, InstanceException {
 
         User user = userService.addUser(1l, "Mon", "Maetro", "1q2w3e4r", "12345678R", "RMaetro@gmail.com", "690047407", 2);//¿El tamaño de camiseta un numero o una letra?
         User user2 = userDao.find(user.getUserId());
@@ -47,8 +48,7 @@ public class UserServiceTest {
 
     @Test(expected = DuplicatedInstanceException.class)
     @SuppressWarnings("unused")
-    public void testDuplicatedUser() throws InstanceNotFoundException,
-            DuplicatedInstanceException {
+    public void testDuplicatedUser() throws ServiceException {
         User user = userService.addUser(1l, "Mon", "Maetro", "1q2w3e4r", "12345678R", "RMaetro@gmail.com", "690047407", 2);//¿El tamaño de camiseta un numero o una letra?
         User user2 = userService.addUser(2l, "Ramón", "Maetro", "1q2w3e4r", "12345678R", "RMaetro@gmail.com", "690047407", 2);
 

@@ -3,7 +3,7 @@ package es.ficonlan.web.backend.model.role;
 import java.util.List;
 
 import es.ficonlan.web.backend.model.role.Role;
-import es.ficonlan.web.backend.util.dao.GenericDao;
+import es.ficonlan.web.backend.model.util.dao.GenericDao;
 
 /**
  * @author Ramón José Casares Porto

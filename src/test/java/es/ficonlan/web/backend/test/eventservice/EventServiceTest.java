@@ -8,10 +8,12 @@ package es.ficonlan.web.backend.test.eventservice;
 import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.event.EventDao;
 import es.ficonlan.web.backend.model.eventservice.EventService;
+import es.ficonlan.web.backend.model.util.exceptions.InstanceNotFoundException;
 import static es.ficonlan.web.backend.model.util.GlobalNames.SPRING_CONFIG_FILE;
 import static es.ficonlan.web.backend.test.util.GlobalNames.SPRING_CONFIG_TEST_FILE;
-import es.ficonlan.web.backend.util.exceptions.InstanceNotFoundException;
+
 import java.util.Calendar;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

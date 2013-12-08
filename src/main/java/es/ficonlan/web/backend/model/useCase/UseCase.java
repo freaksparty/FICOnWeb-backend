@@ -1,4 +1,4 @@
-package es.ficonlan.web.backend.model.userCase;
+package es.ficonlan.web.backend.model.useCase;
 
 
 import javax.persistence.Column;
@@ -13,17 +13,17 @@ import javax.persistence.SequenceGenerator;
  * @version 1.0
  */
 @Entity
-public class UserCase {
+public class UseCase {
 	
-	private long userCaseId;
-	private String userCaseName;
+	private long useCaseId;
+	private String useCaseName;
 	
-	public UserCase() {};
+	public UseCase() {};
 	
-	public UserCase(String name)
+	public UseCase(String name)
 	{
 		super();
-		this.userCaseName = name;
+		this.useCaseName = name;
 	}
 	
 	@Column(name = "userCase_id")
@@ -31,21 +31,21 @@ public class UserCase {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "userCaseIdGenerator")
 	public long getUserCaseId() {
-		return this.userCaseId;
+		return this.useCaseId;
 	}
 	
 	public void setUserCaseId(long newId)
 	{
-		this.userCaseId = newId;
+		this.useCaseId = newId;
 	}
 	
 	@Column(name = "userCase_name")
 	public String getUserCaseName()
 	{
-		return this.userCaseName;
+		return this.useCaseName;
 	}
-
+	
 	public void setUserCaseName(String newName) {
-		this.userCaseName = newName;
+		this.useCaseName = newName;
 	}
 }

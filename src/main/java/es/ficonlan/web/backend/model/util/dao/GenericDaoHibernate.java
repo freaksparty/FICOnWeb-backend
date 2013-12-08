@@ -1,4 +1,4 @@
-package es.ficonlan.web.backend.util.dao;
+package es.ficonlan.web.backend.model.util.dao;
 
 import java.io.Serializable;
 
@@ -8,7 +8,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import es.ficonlan.web.backend.util.exceptions.InstanceNotFoundException;
+import es.ficonlan.web.backend.model.util.exceptions.InstanceNotFoundException;
 
 import java.lang.reflect.ParameterizedType;
 
