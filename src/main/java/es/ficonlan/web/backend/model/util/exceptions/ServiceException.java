@@ -1,18 +1,19 @@
 package es.ficonlan.web.backend.model.util.exceptions;
 
-/* Exception Codes:
+/**
+ * Exception Codes:<br>
+ * 01 - Invalid session<br>
+ * 02 - Permission denied<br>
+ * 03 - Duplicated login<br>
+ * 04 - Incorrect login<br>
+ * 05 - Incorrect password<br>
+ * 06 - User Not Found<br>
+ * 07 - Role Not Found<br>
+ * 08 - User Case Not Found<br>
  * 
- * 01 - Invalid session
- * 02 - Permission denied
- * 03 - Duplicated login
- * 04 - Incorrect login
- * 05 - Incorrect password
- * 
- * 
- * 
- * 
+ * @author Daniel Gómez Silva
+ *
  */
-
 @SuppressWarnings("serial")
 public class ServiceException extends Exception{
 
