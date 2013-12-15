@@ -11,8 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
 import es.ficonlan.web.backend.model.role.Role;
 import es.ficonlan.web.backend.model.role.RoleDao;
-import es.ficonlan.web.backend.model.useCase.UseCase;
-import es.ficonlan.web.backend.model.useCase.UseCaseDao;
+import es.ficonlan.web.backend.model.supportedlanguage.SupportedLanguage;
+import es.ficonlan.web.backend.model.supportedlanguage.SupportedLanguageDao;
+import es.ficonlan.web.backend.model.usecase.UseCase;
+import es.ficonlan.web.backend.model.usecase.UseCaseDao;
 import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.user.UserDao;
 import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
@@ -37,6 +39,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private UseCaseDao useCaseDao;
+	
+	@Autowired
+	private SupportedLanguageDao languageDao;
 
 	/**
 	 * If the target user of the operation is the session owner -> Operation allowed<br>
@@ -68,6 +73,24 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Transactional
+	public Session newAnonymousSession() {
+		User user = userDao.findUserBylogin("anonymous");
+		if (user == null){
+			user = new User("-", "anonymous", "-", "-", "-", "-", 0);
+			Role role = new Role("Anonymous");
+	    	UseCase addUser = new UseCase("addUser");
+	    	role.getUseCases().add(addUser);
+	    	user.getRoles().add(role);
+	    	useCaseDao.save(addUser);
+	    	roleDao.save(role);
+	    	userDao.save(user);
+		}
+		Session s = new Session(user);
+		openSessions.put(s.getSessionId(), s);
+		return s;
+	}
+	
+	@Transactional
 	public User addUser(long sessionId, String name, String login, String password, String dni, String email, String phoneNumber, int shirtSize) throws ServiceException {
 		checkPermissions(sessionId, "addUser");
 		User user = userDao.findUserBylogin(login);
@@ -81,7 +104,9 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Transactional(readOnly=true)
-	public Session login(String login, String password, boolean passwordEncripted) throws ServiceException {
+	public Session login(long sessionId, String login, String password, boolean passwordEncripted) throws ServiceException {
+		if (!openSessions.containsKey(sessionId)) throw new ServiceException(01,"login","Invalid session");
+		if(! openSessions.get(sessionId).getUser().getLogin().contentEquals("anonymous"))  throw new ServiceException(10,"login","There is already a session.");
 		//TODO: Encriptado de passwords
 		User user = userDao.findUserBylogin(login);
 		if (user == null) throw new ServiceException(04,"login","Incorrect login");
@@ -96,16 +121,19 @@ public class UserServiceImpl implements UserService {
 		openSessions.remove(sessionId);
 	}
 
+	/**
+	 * DNI field can't be changed by the user, only by an admin; 
+	 */
 	@Transactional
 	public void changeUserData(long sessionId, int userId, String name, String dni, String email, String phoneNumber, int shirtSize) throws ServiceException {
 		checkPermissions(sessionId, userId, "changeUserData");
 		try {
 			User user = userDao.find(userId);
 			user.setName(name);
-			user.setDni(dni);
+			if(openSessions.get(sessionId).getUser().getUserId()!=userId) user.setDni(dni);
 			user.setEmail(email);
 			user.setPhoneNumber(phoneNumber);
-			user.setSirtSize(shirtSize);
+			user.setShirtSize(shirtSize);
 			userDao.save(user);
 		} catch (InstanceException e) {
 			throw new  ServiceException(06,"changeUserData","User Not Found");
@@ -142,24 +170,43 @@ public class UserServiceImpl implements UserService {
 		return userDao.getAllUsers();
 	}
 
-
-	public void setDefaultLanguage(long sessionId, int userId, int languageId) {
-		// TODO Auto-generated method stub
-		
+	@Transactional
+	public void setDefaultLanguage(long sessionId, int userId, int languageId) throws ServiceException {
+		checkPermissions(sessionId, userId, "setDefaultLanguage");
+		try {
+			User user = userDao.find(userId);
+			SupportedLanguage language = languageDao.find(languageId);
+			user.setDefaultLanguage(language);
+			userDao.save(user);
+		} catch (InstanceException e) {
+			if (e.getClassName().contentEquals("User")) throw new  ServiceException(06,"setDefaultLanguage","User Not Found");
+			else throw new ServiceException(9,"setDefaultLanguage","Language Not Found");
+		}	
 	}
 
-
-	public void addUserToBlackList(long sessionId, int userId) {
-		// TODO Auto-generated method stub
-		
+	@Transactional
+	public void addUserToBlackList(long sessionId, int userId) throws ServiceException{
+		checkPermissions(sessionId, "addUserToBlackList");
+		try {
+			User user = userDao.find(userId);
+			user.setInBlackList(true);
+			userDao.save(user);
+		} catch (InstanceException e) {
+			throw new  ServiceException(06,"addUserToBlackList","User Not Found");
+		}	
 	}
 
-
-	public void removeUserFromBlackList(long sessionId, int userId) {
-		// TODO Auto-generated method stub
-		
+	@Transactional
+	public void removeUserFromBlackList(long sessionId, int userId) throws ServiceException {
+		checkPermissions(sessionId, "removeUserFromBlackList");
+		try {
+			User user = userDao.find(userId);
+			user.setInBlackList(false);
+			userDao.save(user);
+		} catch (InstanceException e) {
+			throw new  ServiceException(06,"removeUserFromBlackList","User Not Found");
+		}
 	}
-
 
 	@Transactional
 	public void removeUser(long sessionId, int userId) throws ServiceException {

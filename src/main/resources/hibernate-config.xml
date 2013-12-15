@@ -17,6 +17,7 @@
 	    <mapping class="es.ficonlan.web.backend.model.usecase.UseCase" />
         <mapping class="es.ficonlan.web.backend.model.event.Event" />
         <mapping class="es.ficonlan.web.backend.model.registration.Registration" />
+		<mapping class="es.ficonlan.web.backend.model.supportedlanguage.SupportedLanguage" />
 
 	</session-factory>
 

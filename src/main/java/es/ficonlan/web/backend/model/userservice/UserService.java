@@ -5,7 +5,7 @@ import java.util.Set;
 
 import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
 import es.ficonlan.web.backend.model.role.Role;
-import es.ficonlan.web.backend.model.useCase.UseCase;
+import es.ficonlan.web.backend.model.usecase.UseCase;
 import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 
@@ -14,10 +14,12 @@ import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
  * @version 1.0
  */
 public interface UserService {
+	
+	public Session newAnonymousSession();
 
 	public User addUser(long sessionId, String name, String login, String password, String dni, String email, String phoneNumber, int shirtSize) throws ServiceException;
 	
-	public Session login (String login, String password, boolean passwordEncripted)  throws ServiceException;
+	public Session login (long sessionId, String login, String password, boolean passwordEncripted)  throws ServiceException;
 	
 	public void closeSession(long sessionId)  throws ServiceException;
 	
@@ -29,11 +31,11 @@ public interface UserService {
 	
 	public List<User> getAllUsers(long sessionId)  throws ServiceException;
 	
-	public void setDefaultLanguage(long sessionId, int userId, int languageId);
+	public void setDefaultLanguage(long sessionId, int userId, int languageId) throws ServiceException;
 	
-	public void addUserToBlackList(long sessionId, int userId);
+	public void addUserToBlackList(long sessionId, int userId) throws ServiceException;
 	
-	public void removeUserFromBlackList(long sessionId, int userId);
+	public void removeUserFromBlackList(long sessionId, int userId) throws ServiceException;
 	
 	public void removeUser(long sessionId, int userId) throws ServiceException;
 	

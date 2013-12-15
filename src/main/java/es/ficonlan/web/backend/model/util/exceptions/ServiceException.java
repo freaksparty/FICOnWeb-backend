@@ -10,6 +10,8 @@ package es.ficonlan.web.backend.model.util.exceptions;
  * 06 - User Not Found<br>
  * 07 - Role Not Found<br>
  * 08 - User Case Not Found<br>
+ * 09 - Language Not Found<br>
+ * 10 - There is already a session.<br>
  * 
  * @author Daniel Gómez Silva
  *

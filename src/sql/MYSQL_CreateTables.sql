@@ -8,10 +8,11 @@ DROP TABLE IF EXISTS UserCase;
 DROP TABLE IF EXISTS Activity;
 DROP TABLE IF EXISTS User_Activity;
 DROP TABLE IF EXISTS Role_User;
-DROP TABLE IF EXISTS Role_UserCase;
+DROP TABLuserE IF EXISTS Role_UserCase;
 DROP TABLE IF EXISTS NewsItem;
 DROP TABLE IF EXISTS Registration;
 DROP TABLE IF EXISTS Event_NewsItem;
+DROP TABLE IF EXISTS Language;
 SET foreign_key_checks = 1;
 
 -- ---------- Table for validation queries from the connection pool. ----------
@@ -59,6 +60,8 @@ CREATE TABLE Event (
 	User_email                varchar(200)  NOT NULL  ,
 	User_telf                 varchar(15) , 
 	User_shirtSize			  int ,
+	User_inBlackList          bit   DEFAULT 0 ,
+	User_defaultLanguage	  bigint UNSIGNED  ,
 	CONSTRAINT pk_user PRIMARY KEY ( User_id ) ,
 	CONSTRAINT User_login_UNIQUE UNIQUE ( User_login )  ,
 	CONSTRAINT User_dni_UNIQUE UNIQUE ( User_dni )  ,
@@ -171,7 +174,15 @@ CREATE TABLE NewsItem (
  CREATE INDEX RegistrationIndexByRegistrationUser_id ON Registration (Registration_User_id);
  CREATE INDEX RegistrationIndexByRegistrationEvent_id ON Registration (Registration_Event_id);
 
- 
+-- ------------------------------ LANGUAGE ----------------------------------
+
+CREATE TABLE Language ( 
+	Language_id					  bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
+	Language_name                 varchar(50)  NOT NULL  ,
+	CONSTRAINT pk_language PRIMARY KEY ( Language_id )
+) engine=InnoDB;
+
+
  ALTER TABLE Activity ADD CONSTRAINT fk_activity_organizer FOREIGN KEY ( Activity_organizer_id ) REFERENCES User( User_id ) ON DELETE SET NULL ON UPDATE CASCADE;
  ALTER TABLE Activity ADD CONSTRAINT fk_activity_event FOREIGN KEY ( Activity_event_id ) REFERENCES Event( Event_id ) ON DELETE CASCADE ON UPDATE CASCADE;
  
@@ -189,3 +200,5 @@ CREATE TABLE NewsItem (
  
  ALTER TABLE Registration ADD CONSTRAINT fk_registration_user FOREIGN KEY ( Registration_User_id ) REFERENCES User( User_id ) ON DELETE CASCADE ON UPDATE CASCADE;
  ALTER TABLE Registration ADD CONSTRAINT fk_registration_event FOREIGN KEY ( Registration_Event_id ) REFERENCES Event( Event_id ) ON DELETE CASCADE ON UPDATE CASCADE;
+ 
+ ALTER TABLE User ADD CONSTRAINT fk_default_language FOREIGN KEY ( User_defaultLanguage ) REFERENCES Language( Language_id ) ON DELETE CASCADE ON UPDATE CASCADE;

@@ -1,4 +1,4 @@
-package es.ficonlan.web.backend.model.useCase;
+package es.ficonlan.web.backend.model.usecase;
 
 import es.ficonlan.web.backend.model.util.dao.GenericDao;
 

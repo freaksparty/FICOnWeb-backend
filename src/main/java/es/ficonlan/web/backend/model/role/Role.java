@@ -1,6 +1,7 @@
 package es.ficonlan.web.backend.model.role;
 
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -14,7 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 
-import es.ficonlan.web.backend.model.useCase.UseCase;
+import es.ficonlan.web.backend.model.usecase.UseCase;
 
 /**
  * @author Miguel Ángel Castillo Bellagona
@@ -25,7 +26,7 @@ public class Role {
 	
 	private long roleId;
 	private String roleName;
-	private Set<UseCase> useCases; 
+	private Set<UseCase> useCases = new HashSet<UseCase>(); 
 	
 	public Role() {};
 	

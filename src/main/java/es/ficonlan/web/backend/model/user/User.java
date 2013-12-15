@@ -1,7 +1,9 @@
 package es.ficonlan.web.backend.model.user;
 
 import es.ficonlan.web.backend.model.role.Role;
+import es.ficonlan.web.backend.model.supportedlanguage.SupportedLanguage;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -13,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
 /**
@@ -30,14 +33,13 @@ public class User {
     private String email;
     private String phoneNumber;
     private boolean deleted;
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<Role>(); ;
     //private Set<Activity> participation;
     private int shirtSize;
+    private boolean inBlackList;
+    private SupportedLanguage defaultLanguage;
 
-    public User() {
-    }
-
-    ;
+    public User() {}
 
 	public User(String name, String login, String password, String dni, String email, String phoneNumber, int shirtSize) {
         this.name = name;
@@ -137,14 +139,34 @@ public class User {
         this.roles = roles;
     }
 
-    public void setSirtSize(int sirtSize) {
-        this.shirtSize = sirtSize;
-    }
-
     @Column(name = "User_shirtSize")
-    public int getSirtSize() {
+    public int getShirtSize() {
         return this.shirtSize;
     }
+    
+    public void setShirtSize(int sirtSize) {
+        this.shirtSize = sirtSize;
+    }
+    
+    @Column(name = "User_inBlackList")
+	public boolean isInBlackList() {
+		return inBlackList;
+	}
+
+	public void setInBlackList(boolean inBlackList) {
+		this.inBlackList = inBlackList;
+	}
+
+	@OneToOne
+	@JoinColumn(name="User_defaultLanguage")
+	public SupportedLanguage getDefaultLanguage() {
+		return defaultLanguage;
+	}
+
+	public void setDefaultLanguage(SupportedLanguage defaultLanguage) {
+		this.defaultLanguage = defaultLanguage;
+	}
+	
 
     //@ManyToMany
     //@JoinTable(name = "User_Activity", joinColumns = {

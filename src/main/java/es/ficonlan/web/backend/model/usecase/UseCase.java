@@ -1,4 +1,4 @@
-package es.ficonlan.web.backend.model.useCase;
+package es.ficonlan.web.backend.model.usecase;
 
 
 import javax.persistence.Column;
@@ -7,12 +7,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 /**
  * @author Miguel Ángel Castillo Bellagona
  * @version 1.0
  */
 @Entity
+@Table(name="usercase")
 public class UseCase {
 	
 	private long useCaseId;

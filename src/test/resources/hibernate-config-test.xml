@@ -28,6 +28,8 @@
 		<!-- List of persistent classes -->
 		<mapping class="es.ficonlan.web.backend.model.user.User" />
 		<mapping class="es.ficonlan.web.backend.model.role.Role" />
+		<mapping class="es.ficonlan.web.backend.model.usecase.UseCase" />
+		<mapping class="es.ficonlan.web.backend.model.supportedlanguage.SupportedLanguage" />
 
 	</session-factory>
 </hibernate-configuration>
