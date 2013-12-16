@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
 	public Session newAnonymousSession() {
 		User user = userDao.findUserBylogin("anonymous");
 		if (user == null){
-			user = new User("-", "anonymous", "-", "-", "-", "-", 0);
+			user = new User("-", "anonymous", "-", "-", "-", "-", "_");
 			Role role = new Role("Anonymous");
 	    	UseCase addUser = new UseCase("addUser");
 	    	role.getUseCases().add(addUser);
@@ -91,28 +91,32 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Transactional
-	public User addUser(long sessionId, String name, String login, String password, String dni, String email, String phoneNumber, int shirtSize) throws ServiceException {
+	public User addUser(long sessionId, User user) throws ServiceException {
 		checkPermissions(sessionId, "addUser");
-		User user = userDao.findUserBylogin(login);
-		if (user != null){
+		User u = userDao.findUserBylogin(user.getLogin());
+		if (u != null){
 			throw new ServiceException(03,"addUser","Duplicted login");
 		} else {
-			User u = new User(name, login, password, dni, email, phoneNumber, shirtSize);
-			userDao.save(u);
-			return u;
+			if(user.getLogin()==null) throw new ServiceException(11,"addUser","Missing required arameter: login");
+			if(user.getPassword()==null) throw new ServiceException(11,"addUser","Missing required arameter: password");
+			if(user.getName()==null) throw new ServiceException(11,"addUser","Missing required arameter: name");
+			if(user.getDni()==null) throw new ServiceException(11,"addUser","Missing required arameter: dni");
+			if(user.getEmail()==null) throw new ServiceException(11,"addUser","Missing required arameter: email");
+			userDao.save(user);
+			return user;
 		}
 	}
 	
 	@Transactional(readOnly=true)
-	public Session login(long sessionId, String login, String password, boolean passwordEncripted) throws ServiceException {
+	public Session login(long sessionId, String login, String password) throws ServiceException {
 		if (!openSessions.containsKey(sessionId)) throw new ServiceException(01,"login","Invalid session");
-		if(! openSessions.get(sessionId).getUser().getLogin().contentEquals("anonymous"))  throw new ServiceException(10,"login","There is already a session.");
-		//TODO: Encriptado de passwords
+		Session session = openSessions.get(sessionId);
+		if(login.contentEquals("anonymous")) return session;
+		if(!session.getUser().getLogin().contentEquals("anonymous"))  throw new ServiceException(10,"login","There is already a session.");
 		User user = userDao.findUserBylogin(login);
 		if (user == null) throw new ServiceException(04,"login","Incorrect login");
 		else if (!password.contentEquals(user.getPassword()))  throw new ServiceException(05,"login","Incorrect password");
-		Session session = new Session(user);
-		openSessions.put(session.getSessionId(), session);
+		session.setUser(user);
 		return session;
 	}
 
@@ -125,16 +129,16 @@ public class UserServiceImpl implements UserService {
 	 * DNI field can't be changed by the user, only by an admin; 
 	 */
 	@Transactional
-	public void changeUserData(long sessionId, int userId, String name, String dni, String email, String phoneNumber, int shirtSize) throws ServiceException {
-		checkPermissions(sessionId, userId, "changeUserData");
+	public void changeUserData(long sessionId, User user) throws ServiceException {
+		checkPermissions(sessionId, user.getUserId(), "changeUserData");
 		try {
-			User user = userDao.find(userId);
-			user.setName(name);
-			if(openSessions.get(sessionId).getUser().getUserId()!=userId) user.setDni(dni);
-			user.setEmail(email);
-			user.setPhoneNumber(phoneNumber);
-			user.setShirtSize(shirtSize);
-			userDao.save(user);
+			User userData = userDao.find(user.getUserId());
+			userData.setName(user.getName());
+			if(openSessions.get(sessionId).getUser().getUserId()!=user.getUserId()) userData.setDni(user.getDni());
+			userData.setEmail(user.getEmail());
+			userData.setPhoneNumber(user.getPhoneNumber());
+			userData.setShirtSize(user.getShirtSize());
+			userDao.save(userData);
 		} catch (InstanceException e) {
 			throw new  ServiceException(06,"changeUserData","User Not Found");
 		}

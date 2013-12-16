@@ -18,6 +18,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 /**
  * @author Daniel Gómez Silva
  * @version 1.0
@@ -32,16 +34,25 @@ public class User {
     private String dni;
     private String email;
     private String phoneNumber;
+    @JsonIgnore
     private boolean deleted;
+    @JsonIgnore
     private Set<Role> roles = new HashSet<Role>(); ;
     //private Set<Activity> participation;
-    private int shirtSize;
+    private String shirtSize;
+    @JsonIgnore
     private boolean inBlackList;
     private SupportedLanguage defaultLanguage;
 
     public User() {}
 
-	public User(String name, String login, String password, String dni, String email, String phoneNumber, int shirtSize) {
+	public User(int userId, String name, String dni, String email, String phoneNumber, String shirtSize) {
+        this(name, null, null, dni, email, phoneNumber, shirtSize);
+        this.userId = userId;
+    }
+	
+	public User(String name,  String login, String password, String dni,
+				 String email, String phoneNumber, String shirtSize) {
         this.name = name;
         this.login = login;
         this.password = password;
@@ -67,6 +78,7 @@ public class User {
     @Column(name = "User_name")
     public String getName() {
         return name;
+
     }
 
     public void setName(String name) {
@@ -127,7 +139,7 @@ public class User {
         this.deleted = deleted;
     }
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "Role_User", joinColumns = {
         @JoinColumn(name = "Role_User_User_id")}, inverseJoinColumns = {
         @JoinColumn(name = "Role_User_Role_id")})
@@ -140,11 +152,11 @@ public class User {
     }
 
     @Column(name = "User_shirtSize")
-    public int getShirtSize() {
+    public String getShirtSize() {
         return this.shirtSize;
     }
     
-    public void setShirtSize(int sirtSize) {
+    public void setShirtSize(String sirtSize) {
         this.shirtSize = sirtSize;
     }
     

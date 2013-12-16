@@ -1,0 +1,34 @@
+﻿
+# CREACIÓN DE UNA SESIÓN ANÓNIMA:
+	- Petición: POST http://localhost:8080/ficonlan/session/new
+	- Respuesta: 200 OK
+		 {"sessionId":0}
+
+# CREACIÓN DE UN USUARIO:
+	- Petición: 
+		POST http://localhost:8080/ficonlan/user/add
+		header: 
+			sessionId=0
+		body: 
+			{
+			 "name":"User1", 
+			 "login":"user1", 
+			 "password":"pass", 
+			 "dni":"12345678Y", 
+			 "email":"user1@hotmail.com", 
+			 "phoneNumber":"666666666", 
+			 "shirtSize":"XL"
+			}
+	- Respuesta: 200 OK
+		{
+			"userId":6,
+			"name":"User1",
+			"login":"user1",
+			"password":"pass",
+			"dni":"12345678Y",
+			"email":"user1@hotmail.com",
+			"phoneNumber":"666666666",
+			"shirtSize":"XL",
+			"defaultLanguage":null
+		} 
+			

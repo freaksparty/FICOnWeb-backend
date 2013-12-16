@@ -17,13 +17,13 @@ public interface UserService {
 	
 	public Session newAnonymousSession();
 
-	public User addUser(long sessionId, String name, String login, String password, String dni, String email, String phoneNumber, int shirtSize) throws ServiceException;
+	public User addUser(long sessionId, User user) throws ServiceException;
 	
-	public Session login (long sessionId, String login, String password, boolean passwordEncripted)  throws ServiceException;
+	public Session login (long sessionId, String login, String password)  throws ServiceException;
 	
 	public void closeSession(long sessionId)  throws ServiceException;
 	
-	public void changeUserData(long sessionId, int UserId,  String name, String dni, String email, String phoneNumber, int shirtSize)  throws ServiceException;
+	public void changeUserData(long sessionId, User user)  throws ServiceException;
 	
 	public void changeUserPassword(long sessionId, int userId, String oldPassword, String newPassword)  throws ServiceException;
 	

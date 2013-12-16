@@ -1,5 +1,6 @@
 package es.ficonlan.web.backend.model.util.exceptions;
 
+
 /**
  * Exception Codes:<br>
  * 01 - Invalid session<br>
@@ -12,6 +13,8 @@ package es.ficonlan.web.backend.model.util.exceptions;
  * 08 - User Case Not Found<br>
  * 09 - Language Not Found<br>
  * 10 - There is already a session.<br>
+ * 11 - Missing required parameter.<br>
+ * 99 - Error inesperado en el sistema (RuntimeException)
  * 
  * @author Daniel Gómez Silva
  *

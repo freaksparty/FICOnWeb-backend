@@ -59,10 +59,10 @@ public class Role {
 		this.roleName = roleName;
 	}
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "Role_UserCase", joinColumns = {
-			@JoinColumn(name = "Role_UserCase_Role_Id")}, inverseJoinColumns = {
-	        @JoinColumn(name = "Role_UserCase_User_Case_Id")})
+			@JoinColumn(name = "Role_UserCase_Role_id")}, inverseJoinColumns = {
+	        @JoinColumn(name = "Role_UserCase_UserCase_Id")})
 	public Set<UseCase> getUseCases() {
 		return useCases;
 	}

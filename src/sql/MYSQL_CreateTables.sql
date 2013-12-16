@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS UserCase;
 DROP TABLE IF EXISTS Activity;
 DROP TABLE IF EXISTS User_Activity;
 DROP TABLE IF EXISTS Role_User;
-DROP TABLuserE IF EXISTS Role_UserCase;
+DROP TABLE IF EXISTS Role_UserCase;
 DROP TABLE IF EXISTS NewsItem;
 DROP TABLE IF EXISTS Registration;
 DROP TABLE IF EXISTS Event_NewsItem;
@@ -59,7 +59,7 @@ CREATE TABLE Event (
 	User_dni                  varchar(11)  NOT NULL ,
 	User_email                varchar(200)  NOT NULL  ,
 	User_telf                 varchar(15) , 
-	User_shirtSize			  int ,
+	User_shirtSize			     varchar(3) ,
 	User_inBlackList          bit   DEFAULT 0 ,
 	User_defaultLanguage	  bigint UNSIGNED  ,
 	CONSTRAINT pk_user PRIMARY KEY ( User_id ) ,
