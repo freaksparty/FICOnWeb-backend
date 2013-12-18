@@ -5,36 +5,58 @@ package es.ficonlan.web.backend.model.util.exceptions;
  * Exception Codes:<br>
  * 01 - Invalid session<br>
  * 02 - Permission denied<br>
- * 03 - Duplicated login<br>
- * 04 - Incorrect login<br>
- * 05 - Incorrect password<br>
- * 06 - User Not Found<br>
- * 07 - Role Not Found<br>
- * 08 - User Case Not Found<br>
- * 09 - Language Not Found<br>
- * 10 - There is already a session.<br>
- * 11 - Missing required parameter.<br>
- * 99 - Error inesperado en el sistema (RuntimeException)
+ * 03 - Duplicated unique field<br>
+ * 04 - Incorrect field<br>
+ * 05 - Missing required field<br>
+ * 06 - Instance not found<br>
+ * 07 - There is already a session<br>
+ * 99 - System unexpected error (RuntimeException)
  * 
  * @author Daniel Gómez Silva
  *
  */
-@SuppressWarnings("serial")
 public class ServiceException extends Exception{
 
+		private static final long serialVersionUID = 1L;
 		private int errorCode;
 		private String useCase;
-		private String specificMessage;
+		private String field;
+		
+		private static String getMessage(int errorCode){
+			switch (errorCode){
+				case 01: return "Invalid session";
+				case 02: return "Permission denied";
+				case 03: return "Duplicated unique field";
+				case 04: return "Incorrect field";
+				case 05: return "Missing required field";
+				case 06: return "Instance not found";
+				case 07: return "There is already a session";
+				case 99: return "System unexpected error";
+			default: return null;
+			}
+		}	
 
-		public ServiceException(int errorCode, String useCase, String specificMessage) {
-
-			super("ServiceException(Code = " + errorCode + ", UseCase = " + useCase + ", Message = " + specificMessage + ")");
+		public ServiceException(int errorCode, String useCase) {
+			super("ServiceException(Code = " + errorCode + ", UseCase = " + useCase + ", Message = " + getMessage(errorCode) + ")");
 			this.errorCode = errorCode;
 			this.useCase = useCase;
-			this.specificMessage = specificMessage;
-
+		}
+		
+		public ServiceException(int errorCode, String useCase, String field) {
+			super("ServiceException(Code = " + errorCode + ", UseCase = " + useCase + ", Message = " + getMessage(errorCode) + ", Field:"+ field +")");
+			this.errorCode = errorCode;
+			this.useCase = useCase;
+			this.field = field;
+		}
+		
+		public String getField() {
+			return field;
 		}
 
+		public String getMessage(){
+			return getMessage(this.errorCode);
+		}
+		
 		public int getErrorCode() {
 			return errorCode;
 		}
@@ -42,10 +64,5 @@ public class ServiceException extends Exception{
 		public String getUseCase() {
 			return useCase;
 		}
-
-		public String getSpecificMessage() {
-			return specificMessage;
-		}
-
-		
+	
 }

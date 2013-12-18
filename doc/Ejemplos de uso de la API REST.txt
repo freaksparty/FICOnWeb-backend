@@ -1,9 +1,9 @@
 ﻿
 # CREACIÓN DE UNA SESIÓN ANÓNIMA:
-	- Petición: POST http://localhost:8080/ficonlan/session/new
+	- Petición: POST http://localhost:8080/ficonlan/session/anonymous
 	- Respuesta: 200 OK
-		 {"sessionId":0}
-
+		{"sessionId":0,"user":null}
+		
 # CREACIÓN DE UN USUARIO:
 	- Petición: 
 		POST http://localhost:8080/ficonlan/user/add
@@ -13,7 +13,7 @@
 			{
 			 "name":"User1", 
 			 "login":"user1", 
-			 "password":"pass", 
+			 "password":"pass(hash)", 
 			 "dni":"12345678Y", 
 			 "email":"user1@hotmail.com", 
 			 "phoneNumber":"666666666", 
@@ -24,11 +24,158 @@
 			"userId":6,
 			"name":"User1",
 			"login":"user1",
-			"password":"pass",
 			"dni":"12345678Y",
 			"email":"user1@hotmail.com",
 			"phoneNumber":"666666666",
 			"shirtSize":"XL",
 			"defaultLanguage":null
 		} 
+
+# LOGIN:
+	- Petición: 
+		POST http://localhost:8080/ficonlan/session/login
+		header: 
+			sessionId=0
+		body:
+		  {
+ 		    "login":"user1", 
+ 			"password":"pass"
+		  } 
+
+	- Respuesta: 200 OK
+		{
+		  "sessionId":0,
+		  "user": {
+		            "userId":6,
+		            "name":"User1",
+		            "login":"user1",
+		            "dni":"12345678Y",
+		            "email":"user1@hotmail.com",
+		            "phoneNumber":"666666666",
+		            "shirtSize":"XL",
+		            "defaultLanguage":null
+		          }
+		}
+		
+# CIERRE DE SESIÓN:	
+	- Petición: 
+		POST http://localhost:8080/ficonlan/session/close
+		header: 
+			sessionId=0
+	- Respuesta: 204 No Content	
+	
+	{
+	
+# MODIFICAR DATOS DEL USUARIO:
+	- Petición: 
+		GET http://localhost:8080/ficonlan/user/all
+		header: 
+			sessionId=0
+		body:
+		  {
+			"userId":6,
+			"name":"User1",
+			"dni":"12345678Y",
+			"email":"user1@hotmail.com",
+			"phoneNumber":"666666666",
+			"shirtSize":"XL",
+		  }
+		  
+	- Respuesta: 204 No Content	 	
+
+"name":"User1", 
+
+# CAMBIAR PASSWORD:
+	- Petición: 
+		POST http://localhost:8080/ficonlan/user/changePassword/6
+		header: 
+			sessionId=0
+		body:
+		  {
+ 			"oldPassword":"pass",
+			"newPassword":"pass2"
+		  }
+		  
+	- Respuesta: 204 No Content	 	
+ 
+ # LISTAR TODOS LOS USUARIOS:
+ 	- Petición: 
+		GET http://localhost:8080/ficonlan/user/getAll
+		header: 
+			sessionId=0
+						
+	- Respuesta: 200 OK
+		  [
+			 {
+			   "userId":6,
+			   "name":"User1",
+			   "login":"user1",
+			   "dni":"12345678Y",
+			   "email":"user1@hotmail.com",
+			   "phoneNumber":"666666666",
+			   "shirtSize":"XL",
+			   "defaultLanguage":null
+			 },
+			 {
+			   "userId":7,
+			   "name":"User2",
+			   "login":"user2",
+			   "dni":"23213213Z",
+			   "email":"user2@hotmail.com",
+			   "phoneNumber":"777777777",
+			   "shirtSize":"XXL",
+			   "defaultLanguage":null
+			 },
+			 {
+			   "userId":8,
+			   "name":"User3",
+			   "login":"user3",
+			   "dni":"23232323M",
+			   "email":"user3@gmail.com",
+			   "phoneNumber":"333333333",
+			   "shirtSize":"M",
+			   "defaultLanguage":null
+			 }
+		  ]		
+
+
+# EXCEPCIONES:
+
+	- Petición: POST http://127.0.0.1:8080/ficonlan/user/add	
+		header: 
+			sessionId=0
+		body: 
+			{
+			 "name":"User1", 
+			 "login":"user1", 
+			 "password":"pass(hash)", 
+			 "dni":"12345678Y", 
+			 "email":"user1@hotmail.com", 
+			 "phoneNumber":"666666666", 
+			 "shirtSize":"XL"
+			}	
 			
+	- Respuesta: 400 Bad Request			
+		{
+		 "exception":"ServiceException",
+		 "code":3,
+		 "useCase":"addUser",
+		 "message":"Duplicated unique field",
+		 "field":"login"
+		}
+		
+	* Códigos de error:
+		01 - Invalid session
+ 		02 - Permission denied
+ 		03 - Duplicated unique field
+ 		04 - Incorrect field
+ 		05 - Missing required field
+ 		06 - Instance not found
+ 		07 - There is already a session
+ 		99 - System unexpected error (RuntimeException)
+ 	
+ 	* Problema detectado: 
+ 		Para peticiones mal formadas (Json incorrecto, o faltan datos en la cabecera) se devuelve un codigo 500 y el stacktrace de la excepción.
+ 		De momento no he sido capaz de arreglarlo ya que es jersey quien lanza esas excepciones y no puedo capturarlas. 		
+
+

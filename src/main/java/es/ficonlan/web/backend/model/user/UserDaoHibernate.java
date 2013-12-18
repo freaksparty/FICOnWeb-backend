@@ -19,7 +19,8 @@ public class UserDaoHibernate extends GenericDaoHibernate<User,Integer> implemen
 		return getSession().createQuery(
 	        	"SELECT u " +
 		        "FROM User u " +
-	        	"ORDER BY u.User_id").list();
+		        "WHERE u.login!='anonymous'" +
+	        	"ORDER BY u.userId").list();
 	}
 	
 	public User findUserBylogin(String login) {
@@ -40,6 +41,12 @@ public class UserDaoHibernate extends GenericDaoHibernate<User,Integer> implemen
                    							  "WHERE r.Event.id = :eventId AND r.state = :state" +
                    							  "ORDER BY u.User_id" 
 				 						    ).setParameter("eventId",eventId).setParameter("state",state).list(); 			
+	}
+
+	public User findUserByDni(String dni) {
+		return (User) getSession()
+				.createQuery("SELECT u FROM User u Where User_dni = :dni")
+				.setParameter("dni", dni).uniqueResult();
 	}
 
 }

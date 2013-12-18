@@ -1,5 +1,7 @@
 package es.ficonlan.web.backend.test.userservice;
 
+import java.util.List;
+
 import es.ficonlan.web.backend.model.role.Role;
 import es.ficonlan.web.backend.model.role.RoleDao;
 import es.ficonlan.web.backend.model.supportedlanguage.SupportedLanguageDao;
@@ -72,7 +74,7 @@ public class UserServiceTest {
             fail("This should have thrown an exception");  
     	}catch(ServiceException e){
         	assertTrue(e.getUseCase().contentEquals("addUser"));
-        	assertTrue(e.getErrorCode()==3);
+        	assertTrue(e.getErrorCode()==03);
         }
     }
         
@@ -96,7 +98,7 @@ public class UserServiceTest {
             fail("This should have thrown an exception");  
         }catch(ServiceException e){
         	assertTrue(e.getUseCase().contentEquals("login"));
-        	assertTrue(e.getErrorCode()==10);
+        	assertTrue(e.getErrorCode()==07);
         }
     }
 
@@ -108,7 +110,7 @@ public class UserServiceTest {
             fail("This should have thrown an exception");  
         }catch(ServiceException e){
         	assertTrue(e.getUseCase().contentEquals("login"));
-        	assertTrue(e.getErrorCode()==4);
+        	assertTrue(e.getErrorCode()==04);
         }
     }
 	
@@ -122,7 +124,7 @@ public class UserServiceTest {
             fail("This should have thrown an exception");  
         }catch(ServiceException e){
         	assertTrue(e.getUseCase().contentEquals("login"));
-        	assertTrue(e.getErrorCode()==5);
+        	assertTrue(e.getErrorCode()==04);
         }
     }
 	
@@ -138,7 +140,7 @@ public class UserServiceTest {
     	    fail("This should have thrown an exception");  
         }catch(ServiceException e){
         	assertTrue(e.getUseCase().contentEquals("login"));
-        	assertTrue(e.getErrorCode()==1);
+        	assertTrue(e.getErrorCode()==01);
         }
 	}
 	
@@ -149,7 +151,7 @@ public class UserServiceTest {
     	    fail("This should have thrown an exception");  
         }catch(ServiceException e){
         	assertTrue(e.getUseCase().contentEquals("closeSession"));
-        	assertTrue(e.getErrorCode()==1);
+        	assertTrue(e.getErrorCode()==01);
         }	
 	}
 	
@@ -204,7 +206,7 @@ public class UserServiceTest {
 		    fail("This should have thrown an exception");  
 		} catch (ServiceException e) {
 			assertTrue(e.getUseCase().contentEquals("changeUserData"));
-        	assertTrue(e.getErrorCode()==2);
+        	assertTrue(e.getErrorCode()==02);
 		}
 	}
 	
@@ -225,7 +227,7 @@ public class UserServiceTest {
 		    fail("This should have thrown an exception");  
 		} catch (ServiceException e) {
 			assertTrue(e.getUseCase().contentEquals("changeUserData"));
-        	assertTrue(e.getErrorCode()==6);
+        	assertTrue(e.getErrorCode()==06);
 		}	
 	}
 	
@@ -251,7 +253,7 @@ public class UserServiceTest {
     	    fail("This should have thrown an exception");  
     	} catch (ServiceException e) {
     		assertTrue(e.getUseCase().contentEquals("changeUserPassword"));
-    	    assertTrue(e.getErrorCode()==5);
+    	    assertTrue(e.getErrorCode()==04);
     	}	
 	}
 	
@@ -273,5 +275,30 @@ public class UserServiceTest {
     	User u = userDao.find(user.getUserId());
     	assertTrue(u.getPassword().contentEquals("newpass"));
 	}
-    
+	
+	@Test
+	public void testGetAllUsers() throws ServiceException {
+		User user1 = new User("User1", "user1", "pass", "12345678R", "user1@gmail.com", "690047407", "L");
+		User user2 = new User("User2", "user2", "pass", "23232323S", "user2@gmail.com", "690047407", "L");
+		User user3 = new User("User3", "user3", "pass", "44343348T", "user3@gmail.com", "690047407", "L");
+    	userDao.save(user1);
+    	userDao.save(user2);
+    	userDao.save(user3);
+    	User admin = new User("Admin1", "admin1", "pass", "21321321P", "admin1@gmail.com", "690047407", "L");
+    	Role role = new Role("admin");
+    	UseCase useCase = new UseCase("getAllUsers");
+    	role.getUseCases().add(useCase);
+    	admin.getRoles().add(role);
+    	useCaseDao.save(useCase);
+    	roleDao.save(role);
+    	userDao.save(admin);
+    	Session anonymousSession = userService.newAnonymousSession();
+    	Session s = userService.login(anonymousSession.getSessionId(),"admin1", "pass");
+    	List<User> users = userService.getAllUsers(s.getSessionId());
+    	assertTrue(users.size()==4);
+    	assertTrue(users.get(0).getLogin().contentEquals("user1"));
+    	assertTrue(users.get(1).getLogin().contentEquals("user2"));
+    	assertTrue(users.get(2).getLogin().contentEquals("user3"));
+    	assertTrue(users.get(3).getLogin().contentEquals("admin1"));
+	}  
 }

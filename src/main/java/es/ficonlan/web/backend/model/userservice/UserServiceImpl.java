@@ -53,13 +53,13 @@ public class UserServiceImpl implements UserService {
 	 * @throws ServiceException
 	 */
 	private void checkPermissions(long sessionId, int userId, String useCase) throws ServiceException{
-		if (!openSessions.containsKey(sessionId)) throw new ServiceException(01,useCase,"Invalid session");
+		if (!openSessions.containsKey(sessionId)) throw new ServiceException(01,useCase);
 		Session session = openSessions.get(sessionId);
 		if (session.getUser().getUserId() != userId) checkPermissions(session, useCase);
 	}
 	
 	private void checkPermissions(long sessionId, String useCase) throws ServiceException {
-		if (!openSessions.containsKey(sessionId)) throw new ServiceException(01,useCase,"Invalid session");
+		if (!openSessions.containsKey(sessionId)) throw new ServiceException(01,useCase);
 		checkPermissions(openSessions.get(sessionId), useCase);	
 	}
 	
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
 		    	if (uc.getUserCaseName().contentEquals(useCase)) return;
 		    }
 		}
-		throw new ServiceException(02, useCase,"Permission denied");	
+		throw new ServiceException(02, useCase);	
 	}
 	
 	@Transactional
@@ -94,34 +94,34 @@ public class UserServiceImpl implements UserService {
 	public User addUser(long sessionId, User user) throws ServiceException {
 		checkPermissions(sessionId, "addUser");
 		User u = userDao.findUserBylogin(user.getLogin());
-		if (u != null){
-			throw new ServiceException(03,"addUser","Duplicted login");
-		} else {
-			if(user.getLogin()==null) throw new ServiceException(11,"addUser","Missing required arameter: login");
-			if(user.getPassword()==null) throw new ServiceException(11,"addUser","Missing required arameter: password");
-			if(user.getName()==null) throw new ServiceException(11,"addUser","Missing required arameter: name");
-			if(user.getDni()==null) throw new ServiceException(11,"addUser","Missing required arameter: dni");
-			if(user.getEmail()==null) throw new ServiceException(11,"addUser","Missing required arameter: email");
-			userDao.save(user);
-			return user;
-		}
+		if (u != null) throw new ServiceException(03,"addUser","login");
+		u = userDao.findUserByDni(user.getDni());
+		if (u != null) throw new ServiceException(03,"addUser","dni");
+		if(user.getLogin()==null) throw new ServiceException(05,"addUser","login");
+		if(user.getPassword()==null) throw new ServiceException(05,"addUser","password");
+		if(user.getName()==null) throw new ServiceException(05,"addUser","name");
+		if(user.getDni()==null) throw new ServiceException(05,"addUser","dni");
+		if(user.getEmail()==null) throw new ServiceException(05,"addUser","email");
+		userDao.save(user);
+		return user;
+		
 	}
 	
 	@Transactional(readOnly=true)
 	public Session login(long sessionId, String login, String password) throws ServiceException {
-		if (!openSessions.containsKey(sessionId)) throw new ServiceException(01,"login","Invalid session");
+		if (!openSessions.containsKey(sessionId)) throw new ServiceException(01,"login");
 		Session session = openSessions.get(sessionId);
 		if(login.contentEquals("anonymous")) return session;
-		if(!session.getUser().getLogin().contentEquals("anonymous"))  throw new ServiceException(10,"login","There is already a session.");
+		if(!session.getUser().getLogin().contentEquals("anonymous")) throw new ServiceException(07,"login");
 		User user = userDao.findUserBylogin(login);
-		if (user == null) throw new ServiceException(04,"login","Incorrect login");
-		else if (!password.contentEquals(user.getPassword()))  throw new ServiceException(05,"login","Incorrect password");
+		if (user == null) throw new ServiceException(04,"login","login");
+		else if (!password.contentEquals(user.getPassword()))  throw new ServiceException(04,"login","password");
 		session.setUser(user);
 		return session;
 	}
 
 	public void closeSession(long sessionId) throws ServiceException {
-		if (!openSessions.containsKey(sessionId)) throw new ServiceException(01,"closeSession","Invalid session");
+		if (!openSessions.containsKey(sessionId)) throw new ServiceException(01,"closeSession");
 		openSessions.remove(sessionId);
 	}
 
@@ -140,7 +140,7 @@ public class UserServiceImpl implements UserService {
 			userData.setShirtSize(user.getShirtSize());
 			userDao.save(userData);
 		} catch (InstanceException e) {
-			throw new  ServiceException(06,"changeUserData","User Not Found");
+			throw new  ServiceException(06,"changeUserData","User");
 		}
 	}
 
@@ -154,11 +154,11 @@ public class UserServiceImpl implements UserService {
 		Session session = openSessions.get(sessionId);
 		try {
 			User user = userDao.find(userId);
-			if(session.getUser().getUserId() == userId && !oldPassword.contentEquals(user.getPassword()))  throw new ServiceException(05,"changeUserPassword","Incorrect password"); 
+			if(session.getUser().getUserId() == userId && !oldPassword.contentEquals(user.getPassword()))  throw new ServiceException(04,"changeUserPassword","password"); 
 			user.setPassword(newPassword);
 			userDao.save(user);
 		} catch (InstanceException e) {
-			throw new  ServiceException(06,"changeUserPassword","User Not Found");
+			throw new  ServiceException(06,"changeUserPassword","User");
 		}	
 	}
 
@@ -183,8 +183,8 @@ public class UserServiceImpl implements UserService {
 			user.setDefaultLanguage(language);
 			userDao.save(user);
 		} catch (InstanceException e) {
-			if (e.getClassName().contentEquals("User")) throw new  ServiceException(06,"setDefaultLanguage","User Not Found");
-			else throw new ServiceException(9,"setDefaultLanguage","Language Not Found");
+			if (e.getClassName().contentEquals("User")) throw new  ServiceException(06,"setDefaultLanguage","User");
+			else throw new ServiceException(06,"setDefaultLanguage","Language");
 		}	
 	}
 
@@ -196,7 +196,7 @@ public class UserServiceImpl implements UserService {
 			user.setInBlackList(true);
 			userDao.save(user);
 		} catch (InstanceException e) {
-			throw new  ServiceException(06,"addUserToBlackList","User Not Found");
+			throw new  ServiceException(06,"addUserToBlackList","User");
 		}	
 	}
 
@@ -208,7 +208,7 @@ public class UserServiceImpl implements UserService {
 			user.setInBlackList(false);
 			userDao.save(user);
 		} catch (InstanceException e) {
-			throw new  ServiceException(06,"removeUserFromBlackList","User Not Found");
+			throw new  ServiceException(06,"removeUserFromBlackList","User");
 		}
 	}
 
@@ -220,7 +220,7 @@ public class UserServiceImpl implements UserService {
 			user.setDeleted(true);
 			userDao.save(user);
 		} catch (InstanceException e) {
-			throw new  ServiceException(06,"removeUser","User Not Found");
+			throw new  ServiceException(06,"removeUser","User");
 		}
 	}
 
@@ -241,8 +241,8 @@ public class UserServiceImpl implements UserService {
 			user.getRoles().add(role);
 			userDao.save(user);
 		} catch (InstanceException e) {
-			if (e.getClassName().contentEquals("User")) throw new  ServiceException(06,"addRole","User Not Found");
-			else throw new ServiceException(07,"addRole","Role Not Found");
+			if (e.getClassName().contentEquals("User")) throw new  ServiceException(06,"addRole","User");
+			else throw new ServiceException(06,"addRole","Role");
 		}
 	}
 
@@ -255,8 +255,8 @@ public class UserServiceImpl implements UserService {
 			user.getRoles().remove(role);
 			userDao.save(user);
 		} catch (InstanceException e) {
-			if (e.getClassName().contentEquals("User")) throw new  ServiceException(06,"removeRole","User Not Found");
-			else throw new  ServiceException(07,"removeRole","Role Not Found");
+			if (e.getClassName().contentEquals("User")) throw new  ServiceException(06,"removeRole","User");
+			else throw new  ServiceException(06,"removeRole","Role");
 		}
 		
 	}
@@ -268,7 +268,7 @@ public class UserServiceImpl implements UserService {
 			User user = userDao.find(userId);
 			return user.getRoles();
 		} catch (InstanceException e) {
-			throw new  ServiceException(06,"getUserRoles","User Not Found");
+			throw new  ServiceException(06,"getUserRoles","User");
 		}
 	}
 
@@ -289,8 +289,8 @@ public class UserServiceImpl implements UserService {
 			role.getUseCases().add(useCase);
 			roleDao.save(role);
 		} catch (InstanceException e) {
-			if (e.getClassName().contentEquals("UseCase")) throw new  ServiceException(8,"addUseCase","User Case Not Found");
-			else throw new  ServiceException(07,"addUseCase","Role Not Found");
+			if (e.getClassName().contentEquals("UseCase")) throw new  ServiceException(06,"addUseCase","UseCase");
+			else throw new  ServiceException(06,"addUseCase","Role");
 		}
 		
 	}
@@ -304,8 +304,8 @@ public class UserServiceImpl implements UserService {
 			role.getUseCases().remove(useCase);
 			roleDao.save(role);
 		} catch (InstanceException e) {
-			if (e.getClassName().contentEquals("UseCase")) throw new  ServiceException(8,"removeUseCase","User Case Not Found");
-			else throw new  ServiceException(07,"removeUseCase","Role Not Found");
+			if (e.getClassName().contentEquals("UseCase")) throw new  ServiceException(06,"removeUseCase","UseCase");
+			else throw new  ServiceException(06,"removeUseCase","Role");
 		}
 		
 	}
@@ -317,7 +317,7 @@ public class UserServiceImpl implements UserService {
 			Role role = roleDao.find(roleId);
 			return role.getUseCases();
 		} catch (InstanceException e) {
-			throw new  ServiceException(07,"getRolePermissions","Role Not Found");
+			throw new  ServiceException(06,"getRolePermissions","Role");
 		}
 	}	
 	

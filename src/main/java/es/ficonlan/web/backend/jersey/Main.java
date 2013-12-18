@@ -28,7 +28,7 @@ public class Main {
 		ApplicationContext ctx = new ClassPathXmlApplicationContext("spring-config.xml");
         // create a resource config that scans for JAX-RS resources and providers
         // in es.ficonlan.web.prueba package
-        final ResourceConfig rc = new ResourceConfig().packages("es.ficonlan.web.backend.jersey.resources").register(JacksonFeature.class);
+        final ResourceConfig rc = new ResourceConfig().packages("es.ficonlan.web.backend.jersey").register(JacksonFeature.class);
 
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI

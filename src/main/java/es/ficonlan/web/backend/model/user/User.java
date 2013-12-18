@@ -30,6 +30,7 @@ public class User {
     private int userId;
     private String name;
     private String login;
+    @JsonIgnore
     private String password;
     private String dni;
     private String email;
@@ -51,8 +52,7 @@ public class User {
         this.userId = userId;
     }
 	
-	public User(String name,  String login, String password, String dni,
-				 String email, String phoneNumber, String shirtSize) {
+	public User(String name,  String login, String password, String dni, String email, String phoneNumber, String shirtSize) {
         this.name = name;
         this.login = login;
         this.password = password;
