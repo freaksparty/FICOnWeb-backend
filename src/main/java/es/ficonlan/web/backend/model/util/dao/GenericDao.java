@@ -6,7 +6,6 @@ import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
 
 /**
  * @author Daniel Gómez Silva
- * @version 1.0
  */
 public interface GenericDao<E, PK extends Serializable> {
 

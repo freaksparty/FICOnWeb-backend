@@ -14,7 +14,6 @@ import java.lang.reflect.ParameterizedType;
 
 /**
  * @author Daniel Gómez Silva
- * @version 1.0
  */
 public class GenericDaoHibernate<E, PK extends Serializable> implements GenericDao<E, PK> {
 

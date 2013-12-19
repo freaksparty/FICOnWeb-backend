@@ -9,10 +9,10 @@ import es.ficonlan.web.backend.model.usecase.UseCase;
 import es.ficonlan.web.backend.model.usecase.UseCaseDao;
 import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.user.UserDao;
-import es.ficonlan.web.backend.model.userservice.Session;
 import es.ficonlan.web.backend.model.userservice.UserService;
 import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
+import es.ficonlan.web.backend.model.util.session.Session;
 import static es.ficonlan.web.backend.model.util.GlobalNames.SPRING_CONFIG_FILE;
 import static es.ficonlan.web.backend.test.util.GlobalNames.SPRING_CONFIG_TEST_FILE;
 import static org.junit.Assert.*;
@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Daniel Gómez Silva
- * @version 1.0
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {SPRING_CONFIG_FILE, SPRING_CONFIG_TEST_FILE})

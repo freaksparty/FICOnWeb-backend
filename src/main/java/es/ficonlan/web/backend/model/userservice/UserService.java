@@ -8,10 +8,10 @@ import es.ficonlan.web.backend.model.role.Role;
 import es.ficonlan.web.backend.model.usecase.UseCase;
 import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
+import es.ficonlan.web.backend.model.util.session.Session;
 
 /**
  * @author Daniel Gómez Silva
- * @version 1.0
  */
 public interface UserService {
 	
@@ -23,7 +23,7 @@ public interface UserService {
 	
 	public void closeSession(long sessionId)  throws ServiceException;
 	
-	public void changeUserData(long sessionId, User user)  throws ServiceException;
+	public void changeUserData(long sessionId, User userData)  throws ServiceException;
 	
 	public void changeUserPassword(long sessionId, int userId, String oldPassword, String newPassword)  throws ServiceException;
 	

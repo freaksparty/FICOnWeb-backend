@@ -8,6 +8,9 @@ import javax.ws.rs.ext.Provider;
 
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 
+/**
+ * @author Daniel Gómez Silva
+ */
 @Provider
 public class ServiceExceptionMapper implements ExceptionMapper<ServiceException> {
 

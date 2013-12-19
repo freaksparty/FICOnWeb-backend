@@ -20,7 +20,6 @@ import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 
 /**
  * @author Daniel Gómez Silva
- * @version 1.0
  */
 @Path("user")
 public class UserResource {

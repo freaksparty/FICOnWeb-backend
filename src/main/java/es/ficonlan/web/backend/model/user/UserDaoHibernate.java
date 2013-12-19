@@ -9,7 +9,6 @@ import es.ficonlan.web.backend.model.util.dao.GenericDaoHibernate;
 
 /**
  * @author Daniel Gómez Silva
- * @version 1.0
  */
 @Repository("userDao")
 public class UserDaoHibernate extends GenericDaoHibernate<User,Integer> implements UserDao {
@@ -19,33 +18,33 @@ public class UserDaoHibernate extends GenericDaoHibernate<User,Integer> implemen
 		return getSession().createQuery(
 	        	"SELECT u " +
 		        "FROM User u " +
-		        "WHERE u.login!='anonymous'" +
+		        "WHERE u.login!='anonymous' AND u.deleted=FALSE " +
 	        	"ORDER BY u.userId").list();
 	}
 	
 	public User findUserBylogin(String login) {
 		return (User) getSession()
-				.createQuery("SELECT u FROM User u Where User_login = :login")
+				.createQuery("SELECT u FROM User u WHERE User_login = :login AND u.deleted=FALSE ")
 				.setParameter("login", login).uniqueResult();
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<User> getUsersByEvet(int eventId, RegistrationState state) {
 		if (state==null) return getSession().createQuery( "SELECT u " +
-   			                                             "FROM User u JOIN Registration r" +
-	                                                     "WHERE r.Event.id = :eventId" +
+   			                                             "FROM User u JOIN Registration r " +
+	                                                     "WHERE r.Event.id = :eventId AND u.deleted=FALSE " +
                                                          "ORDER BY u.User_id" 
 	                                                    ).setParameter("eventId",eventId).list();
 		else return getSession().createQuery( "SELECT u " +
-                   							  "FROM User u JOIN Registration r" +
-                   							  "WHERE r.Event.id = :eventId AND r.state = :state" +
+                   							  "FROM User u JOIN Registration r " +
+                   							  "WHERE r.Event.id = :eventId AND r.state = :state AND u.deleted=FALSE " +
                    							  "ORDER BY u.User_id" 
 				 						    ).setParameter("eventId",eventId).setParameter("state",state).list(); 			
 	}
 
 	public User findUserByDni(String dni) {
 		return (User) getSession()
-				.createQuery("SELECT u FROM User u Where User_dni = :dni")
+				.createQuery("SELECT u FROM User u Where User_dni = :dni AND u.deleted=FALSE")
 				.setParameter("dni", dni).uniqueResult();
 	}
 

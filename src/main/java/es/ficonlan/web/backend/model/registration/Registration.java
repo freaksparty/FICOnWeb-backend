@@ -18,12 +18,15 @@ import javax.persistence.Temporal;
 import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.user.User;
 
+/**
+ * @author Daniel Gómez Silva
+ */
 @Entity
 public class Registration {
 	
 	public enum RegistrationState {registered, inQueue, paid};
 	
-	private long registrationId;
+	private int registrationId;
 	private User user;
 	private Event event;
 	private RegistrationState state;
@@ -31,15 +34,26 @@ public class Registration {
 	private Calendar paidDate;
 	private boolean paid = false;
 	
-    @Column(name = "Registration_Id")
+	public Registration(){}
+	
+    public Registration(User user, Event event) {
+		this.user = user;
+		this.event = event;
+		this.state = RegistrationState.registered;
+		this.registrationDate = Calendar.getInstance();
+		this.paidDate = null;
+		this.paid = false;
+	}
+
+	@Column(name = "Registration_Id")
     @SequenceGenerator(name = "registrationIdGenerator", sequenceName = "registrationSeq")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "registrationIdGenerator")
-	public long getRegistrationId() {
+	public int getRegistrationId() {
 		return registrationId;
 	}
 
-	public void setRegistrationId(long registrationId) {
+	public void setRegistrationId(int registrationId) {
 		this.registrationId = registrationId;
 	}
 

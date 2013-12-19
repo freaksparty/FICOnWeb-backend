@@ -9,6 +9,7 @@ import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.event.EventDao;
 import es.ficonlan.web.backend.model.eventservice.EventService;
 import es.ficonlan.web.backend.model.util.exceptions.InstanceNotFoundException;
+import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import static es.ficonlan.web.backend.model.util.GlobalNames.SPRING_CONFIG_FILE;
 import static es.ficonlan.web.backend.test.util.GlobalNames.SPRING_CONFIG_TEST_FILE;
 
@@ -40,7 +41,7 @@ public class EventServiceTest {
     private EventService eventService;
 
     @Test
-    public void testFindEventByName() throws InstanceNotFoundException {
+    public void testFindEventByName() throws ServiceException {
         Event event = new Event(0, "Awesome event!", "Curling world cup.", 10,
                 Calendar.getInstance(), Calendar.getInstance(),
                 Calendar.getInstance(), Calendar.getInstance());
@@ -49,7 +50,7 @@ public class EventServiceTest {
     }
 
     @Test(expected = InstanceNotFoundException.class)
-    public void testFindEventByUnexistingName() throws InstanceNotFoundException {
+    public void testFindEventByUnexistingName() throws ServiceException {
         eventService.findEventByName(1l, NON_EXISTENT_EVENT_NAME);
     }
 

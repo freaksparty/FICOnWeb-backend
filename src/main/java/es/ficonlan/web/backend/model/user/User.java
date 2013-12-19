@@ -22,7 +22,6 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  * @author Daniel Gómez Silva
- * @version 1.0
  */
 @Entity
 public class User {

@@ -1,9 +1,12 @@
-package es.ficonlan.web.backend.model.userservice;
+package es.ficonlan.web.backend.model.util.session;
 
 import java.util.concurrent.atomic.AtomicLong;
 
 import es.ficonlan.web.backend.model.user.User;
 
+/**
+ * @author Daniel Gómez Silva
+ */
 public class Session {
 
 	private static AtomicLong idGenerator = new AtomicLong();

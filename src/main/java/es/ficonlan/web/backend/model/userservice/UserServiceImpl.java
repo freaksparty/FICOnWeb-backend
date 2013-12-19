@@ -2,7 +2,6 @@ package es.ficonlan.web.backend.model.userservice;
 
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +18,8 @@ import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.user.UserDao;
 import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
+import es.ficonlan.web.backend.model.util.session.Session;
+import es.ficonlan.web.backend.model.util.session.SessionManager;
 
 /**
  * @author Daniel Gómez Silva
@@ -28,9 +29,7 @@ import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 @Service("UserService")
 @Transactional
 public class UserServiceImpl implements UserService {
-	
-	private static ConcurrentHashMap<Long, Session> openSessions = new ConcurrentHashMap<Long, Session>();
-	
+		
 	@Autowired
 	private UserDao userDao;
 	
@@ -52,25 +51,6 @@ public class UserServiceImpl implements UserService {
 	 * @param useCase
 	 * @throws ServiceException
 	 */
-	private void checkPermissions(long sessionId, int userId, String useCase) throws ServiceException{
-		if (!openSessions.containsKey(sessionId)) throw new ServiceException(01,useCase);
-		Session session = openSessions.get(sessionId);
-		if (session.getUser().getUserId() != userId) checkPermissions(session, useCase);
-	}
-	
-	private void checkPermissions(long sessionId, String useCase) throws ServiceException {
-		if (!openSessions.containsKey(sessionId)) throw new ServiceException(01,useCase);
-		checkPermissions(openSessions.get(sessionId), useCase);	
-	}
-	
-	private void checkPermissions(Session session, String useCase) throws ServiceException{
-		for(Role r:session.getUser().getRoles()){
-		    for (UseCase uc: r.getUseCases()){
-		    	if (uc.getUserCaseName().contentEquals(useCase)) return;
-		    }
-		}
-		throw new ServiceException(02, useCase);	
-	}
 	
 	@Transactional
 	public Session newAnonymousSession() {
@@ -86,13 +66,13 @@ public class UserServiceImpl implements UserService {
 	    	userDao.save(user);
 		}
 		Session s = new Session(user);
-		openSessions.put(s.getSessionId(), s);
+		SessionManager.addSession(s);
 		return s;
 	}
 	
 	@Transactional
 	public User addUser(long sessionId, User user) throws ServiceException {
-		checkPermissions(sessionId, "addUser");
+		SessionManager.checkPermissions(sessionId, "addUser");
 		User u = userDao.findUserBylogin(user.getLogin());
 		if (u != null) throw new ServiceException(03,"addUser","login");
 		u = userDao.findUserByDni(user.getDni());
@@ -109,8 +89,8 @@ public class UserServiceImpl implements UserService {
 	
 	@Transactional(readOnly=true)
 	public Session login(long sessionId, String login, String password) throws ServiceException {
-		if (!openSessions.containsKey(sessionId)) throw new ServiceException(01,"login");
-		Session session = openSessions.get(sessionId);
+		if (!SessionManager.exists(sessionId)) throw new ServiceException(01,"login");
+		Session session = SessionManager.getSession(sessionId);
 		if(login.contentEquals("anonymous")) return session;
 		if(!session.getUser().getLogin().contentEquals("anonymous")) throw new ServiceException(07,"login");
 		User user = userDao.findUserBylogin(login);
@@ -121,24 +101,24 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public void closeSession(long sessionId) throws ServiceException {
-		if (!openSessions.containsKey(sessionId)) throw new ServiceException(01,"closeSession");
-		openSessions.remove(sessionId);
+		if (!SessionManager.exists(sessionId)) throw new ServiceException(01,"closeSession");
+		SessionManager.removeSession(sessionId);
 	}
 
 	/**
 	 * DNI field can't be changed by the user, only by an admin; 
 	 */
 	@Transactional
-	public void changeUserData(long sessionId, User user) throws ServiceException {
-		checkPermissions(sessionId, user.getUserId(), "changeUserData");
+	public void changeUserData(long sessionId, User userData) throws ServiceException {
+		SessionManager.checkPermissions(sessionId, userData.getUserId(), "changeUserData");
 		try {
-			User userData = userDao.find(user.getUserId());
-			userData.setName(user.getName());
-			if(openSessions.get(sessionId).getUser().getUserId()!=user.getUserId()) userData.setDni(user.getDni());
-			userData.setEmail(user.getEmail());
-			userData.setPhoneNumber(user.getPhoneNumber());
-			userData.setShirtSize(user.getShirtSize());
-			userDao.save(userData);
+			User user = userDao.find(userData.getUserId());
+			user.setName(userData.getName());
+			if(SessionManager.getSession(sessionId).getUser().getUserId()!=userData.getUserId()) user.setDni(userData.getDni());
+			user.setEmail(userData.getEmail());
+			user.setPhoneNumber(userData.getPhoneNumber());
+			user.setShirtSize(userData.getShirtSize());
+			userDao.save(user);
 		} catch (InstanceException e) {
 			throw new  ServiceException(06,"changeUserData","User");
 		}
@@ -150,8 +130,8 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Transactional
 	public void changeUserPassword(long sessionId, int userId, String oldPassword, String newPassword) throws ServiceException {
-		checkPermissions(sessionId, userId, "changeUserPassword");
-		Session session = openSessions.get(sessionId);
+		SessionManager.checkPermissions(sessionId, userId, "changeUserPassword");
+		Session session = SessionManager.getSession(sessionId);
 		try {
 			User user = userDao.find(userId);
 			if(session.getUser().getUserId() == userId && !oldPassword.contentEquals(user.getPassword()))  throw new ServiceException(04,"changeUserPassword","password"); 
@@ -164,19 +144,19 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional(readOnly=true)
 	public List<User> getUsersByEvet(long sessionId, int eventId, RegistrationState state) throws ServiceException {
-		checkPermissions(sessionId, "getUsersByEvet");
+		SessionManager.checkPermissions(sessionId, "getUsersByEvet");
 		return userDao.getUsersByEvet(eventId,state);
 	}
 	
 	@Transactional(readOnly=true)
 	public List<User> getAllUsers(long sessionId) throws ServiceException {
-		checkPermissions(sessionId, "getAllUsers");
+		SessionManager.checkPermissions(sessionId, "getAllUsers");
 		return userDao.getAllUsers();
 	}
 
 	@Transactional
 	public void setDefaultLanguage(long sessionId, int userId, int languageId) throws ServiceException {
-		checkPermissions(sessionId, userId, "setDefaultLanguage");
+		SessionManager.checkPermissions(sessionId, userId, "setDefaultLanguage");
 		try {
 			User user = userDao.find(userId);
 			SupportedLanguage language = languageDao.find(languageId);
@@ -190,7 +170,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	public void addUserToBlackList(long sessionId, int userId) throws ServiceException{
-		checkPermissions(sessionId, "addUserToBlackList");
+		SessionManager.checkPermissions(sessionId, "addUserToBlackList");
 		try {
 			User user = userDao.find(userId);
 			user.setInBlackList(true);
@@ -202,7 +182,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	public void removeUserFromBlackList(long sessionId, int userId) throws ServiceException {
-		checkPermissions(sessionId, "removeUserFromBlackList");
+		SessionManager.checkPermissions(sessionId, "removeUserFromBlackList");
 		try {
 			User user = userDao.find(userId);
 			user.setInBlackList(false);
@@ -214,7 +194,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	public void removeUser(long sessionId, int userId) throws ServiceException {
-		checkPermissions(sessionId, "removeUser");
+		SessionManager.checkPermissions(sessionId, "removeUser");
 		try {
 			User user = userDao.find(userId);
 			user.setDeleted(true);
@@ -226,7 +206,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	public Role createRole(long sessionId, String roleName) throws ServiceException {
-		checkPermissions(sessionId, "createRole");
+		SessionManager.checkPermissions(sessionId, "createRole");
 		Role role = new Role(roleName);
 		roleDao.save(role);
 		return role;
@@ -234,7 +214,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	public void addRole(long sessionId, int roleId, int userId) throws ServiceException {
-		checkPermissions(sessionId, "addRole");
+		SessionManager.checkPermissions(sessionId, "addRole");
 		try {
 			User user = userDao.find(userId);
 			Role role = roleDao.find(roleId);
@@ -248,7 +228,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	public void removeRole(long sessionId, int roleId, int userId) throws ServiceException {
-		checkPermissions(sessionId, "removeRole");
+		SessionManager.checkPermissions(sessionId, "removeRole");
 		try {
 			User user = userDao.find(userId);
 			Role role = roleDao.find(roleId);
@@ -263,7 +243,7 @@ public class UserServiceImpl implements UserService {
 	
 	@Transactional(readOnly=true)
 	public Set<Role> getUserRoles(long sessionId, int userId) throws ServiceException {
-		checkPermissions(sessionId, "getUserRoles");
+		SessionManager.checkPermissions(sessionId, "getUserRoles");
 		try {
 			User user = userDao.find(userId);
 			return user.getRoles();
@@ -274,7 +254,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	public UseCase createUseCase(long sessionId, String useCaseName) throws ServiceException {
-		checkPermissions(sessionId, "createUseCase");
+		SessionManager.checkPermissions(sessionId, "createUseCase");
 		UseCase useCase = new UseCase(useCaseName);
 		useCaseDao.save(useCase);
 		return useCase;
@@ -282,7 +262,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	public void addUseCase(long sessionId, int roleId, int useCaseId) throws ServiceException {
-		checkPermissions(sessionId, "addUseCase");
+		SessionManager.checkPermissions(sessionId, "addUseCase");
 		try {
 			Role role = roleDao.find(roleId);
 			UseCase useCase = useCaseDao.find(useCaseId);
@@ -297,7 +277,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	public void removeUseCase(long sessionId, int roleId, int useCaseId) throws ServiceException {
-		checkPermissions(sessionId, "removeUseCase");
+		SessionManager.checkPermissions(sessionId, "removeUseCase");
 		try {
 			Role role = roleDao.find(roleId);
 			UseCase useCase = useCaseDao.find(useCaseId);
@@ -312,7 +292,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional(readOnly=true)	
 	public Set<UseCase> getRolePermissions(long sessionId, int roleId) throws ServiceException {
-		checkPermissions(sessionId, "getRolePermissions");
+		SessionManager.checkPermissions(sessionId, "getRolePermissions");
 		try {
 			Role role = roleDao.find(roleId);
 			return role.getUseCases();

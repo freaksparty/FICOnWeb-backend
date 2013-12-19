@@ -8,13 +8,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
-import es.ficonlan.web.backend.model.userservice.Session;
 import es.ficonlan.web.backend.model.userservice.UserService;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
+import es.ficonlan.web.backend.model.util.session.Session;
 
 /**
  * @author Daniel Gómez Silva
- * @version 1.0
  */
 @Path("/session")
 public class SessionResource {
