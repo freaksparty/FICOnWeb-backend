@@ -14,7 +14,7 @@ public class ActivityDaoHibernate extends GenericDaoHibernate<Activity,Integer> 
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Activity> findActivitiesByEventByType(long eventId, int type) {
+	public List<Activity> findActivitiesByEventByType(long eventId, int type, int startIndex, int cont) {
 		// TODO Not Tested
 		
 		String hql = "SELECT u FROM Activity u";
@@ -31,7 +31,7 @@ public class ActivityDaoHibernate extends GenericDaoHibernate<Activity,Integer> 
 		if (eventId != 0) { query = query.setParameter("eventId", eventId); }
 		if (type != 0)    { query = query.setParameter("type", type);       }
 		
-		return query.list();
+		return query.setFirstResult(startIndex).setMaxResults(cont).list();
 	}
 
 }

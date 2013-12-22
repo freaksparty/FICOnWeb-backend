@@ -16,6 +16,6 @@ public interface ActivityDao extends GenericDao<Activity, Integer> {
 	 * @param type Tipo de actividades que queremos obtener (si es 0 se devolverán todos los tipos)
 	 * @return List<Activity>
 	 */
-	public List<Activity> findActivitiesByEventByType(long eventId, int type);
+	public List<Activity> findActivitiesByEventByType(long eventId, int type, int startIndex, int cont);
 
 }
