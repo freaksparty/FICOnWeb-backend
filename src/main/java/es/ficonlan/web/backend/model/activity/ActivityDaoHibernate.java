@@ -21,6 +21,7 @@ public class ActivityDaoHibernate extends GenericDaoHibernate<Activity,Integer> 
 		if ((eventId != 0) || (type != 0)) hql = hql + " WHERE ";
 		String aux = "";
 		if (eventId != 0) { hql = hql + aux + "(u.category.eventId = :eventId)"; }
+		if ((eventId != 0) && (type != 0)) hql = hql + " AND ";
 		if (type != 0)    { hql = hql + aux + "(u.type = :type)";                }
 		
 		hql = hql + " ORDER BY u.dateStart";
