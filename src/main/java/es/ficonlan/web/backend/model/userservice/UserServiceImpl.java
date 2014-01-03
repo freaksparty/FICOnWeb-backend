@@ -143,9 +143,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Transactional(readOnly=true)
-	public List<User> getUsersByEvet(long sessionId, int eventId, RegistrationState state) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "getUsersByEvet");
-		return userDao.getUsersByEvet(eventId,state);
+	public List<User> getUsersByEvent(long sessionId, int eventId, RegistrationState state) throws ServiceException {
+		SessionManager.checkPermissions(sessionId, "getUsersByEvent");
+		return userDao.getUsersByEvent(eventId,state);
 	}
 	
 	@Transactional(readOnly=true)

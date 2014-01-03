@@ -1,6 +1,7 @@
 package es.ficonlan.web.backend.model.event;
 
 import java.util.Calendar;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,6 +9,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
+
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import es.ficonlan.web.backend.jersey.util.JsonDateDeserializer;
+import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
 
 @Entity
 public class Event {
@@ -77,6 +84,8 @@ public class Event {
         this.numParticipants = numParticipants;
     }
 
+    @JsonDeserialize(using = JsonDateDeserializer.class)
+    @JsonSerialize(using=JsonDateSerializer.class)
     @Column(name = "Event_date_start")
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     public Calendar getStartDate() {
@@ -87,6 +96,8 @@ public class Event {
         this.startDate = startDate;
     }
 
+    @JsonDeserialize(using = JsonDateDeserializer.class)
+    @JsonSerialize(using=JsonDateSerializer.class)
     @Column(name = "Event_date_end")
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     public Calendar getEndDate() {
@@ -96,7 +107,9 @@ public class Event {
     public void setEndDate(Calendar endDate) {
         this.endDate = endDate;
     }
-
+    
+    @JsonDeserialize(using = JsonDateDeserializer.class)
+    @JsonSerialize(using=JsonDateSerializer.class)
     @Column(name = "Event_reg_date_open")
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     public Calendar getRegistrationOpenDate() {
@@ -106,7 +119,9 @@ public class Event {
     public void setRegistrationOpenDate(Calendar registrationOpenDate) {
         this.registrationOpenDate = registrationOpenDate;
     }
-
+    
+    @JsonDeserialize(using = JsonDateDeserializer.class)
+    @JsonSerialize(using=JsonDateSerializer.class)
     @Column(name = "Event_reg_date_close")
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     public Calendar getRegistrationCloseDate() {

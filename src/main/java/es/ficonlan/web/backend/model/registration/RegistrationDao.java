@@ -9,4 +9,6 @@ public interface RegistrationDao extends GenericDao<Registration, Integer> {
 	
 	public Registration findByUserAndEvent(int userId, int eventId);
 	
+	public int geNumRegistrations(int eventId);
+	
 }

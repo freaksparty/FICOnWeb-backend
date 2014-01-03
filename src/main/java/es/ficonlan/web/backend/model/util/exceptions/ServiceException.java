@@ -10,6 +10,7 @@ package es.ficonlan.web.backend.model.util.exceptions;
  * 05 - Missing required field<br>
  * 06 - Instance not found<br>
  * 07 - There is already a session<br>
+ * 08 - Event maximum number of participants reached<br>
  * 99 - System unexpected error (RuntimeException)
  * 
  * @author Daniel Gómez Silva

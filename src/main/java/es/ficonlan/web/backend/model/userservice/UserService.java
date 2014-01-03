@@ -27,7 +27,7 @@ public interface UserService {
 	
 	public void changeUserPassword(long sessionId, int userId, String oldPassword, String newPassword)  throws ServiceException;
 	
-	public List<User> getUsersByEvet(long sessionId, int eventId, RegistrationState state)  throws ServiceException;
+	public List<User> getUsersByEvent(long sessionId, int eventId, RegistrationState state)  throws ServiceException;
 	
 	public List<User> getAllUsers(long sessionId)  throws ServiceException;
 	

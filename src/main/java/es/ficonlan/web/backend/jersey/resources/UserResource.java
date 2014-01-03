@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
+import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
 import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.userservice.UserService;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
@@ -98,6 +99,25 @@ public class UserResource {
 			return userService.getAllUsers(sessionId);
 		}catch(RuntimeException e){
 			throw new ServiceException(99,"getAllUsers");
+		}
+	}
+	
+	@Path("/byEvent/{eventId}/{state}")
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	public List<User> getByEvent(@HeaderParam("sessionId") long sessionId, @PathParam("eventId") int eventId, @PathParam("state") String state) throws ServiceException {
+		try{
+			RegistrationState st;
+			if(state==null) throw new ServiceException(05,"getUsersByEvent","state");
+    		if(state.toLowerCase().contentEquals("registered"))  st=RegistrationState.registered;
+    		else if(state.toLowerCase().contentEquals("inqueue")) st=RegistrationState.inQueue;
+    		else if(state.toLowerCase().contentEquals("paid")) st=RegistrationState.paid;
+    		else if(state.toLowerCase().contentEquals("all")) st=null;
+    		else throw new ServiceException(04,"getUsersByEvent","state");
+			return userService.getUsersByEvent(sessionId, eventId, st);
+		}catch(RuntimeException e){
+			e.printStackTrace();
+			throw new ServiceException(99,"getUsersByEvent");
 		}
 	}
 }

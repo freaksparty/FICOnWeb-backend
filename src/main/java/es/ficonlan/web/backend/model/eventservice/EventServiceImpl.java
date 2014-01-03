@@ -70,6 +70,7 @@ public class EventServiceImpl implements EventService {
     	try{
     		User user = userDao.find(userId);
     		Event event = eventDao.find(eventId);
+    		if(registrationDao.geNumRegistrations(event.getEventId())>=event.getNumParticipants()) throw new ServiceException(8,"addParticipantToEvent");
     		Registration registration = new Registration(user, event);
         	registrationDao.save(registration);
     	} catch (InstanceException e) {
@@ -93,17 +94,21 @@ public class EventServiceImpl implements EventService {
 
 	@Transactional
 	public void changeRegistrationState(long sessionId, int userId, int eventId, RegistrationState state) throws ServiceException {
+		if(state==null) throw new  ServiceException(05,"changeRegistrationState","state");
 		SessionManager.checkPermissions(sessionId, "changeRegistrationState");
     	Registration registration = registrationDao.findByUserAndEvent(userId, eventId);
     	if (registration==null) throw new  ServiceException(06,"changeRegistrationState","Registration");
-    	if(state==RegistrationState.paid) registration.setPaidDate(Calendar.getInstance());
+    	if(state==RegistrationState.paid){
+    		registration.setPaidDate(Calendar.getInstance());
+    		registration.setPaid(true);
+    	}
     	registration.setState(state);
 		registrationDao.save(registration);
 	}
 
     @Transactional(readOnly = true)
     public Event findEventByName(long sessionId, String name) throws ServiceException {
-        //TODO: Implementación tonta para probar que todo funciona.
+		SessionManager.checkPermissions(sessionId, "findEventByName");
         Event event = eventDao.findEventByName(name);
         if (event == null) {
             throw new ServiceException(06,"findEventByName","Event");

@@ -14,8 +14,16 @@ public class RegistrationDaoHibernate extends GenericDaoHibernate<Registration,I
 			return (Registration) getSession().createQuery(
 		        	"SELECT r " +
 			        "FROM Registration r " +
-			        "WHERE r.User_id=:userId AND r.Event_id=:eventId "
+			        "WHERE r.user.userId=:userId AND r.event.eventId=:eventId "
 			       ).setInteger("userId",userId).setInteger("eventId", eventId).uniqueResult();
+	}
+	
+	public int geNumRegistrations(int eventId){
+		return ((Long) getSession().createQuery(
+	        	"SELECT COUNT(r) " +
+		        "FROM Registration r " +
+		        "WHERE r.event.eventId=:eventId "
+		       ).setInteger("eventId", eventId).uniqueResult()).intValue();
 	}
 	
 }

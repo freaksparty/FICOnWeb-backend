@@ -29,16 +29,16 @@ public class UserDaoHibernate extends GenericDaoHibernate<User,Integer> implemen
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<User> getUsersByEvet(int eventId, RegistrationState state) {
-		if (state==null) return getSession().createQuery( "SELECT u " +
-   			                                             "FROM User u JOIN Registration r " +
-	                                                     "WHERE r.Event.id = :eventId AND u.deleted=FALSE " +
-                                                         "ORDER BY u.User_id" 
+	public List<User> getUsersByEvent(int eventId, RegistrationState state) {
+		if (state==null) return getSession().createQuery("SELECT u " +
+   			                                             "FROM Registration r INNER JOIN r.user u " +
+	                                                     "WHERE r.event.id = :eventId AND u.deleted=FALSE " +
+                                                         "ORDER BY r.registrationDate" 
 	                                                    ).setParameter("eventId",eventId).list();
 		else return getSession().createQuery( "SELECT u " +
-                   							  "FROM User u JOIN Registration r " +
-                   							  "WHERE r.Event.id = :eventId AND r.state = :state AND u.deleted=FALSE " +
-                   							  "ORDER BY u.User_id" 
+                   							  "FROM Registration r INNER JOIN r.user u " +
+                   							  "WHERE r.event.id = :eventId AND r.state = :state AND u.deleted=FALSE " +
+                   							  "ORDER BY r.registrationDate" 
 				 						    ).setParameter("eventId",eventId).setParameter("state",state).list(); 			
 	}
 

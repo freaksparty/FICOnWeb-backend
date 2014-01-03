@@ -12,7 +12,7 @@ import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
  * @author Daniel Gómez Silva
  */
 @Provider
-public class ServiceExceptionMapper implements ExceptionMapper<ServiceException> {
+public class ServiceExceptionMapper implements ExceptionMapper<Exception> {
 
 	class ErrorMessage{
 		private String exception;
@@ -73,8 +73,12 @@ public class ServiceExceptionMapper implements ExceptionMapper<ServiceException>
 		}	
 	}
 	
-	public Response toResponse(final ServiceException exception) {
-		return Response.status(Status.BAD_REQUEST).entity(new ErrorMessage(exception)).type(MediaType.APPLICATION_JSON).build();
+	public Response toResponse(final Exception exception) {
+		exception.printStackTrace();
+		if (exception instanceof ServiceException) 
+			return Response.status(Status.BAD_REQUEST).entity(new ErrorMessage((ServiceException) exception)).type(MediaType.APPLICATION_JSON).build();
+		else
+			return Response.status(Status.BAD_REQUEST).entity(new ErrorMessage(new ServiceException(99,null))).type(MediaType.APPLICATION_JSON).build();
 	}
 
 }

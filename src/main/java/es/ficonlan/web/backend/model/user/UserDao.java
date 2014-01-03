@@ -16,6 +16,6 @@ public interface UserDao extends GenericDao<User,Integer> {
 	
 	public User findUserByDni(String dni);
 
-	public List<User> getUsersByEvet(int eventId, RegistrationState state);
+	public List<User> getUsersByEvent(int eventId, RegistrationState state);
 
 }
