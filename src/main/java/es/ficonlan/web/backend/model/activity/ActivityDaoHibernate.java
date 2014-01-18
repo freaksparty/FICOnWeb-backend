@@ -2,22 +2,22 @@ package es.ficonlan.web.backend.model.activity;
 
 import java.util.List;
 
-import org.hibernate.Query;
+import org.springframework.stereotype.Repository;
 
+import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
 import es.ficonlan.web.backend.model.util.dao.GenericDaoHibernate;
 
 /**
  * @author Miguel Ángel Castillo Bellagona
  * @version 1.0
  */
+@Repository("activityDao")
 public class ActivityDaoHibernate extends GenericDaoHibernate<Activity,Integer> implements ActivityDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Activity> findActivitiesByEventByType(long eventId, int type, int startIndex, int cont) {
-		// TODO Not Tested
-		
-		String hql = "SELECT u FROM Activity u";
+	public List<Activity> findActivitiesByEvent(long eventId, ActivityType type) {
+		/*String hql = "SELECT u FROM Activity u";
 		if ((eventId != 0) || (type != 0)) hql = hql + " WHERE ";
 		String aux = "";
 		if (eventId != 0) { hql = hql + aux + "(u.category.eventId = :eventId)"; }
@@ -31,7 +31,12 @@ public class ActivityDaoHibernate extends GenericDaoHibernate<Activity,Integer> 
 		if (eventId != 0) { query = query.setParameter("eventId", eventId); }
 		if (type != 0)    { query = query.setParameter("type", type);       }
 		
-		return query.setFirstResult(startIndex).setMaxResults(cont).list();
+		return query.list();*/
+		return getSession().createQuery( "SELECT a "  +
+									     "FROM Activity " +
+			                             "WHERE a.event.id = :eventId AND a.type = :type " +
+			                             "ORDER BY a.startDate"
+				                       ).setParameter("eventId",eventId).setParameter("type",type).list(); 			
 	}
 
 }

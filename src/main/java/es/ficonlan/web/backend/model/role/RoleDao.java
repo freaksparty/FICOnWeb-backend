@@ -11,6 +11,8 @@ import es.ficonlan.web.backend.model.util.dao.GenericDao;
  */
 public interface RoleDao extends GenericDao<Role,Integer> {
 	
+	public Role findByName(String name);
+	
 	public List<Role> getAllRoles();
 
 }

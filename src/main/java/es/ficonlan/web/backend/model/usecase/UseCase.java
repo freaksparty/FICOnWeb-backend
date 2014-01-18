@@ -42,12 +42,12 @@ public class UseCase {
 	}
 	
 	@Column(name = "userCase_name")
-	public String getUserCaseName()
+	public String getUseCaseName()
 	{
 		return this.useCaseName;
 	}
 	
-	public void setUserCaseName(String newName) {
+	public void setUseCaseName(String newName) {
 		this.useCaseName = newName;
 	}
 }

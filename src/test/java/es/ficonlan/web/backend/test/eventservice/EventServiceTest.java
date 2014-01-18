@@ -11,9 +11,7 @@ import es.ficonlan.web.backend.model.eventservice.EventService;
 import es.ficonlan.web.backend.model.registration.Registration;
 import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
 import es.ficonlan.web.backend.model.registration.RegistrationDao;
-import es.ficonlan.web.backend.model.role.Role;
 import es.ficonlan.web.backend.model.role.RoleDao;
-import es.ficonlan.web.backend.model.usecase.UseCase;
 import es.ficonlan.web.backend.model.usecase.UseCaseDao;
 import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.user.UserDao;
@@ -28,6 +26,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Calendar;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +44,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class EventServiceTest {
 
     private final String NON_EXISTENT_EVENT_NAME = "Boring event";
+    private final String ADMIN_LOGIN = "Admin";
+    private final String ADMIN_PASS = "initialAdminPass";
 
     @Autowired
     private EventDao eventDao;
@@ -66,19 +67,16 @@ public class EventServiceTest {
 	
 	@Autowired
 	private UseCaseDao useCaseDao;
-	    
+	 
+	@Before 
+	public void initialize() {
+	     userService.initialize();
+	}
+	
     @Test
     public void testCreateEvent() throws ServiceException, InstanceException{
-    	User admin = new User("Admin1", "admin", "pass", "21321321P", "admin1@gmail.com", "690047407", "L");
-    	Role role = new Role("admin");
-    	UseCase useCase = new UseCase("createEvent");
-    	role.getUseCases().add(useCase);
-    	admin.getRoles().add(role);
-    	useCaseDao.save(useCase);
-    	roleDao.save(role);
-    	userDao.save(admin);
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(),"admin", "pass");
+    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance());
     	eventService.createEvent(s.getSessionId(), event);
     	assertTrue(eventDao.find(event.getEventId()).getEventId()==event.getEventId());
@@ -87,16 +85,8 @@ public class EventServiceTest {
     
     @Test
     public void testChangeEventData() throws ServiceException{
-    	User admin = new User("Admin1", "admin", "pass", "21321321P", "admin1@gmail.com", "690047407", "L");
-    	Role role = new Role("admin");
-    	UseCase useCase = new UseCase("changeEventData");
-    	role.getUseCases().add(useCase);
-    	admin.getRoles().add(role);
-    	useCaseDao.save(useCase);
-    	roleDao.save(role);
-    	userDao.save(admin);
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(),"admin", "pass");
+    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance());
     	eventDao.save(event);
     	Calendar newDate = Calendar.getInstance();
@@ -114,20 +104,13 @@ public class EventServiceTest {
     
     @Test
     public void testAddParticipantToEvent() throws ServiceException{
-    	User admin = new User("Admin1", "admin", "pass", "21321321P", "admin1@gmail.com", "690047407", "L");
-    	Role role = new Role("admin");
-    	UseCase useCase = new UseCase("addParticipantToEvent");
-    	role.getUseCases().add(useCase);
-    	admin.getRoles().add(role);
-    	useCaseDao.save(useCase);
-    	roleDao.save(role);
-    	userDao.save(admin);
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(),"admin", "pass");
-    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance());
+    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	Calendar regCloseDate = Calendar.getInstance();
+    	regCloseDate.add(Calendar.DAY_OF_YEAR, 1);
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),regCloseDate);
     	eventDao.save(event);
-    	User user = new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L");
-    	userDao.save(user);
+    	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	eventService.addParticipantToEvent(s.getSessionId(), user.getUserId(), event.getEventId());
     	Registration r = registrationDao.findByUserAndEvent(user.getUserId(), event.getEventId());
     	assertTrue(r!=null);
@@ -138,20 +121,11 @@ public class EventServiceTest {
     
     @Test
     public void testRemoveParticipantFromEvent() throws ServiceException{
-    	User admin = new User("Admin1", "admin", "pass", "21321321P", "admin1@gmail.com", "690047407", "L");
-    	Role role = new Role("admin");
-    	UseCase useCase = new UseCase("removeParticipantFromEvent");
-    	role.getUseCases().add(useCase);
-    	admin.getRoles().add(role);
-    	useCaseDao.save(useCase);
-    	roleDao.save(role);
-    	userDao.save(admin);
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(),"admin", "pass");
+    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance());
     	eventDao.save(event);
-    	User user = new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L");
-    	userDao.save(user);
+    	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	Registration r = new Registration(user,event);
     	registrationDao.save(r);
     	eventService.removeParticipantFromEvent(s.getSessionId(), user.getUserId(), event.getEventId());
@@ -161,20 +135,11 @@ public class EventServiceTest {
     
     @Test
     public void testChangeRegistrationState() throws ServiceException{
-    	User admin = new User("Admin1", "admin", "pass", "21321321P", "admin1@gmail.com", "690047407", "L");
-    	Role role = new Role("admin");
-    	UseCase useCase = new UseCase("changeRegistrationState");
-    	role.getUseCases().add(useCase);
-    	admin.getRoles().add(role);
-    	useCaseDao.save(useCase);
-    	roleDao.save(role);
-    	userDao.save(admin);
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(),"admin", "pass");
+    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance());
     	eventDao.save(event);
-    	User user = new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L");
-    	userDao.save(user);
+    	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	Registration r = new Registration(user,event);
     	registrationDao.save(r);
     	assertTrue(r.getState()==RegistrationState.registered);	
@@ -185,16 +150,8 @@ public class EventServiceTest {
     
     @Test
     public void testFindEventByName() throws ServiceException {
-    	User admin = new User("Admin1", "admin", "pass", "21321321P", "admin1@gmail.com", "690047407", "L");
-    	Role role = new Role("admin");
-    	UseCase useCase = new UseCase("findEventByName");
-    	role.getUseCases().add(useCase);
-    	admin.getRoles().add(role);
-    	useCaseDao.save(useCase);
-    	roleDao.save(role);
-    	userDao.save(admin);
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(),"admin", "pass");
+    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
         Event event = new Event(0, "Awesome event!", "Curling world cup.", 10, Calendar.getInstance(), Calendar.getInstance(),Calendar.getInstance(), Calendar.getInstance());
         eventDao.save(event);
         Assert.assertEquals(event, eventService.findEventByName(s.getSessionId(), "Awesome event!"));
@@ -202,16 +159,8 @@ public class EventServiceTest {
 
     @Test(expected = ServiceException.class)
     public void testFindEventByUnexistingName() throws ServiceException {
-    	User admin = new User("Admin1", "admin", "pass", "21321321P", "admin1@gmail.com", "690047407", "L");
-    	Role role = new Role("admin");
-    	UseCase useCase = new UseCase("findEventByName");
-    	role.getUseCases().add(useCase);
-    	admin.getRoles().add(role);
-    	useCaseDao.save(useCase);
-    	roleDao.save(role);
-    	userDao.save(admin);
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(),"admin", "pass");
+    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
         eventService.findEventByName(s.getSessionId(), NON_EXISTENT_EVENT_NAME);
     }
 }

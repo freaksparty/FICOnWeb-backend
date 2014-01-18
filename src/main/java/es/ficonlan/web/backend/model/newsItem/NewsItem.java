@@ -22,7 +22,7 @@ import es.ficonlan.web.backend.model.event.Event;
 @Entity
 public class NewsItem {
 	
-	private long newsItemId;
+	private int newsItemId;
 	private String title;
 	private Calendar creationDate;
 	private Calendar publishDate;
@@ -46,11 +46,11 @@ public class NewsItem {
 	@SequenceGenerator(name = "NewsItemIdGenerator", sequenceName = "NewsItemSeq")
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "NewsItemIdGenerator")
-	public long getNewsItemId() {
+	public int getNewsItemId() {
 		return newsItemId;
 	}
 
-	public void setNewsItemId(long newsItemId) {
+	public void setNewsItemId(int newsItemId) {
 		this.newsItemId = newsItemId;
 	}
 

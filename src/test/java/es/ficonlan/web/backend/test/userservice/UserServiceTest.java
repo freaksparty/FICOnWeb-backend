@@ -1,11 +1,11 @@
 package es.ficonlan.web.backend.test.userservice;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-import es.ficonlan.web.backend.model.role.Role;
 import es.ficonlan.web.backend.model.role.RoleDao;
 import es.ficonlan.web.backend.model.supportedlanguage.SupportedLanguageDao;
-import es.ficonlan.web.backend.model.usecase.UseCase;
 import es.ficonlan.web.backend.model.usecase.UseCaseDao;
 import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.user.UserDao;
@@ -17,6 +17,7 @@ import static es.ficonlan.web.backend.model.util.GlobalNames.SPRING_CONFIG_FILE;
 import static es.ficonlan.web.backend.test.util.GlobalNames.SPRING_CONFIG_TEST_FILE;
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,8 @@ public class UserServiceTest {
     private final String NON_EXISTENT_LOGIN = "-2";
     private final String NON_EXISTENT_PASSWORD = "-3";
     private final long NON_EXISTENT_SESSION_ID = -4;
+    private final String ADMIN_LOGIN = "Admin";
+    private final String ADMIN_PASS = "initialAdminPass";
 
 
     @Autowired
@@ -53,7 +56,11 @@ public class UserServiceTest {
 	@Autowired
 	private SupportedLanguageDao languageDao;
     
-
+	@Before 
+	public void initialize() {
+	     userService.initialize();
+	}
+	
     @Test
     public void testCreateRegisterAndFindUser() throws ServiceException, InstanceException {
     	Session anonymousSession = userService.newAnonymousSession();
@@ -79,9 +86,8 @@ public class UserServiceTest {
         
     @Test
     public void testLogin() throws ServiceException {
-    	User user = new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L");
-    	userDao.save(user);
     	Session anonymousSession = userService.newAnonymousSession();
+    	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	Session s = userService.login(anonymousSession.getSessionId(),"login1", "pass");
     	assertEquals(s.getUser(), user);
     }
@@ -89,9 +95,8 @@ public class UserServiceTest {
     @Test
     public void testLoginWithSessionStarted() {
     	try{
-        	User user = new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L");
-        	userDao.save(user);
         	Session anonymousSession = userService.newAnonymousSession();
+        	userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
         	Session s = userService.login(anonymousSession.getSessionId(),"login1", "pass");
         	userService.login(s.getSessionId(),"login1", "pass");
             fail("This should have thrown an exception");  
@@ -116,9 +121,8 @@ public class UserServiceTest {
 	@Test
     public void testLoginWithIncorrectPassword() {
     	try{
-        	User user = new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L");
-        	userDao.save(user);
         	Session anonymousSession = userService.newAnonymousSession();
+        	userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
         	userService.login(anonymousSession.getSessionId(),"login1", NON_EXISTENT_PASSWORD);
             fail("This should have thrown an exception");  
         }catch(ServiceException e){
@@ -129,9 +133,8 @@ public class UserServiceTest {
 	
 	@Test
 	public void testCloseSession() throws ServiceException {
-    	User user = new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L");
-    	userDao.save(user);
     	Session anonymousSession = userService.newAnonymousSession();
+    	userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	Session s = userService.login(anonymousSession.getSessionId(),"login1", "pass");
     	userService.closeSession(s.getSessionId());
     	try{
@@ -156,9 +159,8 @@ public class UserServiceTest {
 	
 	@Test
 	public void testChangeUserData() throws ServiceException, InstanceException {
-    	User user = new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L");
-    	userDao.save(user);
     	Session anonymousSession = userService.newAnonymousSession();
+    	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	Session s = userService.login(anonymousSession.getSessionId(),"login1", "pass");
     	userService.changeUserData(s.getSessionId(), new User(user.getUserId(),"new name", "87654321Y", "newEmail@gmail.com", "666666666", "XL"));
     	User u = userDao.find(user.getUserId());
@@ -171,18 +173,9 @@ public class UserServiceTest {
 	
 	@Test
 	public void testChangeUserDataByAnAdmin() throws ServiceException, InstanceException {
-    	User user = new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L");
-    	userDao.save(user);
-    	User admin = new User("Admin1", "admin", "pass", "21321321P", "admin1@gmail.com", "690047407", "L");
-    	Role role = new Role("admin");
-    	UseCase useCase = new UseCase("changeUserData");
-    	role.getUseCases().add(useCase);
-    	admin.getRoles().add(role);
-    	useCaseDao.save(useCase);
-    	roleDao.save(role);
-    	userDao.save(admin);
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(),"admin", "pass");
+    	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
+    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	userService.changeUserData(s.getSessionId(),  new User(user.getUserId(),"new name", "87654321Y", "newEmail@gmail.com", "666666666", "XL"));
     	User u = userDao.find(user.getUserId());
     	assertTrue(u.getName().contentEquals("new name"));
@@ -194,11 +187,9 @@ public class UserServiceTest {
 	
 	@Test
 	public void testChangeUserDataWithNoPermission() throws InstanceException, ServiceException {
-    	User user = new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L");
-    	userDao.save(user);
-    	User user2 = new User("User2", "login2", "pass", "22321321R", "user2@gmail.com", "690047407", "L");
-    	userDao.save(user2);
     	Session anonymousSession = userService.newAnonymousSession();
+    	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
+    	userService.addUser(anonymousSession.getSessionId(),  new User("User2", "login2", "pass", "22321321R", "user2@gmail.com", "690047407", "L"));
     	Session s = userService.login(anonymousSession.getSessionId(),"login2", "pass");
     	try {
 			userService.changeUserData(s.getSessionId(), new User(user.getUserId(), "new name", "87654321Y", "newEmail@gmail.com", "666666666", "XL"));
@@ -211,16 +202,8 @@ public class UserServiceTest {
 	
 	@Test
 	public void testChangeNonExistentUserData() throws InstanceException, ServiceException {
-		User admin = new User("Admin1", "admin", "pass", "12345678R", "admin1@gmail.com", "690047407", "L");
-    	Role role = new Role("admin");
-    	UseCase useCase = new UseCase("changeUserData");
-    	role.getUseCases().add(useCase);
-    	admin.getRoles().add(role);
-    	useCaseDao.save(useCase);
-    	roleDao.save(role);
-    	userDao.save(admin);
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(),"admin", "pass");
+    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	try {
 			userService.changeUserData(s.getSessionId(), new User(NON_EXISTENT_USER_ID, "new name", "87654321Y", "newEmail@gmail.com", "666666666", "XL"));
 		    fail("This should have thrown an exception");  
@@ -231,21 +214,21 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	public void testChangeUserPassword() throws ServiceException, InstanceException{
-		User user = new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L");
-    	userDao.save(user);
+	public void testChangeUserPassword() throws ServiceException, InstanceException, NoSuchAlgorithmException{
     	Session anonymousSession = userService.newAnonymousSession();
+    	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	Session s = userService.login(anonymousSession.getSessionId(),"login1", "pass");
     	userService.changeUserPassword(s.getSessionId(), user.getUserId(), "pass", "newpass");
     	User u = userDao.find(user.getUserId());
-    	assertTrue(u.getPassword().contentEquals("newpass"));
+    	MessageDigest mdigest = MessageDigest.getInstance("SHA-256");
+    	String newPassHash = new String(mdigest.digest("newpass".getBytes()));
+    	assertTrue(u.getPassword().contentEquals(newPassHash));
 	}
 	
 	@Test
 	public void testChangeUserPasswordWithIncorrecOldPassword() throws ServiceException {
-		User user = new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L");
-    	userDao.save(user);
     	Session anonymousSession = userService.newAnonymousSession();
+    	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	Session s = userService.login(anonymousSession.getSessionId(),"login1", "pass");
     	try {
     		userService.changeUserPassword(s.getSessionId(), user.getUserId(), NON_EXISTENT_PASSWORD, "newpass");
@@ -257,47 +240,29 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	public void testChangeUserPasswordByAnAdmin() throws ServiceException, InstanceException{
-		User user = new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L");
-    	userDao.save(user);
-    	User admin = new User("Admin1", "admin", "pass", "21321321P", "admin1@gmail.com", "690047407", "L");
-    	Role role = new Role("admin");
-    	UseCase useCase = new UseCase("changeUserPassword");
-    	role.getUseCases().add(useCase);
-    	admin.getRoles().add(role);
-    	useCaseDao.save(useCase);
-    	roleDao.save(role);
-    	userDao.save(admin);
+	public void testChangeUserPasswordByAnAdmin() throws ServiceException, InstanceException, NoSuchAlgorithmException{
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(),"admin", "pass");
+    	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
+    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	userService.changeUserPassword(s.getSessionId(), user.getUserId(), null, "newpass"); //Old password not required in this case
     	User u = userDao.find(user.getUserId());
-    	assertTrue(u.getPassword().contentEquals("newpass"));
+    	MessageDigest mdigest = MessageDigest.getInstance("SHA-256");
+    	String newPassHash = new String(mdigest.digest("newpass".getBytes()));
+    	assertTrue(u.getPassword().contentEquals(newPassHash));
 	}
 	
 	@Test
 	public void testGetAllUsers() throws ServiceException {
-		User user1 = new User("User1", "user1", "pass", "12345678R", "user1@gmail.com", "690047407", "L");
-		User user2 = new User("User2", "user2", "pass", "23232323S", "user2@gmail.com", "690047407", "L");
-		User user3 = new User("User3", "user3", "pass", "44343348T", "user3@gmail.com", "690047407", "L");
-    	userDao.save(user1);
-    	userDao.save(user2);
-    	userDao.save(user3);
-    	User admin = new User("Admin1", "admin1", "pass", "21321321P", "admin1@gmail.com", "690047407", "L");
-    	Role role = new Role("admin");
-    	UseCase useCase = new UseCase("getAllUsers");
-    	role.getUseCases().add(useCase);
-    	admin.getRoles().add(role);
-    	useCaseDao.save(useCase);
-    	roleDao.save(role);
-    	userDao.save(admin);
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(),"admin1", "pass");
+    	userService.addUser(anonymousSession.getSessionId(), new User("User1", "user1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
+		userService.addUser(anonymousSession.getSessionId(), new User("User2", "user2", "pass", "22321321R", "user2@gmail.com", "690047407", "L"));
+		userService.addUser(anonymousSession.getSessionId(), new User("User3", "user3", "pass", "44343348T", "user3@gmail.com", "690047407", "L"));
+    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	List<User> users = userService.getAllUsers(s.getSessionId());
     	assertTrue(users.size()==4);
-    	assertTrue(users.get(0).getLogin().contentEquals("user1"));
-    	assertTrue(users.get(1).getLogin().contentEquals("user2"));
-    	assertTrue(users.get(2).getLogin().contentEquals("user3"));
-    	assertTrue(users.get(3).getLogin().contentEquals("admin1"));
+    	assertTrue(users.get(0).getLogin().contentEquals(ADMIN_LOGIN));
+    	assertTrue(users.get(1).getLogin().contentEquals("user1"));
+    	assertTrue(users.get(2).getLogin().contentEquals("user2"));
+    	assertTrue(users.get(3).getLogin().contentEquals("user3"));
 	}  
 }

@@ -7,6 +7,8 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import es.ficonlan.web.backend.model.userservice.UserService;
+
 import java.io.IOException;
 import java.net.URI;
 
@@ -23,9 +25,6 @@ public class Main {
      * @return Grizzly HTTP server.
      */
     public static HttpServer startServer() {
-    	//Spring context initialization.
-    	@SuppressWarnings({ "resource", "unused" })
-		ApplicationContext ctx = new ClassPathXmlApplicationContext("spring-config.xml");
         // create a resource config that scans for JAX-RS resources and providers
         // in es.ficonlan.web.prueba package
         final ResourceConfig rc = new ResourceConfig().packages("es.ficonlan.web.backend.jersey").register(JacksonFeature.class);
@@ -40,7 +39,16 @@ public class Main {
      * @param args
      * @throws IOException
      */
-    public static void main(String[] args) throws IOException {    	
+    public static void main(String[] args) throws IOException { 
+    	
+    	//Spring context initialization.
+    	@SuppressWarnings("resource")
+		ApplicationContext ctx = new ClassPathXmlApplicationContext("spring-config.xml");
+    	
+    	//UserService Initialization
+    	UserService userService = ctx.getBean(UserService.class);
+    	userService.initialize();
+    	
         final HttpServer server = startServer();
         System.out.println(String.format("Jersey app started with WADL available at "
                 + "%sapplication.wadl\nHit enter to stop it...", BASE_URI));

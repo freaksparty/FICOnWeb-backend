@@ -1,5 +1,8 @@
 package es.ficonlan.web.backend.model.userservice;
 
+import java.lang.reflect.Method;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Set;
 
@@ -7,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.ficonlan.web.backend.model.eventservice.EventService;
 import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
 import es.ficonlan.web.backend.model.role.Role;
 import es.ficonlan.web.backend.model.role.RoleDao;
@@ -23,12 +27,13 @@ import es.ficonlan.web.backend.model.util.session.SessionManager;
 
 /**
  * @author Daniel Gómez Silva
- * @version 1.0
  */
-
 @Service("UserService")
 @Transactional
 public class UserServiceImpl implements UserService {
+	
+	private static final String ADMIN_LOGIN = "Admin";
+	private static final String INITIAL_ADMIN_PASS = "initialAdminPass";
 		
 	@Autowired
 	private UserDao userDao;
@@ -41,30 +46,81 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private SupportedLanguageDao languageDao;
-
+	
+	private MessageDigest mdigest;
+	
+	public UserServiceImpl(){
+		try {
+			this.mdigest = MessageDigest.getInstance("SHA-256");
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException();
+		}
+		
+	}
+	
 	/**
-	 * If the target user of the operation is the session owner -> Operation allowed<br>
-	 * If the target user of the operation isn't the session owner -> Check permissions
-	 * 
-	 * @param sessionId
-	 * @param userId Id of the target user of the operation.
-	 * @param useCase
-	 * @throws ServiceException
+	 * Crea los usuarios, roles y casos de uso por defecto, en caso de que no estean crados aún.
 	 */
+	@Transactional
+	public void initialize(){
+		
+		for(Method m:UserService.class.getMethods()){
+			UseCase uc = useCaseDao.findByName(m.getName());
+			if (uc==null && !m.getName().contentEquals("initialize") && !m.getName().contentEquals("login")){
+				uc=new UseCase(m.getName());
+				useCaseDao.save(uc);
+			}
+		}
+		
+		for(Method m:EventService.class.getMethods()){
+			UseCase uc = useCaseDao.findByName(m.getName());
+			if (uc==null){
+				uc=new UseCase(m.getName());
+				useCaseDao.save(uc);
+			}
+		}
+		
+		Role userRole  = roleDao.findByName("User");
+		if (userRole==null){
+			userRole = new Role("User");
+			roleDao.save(userRole);
+		}
+		
+		Role adminRole  = roleDao.findByName("Admin");
+			if (adminRole==null){
+				adminRole = new Role("Admin");
+				for(UseCase uc:useCaseDao.getAll()){
+					adminRole.getUseCases().add(uc);
+				}
+				roleDao.save(adminRole);
+			}
+		
+		Role anonymousRole = roleDao.findByName("Anonymous");
+		if (anonymousRole==null){
+			anonymousRole = new Role("Anonymous");
+			anonymousRole.getUseCases().add(useCaseDao.findByName("addUser"));
+			roleDao.save(anonymousRole);
+		}
+		
+		User anonymous = userDao.findUserBylogin("anonymous");
+		if (anonymous == null){
+			anonymous = new User("-", "anonymous", "anonymous", "-", "-", "-", "-");
+			anonymous.getRoles().add(anonymousRole);
+	    	userDao.save(anonymous);
+		}
+		
+		User admin = userDao.findUserBylogin("Admin");
+		if (admin == null){
+				String passHash = new String(mdigest.digest(INITIAL_ADMIN_PASS.getBytes()));
+				admin = new User("Administrador", ADMIN_LOGIN, passHash, "0", "adminMail", "-", "-");
+				admin.getRoles().add(adminRole);
+		    	userDao.save(admin);
+		}
+	}
 	
 	@Transactional
 	public Session newAnonymousSession() {
 		User user = userDao.findUserBylogin("anonymous");
-		if (user == null){
-			user = new User("-", "anonymous", "-", "-", "-", "-", "_");
-			Role role = new Role("Anonymous");
-	    	UseCase addUser = new UseCase("addUser");
-	    	role.getUseCases().add(addUser);
-	    	user.getRoles().add(role);
-	    	useCaseDao.save(addUser);
-	    	roleDao.save(role);
-	    	userDao.save(user);
-		}
 		Session s = new Session(user);
 		SessionManager.addSession(s);
 		return s;
@@ -82,9 +138,11 @@ public class UserServiceImpl implements UserService {
 		if(user.getName()==null) throw new ServiceException(05,"addUser","name");
 		if(user.getDni()==null) throw new ServiceException(05,"addUser","dni");
 		if(user.getEmail()==null) throw new ServiceException(05,"addUser","email");
+		user.getRoles().add(roleDao.findByName("User"));
+		String passHash = new String(mdigest.digest(user.getPassword().getBytes()));
+		user.setPassword(passHash);
 		userDao.save(user);
-		return user;
-		
+		return user;	
 	}
 	
 	@Transactional(readOnly=true)
@@ -95,7 +153,8 @@ public class UserServiceImpl implements UserService {
 		if(!session.getUser().getLogin().contentEquals("anonymous")) throw new ServiceException(07,"login");
 		User user = userDao.findUserBylogin(login);
 		if (user == null) throw new ServiceException(04,"login","login");
-		else if (!password.contentEquals(user.getPassword()))  throw new ServiceException(04,"login","password");
+		String passHash = new String(mdigest.digest(password.getBytes()));
+		if (!user.getPassword().contentEquals(passHash))  throw new ServiceException(04,"login","password");
 		session.setUser(user);
 		return session;
 	}
@@ -134,8 +193,12 @@ public class UserServiceImpl implements UserService {
 		Session session = SessionManager.getSession(sessionId);
 		try {
 			User user = userDao.find(userId);
-			if(session.getUser().getUserId() == userId && !oldPassword.contentEquals(user.getPassword()))  throw new ServiceException(04,"changeUserPassword","password"); 
-			user.setPassword(newPassword);
+			if(session.getUser().getUserId() == userId){
+				String oldPassHash=new String(mdigest.digest(oldPassword.getBytes()));
+				if(!oldPassHash.contentEquals(user.getPassword()))  throw new ServiceException(04,"changeUserPassword","password"); 
+			}
+			String newPassHash=new String(mdigest.digest(newPassword.getBytes()));
+			user.setPassword(newPassHash);
 			userDao.save(user);
 		} catch (InstanceException e) {
 			throw new  ServiceException(06,"changeUserPassword","User");
@@ -251,6 +314,12 @@ public class UserServiceImpl implements UserService {
 			throw new  ServiceException(06,"getUserRoles","User");
 		}
 	}
+	
+	@Transactional(readOnly=true)
+	public List<Role> getAllRoles(long sessionId) throws ServiceException {
+		SessionManager.checkPermissions(sessionId, "getAllRoles");
+		return roleDao.getAllRoles();
+	}
 
 	@Transactional
 	public UseCase createUseCase(long sessionId, String useCaseName) throws ServiceException {
@@ -289,6 +358,12 @@ public class UserServiceImpl implements UserService {
 		}
 		
 	}
+	
+	@Transactional(readOnly=true)	
+	public List<UseCase> getAllUseCases(long sessionId) throws ServiceException {
+		SessionManager.checkPermissions(sessionId, "getAllUseCases");
+		return useCaseDao.getAll();
+	}
 
 	@Transactional(readOnly=true)	
 	public Set<UseCase> getRolePermissions(long sessionId, int roleId) throws ServiceException {
@@ -300,5 +375,4 @@ public class UserServiceImpl implements UserService {
 			throw new  ServiceException(06,"getRolePermissions","Role");
 		}
 	}	
-	
 }

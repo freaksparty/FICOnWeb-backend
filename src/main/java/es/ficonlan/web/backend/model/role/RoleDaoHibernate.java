@@ -12,13 +12,19 @@ import es.ficonlan.web.backend.model.util.dao.GenericDaoHibernate;
  */
 @Repository("roleDao")
 public class RoleDaoHibernate extends GenericDaoHibernate<Role,Integer> implements RoleDao {
+		
+	public Role findByName(String name) {
+		return (Role) getSession()
+				.createQuery("SELECT r FROM Role r WHERE r.roleName = :name")
+				.setParameter("name", name).uniqueResult();
+	}
 	
 	@SuppressWarnings("unchecked")
 	public List<Role> getAllRoles(){
 		return getSession().createQuery(
 	        	"SELECT r " +
 		        "FROM Role r " +
-	        	"ORDER BY r.role_id").list();
+	        	"ORDER BY r.roleName").list();
 	}
 
 }

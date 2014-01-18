@@ -1,18 +1,22 @@
 package es.ficonlan.web.backend.model.activity;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
-
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.user.User;
@@ -24,30 +28,31 @@ import es.ficonlan.web.backend.model.user.User;
 @Entity
 public class Activity {
 	
-	private long activityId;
+	public enum ActivityType {Production, Conference, Tournament};
+	
+	private int activityId;
 	private User organizer;
 	private Event event;
 	private String name;
 	private String description;
-	private int numParticipantes;
-	private int tipo;              // Siguiendo el modelo 1=Produccion, 2=Conferencia 3=Torneo
+	private int numParticipants;
+	private ActivityType type;
 	private boolean oficial; 
-	private Calendar dateStart;
-	private Calendar dateEnd;
-	@JsonIgnore
+	private Calendar startDate;
+	private Calendar endDate;
 	private Calendar regDateOpen;
-	@JsonIgnore
 	private Calendar regDateClose;
+	private List<User> participants = new ArrayList<User>();
 	
 	@Column(name = "Activity_id")
 	@SequenceGenerator(name = "ActivityIdGenerator", sequenceName = "ActivitySeq")
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "ActivityIdGenerator")
-	public long getActivityId() {
+	public int getActivityId() {
 		return activityId;
 	}
 	
-	public void setActivityId(long activityId) {
+	public void setActivityId(int activityId) {
 		this.activityId = activityId;
 	}
 	
@@ -70,21 +75,22 @@ public class Activity {
 	}
 	
 	@Column(name = "Activity_num_participants")
-	public int getNumParticipantes() {
-		return numParticipantes;
+	public int getNumParticipants() {
+		return numParticipants;
 	}
 	
-	public void setNumParticipantes(int numParticipantes) {
-		this.numParticipantes = numParticipantes;
+	public void setNumParticipants(int numParticipants) {
+		this.numParticipants = numParticipants;
 	}
 	
 	@Column(name = "Activity_type_activity")
-	public int getTipo() {
-		return tipo;
+	@Enumerated(EnumType.ORDINAL) 
+	public ActivityType getType() {
+		return type;
 	}
 	
-	public void setTipo(int tipo) {
-		this.tipo = tipo;
+	public void setType(ActivityType type) {
+		this.type = type;
 	}
 	
 	@Column(name = "Activity_kind")
@@ -97,21 +103,21 @@ public class Activity {
 	}
 	
 	@Column(name = "Activity_date_start")
-	public Calendar getDateStart() {
-		return dateStart;
+	public Calendar getStartDate() {
+		return startDate;
 	}
 	
-	public void setDateStart(Calendar dateStart) {
-		this.dateStart = dateStart;
+	public void setStartDate(Calendar startDate) {
+		this.startDate = startDate;
 	}
 	
 	@Column(name = "Activity_date_end")
-	public Calendar getDateEnd() {
-		return dateEnd;
+	public Calendar getEndDate() {
+		return endDate;
 	}
 	
-	public void setDateEnd(Calendar dateEnd) {
-		this.dateEnd = dateEnd;
+	public void setEndDate(Calendar endDate) {
+		this.endDate = endDate;
 	}
 	
 	@Column(name = "Activity_reg_date_open")
@@ -151,5 +157,16 @@ public class Activity {
 	public void setEvent(Event event) {
 		this.event = event;
 	}
-	
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "user_activity", joinColumns = {
+	      @JoinColumn(name = "User_Activity_Activity_id")}, inverseJoinColumns = {
+	      @JoinColumn(name = "User_Activity_User_id")})
+	public List<User> getParticipants() {
+		return participants;
+	}
+
+	public void setParticipants(List<User> participants) {
+		this.participants = participants;
+	}
 }

@@ -2,6 +2,7 @@ package es.ficonlan.web.backend.model.activity;
 
 import java.util.List;
 
+import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
 import es.ficonlan.web.backend.model.util.dao.GenericDao;
 
 /**
@@ -16,6 +17,6 @@ public interface ActivityDao extends GenericDao<Activity, Integer> {
 	 * @param type Tipo de actividades que queremos obtener (si es 0 se devolverán todos los tipos)
 	 * @return List<Activity>
 	 */
-	public List<Activity> findActivitiesByEventByType(long eventId, int type, int startIndex, int cont);
+	public List<Activity> findActivitiesByEvent(long eventId, ActivityType type);
 
 }

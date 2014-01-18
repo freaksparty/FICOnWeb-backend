@@ -15,6 +15,8 @@ import es.ficonlan.web.backend.model.util.session.Session;
  */
 public interface UserService {
 	
+	public void initialize();
+	
 	public Session newAnonymousSession();
 
 	public User addUser(long sessionId, User user) throws ServiceException;
@@ -28,7 +30,7 @@ public interface UserService {
 	public void changeUserPassword(long sessionId, int userId, String oldPassword, String newPassword)  throws ServiceException;
 	
 	public List<User> getUsersByEvent(long sessionId, int eventId, RegistrationState state)  throws ServiceException;
-	
+    
 	public List<User> getAllUsers(long sessionId)  throws ServiceException;
 	
 	public void setDefaultLanguage(long sessionId, int userId, int languageId) throws ServiceException;
@@ -47,11 +49,15 @@ public interface UserService {
 	
 	public Set<Role> getUserRoles(long sessionId, int userId) throws ServiceException;
 	
+	public List<Role> getAllRoles(long sessionId) throws ServiceException;
+	
 	public UseCase createUseCase(long sessionId, String useCaseName) throws ServiceException;
 	
 	public void addUseCase(long sessionId, int roleId, int useCaseId) throws ServiceException;
 	
 	public void removeUseCase(long sessionId, int roleId, int useCaseId) throws ServiceException;
+	
+	public List<UseCase> getAllUseCases(long sessionId) throws ServiceException;
 	
 	public Set<UseCase> getRolePermissions(long sessionId, int roleId) throws ServiceException;
 	

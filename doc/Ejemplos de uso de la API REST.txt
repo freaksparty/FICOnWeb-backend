@@ -316,6 +316,7 @@
  		06 - Instance not found
  		07 - There is already a session
  		08 - Event maximum number of participants reached
+ 		09 - Registration out of time
  		99 - System unexpected error (RuntimeException)
  	
  	* Arreglado el tratamiento de excepciones lanzadas por jersey. Ahora se envían como una ServiceException con code=99 y useCase=null.		
