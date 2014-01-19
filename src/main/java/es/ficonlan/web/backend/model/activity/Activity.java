@@ -18,6 +18,14 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import es.ficonlan.web.backend.jersey.util.JsonActivityTypeDeserializer;
+import es.ficonlan.web.backend.jersey.util.JsonDateDeserializer;
+import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
+import es.ficonlan.web.backend.jersey.util.JsonEntityIdSerializer;
 import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.user.User;
 
@@ -43,6 +51,27 @@ public class Activity {
 	private Calendar regDateOpen;
 	private Calendar regDateClose;
 	private List<User> participants = new ArrayList<User>();
+	
+	public Activity(){}
+	
+	public Activity(int activityId, String name, String description, int numParticipants, ActivityType type, boolean oficial, Calendar startDate, Calendar endDate, Calendar regDateOpen, Calendar regDateClose) {
+		this.activityId=activityId;
+		this.name = name;
+		this.description = description;
+		this.numParticipants = numParticipants;
+		this.type = type;
+		this.oficial = oficial;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.regDateOpen = regDateOpen;
+		this.regDateClose = regDateClose;
+	}
+	
+	public Activity(Event event, String name, String description, int numParticipants, ActivityType type, boolean oficial, Calendar startDate, Calendar endDate, Calendar regDateOpen, Calendar regDateClose) {
+		this(0,name,description, numParticipants,type, oficial, startDate, endDate,regDateOpen, regDateClose);
+		this.event = event;
+		
+	}
 	
 	@Column(name = "Activity_id")
 	@SequenceGenerator(name = "ActivityIdGenerator", sequenceName = "ActivitySeq")
@@ -83,6 +112,7 @@ public class Activity {
 		this.numParticipants = numParticipants;
 	}
 	
+	@JsonDeserialize(using = JsonActivityTypeDeserializer.class)
 	@Column(name = "Activity_type_activity")
 	@Enumerated(EnumType.ORDINAL) 
 	public ActivityType getType() {
@@ -102,6 +132,8 @@ public class Activity {
 		this.oficial = oficial;
 	}
 	
+	@JsonDeserialize(using = JsonDateDeserializer.class)
+	@JsonSerialize(using=JsonDateSerializer.class)
 	@Column(name = "Activity_date_start")
 	public Calendar getStartDate() {
 		return startDate;
@@ -111,6 +143,8 @@ public class Activity {
 		this.startDate = startDate;
 	}
 	
+	@JsonDeserialize(using = JsonDateDeserializer.class)
+	@JsonSerialize(using=JsonDateSerializer.class)
 	@Column(name = "Activity_date_end")
 	public Calendar getEndDate() {
 		return endDate;
@@ -120,6 +154,8 @@ public class Activity {
 		this.endDate = endDate;
 	}
 	
+	@JsonDeserialize(using = JsonDateDeserializer.class)
+	@JsonSerialize(using=JsonDateSerializer.class)
 	@Column(name = "Activity_reg_date_open")
 	public Calendar getRegDateOpen() {
 		return regDateOpen;
@@ -129,6 +165,8 @@ public class Activity {
 		this.regDateOpen = regDateOpen;
 	}
 	
+	@JsonDeserialize(using = JsonDateDeserializer.class)
+	@JsonSerialize(using=JsonDateSerializer.class)
 	@Column(name = "Activity_reg_date_close")
 	public Calendar getRegDateClose() {
 		return regDateClose;
@@ -138,6 +176,7 @@ public class Activity {
 		this.regDateClose = regDateClose;
 	}
 
+	@JsonSerialize(using=JsonEntityIdSerializer.class)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Activity_organizer_id ")
 	public User getOrganizer() {
@@ -148,6 +187,7 @@ public class Activity {
 		this.organizer = organizer;
 	}
 
+	@JsonSerialize(using=JsonEntityIdSerializer.class)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Activity_event_id")
 	public Event getEvent() {
@@ -158,7 +198,8 @@ public class Activity {
 		this.event = event;
 	}
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@JsonIgnore
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_activity", joinColumns = {
 	      @JoinColumn(name = "User_Activity_Activity_id")}, inverseJoinColumns = {
 	      @JoinColumn(name = "User_Activity_User_id")})

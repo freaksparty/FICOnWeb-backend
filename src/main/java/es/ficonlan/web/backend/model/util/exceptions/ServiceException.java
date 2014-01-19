@@ -12,6 +12,8 @@ package es.ficonlan.web.backend.model.util.exceptions;
  * 07 - There is already a session<br>
  * 08 - Event maximum number of participants reached<br>
  * 09 - Registration out of time<br>
+ * 10 - User isn't registered in the event<br>
+ * 11 - Activity maximum number of participants reached<br>
  * 99 - System unexpected error (RuntimeException)
  * 
  * @author Daniel Gómez Silva
@@ -26,13 +28,17 @@ public class ServiceException extends Exception{
 		
 		private static String getMessage(int errorCode){
 			switch (errorCode){
-				case 01: return "Invalid session";
-				case 02: return "Permission denied";
-				case 03: return "Duplicated unique field";
-				case 04: return "Incorrect field";
-				case 05: return "Missing required field";
-				case 06: return "Instance not found";
-				case 07: return "There is already a session";
+				case  1: return "Invalid session";
+				case  2: return "Permission denied";
+				case  3: return "Duplicated unique field";
+				case  4: return "Incorrect field";
+				case  5: return "Missing required field";
+				case  6: return "Instance not found";
+				case  7: return "There is already a session";
+				case  8: return "Event maximum number of participants reached";
+				case  9: return "Registration out of time";
+				case 10: return "User isn't registered in the event";
+				case 11: return "Activity maximum number of participants reached";
 				case 99: return "System unexpected error";
 			default: return null;
 			}

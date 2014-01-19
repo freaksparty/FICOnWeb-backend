@@ -6,7 +6,7 @@ import java.util.List;
 import es.ficonlan.web.backend.model.activity.Activity;
 import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
 import es.ficonlan.web.backend.model.event.Event;
-import es.ficonlan.web.backend.model.newsItem.NewsItem;
+import es.ficonlan.web.backend.model.newsitem.NewsItem;
 import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
 import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
@@ -29,7 +29,9 @@ public interface EventService {
 
     public Event findEventByName(long sessionId, String name) throws ServiceException;
     
-    public Activity createActivity(long sessionId, int eventId,  Activity activity) throws ServiceException;
+    public Activity addActivity(long sessionId, int eventId,  Activity activity) throws ServiceException;
+    
+    public void removeActivity(long sessionId, int activityId) throws ServiceException;
     
     public void changeActivityData(long sessionId, Activity activityData) throws ServiceException;
     
@@ -39,7 +41,7 @@ public interface EventService {
     
     public void addParticipantToActivity(long sessionId, int userId, int activityId) throws ServiceException;
     
-    public void removeParticipantFormActivity(long sessionId, int userId, int activityId) throws ServiceException;
+    public void removeParticipantFromActivity(long sessionId, int userId, int activityId) throws ServiceException;
     
     public List<User> getActivityParticipants(long sessionId, int activityId) throws ServiceException;
     

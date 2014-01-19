@@ -19,6 +19,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  * @author Daniel Gómez Silva
@@ -29,18 +30,13 @@ public class User {
     private int userId;
     private String name;
     private String login;
-    @JsonIgnore
     private String password;
     private String dni;
     private String email;
     private String phoneNumber;
-    @JsonIgnore
     private boolean deleted;
-    @JsonIgnore
     private Set<Role> roles = new HashSet<Role>(); ;
-    //private Set<Activity> participation;
     private String shirtSize;
-    @JsonIgnore
     private boolean inBlackList;
     private SupportedLanguage defaultLanguage;
 
@@ -93,11 +89,13 @@ public class User {
         this.login = login;
     }
 
+    @JsonIgnore
     @Column(name = "User_password")
     public String getPassword() {
         return password;
     }
 
+    @JsonProperty(value = "password")
     public void setPassword(String password) {
         this.password = password;
     }
@@ -129,6 +127,7 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
+    @JsonIgnore
     @Column(name = "User_checked")
     public boolean isDeleted() {
         return deleted;
@@ -138,6 +137,7 @@ public class User {
         this.deleted = deleted;
     }
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "Role_User", joinColumns = {
         @JoinColumn(name = "Role_User_User_id")}, inverseJoinColumns = {
@@ -159,6 +159,7 @@ public class User {
         this.shirtSize = sirtSize;
     }
     
+    @JsonIgnore
     @Column(name = "User_inBlackList")
 	public boolean isInBlackList() {
 		return inBlackList;
@@ -177,17 +178,4 @@ public class User {
 	public void setDefaultLanguage(SupportedLanguage defaultLanguage) {
 		this.defaultLanguage = defaultLanguage;
 	}
-	
-
-    //@ManyToMany
-    //@JoinTable(name = "User_Activity", joinColumns = {
-    //    @JoinColumn(name = "User_Activity_User_id")}, inverseJoinColumns = {
-    //    @JoinColumn(name = "User_Activity_Activity_id")})
-    /*public Set<Activity> getParticipation() {
-     return participation;
-     }
-
-     public void setParticipation(Set<Activity> participation) {
-     this.participation = participation;
-     }*/
 }

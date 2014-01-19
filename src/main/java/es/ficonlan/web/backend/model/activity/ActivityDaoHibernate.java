@@ -16,7 +16,7 @@ public class ActivityDaoHibernate extends GenericDaoHibernate<Activity,Integer> 
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Activity> findActivitiesByEvent(long eventId, ActivityType type) {
+	public List<Activity> findActivitiesByEvent(int eventId, ActivityType type) {
 		/*String hql = "SELECT u FROM Activity u";
 		if ((eventId != 0) || (type != 0)) hql = hql + " WHERE ";
 		String aux = "";
@@ -32,11 +32,28 @@ public class ActivityDaoHibernate extends GenericDaoHibernate<Activity,Integer> 
 		if (type != 0)    { query = query.setParameter("type", type);       }
 		
 		return query.list();*/
-		return getSession().createQuery( "SELECT a "  +
-									     "FROM Activity " +
-			                             "WHERE a.event.id = :eventId AND a.type = :type " +
-			                             "ORDER BY a.startDate"
-				                       ).setParameter("eventId",eventId).setParameter("type",type).list(); 			
+		if(type==null) return getSession().createQuery( "SELECT a "  +
+			      										"FROM Activity a " +
+			      										"WHERE a.event.id = :eventId " +
+			      										"ORDER BY a.startDate"
+         											  ).setParameter("eventId",eventId).list(); 	
+		else return getSession().createQuery( "SELECT a "  +
+			      						      "FROM Activity a " +
+			      						      "WHERE a.event.id = :eventId AND a.type = :type " +
+			      						      "ORDER BY a.startDate"
+				                       		).setParameter("eventId",eventId).setParameter("type",type).list(); 			
 	}
+
+	/*@Override
+	public List<User> getParticipants(Activity activity) {	
+		//Force initialization
+		Hibernate.initialize(activity.getParticipants());
+		for(User u:activity.getParticipants()){
+			Hibernate.initialize(u);
+		}
+		return activity.getParticipants();
+	}*/
+	
+	
 
 }

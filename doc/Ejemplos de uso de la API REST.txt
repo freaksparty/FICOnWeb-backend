@@ -227,7 +227,7 @@
 
 
 # OBTENER EVENTO POR NOMBRE:
-- Petición: 
+	- Petición: 
 		GET http://localhost:8080/ficonlan/event/byName/FicOnLan%202014     *(name="FicOnLan 2014", debe ir codificado en la url)
 		header: 
 			sessionId=0
@@ -243,6 +243,7 @@
    			  "registrationOpenDate":"16-01-2014/09:00:00",
    			  "registrationCloseDate":"31-01-2014/21:00:00"
 			}
+
 
 # OBTENER USUARIOS INSCRITOS EN UN EVENTO Y CON UN ESTADO DE INSCRIPCIÓN DETERMINADO:		
 	- Petición: 
@@ -282,6 +283,183 @@
 		* Los usuarios se obtienen ordenados por fecha de inscripción, por lo que si buscamos todos los usuarios en cola, se obtendrán
 		  ordenados también por su posición dentro de la cola.	
 
+
+# CREAR ACTIVIDAD:
+	
+	- Petición: 
+		POST http://localhost:8080/ficonlan/event/1/addActivity    *(eventId=1)
+		header: 
+			sessionId=0
+		
+		body:
+			{
+			  "name":"Torneo de Lol",
+			  "description":"Torneo de Lol",
+			  "numParticipants":40,
+			  "type":"Tournament",
+			  "oficial":true,
+			  "startDate":"02-02-2014/00:00:00",
+			  "endDate":"05-02-2014/00:00:00",
+			  "regDateOpen":"16-01-2014/09:00:00",
+			  "regDateClose":"31-01-2014/21:00:00"
+			}
+			
+		* Posibles valores de type:
+			- Torunament
+			- Production
+			- Conference			
+		 
+	- Respuesta: 200 OK	
+		{
+		  "activityId":1,
+		  "organizer":null,
+		  "event":"1",
+		  "name":"Torneo de Lol",
+		  "description":"Torneo de Lol",
+		  "numParticipants":40,
+		  "type":"Tournament",
+		  "oficial":true,
+		  "startDate":"02-00-2014/00:00:00",
+		  "endDate":"05-00-2014/00:00:00",
+		  "regDateOpen":"16-00-2014/09:00:00",
+		  "regDateClose":"31-00-2014/21:00:00"
+		}
+
+# MODIFICAR DATOS DE UNA ACTIVIDAD:
+	- Petición: 
+		POST http://localhost:8080/ficonlan/activity/changeData
+		header: 
+			sessionId=0
+		
+		body:
+			{
+			  "activityId":1,	
+			  "name":"Concurso de Hacking",
+			  "description":"Concurso de Hacking",
+			  "numParticipants":20,
+			  "type":"Production",
+			  "oficial":false,
+			  "startDate":"03-02-2014/00:00:00",
+			  "endDate":"04-02-2014/00:00:00",
+			  "regDateOpen":"15-01-2014/09:00:00",
+			  "regDateClose":"30-01-2014/21:00:00"
+			}
+			
+		* Para dejar un campo sin modificar se pone a null.
+			
+		* Posibles valores de type:
+			- Torunament
+			- Production
+			- Conference	
+			
+	- Respuesta: 204 No Content
+	
+# ELIMINAR ACTIVIDAD
+	- Petición: 
+		POST http://localhost:8080/ficonlan/activity/remove/1    *(activityId=1)
+		header: 
+			sessionId=0
+			 
+	- Respuesta: 204 No Content
+	
+# ESTABLECER EL ORGANIZADOR DE UNA ACTIVIDAD:	
+	- Petición: 
+		POST http://localhost:8080/ficonlan/activity/setOrganizer/4/3   *(activityId=4, userId=3)
+		header: 
+			sessionId=0
+			 
+	- Respuesta: 204 No Content
+	
+# BUSCAR ACTIVIDADES POR EVENTO Y TIPO:	
+	- Petición: 
+		GET http://localhost:8080/ficonlan/activity/getByEvent/1/All   *(eventId=1, type=All)
+		header: 
+			sessionId=0
+		
+		* Posibles valores de type:
+			- Torunament
+			- Production
+			- Conference
+			- All : Obtiene todas las actividades de un evento independientemente de su tipo		
+			 
+	- Respuesta: 200 OK
+		[
+		  {
+		    "activityId":4,
+		    "organizer":null,
+		    "event":"1",
+		    "name":"Torneo de Lol",
+		    "description":"Torneo de Lol",
+		    "numParticipants":40,
+		    "type":"Tournament",
+		    "oficial":true,
+		    "startDate":"02-00-2014/00:00:00",
+		    "endDate":"05-00-2014/00:00:00",
+		    "regDateOpen":"16-00-2014/09:00:00",
+		    "regDateClose":"31-00-2014/21:00:00"
+		  },
+		  {
+		    "activityId":5,
+		    "organizer":null,
+		    "event":"1","name":
+		    "Concurso de Hacking",
+		    "description":"Concurso de Hacking",
+		    "numParticipants":20,
+		    "type":"Production",
+		    "oficial":true,
+		    "startDate":"02-00-2014/00:00:00",
+		    "endDate":"05-00-2014/00:00:00",
+		    "regDateOpen":"16-00-2014/09:00:00",
+		    "regDateClose":"31-00-2014/21:00:00"
+		  }
+		]
+	
+# AÑADIR PARTICIPANTE A UNA ACTIVIDAD
+	- Petición: 
+		POST http://localhost:8080/ficonlan/activity/addParticipant/4/3   *(activityId=4, userId=3)
+		header: 
+			sessionId=0
+			 
+	- Respuesta: 204 No Content
+
+# ELIMINAR PARTICIPANTE A UNA ACTIVIDAD
+	- Petición: 
+		POST http://localhost:8080/ficonlan/activity/removeParticipant/4/3   *(activityId=4, userId=3)
+		header: 
+			sessionId=0
+			 
+	- Respuesta: 204 No Content	
+	
+ # OBTENER PARTICIPANTES DE UNA ACTIVIDAD
+  	-Petición: 
+		GET http://localhost:8080/ficonlan/activity/getParticipants/4   *(activityId=4)
+		header: 
+			sessionId=0
+			 
+	- Respuesta: 200 OK	
+		[
+		  {
+		    "userId":3,
+		    "name":"User1",
+		    "login":"user1",
+		    "dni":"12345678Y",
+		    "email":"user1@hotmail.com",
+		    "phoneNumber":"666666666",
+		    "shirtSize":"XL",
+		    "defaultLanguage":null
+		  },
+		  {
+		    "userId":4,
+		    "name":"User2",
+		    "login":"user2",
+		    "dni":"23232313Y",
+		    "email":"user2@hotmail.com",
+		    "phoneNumber":"666666666",
+		    "shirtSize":"XL",
+		    "defaultLanguage":null
+		  }
+		]
+	
 # EXCEPCIONES:
 
 	- Petición: POST http://127.0.0.1:8080/ficonlan/user/add	
@@ -317,6 +495,8 @@
  		07 - There is already a session
  		08 - Event maximum number of participants reached
  		09 - Registration out of time
+ 		10 - User isn't registered in the event
+ 		11 - Activity maximum number of participants reached
  		99 - System unexpected error (RuntimeException)
  	
  	* Arreglado el tratamiento de excepciones lanzadas por jersey. Ahora se envían como una ServiceException con code=99 y useCase=null.		

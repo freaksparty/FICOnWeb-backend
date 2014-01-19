@@ -62,62 +62,42 @@ public class UserResource {
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
 	public User adduser(@HeaderParam("sessionId") long sessionId, User user) throws ServiceException {
-		try{
-			return userService.addUser(sessionId, user);
-		}catch(RuntimeException e){
-			throw new ServiceException(99,"addUser");
-		}
+		return userService.addUser(sessionId, user);
 	}
 	
 	@Path("/changeData")
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	public void changeData(@HeaderParam("sessionId") long sessionId, User user) throws ServiceException {
-		try{
-			userService.changeUserData(sessionId, user);
-		}catch(RuntimeException e){
-			throw new ServiceException(99,"changeUserData");
-		}
+		userService.changeUserData(sessionId, user);
 	}
 	
 	@Path("/changePassword/{userId}")
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	public void changePassword(@HeaderParam("sessionId") long sessionId, @PathParam("userId") int userId, ChangePasswordData data) throws ServiceException {
-		try{
-			userService.changeUserPassword(sessionId, userId, data.getOldPassword(), data.getNewPassword());
-		}catch(RuntimeException e){
-			throw new ServiceException(99,"changeUserPassword");
-		}
+		userService.changeUserPassword(sessionId, userId, data.getOldPassword(), data.getNewPassword());
 	}
 	
 	@Path("/all")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<User> getAll(@HeaderParam("sessionId") long sessionId) throws ServiceException {
-		try{
-			return userService.getAllUsers(sessionId);
-		}catch(RuntimeException e){
-			throw new ServiceException(99,"getAllUsers");
-		}
+		return userService.getAllUsers(sessionId);
+
 	}
 	
 	@Path("/byEvent/{eventId}/{state}")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<User> getByEvent(@HeaderParam("sessionId") long sessionId, @PathParam("eventId") int eventId, @PathParam("state") String state) throws ServiceException {
-		try{
-			RegistrationState st;
-			if(state==null) throw new ServiceException(05,"getUsersByEvent","state");
-    		if(state.toLowerCase().contentEquals("registered"))  st=RegistrationState.registered;
-    		else if(state.toLowerCase().contentEquals("inqueue")) st=RegistrationState.inQueue;
-    		else if(state.toLowerCase().contentEquals("paid")) st=RegistrationState.paid;
-    		else if(state.toLowerCase().contentEquals("all")) st=null;
-    		else throw new ServiceException(04,"getUsersByEvent","state");
-			return userService.getUsersByEvent(sessionId, eventId, st);
-		}catch(RuntimeException e){
-			e.printStackTrace();
-			throw new ServiceException(99,"getUsersByEvent");
-		}
+		RegistrationState st;
+		if(state==null) throw new ServiceException(05,"getUsersByEvent","state");
+    	if(state.toLowerCase().contentEquals("registered"))  st=RegistrationState.registered;
+    	else if(state.toLowerCase().contentEquals("inqueue")) st=RegistrationState.inQueue;
+    	else if(state.toLowerCase().contentEquals("paid")) st=RegistrationState.paid;
+    	else if(state.toLowerCase().contentEquals("all")) st=null;
+    	else throw new ServiceException(04,"getUsersByEvent","state");
+		return userService.getUsersByEvent(sessionId, eventId, st);
 	}
 }

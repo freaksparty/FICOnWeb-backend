@@ -1,4 +1,4 @@
-package es.ficonlan.web.backend.model.newsItem;
+package es.ficonlan.web.backend.model.newsitem;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

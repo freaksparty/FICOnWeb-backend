@@ -52,13 +52,9 @@ public class SessionResource {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Session newSession() throws ServiceException {
-		try{
-    		Session s = userService.newAnonymousSession().clone();
-    		s.setUser(null);
-    		return s;
-    	}catch(RuntimeException e){
-    		throw new ServiceException(99,"newAnonymousSession");
-    	}
+    	Session s = userService.newAnonymousSession().clone();
+    	s.setUser(null);
+    	return s;
 	}
 	
 	@Path("/login")
@@ -66,21 +62,13 @@ public class SessionResource {
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
 	public Session login(@HeaderParam("sessionId") long sessionId, LoginData loginData) throws ServiceException {
-		try{
-    		return userService.login(sessionId, loginData.getLogin(), loginData.getPassword());
-    	}catch(RuntimeException e){
-    		throw new ServiceException(99,"login");
-    	}
+    	return userService.login(sessionId, loginData.getLogin(), loginData.getPassword());
 	}
 	
 	@Path("/close")
 	@POST
 	public void close(@HeaderParam("sessionId") long sessionId) throws ServiceException{
-		try{
-    		userService.closeSession(sessionId);
-    	}catch(RuntimeException e){
-    		throw new ServiceException(99,"closeSession");
-    	}
+    	userService.closeSession(sessionId);
 	}
 	
 }

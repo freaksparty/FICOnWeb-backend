@@ -8,8 +8,8 @@ import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
 import es.ficonlan.web.backend.model.activity.ActivityDao;
 import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.event.EventDao;
-import es.ficonlan.web.backend.model.newsItem.NewsDao;
-import es.ficonlan.web.backend.model.newsItem.NewsItem;
+import es.ficonlan.web.backend.model.newsitem.NewsDao;
+import es.ficonlan.web.backend.model.newsitem.NewsItem;
 import es.ficonlan.web.backend.model.registration.Registration;
 import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
 import es.ficonlan.web.backend.model.registration.RegistrationDao;
@@ -82,7 +82,7 @@ public class EventServiceImpl implements EventService {
     	try{
     		User user = userDao.find(userId);
     		Event event = eventDao.find(eventId);
-    		if(registrationDao.geNumRegistrations(event.getEventId())>=event.getNumParticipants()) throw new ServiceException(8,"addParticipantToEvent");
+    		if(registrationDao.geNumRegistrations(event.getEventId())>=event.getNumParticipants()) throw new ServiceException(8,"addParticipantToEvent","Event(Id="+event.getEventId()+")");
     		if(event.getRegistrationOpenDate().compareTo(Calendar.getInstance())>0||event.getRegistrationCloseDate().compareTo(Calendar.getInstance())<0) throw new ServiceException(9,"addParticipantToEvent");
     		Registration registration = new Registration(user, event);
         	registrationDao.save(registration);
@@ -131,8 +131,8 @@ public class EventServiceImpl implements EventService {
     }
 
     @Transactional
-	public Activity createActivity(long sessionId, int eventId, Activity activity) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "createActivity");
+	public Activity addActivity(long sessionId, int eventId, Activity activity) throws ServiceException {
+		SessionManager.checkPermissions(sessionId, "addActivity");
 		Event event;
 		try {
 				event = eventDao.find(eventId);
@@ -151,6 +151,17 @@ public class EventServiceImpl implements EventService {
 		activity.setEvent(event);
 		activityDao.save(activity);
 		return activity;
+	}
+    
+
+    @Transactional
+	public void removeActivity(long sessionId, int activityId) throws ServiceException {
+    	SessionManager.checkPermissions(sessionId, "removeActivity");
+		try {
+			activityDao.remove(activityId);
+		} catch (InstanceException e) {
+			throw new ServiceException(06,"removeActivity","Activity");
+		}
 	}
     
     @Transactional
@@ -173,7 +184,7 @@ public class EventServiceImpl implements EventService {
 				activity.setEndDate(activityData.getEndDate());
 			}
 			if(activityData.getRegDateOpen()!=null) activity.setRegDateOpen(activityData.getRegDateOpen());
-			if(activityData.getRegDateClose()!=null) activity.setRegDateOpen(activityData.getRegDateClose());
+			if(activityData.getRegDateClose()!=null) activity.setRegDateClose(activityData.getRegDateClose());
 			activityDao.save(activity);
 		} catch (InstanceException e) {
 			throw new ServiceException(06,"changeActivityData","Activity");
@@ -186,6 +197,7 @@ public class EventServiceImpl implements EventService {
 		try {
 			Activity activity = activityDao.find(activityId);
 			User user = userDao.find(userId);
+			if(registrationDao.findByUserAndEvent(user.getUserId(), activity.getEvent().getEventId())==null) throw new ServiceException(10,"setActivityOrganizer","userId");
 			activity.setOrganizer(user);
 			activityDao.save(activity);
 		} catch (InstanceException e) {
@@ -212,6 +224,8 @@ public class EventServiceImpl implements EventService {
 		try {
 			Activity activity = activityDao.find(activityId);
 			User user = userDao.find(userId);
+			if(registrationDao.findByUserAndEvent(user.getUserId(), activity.getEvent().getEventId())==null) throw new ServiceException(10,"addParticipantToActivity","userId");
+			if(activity.getParticipants().size()>=activity.getNumParticipants()) throw new ServiceException(11,"addParticipantToActivity","Activity(Id="+activity.getActivityId()+")");
 			if (!activity.getParticipants().contains(user)) activity.getParticipants().add(user);
 			activityDao.save(activity);
 		} catch (InstanceException e) {
@@ -223,16 +237,16 @@ public class EventServiceImpl implements EventService {
 	}
 
     @Transactional
-	public void removeParticipantFormActivity(long sessionId, int userId, int activityId) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "removeParticipantFormActivity");
+	public void removeParticipantFromActivity(long sessionId, int userId, int activityId) throws ServiceException {
+		SessionManager.checkPermissions(sessionId, "removeParticipantFromActivity");
 		try {
 			Activity activity = activityDao.find(activityId);
 			User user = userDao.find(userId);
 			if (activity.getParticipants().contains(user)) activity.getParticipants().remove(user);
 			activityDao.save(activity);
 		} catch (InstanceException e) {
-			if (e.getClassName().contentEquals("User")) throw new  ServiceException(06,"removeParticipantFormActivity","User");
-			else throw new  ServiceException(06,"removeParticipantFormActivity","Activity");
+			if (e.getClassName().contentEquals("User")) throw new  ServiceException(06,"removeParticipantFromActivity","User");
+			else throw new  ServiceException(06,"removeParticipantFromActivity","Activity");
 
 		}
 		
@@ -240,9 +254,10 @@ public class EventServiceImpl implements EventService {
     
     @Transactional(readOnly = true)
 	public List<User> getActivityParticipants(long sessionId, int activityId) throws ServiceException {
-    	SessionManager.checkPermissions(sessionId, " getActivityParticipants");
+    	SessionManager.checkPermissions(sessionId, "getActivityParticipants");
 		try {
 			Activity activity = activityDao.find(activityId);
+			//return activityDao.getParticipants(activity);
 			return activity.getParticipants();
 		} catch (InstanceException e) {
 			throw new  ServiceException(06,"getActivityParticipants","Activity");
@@ -297,6 +312,5 @@ public class EventServiceImpl implements EventService {
 		} catch (InstanceException e) {
 			throw new  ServiceException(06,"removeNews","NewsItem");
 		}
-		
 	}
 }

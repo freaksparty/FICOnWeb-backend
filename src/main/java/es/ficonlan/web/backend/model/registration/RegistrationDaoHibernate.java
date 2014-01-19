@@ -7,7 +7,7 @@ import es.ficonlan.web.backend.model.util.dao.GenericDaoHibernate;
 /**
  * @author Daniel Gómez Silva
  */
-@Repository("rigistrationDao")
+@Repository("registrationDao")
 public class RegistrationDaoHibernate extends GenericDaoHibernate<Registration,Integer> implements RegistrationDao {
 	
 	public Registration findByUserAndEvent(int userId, int eventId){
