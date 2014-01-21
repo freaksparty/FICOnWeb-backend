@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JsonDateSerializer extends JsonSerializer<Calendar>{
  
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy/HH:mm:ss");
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy/HH:mm:ss");
  
     @Override
     public void serialize(Calendar date, JsonGenerator gen, SerializerProvider provider) throws IOException, JsonProcessingException {

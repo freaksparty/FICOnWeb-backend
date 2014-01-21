@@ -20,11 +20,11 @@ public class JsonDateDeserializer extends JsonDeserializer<Calendar> {
 	@Override
 	public Calendar deserialize(JsonParser jsonparser, DeserializationContext deserializationcontext) throws IOException, JsonProcessingException {
 
-		SimpleDateFormat format = new SimpleDateFormat("dd-mm-yyyy/HH:mm:ss");
+		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy/HH:mm:ss");
 		String date = jsonparser.getText();
 		Calendar c = Calendar.getInstance();
 		try {
-			c.setTime(format.parse(date));
+			c.setTimeInMillis(format.parse(date).getTime());
 		} catch (ParseException e) {
 			throw new RuntimeException();
 		}

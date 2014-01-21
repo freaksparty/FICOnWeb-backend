@@ -1,13 +1,19 @@
 ﻿
+Cuenta de Admin:
+	
+	LOGIN: Admin
+	Password: initialAdminPass
+
+
 # CREACIÓN DE UNA SESIÓN ANÓNIMA:
-	- Petición: POST http://localhost:8080/ficonlan/session/anonymous
+	- Petición: POST https://alguien.servegame.com:1194/ficonlan/session/anonymous
 	- Respuesta: 200 OK
 		{"sessionId":0,"user":null}
 	
 		
 # CREACIÓN DE UN USUARIO:
 	- Petición: 
-		POST http://localhost:8080/ficonlan/user/add
+		POST https://alguien.servegame.com:1194/ficonlan/user/add
 		header: 
 			sessionId=0
 		body: 
@@ -35,7 +41,7 @@
 
 # LOGIN:
 	- Petición: 
-		POST http://localhost:8080/ficonlan/session/login
+		POST https://alguien.servegame.com:1194/ficonlan/session/login
 		header: 
 			sessionId=0
 		body:
@@ -62,7 +68,7 @@
 		
 # CIERRE DE SESIÓN:	
 	- Petición: 
-		POST http://localhost:8080/ficonlan/session/close
+		POST https://alguien.servegame.com:1194/ficonlan/session/close
 		header: 
 			sessionId=0
 	- Respuesta: 204 No Content	
@@ -70,7 +76,7 @@
 	
 # MODIFICAR DATOS DEL USUARIO:
 	- Petición: 
-		GET http://localhost:8080/ficonlan/user/all
+		GET https://alguien.servegame.com:1194/ficonlan/user/all
 		header: 
 			sessionId=0
 		body:
@@ -90,7 +96,7 @@
 
 # CAMBIAR PASSWORD:
 	- Petición: 
-		POST http://localhost:8080/ficonlan/user/changePassword/6   *(userId=6)
+		POST https://alguien.servegame.com:1194/ficonlan/user/changePassword/6   *(userId=6)
 		header: 
 			sessionId=0
 		body:
@@ -104,7 +110,7 @@
  
  # LISTAR TODOS LOS USUARIOS:
  	- Petición: 
-		GET http://localhost:8080/ficonlan/user/getAll
+		GET https://alguien.servegame.com:1194/ficonlan/user/getAll
 		header: 
 			sessionId=0
 						
@@ -145,7 +151,7 @@
 		  
 # CREACIÓN DE UN EVENTO:
 	- Petición: 
-		POST http://localhost:8080/ficonlan/event/create
+		POST https://alguien.servegame.com:1194/ficonlan/event/create
 		header: 
 			sessionId=0
 		body: 
@@ -173,7 +179,7 @@
 	  		
 # MODIFICAR DATOS DEL EVENTO:
 - Petición: 
-		POST http://localhost:8080/ficonlan/event/changeData
+		POST https://alguien.servegame.com:1194/ficonlan/event/changeData
 		header: 
 			sessionId=0
 		body: 
@@ -194,7 +200,7 @@
 	
 # INSCRIPCIÓN EN UN EVENTO:
 	- Petición: 
-		POST http://localhost:8080/ficonlan/event/addParticipant/1/6
+		POST https://alguien.servegame.com:1194/ficonlan/event/addParticipant/1/6
 		header: 
 			sessionId=0
 			
@@ -205,7 +211,7 @@
 
 # ELIMINAR INSCRIPCIÓN EN UN EVENTO	
 	- Petición: 
-		POST http://localhost:8080/ficonlan/event/removeParticipant/1/6     *(eventId=1, userId=6)
+		POST https://alguien.servegame.com:1194/ficonlan/event/removeParticipant/1/6     *(eventId=1, userId=6)
 		header: 
 			sessionId=0
 		  
@@ -214,7 +220,7 @@
 	
 # CAMBIAR ESTADO DE INSCRIPCIÓN EN UN EVENTO	
 	- Petición: 
-		POST http://localhost:8080/ficonlan/event/changeRegistrationState/1/6/paid    *(eventId=1, userId=6, state="paid")
+		POST https://alguien.servegame.com:1194/ficonlan/event/changeRegistrationState/1/6/paid    *(eventId=1, userId=6, state="paid")
 		header: 
 			sessionId=0
 		 
@@ -228,7 +234,7 @@
 
 # OBTENER EVENTO POR NOMBRE:
 	- Petición: 
-		GET http://localhost:8080/ficonlan/event/byName/FicOnLan%202014     *(name="FicOnLan 2014", debe ir codificado en la url)
+		GET https://alguien.servegame.com:1194/ficonlan/event/byName/FicOnLan%202014     *(name="FicOnLan 2014", debe ir codificado en la url)
 		header: 
 			sessionId=0
 		 
@@ -247,7 +253,7 @@
 
 # OBTENER USUARIOS INSCRITOS EN UN EVENTO Y CON UN ESTADO DE INSCRIPCIÓN DETERMINADO:		
 	- Petición: 
-		GET http://localhost:8080/ficonlan/user/byEvent/1/paid    *(eventId=1, state="paid")
+		GET https://alguien.servegame.com:1194/ficonlan/user/byEvent/1/paid    *(eventId=1, state="paid")
 		header: 
 			sessionId=0
 		 
@@ -287,7 +293,7 @@
 # CREAR ACTIVIDAD:
 	
 	- Petición: 
-		POST http://localhost:8080/ficonlan/event/1/addActivity    *(eventId=1)
+		POST https://alguien.servegame.com:1194/ficonlan/event/1/addActivity    *(eventId=1)
 		header: 
 			sessionId=0
 		
@@ -319,15 +325,15 @@
 		  "numParticipants":40,
 		  "type":"Tournament",
 		  "oficial":true,
-		  "startDate":"02-00-2014/00:00:00",
-		  "endDate":"05-00-2014/00:00:00",
-		  "regDateOpen":"16-00-2014/09:00:00",
-		  "regDateClose":"31-00-2014/21:00:00"
+		  "startDate":"02-02-2014/00:00:00",
+	 	  "endDate":"05-02-2014/00:00:00",
+	      "regDateOpen":"16-01-2014/09:00:00",
+	      "regDateClose":"31-01-2014/21:00:00"
 		}
 
 # MODIFICAR DATOS DE UNA ACTIVIDAD:
 	- Petición: 
-		POST http://localhost:8080/ficonlan/activity/changeData
+		POST https://alguien.servegame.com:1194/ficonlan/activity/changeData
 		header: 
 			sessionId=0
 		
@@ -356,7 +362,7 @@
 	
 # ELIMINAR ACTIVIDAD
 	- Petición: 
-		POST http://localhost:8080/ficonlan/activity/remove/1    *(activityId=1)
+		POST https://alguien.servegame.com:1194/ficonlan/activity/remove/1    *(activityId=1)
 		header: 
 			sessionId=0
 			 
@@ -364,7 +370,7 @@
 	
 # ESTABLECER EL ORGANIZADOR DE UNA ACTIVIDAD:	
 	- Petición: 
-		POST http://localhost:8080/ficonlan/activity/setOrganizer/4/3   *(activityId=4, userId=3)
+		POST https://alguien.servegame.com:1194/ficonlan/activity/setOrganizer/4/3   *(activityId=4, userId=3)
 		header: 
 			sessionId=0
 			 
@@ -372,7 +378,7 @@
 	
 # BUSCAR ACTIVIDADES POR EVENTO Y TIPO:	
 	- Petición: 
-		GET http://localhost:8080/ficonlan/activity/getByEvent/1/All   *(eventId=1, type=All)
+		GET https://alguien.servegame.com:1194/ficonlan/activity/getByEvent/1/All   *(eventId=1, type=All)
 		header: 
 			sessionId=0
 		
@@ -416,7 +422,7 @@
 	
 # AÑADIR PARTICIPANTE A UNA ACTIVIDAD
 	- Petición: 
-		POST http://localhost:8080/ficonlan/activity/addParticipant/4/3   *(activityId=4, userId=3)
+		POST https://alguien.servegame.com:1194/ficonlan/activity/addParticipant/4/3   *(activityId=4, userId=3)
 		header: 
 			sessionId=0
 			 
@@ -424,7 +430,7 @@
 
 # ELIMINAR PARTICIPANTE A UNA ACTIVIDAD
 	- Petición: 
-		POST http://localhost:8080/ficonlan/activity/removeParticipant/4/3   *(activityId=4, userId=3)
+		POST https://alguien.servegame.com:1194/ficonlan/activity/removeParticipant/4/3   *(activityId=4, userId=3)
 		header: 
 			sessionId=0
 			 
@@ -432,7 +438,7 @@
 	
  # OBTENER PARTICIPANTES DE UNA ACTIVIDAD
   	-Petición: 
-		GET http://localhost:8080/ficonlan/activity/getParticipants/4   *(activityId=4)
+		GET https://alguien.servegame.com:1194/ficonlan/activity/getParticipants/4   *(activityId=4)
 		header: 
 			sessionId=0
 			 

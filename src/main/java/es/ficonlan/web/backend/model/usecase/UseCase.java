@@ -14,7 +14,7 @@ import javax.persistence.Table;
  * @version 1.0
  */
 @Entity
-@Table(name="usercase")
+@Table(name="UserCase")
 public class UseCase {
 	
 	private long useCaseId;

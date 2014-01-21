@@ -2,7 +2,6 @@ package es.ficonlan.web.backend.model.userservice;
 
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Set;
 
@@ -47,15 +46,13 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private SupportedLanguageDao languageDao;
 	
-	private MessageDigest mdigest;
-	
-	public UserServiceImpl(){
+	private String hashPassword (String password){
 		try {
-			this.mdigest = MessageDigest.getInstance("SHA-256");
-		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException();
+			MessageDigest mdigest = MessageDigest.getInstance("SHA-256");
+			return new String(mdigest.digest(password.getBytes("UTF-8")),"UTF-8");
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
 		}
-		
 	}
 	
 	/**
@@ -111,8 +108,7 @@ public class UserServiceImpl implements UserService {
 		
 		User admin = userDao.findUserBylogin("Admin");
 		if (admin == null){
-				String passHash = new String(mdigest.digest(INITIAL_ADMIN_PASS.getBytes()));
-				admin = new User("Administrador", ADMIN_LOGIN, passHash, "0", "adminMail", "-", "-");
+				admin = new User("Administrador", ADMIN_LOGIN, hashPassword(INITIAL_ADMIN_PASS), "0", "adminMail", "-", "-");
 				admin.getRoles().add(adminRole);
 		    	userDao.save(admin);
 		}
@@ -127,7 +123,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Transactional
-	public User addUser(long sessionId, User user) throws ServiceException {
+	public User addUser(long sessionId, User user) throws ServiceException{
 		SessionManager.checkPermissions(sessionId, "addUser");
 		User u = userDao.findUserBylogin(user.getLogin());
 		if (u != null) throw new ServiceException(03,"addUser","login");
@@ -139,8 +135,7 @@ public class UserServiceImpl implements UserService {
 		if(user.getDni()==null) throw new ServiceException(05,"addUser","dni");
 		if(user.getEmail()==null) throw new ServiceException(05,"addUser","email");
 		user.getRoles().add(roleDao.findByName("User"));
-		String passHash = new String(mdigest.digest(user.getPassword().getBytes()));
-		user.setPassword(passHash);
+		user.setPassword(hashPassword(user.getPassword()));
 		userDao.save(user);
 		return user;	
 	}
@@ -153,8 +148,7 @@ public class UserServiceImpl implements UserService {
 		if(!session.getUser().getLogin().contentEquals("anonymous")) throw new ServiceException(07,"login");
 		User user = userDao.findUserBylogin(login);
 		if (user == null) throw new ServiceException(04,"login","login");
-		String passHash = new String(mdigest.digest(password.getBytes()));
-		if (!user.getPassword().contentEquals(passHash))  throw new ServiceException(04,"login","password");
+		if (!user.getPassword().contentEquals(hashPassword(password)))  throw new ServiceException(04,"login","password");
 		session.setUser(user);
 		return session;
 	}
@@ -194,11 +188,9 @@ public class UserServiceImpl implements UserService {
 		try {
 			User user = userDao.find(userId);
 			if(session.getUser().getUserId() == userId){
-				String oldPassHash=new String(mdigest.digest(oldPassword.getBytes()));
-				if(!oldPassHash.contentEquals(user.getPassword()))  throw new ServiceException(04,"changeUserPassword","password"); 
+				if(!hashPassword(oldPassword).contentEquals(user.getPassword()))  throw new ServiceException(04,"changeUserPassword","password"); 
 			}
-			String newPassHash=new String(mdigest.digest(newPassword.getBytes()));
-			user.setPassword(newPassHash);
+			user.setPassword(hashPassword(newPassword));
 			userDao.save(user);
 		} catch (InstanceException e) {
 			throw new  ServiceException(06,"changeUserPassword","User");

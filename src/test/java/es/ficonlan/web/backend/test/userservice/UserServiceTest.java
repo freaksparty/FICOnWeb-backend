@@ -1,5 +1,6 @@
 package es.ficonlan.web.backend.test.userservice;
 
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -214,14 +215,14 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	public void testChangeUserPassword() throws ServiceException, InstanceException, NoSuchAlgorithmException{
+	public void testChangeUserPassword() throws ServiceException, InstanceException, NoSuchAlgorithmException, UnsupportedEncodingException{
     	Session anonymousSession = userService.newAnonymousSession();
     	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	Session s = userService.login(anonymousSession.getSessionId(),"login1", "pass");
     	userService.changeUserPassword(s.getSessionId(), user.getUserId(), "pass", "newpass");
     	User u = userDao.find(user.getUserId());
     	MessageDigest mdigest = MessageDigest.getInstance("SHA-256");
-    	String newPassHash = new String(mdigest.digest("newpass".getBytes()));
+    	String newPassHash = new String(mdigest.digest("newpass".getBytes("UTF-8")),"UTF-8");
     	assertTrue(u.getPassword().contentEquals(newPassHash));
 	}
 	
@@ -240,14 +241,14 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	public void testChangeUserPasswordByAnAdmin() throws ServiceException, InstanceException, NoSuchAlgorithmException{
+	public void testChangeUserPasswordByAnAdmin() throws ServiceException, InstanceException, NoSuchAlgorithmException, UnsupportedEncodingException{
     	Session anonymousSession = userService.newAnonymousSession();
     	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	userService.changeUserPassword(s.getSessionId(), user.getUserId(), null, "newpass"); //Old password not required in this case
     	User u = userDao.find(user.getUserId());
     	MessageDigest mdigest = MessageDigest.getInstance("SHA-256");
-    	String newPassHash = new String(mdigest.digest("newpass".getBytes()));
+    	String newPassHash = new String(mdigest.digest("newpass".getBytes("UTF-8")),"UTF-8");
     	assertTrue(u.getPassword().contentEquals(newPassHash));
 	}
 	
