@@ -25,9 +25,11 @@ public interface EventService {
 	
 	public void removeParticipantFromEvent(long sessionId, int userId, int eventId) throws ServiceException;
 	
+	public void setPaid(long sessionId, int userId, int eventId) throws ServiceException;
+	
 	public void changeRegistrationState(long sessionId, int userId, int eventId, RegistrationState state) throws ServiceException;
 
-    public Event findEventByName(long sessionId, String name) throws ServiceException;
+    public List<Event> findEventByName(long sessionId, String name) throws ServiceException;
     
     public Activity addActivity(long sessionId, int eventId,  Activity activity) throws ServiceException;
     

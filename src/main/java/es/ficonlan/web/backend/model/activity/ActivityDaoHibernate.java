@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
+import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.util.dao.GenericDaoHibernate;
 
 /**
@@ -44,15 +45,15 @@ public class ActivityDaoHibernate extends GenericDaoHibernate<Activity,Integer> 
 				                       		).setParameter("eventId",eventId).setParameter("type",type).list(); 			
 	}
 
-	/*@Override
-	public List<User> getParticipants(Activity activity) {	
-		//Force initialization
-		Hibernate.initialize(activity.getParticipants());
-		for(User u:activity.getParticipants()){
-			Hibernate.initialize(u);
-		}
-		return activity.getParticipants();
-	}*/
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> getParticipants(int activityId) {	
+		return getSession().createQuery( "SELECT p "  +
+			      						 "FROM Activity a INNER JOIN a.participants p " +
+			      						 "WHERE a.activityId=:activityId " +
+			      						 "ORDER BY p.login"
+         							   ).setParameter("activityId", activityId).list();
+	}
 	
 	
 

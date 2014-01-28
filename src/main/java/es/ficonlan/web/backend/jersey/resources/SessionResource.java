@@ -1,6 +1,7 @@
 package es.ficonlan.web.backend.jersey.resources;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -8,6 +9,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
+import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.userservice.UserService;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import es.ficonlan.web.backend.model.util.session.Session;
@@ -63,6 +65,13 @@ public class SessionResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Session login(@HeaderParam("sessionId") long sessionId, LoginData loginData) throws ServiceException {
     	return userService.login(sessionId, loginData.getLogin(), loginData.getPassword());
+	}
+	
+	@Path("/currentUser")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public User currentUser(@HeaderParam("sessionId") long sessionId) throws ServiceException {
+    	return userService.getCurrenUser(sessionId);
 	}
 	
 	@Path("/close")

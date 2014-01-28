@@ -1,5 +1,7 @@
 package es.ficonlan.web.backend.jersey.resources;
 
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -13,6 +15,7 @@ import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
 import es.ficonlan.web.backend.model.activity.Activity;
 import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.eventservice.EventService;
+import es.ficonlan.web.backend.model.newsitem.NewsItem;
 import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 
@@ -69,10 +72,16 @@ public class EventResource {
 		eventService.changeRegistrationState(sessionId, userId, eventId, st);
 	}
 	
+	@Path("/setPaid/{eventId}/{userId}")
+	@POST
+	public void setPaid(@HeaderParam("sessionId") long sessionId, @PathParam("eventId") int eventId, @PathParam("userId") int userId) throws ServiceException {
+		eventService.setPaid(sessionId, userId, eventId);
+	}
+	
 	@Path("/byName/{name}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Event findByName(@HeaderParam("sessionId") long sessionId, @PathParam("name") String name) throws ServiceException {
+	public List<Event> findByName(@HeaderParam("sessionId") long sessionId, @PathParam("name") String name) throws ServiceException {
 		return eventService.findEventByName(sessionId, name);
 	}
 	
@@ -84,4 +93,12 @@ public class EventResource {
 		return eventService.addActivity(sessionId, eventId, activity);
 	}
 	
+	@Path("/{eventId}/addNews")
+	@POST
+	@Consumes({MediaType.APPLICATION_JSON})
+	@Produces(MediaType.APPLICATION_JSON)
+    public NewsItem add(@HeaderParam("sessionId") long sessionId, @PathParam("eventId") int eventId, NewsItem newsItem) throws ServiceException{
+    	return eventService.addNews(sessionId, eventId, newsItem);
+    }
+    
 }

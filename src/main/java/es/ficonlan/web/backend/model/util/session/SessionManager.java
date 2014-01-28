@@ -1,5 +1,7 @@
 package es.ficonlan.web.backend.model.util.session;
 
+import java.util.Calendar;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import es.ficonlan.web.backend.model.role.Role;
@@ -19,11 +21,22 @@ public class SessionManager {
 	}
 	
 	public static Session getSession(long sessionId){
-		return openSessions.get(sessionId);
+		Session s = openSessions.get(sessionId);
+		s.setLastAccess(Calendar.getInstance());
+		return s;
 	}
 	
 	public static void removeSession(long sessionId){
 		openSessions.remove(sessionId);
+	}
+	
+	public static void cleanOldSessions(int timeout){
+		Calendar limitTime = Calendar.getInstance();
+		limitTime.add(Calendar.SECOND, -timeout);
+		for(Map.Entry<Long,Session> e:openSessions.entrySet()){
+			if(e.getValue().getLastAccess().before(limitTime))
+				openSessions.remove(e.getKey());
+		}
 	}
 	
 	/**

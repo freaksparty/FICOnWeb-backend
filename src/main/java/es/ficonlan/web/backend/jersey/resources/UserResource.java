@@ -1,6 +1,7 @@
 package es.ficonlan.web.backend.jersey.resources;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
 import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
+import es.ficonlan.web.backend.model.role.Role;
 import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.userservice.UserService;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
@@ -79,18 +81,28 @@ public class UserResource {
 		userService.changeUserPassword(sessionId, userId, data.getOldPassword(), data.getNewPassword());
 	}
 	
-	@Path("/all")
+	@Path("/all/{statrtIndex}/{maxResults}")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<User> getAll(@HeaderParam("sessionId") long sessionId) throws ServiceException {
-		return userService.getAllUsers(sessionId);
+	public List<User> getAll(@HeaderParam("sessionId") long sessionId, @PathParam("startIndex") int startIndex,  @PathParam("maxResults") int maxResults) throws ServiceException {
+		return userService.getAllUsers(sessionId, startIndex, maxResults);
 
 	}
 	
-	@Path("/byEvent/{eventId}/{state}")
+	@Path("/findByName/{name}/{statrtIndex}/{maxResults}")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<User> getByEvent(@HeaderParam("sessionId") long sessionId, @PathParam("eventId") int eventId, @PathParam("state") String state) throws ServiceException {
+	public List<User> findByName(@HeaderParam("sessionId") long sessionId, @PathParam("name") String name, @PathParam("startIndex") int startIndex,  
+			                     @PathParam("maxResults") int maxResults) throws ServiceException {
+		return userService.findUsersByName(sessionId, name, startIndex, maxResults);
+
+	}
+	
+	@Path("/byEvent/{eventId}/{state}/{statrtIndex}/{maxResults}")
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	public List<User> getByEvent(@HeaderParam("sessionId") long sessionId, @PathParam("eventId") int eventId, @PathParam("state") String state,  
+			                     @PathParam("startIndex") int startIndex,  @PathParam("maxResults") int maxResults) throws ServiceException {
 		RegistrationState st;
 		if(state==null) throw new ServiceException(05,"getUsersByEvent","state");
     	if(state.toLowerCase().contentEquals("registered"))  st=RegistrationState.registered;
@@ -98,6 +110,45 @@ public class UserResource {
     	else if(state.toLowerCase().contentEquals("paid")) st=RegistrationState.paid;
     	else if(state.toLowerCase().contentEquals("all")) st=null;
     	else throw new ServiceException(04,"getUsersByEvent","state");
-		return userService.getUsersByEvent(sessionId, eventId, st);
+		return userService.getUsersByEvent(sessionId, eventId, st, startIndex, maxResults);
+	}
+	
+	@Path("/addToBlackList/{userId}")
+	@POST
+	public void addToBlackList(@HeaderParam("sessionId") long sessionId, @PathParam("userId") int userId) throws ServiceException {
+		userService.addUserToBlackList(sessionId, userId);
+	}
+	
+	@Path("/removeFromBlackList/{userId}")
+	@POST
+	public void removeFromBlackList(@HeaderParam("sessionId") long sessionId, @PathParam("userId") int userId) throws ServiceException {
+		userService.removeUserFromBlackList(sessionId, userId);
+	}
+	
+	@Path("/getBlackList/{statrtIndex}/{maxResults}")
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	public List<User> getBlackList(@HeaderParam("sessionId") long sessionId, @PathParam("startIndex") int startIndex,  @PathParam("maxResults") int maxResults) throws ServiceException {
+		return userService.getBlacklistedUsers(sessionId, startIndex, maxResults);
+
+	}
+	
+	@Path("/addRole/{userId}/{roleId}")
+	@POST
+	public void addRole(@HeaderParam("sessionId") long sessionId, @PathParam("roleId") int roleId, @PathParam("userId") int userId) throws ServiceException{
+		userService.addRole(sessionId, roleId, userId);
+	}
+	
+	@Path("/removeRole/{userId}/{roleId}")
+	@POST
+	public void removeRole(@HeaderParam("sessionId") long sessionId, @PathParam("roleId") int roleId, @PathParam("userId") int userId) throws ServiceException{
+		userService.removeRole(sessionId, roleId, userId);
+	} 
+	
+	@Path("/roles/{userId}")
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	public Set<Role> getUserRoles(@HeaderParam("sessionId") long sessionId, @PathParam("userId") int userId) throws ServiceException {
+		return userService.getUserRoles(sessionId, userId);
 	}
 }

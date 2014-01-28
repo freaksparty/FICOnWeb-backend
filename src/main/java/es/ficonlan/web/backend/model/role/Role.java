@@ -1,6 +1,5 @@
 package es.ficonlan.web.backend.model.role;
 
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,6 +14,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import es.ficonlan.web.backend.model.usecase.UseCase;
 
 /**
@@ -24,7 +25,7 @@ import es.ficonlan.web.backend.model.usecase.UseCase;
 @Entity
 public class Role {
 	
-	private long roleId;
+	private int roleId;
 	private String roleName;
 	private Set<UseCase> useCases = new HashSet<UseCase>(); 
 	
@@ -40,11 +41,11 @@ public class Role {
 	@SequenceGenerator(name = "roleIdGenerator", sequenceName = "RoleSeq")
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "roleIdGenerator")
-	public long getRoleId() {
+	public int getRoleId() {
 		return this.roleId;
 	}
 	
-	public void setRoleId(long newId)
+	public void setRoleId(int newId)
 	{
 		this.roleId = newId;
 	}
@@ -59,6 +60,7 @@ public class Role {
 		this.roleName = roleName;
 	}
 
+	@JsonIgnore
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "Role_UserCase", joinColumns = {
 			@JoinColumn(name = "Role_UserCase_Role_id")}, inverseJoinColumns = {

@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @Table(name="UserCase")
 public class UseCase {
 	
-	private long useCaseId;
+	private int useCaseId;
 	private String useCaseName;
 	
 	public UseCase() {};
@@ -32,11 +32,11 @@ public class UseCase {
 	@SequenceGenerator(name = "userCaseIdGenerator", sequenceName = "userCaseSeq")
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "userCaseIdGenerator")
-	public long getUserCaseId() {
+	public int getUserCaseId() {
 		return this.useCaseId;
 	}
 	
-	public void setUserCaseId(long newId)
+	public void setUserCaseId(int newId)
 	{
 		this.useCaseId = newId;
 	}

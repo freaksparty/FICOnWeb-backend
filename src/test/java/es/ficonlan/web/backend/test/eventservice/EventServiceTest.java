@@ -11,6 +11,8 @@ import es.ficonlan.web.backend.model.activity.ActivityDao;
 import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.event.EventDao;
 import es.ficonlan.web.backend.model.eventservice.EventService;
+import es.ficonlan.web.backend.model.newsitem.NewsDao;
+import es.ficonlan.web.backend.model.newsitem.NewsItem;
 import es.ficonlan.web.backend.model.registration.Registration;
 import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
 import es.ficonlan.web.backend.model.registration.RegistrationDao;
@@ -24,13 +26,11 @@ import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import es.ficonlan.web.backend.model.util.session.Session;
 import static es.ficonlan.web.backend.model.util.GlobalNames.SPRING_CONFIG_FILE;
 import static es.ficonlan.web.backend.test.util.GlobalNames.SPRING_CONFIG_TEST_FILE;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.util.Calendar;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,6 +57,9 @@ public class EventServiceTest {
     
     @Autowired
     private ActivityDao activityDao;
+    
+    @Autowired
+    private NewsDao newsDao;
     
     @Autowired
     private RegistrationDao registrationDao;
@@ -162,14 +165,17 @@ public class EventServiceTest {
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
         Event event = new Event(0, "Awesome event!", "Curling world cup.", 10, Calendar.getInstance(), Calendar.getInstance(),Calendar.getInstance(), Calendar.getInstance());
         eventDao.save(event);
-        Assert.assertEquals(event, eventService.findEventByName(s.getSessionId(), "Awesome event!"));
+        List<Event> result = eventService.findEventByName(s.getSessionId(), "awesome");
+        assertTrue(result.size()==1);
+        assertTrue(result.get(0).getEventId()==event.getEventId());
     }
 
-    @Test(expected = ServiceException.class)
+    @Test
     public void testFindEventByUnexistingName() throws ServiceException {
     	Session anonymousSession = userService.newAnonymousSession();
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
-        eventService.findEventByName(s.getSessionId(), NON_EXISTENT_EVENT_NAME);
+    	List<Event> result = eventService.findEventByName(s.getSessionId(), NON_EXISTENT_EVENT_NAME);
+    	assertTrue(result.size()==0);
     }
     
     @Test
@@ -316,5 +322,93 @@ public class EventServiceTest {
     	assertTrue(result.get(1).getUserId()==user2.getUserId());
     }
     
+    @Test
+    public void addNewsTest() throws ServiceException, InstanceException{
+    	Session anonymousSession = userService.newAnonymousSession();
+    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	NewsItem news = new NewsItem("Nueva noticia", Calendar.getInstance(), "http://ficonlan/nuevaNoticia", 2);
+    	Calendar dateStart = Calendar.getInstance();
+    	Calendar dateEnd = Calendar.getInstance();
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd);
+    	eventService.createEvent(s.getSessionId(), event);
+    	eventService.addNews(s.getSessionId(), event.getEventId(), news);
+    	assertEquals(news, newsDao.find(news.getNewsItemId()));
+    	assertTrue(newsDao.find(news.getNewsItemId()).getPublisher().getLogin().contentEquals("Admin"));
+    }
     
+    @Test
+    public void changeNewsDataTest() throws ServiceException {
+    	Session anonymousSession = userService.newAnonymousSession();
+    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	NewsItem news = new NewsItem("Nueva noticia", Calendar.getInstance(), "http://ficonlan/nuevaNoticia", 2);
+    	Calendar dateStart = Calendar.getInstance();
+    	Calendar dateEnd = Calendar.getInstance();
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd);
+    	eventService.createEvent(s.getSessionId(), event);
+    	eventService.addNews(s.getSessionId(), event.getEventId(), news);
+    	Calendar c = Calendar.getInstance();
+    	c.add(Calendar.DAY_OF_YEAR, 1);
+    	NewsItem newsData = new NewsItem("Nueva noticia2", c , "http://ficonlan/nuevaNoticia2", 3);
+    	newsData.setNewsItemId(news.getNewsItemId());
+    	eventService.changeNewsData(s.getSessionId(), newsData);
+    	assertTrue(news.getTitle().contentEquals("Nueva noticia2"));
+    	assertTrue(news.getUrl().contentEquals("http://ficonlan/nuevaNoticia2"));
+    	assertTrue(news.getPublishDate().compareTo(c)==0);
+    	assertTrue(news.getPriorityHours()==3); 	
+    }
+    
+    @Test
+    public void getLastNewsTest() throws ServiceException {
+    	Session anonymousSession = userService.newAnonymousSession();
+    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	Calendar dateStart = Calendar.getInstance();
+    	Calendar dateEnd = Calendar.getInstance();
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd);
+    	eventService.createEvent(s.getSessionId(), event);
+    	NewsItem news1 = new NewsItem("Nueva noticia1",  Calendar.getInstance(), "http://ficonlan/nuevaNoticia1", 2);
+    	eventService.addNews(s.getSessionId(), event.getEventId(), news1);
+    	NewsItem news2 = new NewsItem("Nueva noticia2",  Calendar.getInstance(), "http://ficonlan/nuevaNoticia2", 0);
+    	eventService.addNews(s.getSessionId(), event.getEventId(), news2);
+      	Calendar c = Calendar.getInstance();
+    	c.add(Calendar.DAY_OF_YEAR, -2);
+    	NewsItem news3 = new NewsItem("Nueva noticia3", c, "http://ficonlan/nuevaNoticia3", 0);
+    	eventService.addNews(s.getSessionId(), event.getEventId(), news3);
+    	Calendar limit = Calendar.getInstance();
+    	limit.add(Calendar.DAY_OF_YEAR, -1);
+    	List<NewsItem> lastNews = eventService.getLastNews(s.getSessionId(), limit, false);
+    	assertTrue(lastNews.size()==2);
+    	assertTrue(lastNews.get(0).getNewsItemId()==news1.getNewsItemId());
+    	assertTrue(lastNews.get(1).getNewsItemId()==news2.getNewsItemId());
+    	lastNews = eventService.getLastNews(s.getSessionId(), limit, true);
+    	assertTrue(lastNews.size()==1);
+    	assertTrue(lastNews.get(0).getNewsItemId()==news1.getNewsItemId());
+    	limit.add(Calendar.DAY_OF_YEAR, -5);
+    	lastNews = eventService.getLastNews(s.getSessionId(), limit, false);
+    	assertTrue(lastNews.size()==3);
+    	assertTrue(lastNews.get(0).getNewsItemId()==news1.getNewsItemId());
+    	assertTrue(lastNews.get(1).getNewsItemId()==news2.getNewsItemId());
+    	assertTrue(lastNews.get(2).getNewsItemId()==news3.getNewsItemId());
+    }
+    
+    @Test
+    public void removeNewsTest() throws ServiceException {
+    	Session anonymousSession = userService.newAnonymousSession();
+    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	NewsItem news = new NewsItem("Nueva noticia", Calendar.getInstance(), "http://ficonlan/nuevaNoticia", 2);
+    	Calendar dateStart = Calendar.getInstance();
+    	Calendar dateEnd = Calendar.getInstance();
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd);
+    	eventService.createEvent(s.getSessionId(), event);
+    	eventService.addNews(s.getSessionId(), event.getEventId(), news);
+    	try {
+			newsDao.find(news.getNewsItemId());
+		} catch (InstanceException e1) {
+			  fail("This shouldn't have thrown an exception");  
+		}
+    	eventService.removeNews(s.getSessionId(), news.getNewsItemId());
+    	try {
+			newsDao.find(news.getNewsItemId());
+			fail("This shouldn have thrown an exception");  
+		} catch (InstanceException e) {}
+    }    
 }

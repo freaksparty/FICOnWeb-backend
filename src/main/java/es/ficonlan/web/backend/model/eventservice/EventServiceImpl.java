@@ -54,6 +54,7 @@ public class EventServiceImpl implements EventService {
 		if(event.getEndDate()==null) throw new ServiceException(05,"createEvent","endDate");
 		if(event.getRegistrationOpenDate()==null) throw new ServiceException(05,"createEvent","registrationOpenDate");
 		if(event.getRegistrationCloseDate()==null) throw new ServiceException(05,"createEvent","registrationCloseDate");
+		if(eventDao.findEventByName(event.getName())!=null) throw new ServiceException(03,"createEvent","name");
     	eventDao.save(event);
     	return event;
 	}
@@ -81,11 +82,16 @@ public class EventServiceImpl implements EventService {
 		SessionManager.checkPermissions(sessionId, "addParticipantToEvent");
     	try{
     		User user = userDao.find(userId);
-    		Event event = eventDao.find(eventId);
-    		if(registrationDao.geNumRegistrations(event.getEventId())>=event.getNumParticipants()) throw new ServiceException(8,"addParticipantToEvent","Event(Id="+event.getEventId()+")");
+    		Event event = eventDao.find(eventId);    		
     		if(event.getRegistrationOpenDate().compareTo(Calendar.getInstance())>0||event.getRegistrationCloseDate().compareTo(Calendar.getInstance())<0) throw new ServiceException(9,"addParticipantToEvent");
     		Registration registration = new Registration(user, event);
-        	registrationDao.save(registration);
+    		int currentParticipants = registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.registered) + 
+    								  registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.paid);
+    		if(currentParticipants>=event.getNumParticipants()) registration.setState(RegistrationState.inQueue);
+    		//TODO: else if(user.isInBlackList()) registration.setState(RegistrationState.inQueue);
+    		else registration.setState(RegistrationState.registered);
+    		registrationDao.save(registration);
+        	//TODO: Mandar correo electrónico
     	} catch (InstanceException e) {
 			if (e.getClassName().contentEquals("User")) throw new  ServiceException(06,"addParticipantToEvent","User");
 			else throw new  ServiceException(06,"addParticipantToEvent","Event");
@@ -100,11 +106,34 @@ public class EventServiceImpl implements EventService {
     	if (registration==null) throw new  ServiceException(06,"removeParticipantFromEvent","Registration");	
         try {
 			registrationDao.remove(registration.getRegistrationId());
+			//TODO: if registration.getState()==registered Mandar correo electrónico registration.User()
 		} catch (InstanceException e) {
 			 throw new  ServiceException(06,"removeParticipantFromEvent","Registration");
-		}	
+		}
+        Registration firstInQueue = registrationDao.getFirstInQueue(eventId);
+        if(firstInQueue!=null){
+        	firstInQueue.setState(RegistrationState.registered);
+        	registrationDao.save(firstInQueue);
+        	//TODO: Mandar correo electrónico a firstInQueue.getUser()
+        }
+	}
+	
+	@Transactional
+	public void setPaid(long sessionId, int userId, int eventId) throws ServiceException {
+		SessionManager.checkPermissions(sessionId, "setPaid");
+		Registration registration = registrationDao.findByUserAndEvent(userId, eventId);
+    	if (registration==null) throw new  ServiceException(06,"changeRegistrationState","Registration");
+    	registration.setPaidDate(Calendar.getInstance());
+    	registration.setPaid(true);
+    	registration.setState(RegistrationState.paid);
+		registrationDao.save(registration);
+    	//TODO: Mandar correo electrónico
 	}
 
+	/**
+	 * This method doesn,t check constraints.
+	 * Use only in exceptional circumstances. Otherways use "setPaid" method.
+	 */
 	@Transactional
 	public void changeRegistrationState(long sessionId, int userId, int eventId, RegistrationState state) throws ServiceException {
 		if(state==null) throw new  ServiceException(05,"changeRegistrationState","state");
@@ -120,14 +149,9 @@ public class EventServiceImpl implements EventService {
 	}
 
     @Transactional(readOnly = true)
-    public Event findEventByName(long sessionId, String name) throws ServiceException {
+    public List<Event> findEventByName(long sessionId, String name) throws ServiceException {
 		SessionManager.checkPermissions(sessionId, "findEventByName");
-        Event event = eventDao.findEventByName(name);
-        if (event == null) {
-            throw new ServiceException(06,"findEventByName","Event");
-        } else {
-            return event;
-        }
+		return eventDao.searchEventsByName(name);
     }
 
     @Transactional
@@ -255,13 +279,7 @@ public class EventServiceImpl implements EventService {
     @Transactional(readOnly = true)
 	public List<User> getActivityParticipants(long sessionId, int activityId) throws ServiceException {
     	SessionManager.checkPermissions(sessionId, "getActivityParticipants");
-		try {
-			Activity activity = activityDao.find(activityId);
-			//return activityDao.getParticipants(activity);
-			return activity.getParticipants();
-		} catch (InstanceException e) {
-			throw new  ServiceException(06,"getActivityParticipants","Activity");
-		}
+    	return activityDao.getParticipants(activityId);
 	}
 
     @Transactional
@@ -284,7 +302,7 @@ public class EventServiceImpl implements EventService {
 
     @Transactional
 	public void changeNewsData(long sessionId, NewsItem newsData) throws ServiceException {
-    	SessionManager.checkPermissions(sessionId, "changeNewsItemData");
+    	SessionManager.checkPermissions(sessionId, "changeNewsData");
 		try {
 			NewsItem news = newsDao.find(newsData.getNewsItemId());
 			if(newsData.getTitle()!=null) news.setTitle(newsData.getTitle());
@@ -301,6 +319,7 @@ public class EventServiceImpl implements EventService {
     @Transactional(readOnly = true)
 	public List<NewsItem> getLastNews(long sessionId, Calendar dateLimit, boolean onlyOutstandingNews) throws ServiceException {
     	SessionManager.checkPermissions(sessionId, "getLastNews");
+    	if(dateLimit==null) throw new ServiceException(05,"getLastNews","limitDate");
 		return newsDao.getLastNews(sessionId, dateLimit, onlyOutstandingNews);
 	}
 

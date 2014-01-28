@@ -53,17 +53,27 @@ Cuenta de Admin:
 	- Respuesta: 200 OK
 		{
 		  "sessionId":0,
-		  "user": {
-		            "userId":6,
-		            "name":"User1",
-		            "login":"user1",
-		            "dni":"12345678Y",
-		            "email":"user1@hotmail.com",
-		            "phoneNumber":"666666666",
-		            "shirtSize":"XL",
-		            "defaultLanguage":null
-		          }
+		  "user": 6
 		}
+
+# OBTENER LOS DATOS DEL USUARIO ACTUAL:	
+
+	- Petición: 
+		GET https://alguien.servegame.com:1194/ficonlan/session/currentUser
+		header: 
+			sessionId=0	
+			
+	- Respuesta: 200 OK		
+			{
+			   "userId":6,
+			   "name":"User1",
+			   "login":"user1",
+			   "dni":"12345678Y",
+			   "email":"user1@hotmail.com",
+			   "phoneNumber":"666666666",
+			   "shirtSize":"XL",
+			   "defaultLanguage":null
+			 },
 		
 		
 # CIERRE DE SESIÓN:	
@@ -76,7 +86,7 @@ Cuenta de Admin:
 	
 # MODIFICAR DATOS DEL USUARIO:
 	- Petición: 
-		GET https://alguien.servegame.com:1194/ficonlan/user/all
+		GET https://alguien.servegame.com:1194/ficonlan/user/changeData
 		header: 
 			sessionId=0
 		body:
@@ -110,7 +120,7 @@ Cuenta de Admin:
  
  # LISTAR TODOS LOS USUARIOS:
  	- Petición: 
-		GET https://alguien.servegame.com:1194/ficonlan/user/getAll
+		GET https://alguien.servegame.com:1194/ficonlan/user/all/0/10    *(startIndex=0, maxResults=10)
 		header: 
 			sessionId=0
 						
@@ -148,6 +158,234 @@ Cuenta de Admin:
 			 }
 		  ]
 
+ # BUSCAR USUARIOS POR NOMBRE:
+ 	- Petición: 
+		GET https://alguien.servegame.com:1194/ficonlan/user/findByName/use/0/10    *(name="use", startIndex=0, maxResults=10) el nombre debe ir codificado en la url
+		header: 
+			sessionId=0
+		
+		* Este metodo busca tanto por login como por nombre. la cadena de búsqueda puede contener espacios y debe ir encodeada en la url. No tiene por que coincidir
+		  exactamente con el nombre buscado, solo es necesario que el nombre o login contenga la cadena buscada. No es case sensitive. 
+						
+	- Respuesta: 200 OK
+		  [
+			 {
+			   "userId":6,
+			   "name":"User1",
+			   "login":"user1",
+			   "dni":"12345678Y",
+			   "email":"user1@hotmail.com",
+			   "phoneNumber":"666666666",
+			   "shirtSize":"XL",
+			   "defaultLanguage":null
+			 },
+			 {
+			   "userId":7,
+			   "name":"User2",
+			   "login":"user2",
+			   "dni":"23213213Z",
+			   "email":"user2@hotmail.com",
+			   "phoneNumber":"777777777",
+			   "shirtSize":"XXL",
+			   "defaultLanguage":null
+			 },
+			 {
+			   "userId":8,
+			   "name":"User3",
+			   "login":"user3",
+			   "dni":"23232323M",
+			   "email":"user3@gmail.com",
+			   "phoneNumber":"333333333",
+			   "shirtSize":"M",
+			   "defaultLanguage":null
+			 }
+		  ]
+
+
+# AÑADIR USUARIO A LA BLACKLIST:
+	- Petición: 
+		POST https://alguien.servegame.com:1194/ficonlan/user/addToBlackList/7     *(userId=7)
+		header: 
+			sessionId=0
+		  
+	- Respuesta: 204 No Content	
+	
+	
+# ELIMINAR USUARIO DE LA BLACKLIST:
+	- Petición: 
+		POST https://alguien.servegame.com:1194/ficonlan/user/removeFromBlackList/7     *(userId=7)
+		header: 
+			sessionId=0
+		  
+	- Respuesta: 204 No Content	
+	
+# OBTENER BLACKLIST	:
+	- Petición: 
+		GET https://alguien.servegame.com:1194/ficonlan/user/getBlackList/0/10    *(startIndex=0, maxResults=10)
+		header: 
+			sessionId=0
+						
+	- Respuesta: 200 OK
+		  [
+			 {
+			   "userId":7,
+			   "name":"User2",
+			   "login":"user2",
+			   "dni":"23213213Z",
+			   "email":"user2@hotmail.com",
+			   "phoneNumber":"777777777",
+			   "shirtSize":"XXL",
+			   "defaultLanguage":null
+			 },
+			 {
+			   "userId":8,
+			   "name":"User3",
+			   "login":"user3",
+			   "dni":"23232323M",
+			   "email":"user3@gmail.com",
+			   "phoneNumber":"333333333",
+			   "shirtSize":"M",
+			   "defaultLanguage":null
+			 }
+		  ]
+	
+	
+# OBTENER TODOS LOS CASOS DE USO:
+	- Petición: 
+		GET https://alguien.servegame.com:1194/ficonlan/permissions/all     
+		header: 
+			sessionId=0
+		  
+	- Respuesta: 200 OK	
+		[
+		  {
+		    "useCaseName":"addActivity",
+		    "userCaseId":23
+		  },
+		  {
+		    "useCaseName":"addNews",
+		    "userCaseId":24
+		  },
+		  {
+		    "useCaseName":"addParticipantToActivity",
+		    "userCaseId":36
+		  },
+		  {
+		    "useCaseName":"addParticipantToEvent",
+		    "userCaseId":29
+		  },
+		  
+		  ...
+		  
+		]
+
+# CREAR ROL:
+	- Petición: 
+		POST https://alguien.servegame.com:1194/ficonlan/permissions/createRole/Nuevo%20Rol   *(roleName="Nuevo Rol")    
+		header: 
+			sessionId=0
+		  
+	- Respuesta: 200 OK
+		{
+		  "roleId":6,
+		  "roleName":"Nuevo Rol"
+		}
+	
+# AÑADIR PERMISO A ROL:
+    - Petición: 
+		POST https://alguien.servegame.com:1194/ficonlan/permissions/add/6/2   *(roleId=6, useCaseId=2)    
+		header: 
+			sessionId=0
+		  
+	- Respuesta: 204 No Content	
+	
+# QUITAR PERMISO DE UN ROL:
+    - Petición: 
+		POST https://alguien.servegame.com:1194/ficonlan/permissions/remove/6/2   *(roleId=6, useCaseId=2)    
+		header: 
+			sessionId=0
+		  
+	- Respuesta: 204 No Content	
+
+# OBTERNER PERMISOS DE UN ROL:
+	- Petición: 
+		GET https://alguien.servegame.com:1194/ficonlan/permissions/role/6   *(roleId=6)
+		header: 
+			sessionId=0
+		  
+	- Respuesta: 200 OK	
+		[
+		  {
+		    "useCaseName":"getUserRoles",
+		    "userCaseId":54
+		  },
+		  {
+		    "useCaseName":"removeRole",
+		    "userCaseId":53
+		  },
+		  {
+		    "useCaseName":"createUseCase",
+		    "userCaseId":55
+		  }
+		]
+	
+# OBTERNER TODOS LOS ROLES:
+	- Petición: 
+		GET https://alguien.servegame.com:1194/ficonlan/permissions/roles
+		header: 
+			sessionId=0
+		  
+	- Respuesta: 200 OK	
+		[
+		  {
+		    "roleId":7,
+		    "roleName":"Admin"
+		  },
+		  {
+		    "roleId":3,
+		    "roleName":"Anonymous"
+		  },
+		  {
+		    "roleId":6,
+		    "roleName":"Nuevo Rol"
+		  },
+		  {
+		    "roleId":1,
+		    "roleName":"User"
+		  }
+		]
+	
+# AÑADIR ROL A UN USUARIO	
+	- Petición: 
+		POST https://alguien.servegame.com:1194/ficonlan/user/addRole/9/6   *(userId=9, roleId=6)     
+		header: 
+			sessionId=0
+		  
+	- Respuesta: 204 No Content
+	
+# QUITAR ROL A UN USUARIO	
+	- Petición: 
+		POST https://alguien.servegame.com:1194/ficonlan/user/removeRole/9/6   *(userId=9, roleId=6)    
+		header: 
+			sessionId=0
+		  
+	- Respuesta: 204 No Content					
+
+# OBTENER ROLES DE UN USUARIO:
+	- Petición: 
+		GET https://alguien.servegame.com:1194/ficonlan/user/roles/7  *(userId=7)  
+		header: 
+			sessionId=0
+		  
+	- Respuesta: 200 OK	
+		[
+		  {
+		    "roleId":7,
+		    "roleName":"Admin"
+		  }
+		]
+	
+	
 		  
 # CREACIÓN DE UN EVENTO:
 	- Petición: 
@@ -217,6 +455,15 @@ Cuenta de Admin:
 		  
 	- Respuesta: 204 No Content	
 	
+
+# CAMBIAR EL ESTADO DE INSCRIPCIÖN DE UN USUARIO A PAGADO:
+	- Petición: 
+		POST https://alguien.servegame.com:1194/ficonlan/event/setPaid/1/6    *(eventId=1, userId=6)
+		header: 
+			sessionId=0
+	
+	- Respuesta: 204 No Content	
+	
 	
 # CAMBIAR ESTADO DE INSCRIPCIÓN EN UN EVENTO	
 	- Petición: 
@@ -228,17 +475,22 @@ Cuenta de Admin:
 		   - registered (inscrito) 
 		   - inQueue
 		   - paid 
-		   
+		
+		* IMPORTANTE!! : Este método no comprueba restriciones ni manda Emails y está pensado para ser usado por un administrador en casos excepcionales. Para cambiar el estado
+		                 en cirsunstancias normales usar el método "setPaid". La cola se gestiona automáticamente y para hacerla avanzar solo es necesario eliminar del evento a los
+		                 usuarios que no han pagado con el método "removeParticipant".
+		                	   
 	- Respuesta: 204 No Content
 
 
-# OBTENER EVENTO POR NOMBRE:
+# BUSCAR EVENTOS POR NOMBRE:
 	- Petición: 
 		GET https://alguien.servegame.com:1194/ficonlan/event/byName/FicOnLan%202014     *(name="FicOnLan 2014", debe ir codificado en la url)
 		header: 
 			sessionId=0
 		 
 	- Respuesta: 200 OK
+		[	
 			{
 			  "eventId":1,
     		  "name":"FicOnLan 2014",
@@ -249,11 +501,13 @@ Cuenta de Admin:
    			  "registrationOpenDate":"16-01-2014/09:00:00",
    			  "registrationCloseDate":"31-01-2014/21:00:00"
 			}
-
+		}
+			
+* Este método se ha modificado y ya no necesita que se le pase el nombre exacto de un evento. Ahora devuelve una lista de eventos cuyo nombre sea similar al que buscamos.
 
 # OBTENER USUARIOS INSCRITOS EN UN EVENTO Y CON UN ESTADO DE INSCRIPCIÓN DETERMINADO:		
 	- Petición: 
-		GET https://alguien.servegame.com:1194/ficonlan/user/byEvent/1/paid    *(eventId=1, state="paid")
+		GET https://alguien.servegame.com:1194/ficonlan/user/byEvent/1/paid/0/10    *(eventId=1, state="paid",startIndex=0, maxResults=10)
 		header: 
 			sessionId=0
 		 
@@ -399,24 +653,24 @@ Cuenta de Admin:
 		    "numParticipants":40,
 		    "type":"Tournament",
 		    "oficial":true,
-		    "startDate":"02-00-2014/00:00:00",
-		    "endDate":"05-00-2014/00:00:00",
-		    "regDateOpen":"16-00-2014/09:00:00",
-		    "regDateClose":"31-00-2014/21:00:00"
+		    "startDate":"02-02-2014/00:00:00",
+		    "endDate":"05-02-2014/00:00:00",
+		    "regDateOpen":"16-01-2014/09:00:00",
+		    "regDateClose":"31-01-2014/21:00:00"
 		  },
 		  {
 		    "activityId":5,
 		    "organizer":null,
-		    "event":"1","name":
-		    "Concurso de Hacking",
+		    "event":"1",
+		    "name":"Concurso de Hacking",
 		    "description":"Concurso de Hacking",
 		    "numParticipants":20,
 		    "type":"Production",
 		    "oficial":true,
-		    "startDate":"02-00-2014/00:00:00",
-		    "endDate":"05-00-2014/00:00:00",
-		    "regDateOpen":"16-00-2014/09:00:00",
-		    "regDateClose":"31-00-2014/21:00:00"
+		    "startDate":"02-02-2014/00:00:00",
+		    "endDate":"05-02-2014/00:00:00",
+		    "regDateOpen":"16-01-2014/09:00:00",
+		    "regDateClose":"31-01-2014/21:00:00"
 		  }
 		]
 	
@@ -465,10 +719,99 @@ Cuenta de Admin:
 		    "defaultLanguage":null
 		  }
 		]
+
+# AÑADIR NOTICIA:
+	-Petición: 
+		POST https://alguien.servegame.com:1194/ficonlan/event/7/addNews    *(eventId=7)
+		header: 
+			sessionId=0
+		
+		body:
+			{
+			  "title":"Nueva Noticia",
+			  "url":"https://ficonlan.es/news/Noticia1",
+			  "publishDate":"16-02-2014/09:00:00",
+			  "priorityHours":2
+			}  
+		
+		* publishDate es la fecha a partir de la cual se publicará la noticia (puede crearse pero no ser publicada inmediatamente)
+		* priorityHours representa las horas durante las que la noticia será destacada después de su publicación
+		
+	- Respuesta: 200 OK	
+		{
+		  "newsItemId":3,
+		  "title":"Nueva Noticia",
+		  "creationDate":"25-01-2014/20:02:40",
+		  "publishDate":"16-02-2014/09:00:00",
+		  "url":"https://ficonlan.es/news/Noticia1",
+		  "priorityHours":2,
+		  "publisher":"7",
+		  "event":"7"
+		}	
+	
+		
+# MODIFICAR NOTICIA:
+	-Petición: 
+		POST https://alguien.servegame.com:1194/ficonlan/news/changeData
+		header: 
+			sessionId=0
+		
+		body:
+			{
+			  "newsItemId":3,
+			  "title":"Nueva Noticia2",
+			  "url":"https://ficonlan.es/news/Noticia2",
+			  "publishDate":"17-02-2014/09:00:00",
+			  "priorityHours":3
+			}  
+	
+	- Respuesta: 204 No Content	
+	
+# OBTERNER LAS ÚlTIMAS NOTICIAS:
+	-Petición: 
+		GET https://alguien.servegame.com:1194/ficonlan/news/last/5/false  *(days=5, outstandingOnly=false)  
+		header: 
+			sessionId=0
+ 
+ 		* days : indica el límite de dias (Ej: se mostrarán las noticias publicadas en los últimos 5 días)
+   		* outstandingOnly : solo noticias destacadas
+    
+	- Respuesta: 200 OK	
+		[
+		  {
+		    "newsItemId":3,
+		    "title":"Nueva Noticia2",
+		    "creationDate":"20-01-2014/20:02:40",
+		    "publishDate":"24-01-2014/09:00:00",
+		    "url":"https://ficonlan.es/news/Noticia2",
+		    "priorityHours":3,
+		    "publisher":"7",
+		    "event":"7"
+		  },
+		  {
+		    "newsItemId":4,
+		    "title":"Nueva Noticia",
+		    "creationDate":"20-01-2014/20:11:49",
+		    "publishDate":"24-01-2014/09:00:00",
+		    "url":"https://ficonlan.es/news/Noticia1",
+		    "priorityHours":2,
+		    "publisher":"7",
+		    "event":"7"
+		  }
+		]
+		
+# BORRAR UNA NOTICIA:
+	-Petición: 
+		POST https://alguien.servegame.com:1194/ficonlan/news/remove/3  *(newsItemId=3)
+		header: 
+			sessionId=0	
+			
+	- Respuesta: 204 No Content	
+	
 	
 # EXCEPCIONES:
 
-	- Petición: POST http://127.0.0.1:8080/ficonlan/user/add	
+	- Petición: POST https://alguien.servegame.com:1194/ficonlan/user/add	
 		header: 
 			sessionId=0
 		body: 

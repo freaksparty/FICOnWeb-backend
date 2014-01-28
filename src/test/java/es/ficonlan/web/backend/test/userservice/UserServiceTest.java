@@ -259,7 +259,7 @@ public class UserServiceTest {
 		userService.addUser(anonymousSession.getSessionId(), new User("User2", "user2", "pass", "22321321R", "user2@gmail.com", "690047407", "L"));
 		userService.addUser(anonymousSession.getSessionId(), new User("User3", "user3", "pass", "44343348T", "user3@gmail.com", "690047407", "L"));
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
-    	List<User> users = userService.getAllUsers(s.getSessionId());
+    	List<User> users = userService.getAllUsers(s.getSessionId(),0,10);
     	assertTrue(users.size()==4);
     	assertTrue(users.get(0).getLogin().contentEquals(ADMIN_LOGIN));
     	assertTrue(users.get(1).getLogin().contentEquals("user1"));

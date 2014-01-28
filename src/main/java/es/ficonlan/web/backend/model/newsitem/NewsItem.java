@@ -10,8 +10,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 import java.util.Calendar;
 
+import es.ficonlan.web.backend.jersey.util.JsonDateDeserializer;
+import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
+import es.ficonlan.web.backend.jersey.util.JsonEntityIdSerializer;
 import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.event.Event;
 
@@ -63,6 +69,8 @@ public class NewsItem {
 		this.title = title;
 	}
 
+	@JsonDeserialize(using = JsonDateDeserializer.class)
+	@JsonSerialize(using=JsonDateSerializer.class)
 	@Column(name = "NewsItem_date_created")
 	public Calendar getCreationDate() {
 		return creationDate;
@@ -72,6 +80,8 @@ public class NewsItem {
 		this.creationDate = creationDate;
 	}
 
+	@JsonDeserialize(using = JsonDateDeserializer.class)
+	@JsonSerialize(using=JsonDateSerializer.class)
 	@Column(name = "NewsItem_date_publish")
 	public Calendar getPublishDate() {
 		return publishDate;
@@ -99,6 +109,7 @@ public class NewsItem {
 		this.priorityHours = priorityHours;
 	}
 
+	@JsonSerialize(using=JsonEntityIdSerializer.class)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "NewsItem_user_id")
 	public User getPublisher() {
@@ -109,6 +120,7 @@ public class NewsItem {
 		this.publisher = publisher;
 	}
 	
+	@JsonSerialize(using=JsonEntityIdSerializer.class)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "NewsItem_Event_id")
 	public Event getEvent() {
@@ -118,9 +130,4 @@ public class NewsItem {
 	public void setEvent(Event event) {
 		this.event = event;
 	}
-	
-	
-	
-
-
 }

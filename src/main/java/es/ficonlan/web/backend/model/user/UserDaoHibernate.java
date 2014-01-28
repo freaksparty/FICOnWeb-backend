@@ -14,12 +14,12 @@ import es.ficonlan.web.backend.model.util.dao.GenericDaoHibernate;
 public class UserDaoHibernate extends GenericDaoHibernate<User,Integer> implements UserDao {
 	
 	@SuppressWarnings("unchecked")
-	public List<User> getAllUsers(){
+	public List<User> getAllUsers(int startindex, int maxResults){
 		return getSession().createQuery(
 	        	"SELECT u " +
 		        "FROM User u " +
 		        "WHERE u.login!='anonymous' AND u.deleted=FALSE " +
-	        	"ORDER BY u.userId").list();
+	        	"ORDER BY u.login").setFirstResult(startindex).setMaxResults(maxResults).list();
 	}
 	
 	public User findUserBylogin(String login) {
@@ -29,23 +29,46 @@ public class UserDaoHibernate extends GenericDaoHibernate<User,Integer> implemen
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<User> getUsersByEvent(int eventId, RegistrationState state) {
+	public List<User> getUsersByEvent(int eventId, RegistrationState state, int startindex, int maxResults) {
 		if (state==null) return getSession().createQuery("SELECT u " +
    			                                             "FROM Registration r INNER JOIN r.user u " +
 	                                                     "WHERE r.event.id = :eventId AND u.deleted=FALSE " +
                                                          "ORDER BY r.registrationDate" 
-	                                                    ).setParameter("eventId",eventId).list();
+	                                                    ).setParameter("eventId",eventId).setFirstResult(startindex).setMaxResults(maxResults).list();
 		else return getSession().createQuery( "SELECT u " +
                    							  "FROM Registration r INNER JOIN r.user u " +
                    							  "WHERE r.event.id = :eventId AND r.state = :state AND u.deleted=FALSE " +
                    							  "ORDER BY r.registrationDate" 
-				 						    ).setParameter("eventId",eventId).setParameter("state",state).list(); 			
+				 						    ).setParameter("eventId",eventId).setParameter("state",state).setFirstResult(startindex).setMaxResults(maxResults).list(); 			
 	}
 
 	public User findUserByDni(String dni) {
 		return (User) getSession()
 				.createQuery("SELECT u FROM User u Where User_dni = :dni AND u.deleted=FALSE")
 				.setParameter("dni", dni).uniqueResult();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> findUsersByName(String name, int startindex, int maxResults) {
+		return getSession().createQuery(
+	        	"SELECT u " +
+		        "FROM User u " +
+		        "WHERE u.login!='anonymous' AND u.deleted=FALSE " +
+		          "AND ( LOWER(u.name) LIKE '%'||LOWER(:name)||'%' " +
+		           "OR  LOWER(u.login) LIKE '%'||LOWER(:name)||'%' ) " +
+	        	"ORDER BY u.login").setParameter("name",name).setFirstResult(startindex).setMaxResults(maxResults).list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> getBlacklistedUsers(long sessionId, int startIndex, int maxResults) {
+		return getSession().createQuery(
+	        	"SELECT u " +
+		        "FROM User u " +
+		        "WHERE u.login!='anonymous' AND u.deleted=FALSE " +
+		          "AND u.inBlackList=true " +
+	        	"ORDER BY u.login").setFirstResult(startIndex).setMaxResults(maxResults).list();
 	}
 
 }

@@ -63,7 +63,8 @@ public class UserServiceImpl implements UserService {
 		
 		for(Method m:UserService.class.getMethods()){
 			UseCase uc = useCaseDao.findByName(m.getName());
-			if (uc==null && !m.getName().contentEquals("initialize") && !m.getName().contentEquals("login")){
+			if (uc==null && !m.getName().contentEquals("initialize") && 
+				!m.getName().contentEquals("login") && !m.getName().contentEquals("getCurrenUser")){
 				uc=new UseCase(m.getName());
 				useCaseDao.save(uc);
 			}
@@ -84,13 +85,12 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		Role adminRole  = roleDao.findByName("Admin");
-			if (adminRole==null){
-				adminRole = new Role("Admin");
-				for(UseCase uc:useCaseDao.getAll()){
-					adminRole.getUseCases().add(uc);
-				}
-				roleDao.save(adminRole);
-			}
+		if (adminRole==null)adminRole = new Role("Admin");
+		for(UseCase uc:useCaseDao.getAll()){
+			if(!adminRole.getUseCases().contains(uc)) adminRole.getUseCases().add(uc);
+		}
+		roleDao.save(adminRole);
+		
 		
 		Role anonymousRole = roleDao.findByName("Anonymous");
 		if (anonymousRole==null){
@@ -107,11 +107,9 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		User admin = userDao.findUserBylogin("Admin");
-		if (admin == null){
-				admin = new User("Administrador", ADMIN_LOGIN, hashPassword(INITIAL_ADMIN_PASS), "0", "adminMail", "-", "-");
-				admin.getRoles().add(adminRole);
-		    	userDao.save(admin);
-		}
+		if (admin == null) admin = new User("Administrador", ADMIN_LOGIN, hashPassword(INITIAL_ADMIN_PASS), "0", "adminMail", "-", "-");
+		if(!admin.getRoles().contains(adminRole)) admin.getRoles().add(adminRole);
+    	userDao.save(admin);
 	}
 	
 	@Transactional
@@ -151,6 +149,13 @@ public class UserServiceImpl implements UserService {
 		if (!user.getPassword().contentEquals(hashPassword(password)))  throw new ServiceException(04,"login","password");
 		session.setUser(user);
 		return session;
+	}
+	
+	public User getCurrenUser(long sessionId) throws ServiceException {
+		if (!SessionManager.exists(sessionId)) throw new ServiceException(01,"getCurrenUser");
+		Session session = SessionManager.getSession(sessionId);
+		if(session.getUser().getLogin().contentEquals("anonymous")) return null;
+		return session.getUser();
 	}
 
 	public void closeSession(long sessionId) throws ServiceException {
@@ -198,29 +203,21 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Transactional(readOnly=true)
-	public List<User> getUsersByEvent(long sessionId, int eventId, RegistrationState state) throws ServiceException {
+	public List<User> getUsersByEvent(long sessionId, int eventId, RegistrationState state, int startindex, int maxResults) throws ServiceException {
 		SessionManager.checkPermissions(sessionId, "getUsersByEvent");
-		return userDao.getUsersByEvent(eventId,state);
+		return userDao.getUsersByEvent(eventId,state,startindex,maxResults);
 	}
 	
 	@Transactional(readOnly=true)
-	public List<User> getAllUsers(long sessionId) throws ServiceException {
+	public List<User> getAllUsers(long sessionId, int startindex, int maxResults) throws ServiceException {
 		SessionManager.checkPermissions(sessionId, "getAllUsers");
-		return userDao.getAllUsers();
+		return userDao.getAllUsers(startindex, maxResults);
 	}
-
-	@Transactional
-	public void setDefaultLanguage(long sessionId, int userId, int languageId) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, userId, "setDefaultLanguage");
-		try {
-			User user = userDao.find(userId);
-			SupportedLanguage language = languageDao.find(languageId);
-			user.setDefaultLanguage(language);
-			userDao.save(user);
-		} catch (InstanceException e) {
-			if (e.getClassName().contentEquals("User")) throw new  ServiceException(06,"setDefaultLanguage","User");
-			else throw new ServiceException(06,"setDefaultLanguage","Language");
-		}	
+	
+	@Transactional(readOnly=true)
+	public List<User> findUsersByName(long sessionId, String name, int startindex, int maxResults) throws ServiceException {
+		SessionManager.checkPermissions(sessionId, "findUsersByName");
+		return userDao.findUsersByName(name, startindex, maxResults);
 	}
 
 	@Transactional
@@ -246,6 +243,26 @@ public class UserServiceImpl implements UserService {
 			throw new  ServiceException(06,"removeUserFromBlackList","User");
 		}
 	}
+	
+	@Transactional(readOnly=true)
+	public List<User> getBlacklistedUsers(long sessionId, int startIndex, int maxResults) throws ServiceException {
+		SessionManager.checkPermissions(sessionId, "getBlacklistedUsers");
+		return userDao.getBlacklistedUsers(sessionId, startIndex, maxResults);
+	}	
+	
+	@Transactional
+	public void setDefaultLanguage(long sessionId, int userId, int languageId) throws ServiceException {
+		SessionManager.checkPermissions(sessionId, userId, "setDefaultLanguage");
+		try {
+			User user = userDao.find(userId);
+			SupportedLanguage language = languageDao.find(languageId);
+			user.setDefaultLanguage(language);
+			userDao.save(user);
+		} catch (InstanceException e) {
+			if (e.getClassName().contentEquals("User")) throw new  ServiceException(06,"setDefaultLanguage","User");
+			else throw new ServiceException(06,"setDefaultLanguage","Language");
+		}	
+	}
 
 	@Transactional
 	public void removeUser(long sessionId, int userId) throws ServiceException {
@@ -258,7 +275,7 @@ public class UserServiceImpl implements UserService {
 			throw new  ServiceException(06,"removeUser","User");
 		}
 	}
-
+	
 	@Transactional
 	public Role createRole(long sessionId, String roleName) throws ServiceException {
 		SessionManager.checkPermissions(sessionId, "createRole");
@@ -322,41 +339,35 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Transactional
-	public void addUseCase(long sessionId, int roleId, int useCaseId) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "addUseCase");
+	public void addPermission(long sessionId, int roleId, int useCaseId) throws ServiceException {
+		SessionManager.checkPermissions(sessionId, "addPermission");
 		try {
 			Role role = roleDao.find(roleId);
 			UseCase useCase = useCaseDao.find(useCaseId);
 			role.getUseCases().add(useCase);
 			roleDao.save(role);
 		} catch (InstanceException e) {
-			if (e.getClassName().contentEquals("UseCase")) throw new  ServiceException(06,"addUseCase","UseCase");
-			else throw new  ServiceException(06,"addUseCase","Role");
+			if (e.getClassName().contentEquals("UseCase")) throw new  ServiceException(06,"addPermission","UseCase");
+			else throw new  ServiceException(06,"addPermission","Role");
 		}
 		
 	}
 
 	@Transactional
-	public void removeUseCase(long sessionId, int roleId, int useCaseId) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "removeUseCase");
+	public void removePermission(long sessionId, int roleId, int useCaseId) throws ServiceException {
+		SessionManager.checkPermissions(sessionId, "removePermission");
 		try {
 			Role role = roleDao.find(roleId);
 			UseCase useCase = useCaseDao.find(useCaseId);
 			role.getUseCases().remove(useCase);
 			roleDao.save(role);
 		} catch (InstanceException e) {
-			if (e.getClassName().contentEquals("UseCase")) throw new  ServiceException(06,"removeUseCase","UseCase");
-			else throw new  ServiceException(06,"removeUseCase","Role");
+			if (e.getClassName().contentEquals("UseCase")) throw new  ServiceException(06,"removePermission","UseCase");
+			else throw new  ServiceException(06,"removePermission","Role");
 		}
 		
 	}
 	
-	@Transactional(readOnly=true)	
-	public List<UseCase> getAllUseCases(long sessionId) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "getAllUseCases");
-		return useCaseDao.getAll();
-	}
-
 	@Transactional(readOnly=true)	
 	public Set<UseCase> getRolePermissions(long sessionId, int roleId) throws ServiceException {
 		SessionManager.checkPermissions(sessionId, "getRolePermissions");
@@ -366,5 +377,11 @@ public class UserServiceImpl implements UserService {
 		} catch (InstanceException e) {
 			throw new  ServiceException(06,"getRolePermissions","Role");
 		}
-	}	
+	}
+	
+	@Transactional(readOnly=true)	
+	public List<UseCase> getAllUseCases(long sessionId) throws ServiceException {
+		SessionManager.checkPermissions(sessionId, "getAllUseCases");
+		return useCaseDao.getAll();
+	}
 }
