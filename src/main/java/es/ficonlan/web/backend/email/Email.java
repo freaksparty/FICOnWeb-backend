@@ -20,15 +20,15 @@ import javax.swing.JOptionPane;
  */
 public class Email {
     
-    String usuarioCorreo;
-    String password;
+    private String usuarioCorreo;
+    private String password;
     
-    String rutaArchivo;
-    String nombreArchivo;
+    private String rutaArchivo;
+    private String nombreArchivo;
     
-    String destinatario;
-    String asunto;
-    String mensaje;
+    private String destinatario;
+    private String asunto;
+    private String mensaje;
     
     public Email(String usuarioCorreo, String password, String rutaArchivo, String nombreArchivo, String destinatario, String asunto,String mensaje) {
         this.usuarioCorreo = usuarioCorreo;
@@ -97,8 +97,8 @@ public class Email {
     }
     
     public static void main(String[] args){
-        String clave = "vjwoweojfhiwyoka"; 
-        Email e = new Email("isaacsanlegas@gmail.com",clave,"C:\\uno.jpg","adjunto.jpg","sanlegas@yopmail.com","Adjunto","Prueba del tutorial para mandar un email");
+        String clave = "CONTRASENA"; 
+        Email e = new Email("surah.harus@gmail.com",clave,"E:\\Imagenes\\Lotus.jpg","adjunto.jpg","miguel.castillo.bellagona@yopmail.com","Adjunto","Test de Email 1");
         if (e.sendMail()){
             JOptionPane.showMessageDialog(null,"El email se mandó correctamente");
         }else{
