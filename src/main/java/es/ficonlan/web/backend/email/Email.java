@@ -97,8 +97,8 @@ public class Email {
     }
     
     public static void main(String[] args){
-        String clave = "CONTRASENA"; 
-        Email e = new Email("surah.harus@gmail.com",clave,"E:\\Imagenes\\Lotus.jpg","adjunto.jpg","miguel.castillo.bellagona@yopmail.com","Adjunto","Test de Email 1");
+        String clave = "patrocinioficonlan"; 
+        Email e = new Email("patrocinio@ficonlan.es",clave,"E:\\Imagenes\\Lotus.jpg","adjunto.jpg","surah.harus@gmail.com","Adjunto","Test de Email 1");
         if (e.sendMail()){
             JOptionPane.showMessageDialog(null,"El email se mandó correctamente");
         }else{
