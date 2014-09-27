@@ -98,8 +98,10 @@ public class Email {
 	}
 
 	public static void main(String[] args) {
+
+		String direccion = "patrocinio@ficonlan.es";
 		String clave = "patrocinioficonlan";
-		Email e = new Email("patrocinio@ficonlan.es", clave,
+		Email e = new Email(direccion, clave,
 				"surah.harus@gmail.com", "Adjunto", "Test de Email 1");
 
 		if (e.sendMail()) {
