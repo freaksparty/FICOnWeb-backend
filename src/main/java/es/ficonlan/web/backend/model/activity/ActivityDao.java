@@ -11,9 +11,9 @@ import es.ficonlan.web.backend.model.util.dao.GenericDao;
  * @version 1.0
  */
 public interface ActivityDao extends GenericDao<Activity, Integer> {
-	
+
 	public List<Activity> findActivitiesByEvent(int eventId, ActivityType type);
-	
-	public List<User> getParticipants( int activityId);
+
+	public List<User> getParticipants(int activityId);
 
 }

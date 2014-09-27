@@ -13,48 +13,41 @@ import es.ficonlan.web.backend.model.util.dao.GenericDaoHibernate;
  * @version 1.0
  */
 @Repository("activityDao")
-public class ActivityDaoHibernate extends GenericDaoHibernate<Activity,Integer> implements ActivityDao {
+public class ActivityDaoHibernate extends
+		GenericDaoHibernate<Activity, Integer> implements ActivityDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Activity> findActivitiesByEvent(int eventId, ActivityType type) {
-		/*String hql = "SELECT u FROM Activity u";
-		if ((eventId != 0) || (type != 0)) hql = hql + " WHERE ";
-		String aux = "";
-		if (eventId != 0) { hql = hql + aux + "(u.category.eventId = :eventId)"; }
-		if ((eventId != 0) && (type != 0)) hql = hql + " AND ";
-		if (type != 0)    { hql = hql + aux + "(u.type = :type)";                }
-		
-		hql = hql + " ORDER BY u.dateStart";
-		
-		Query query = getSession().createQuery(hql);
-		
-		if (eventId != 0) { query = query.setParameter("eventId", eventId); }
-		if (type != 0)    { query = query.setParameter("type", type);       }
-		
-		return query.list();*/
-		if(type==null) return getSession().createQuery( "SELECT a "  +
-			      										"FROM Activity a " +
-			      										"WHERE a.event.id = :eventId " +
-			      										"ORDER BY a.startDate"
-         											  ).setParameter("eventId",eventId).list(); 	
-		else return getSession().createQuery( "SELECT a "  +
-			      						      "FROM Activity a " +
-			      						      "WHERE a.event.id = :eventId AND a.type = :type " +
-			      						      "ORDER BY a.startDate"
-				                       		).setParameter("eventId",eventId).setParameter("type",type).list(); 			
+
+		if (type == null)
+			return getSession()
+					.createQuery(
+							"SELECT a " + "FROM Activity a "
+									+ "WHERE a.event.id = :eventId "
+									+ "ORDER BY a.startDate")
+					.setParameter("eventId", eventId).list();
+		else
+			return getSession()
+					.createQuery(
+							"SELECT a "
+									+ "FROM Activity a "
+									+ "WHERE a.event.id = :eventId AND a.type = :type "
+									+ "ORDER BY a.startDate")
+					.setParameter("eventId", eventId)
+					.setParameter("type", type).list();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<User> getParticipants(int activityId) {	
-		return getSession().createQuery( "SELECT p "  +
-			      						 "FROM Activity a INNER JOIN a.participants p " +
-			      						 "WHERE a.activityId=:activityId " +
-			      						 "ORDER BY p.login"
-         							   ).setParameter("activityId", activityId).list();
+	public List<User> getParticipants(int activityId) {
+		return getSession()
+				.createQuery(
+						"SELECT p "
+								+ "FROM Activity a INNER JOIN a.participants p "
+								+ "WHERE a.activityId=:activityId "
+								+ "ORDER BY p.login")
+				.setParameter("activityId", activityId).list();
 	}
-	
-	
 
 }

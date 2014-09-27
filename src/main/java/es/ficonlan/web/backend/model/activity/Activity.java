@@ -35,9 +35,11 @@ import es.ficonlan.web.backend.model.user.User;
  */
 @Entity
 public class Activity {
-	
-	public enum ActivityType {Production, Conference, Tournament};
-	
+
+	public enum ActivityType {
+		Production, Conference, Tournament
+	};
+
 	private int activityId;
 	private User organizer;
 	private Event event;
@@ -45,17 +47,21 @@ public class Activity {
 	private String description;
 	private int numParticipants;
 	private ActivityType type;
-	private boolean oficial; 
+	private boolean oficial;
 	private Calendar startDate;
 	private Calendar endDate;
 	private Calendar regDateOpen;
 	private Calendar regDateClose;
 	private List<User> participants = new ArrayList<User>();
-	
-	public Activity(){}
-	
-	public Activity(int activityId, String name, String description, int numParticipants, ActivityType type, boolean oficial, Calendar startDate, Calendar endDate, Calendar regDateOpen, Calendar regDateClose) {
-		this.activityId=activityId;
+
+	public Activity() {
+	}
+
+	public Activity(int activityId, String name, String description,
+			int numParticipants, ActivityType type, boolean oficial,
+			Calendar startDate, Calendar endDate, Calendar regDateOpen,
+			Calendar regDateClose) {
+		this.activityId = activityId;
 		this.name = name;
 		this.description = description;
 		this.numParticipants = numParticipants;
@@ -66,13 +72,17 @@ public class Activity {
 		this.regDateOpen = regDateOpen;
 		this.regDateClose = regDateClose;
 	}
-	
-	public Activity(Event event, String name, String description, int numParticipants, ActivityType type, boolean oficial, Calendar startDate, Calendar endDate, Calendar regDateOpen, Calendar regDateClose) {
-		this(0,name,description, numParticipants,type, oficial, startDate, endDate,regDateOpen, regDateClose);
+
+	public Activity(Event event, String name, String description,
+			int numParticipants, ActivityType type, boolean oficial,
+			Calendar startDate, Calendar endDate, Calendar regDateOpen,
+			Calendar regDateClose) {
+		this(0, name, description, numParticipants, type, oficial, startDate,
+				endDate, regDateOpen, regDateClose);
 		this.event = event;
-		
+
 	}
-	
+
 	@Column(name = "Activity_id")
 	@SequenceGenerator(name = "ActivityIdGenerator", sequenceName = "ActivitySeq")
 	@Id
@@ -80,103 +90,103 @@ public class Activity {
 	public int getActivityId() {
 		return activityId;
 	}
-	
+
 	public void setActivityId(int activityId) {
 		this.activityId = activityId;
 	}
-	
+
 	@Column(name = "Activity_name")
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@Column(name = "Activity_description")
 	public String getDescription() {
 		return description;
 	}
-	
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	@Column(name = "Activity_num_participants")
 	public int getNumParticipants() {
 		return numParticipants;
 	}
-	
+
 	public void setNumParticipants(int numParticipants) {
 		this.numParticipants = numParticipants;
 	}
-	
+
 	@JsonDeserialize(using = JsonActivityTypeDeserializer.class)
 	@Column(name = "Activity_type_activity")
-	@Enumerated(EnumType.ORDINAL) 
+	@Enumerated(EnumType.ORDINAL)
 	public ActivityType getType() {
 		return type;
 	}
-	
+
 	public void setType(ActivityType type) {
 		this.type = type;
 	}
-	
+
 	@Column(name = "Activity_kind")
 	public boolean isOficial() {
 		return oficial;
 	}
-	
+
 	public void setOficial(boolean oficial) {
 		this.oficial = oficial;
 	}
-	
+
 	@JsonDeserialize(using = JsonDateDeserializer.class)
-	@JsonSerialize(using=JsonDateSerializer.class)
+	@JsonSerialize(using = JsonDateSerializer.class)
 	@Column(name = "Activity_date_start")
 	public Calendar getStartDate() {
 		return startDate;
 	}
-	
+
 	public void setStartDate(Calendar startDate) {
 		this.startDate = startDate;
 	}
-	
+
 	@JsonDeserialize(using = JsonDateDeserializer.class)
-	@JsonSerialize(using=JsonDateSerializer.class)
+	@JsonSerialize(using = JsonDateSerializer.class)
 	@Column(name = "Activity_date_end")
 	public Calendar getEndDate() {
 		return endDate;
 	}
-	
+
 	public void setEndDate(Calendar endDate) {
 		this.endDate = endDate;
 	}
-	
+
 	@JsonDeserialize(using = JsonDateDeserializer.class)
-	@JsonSerialize(using=JsonDateSerializer.class)
+	@JsonSerialize(using = JsonDateSerializer.class)
 	@Column(name = "Activity_reg_date_open")
 	public Calendar getRegDateOpen() {
 		return regDateOpen;
 	}
-	
+
 	public void setRegDateOpen(Calendar regDateOpen) {
 		this.regDateOpen = regDateOpen;
 	}
-	
+
 	@JsonDeserialize(using = JsonDateDeserializer.class)
-	@JsonSerialize(using=JsonDateSerializer.class)
+	@JsonSerialize(using = JsonDateSerializer.class)
 	@Column(name = "Activity_reg_date_close")
 	public Calendar getRegDateClose() {
 		return regDateClose;
 	}
-	
+
 	public void setRegDateClose(Calendar regDateClose) {
 		this.regDateClose = regDateClose;
 	}
 
-	@JsonSerialize(using=JsonEntityIdSerializer.class)
+	@JsonSerialize(using = JsonEntityIdSerializer.class)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Activity_organizer_id ")
 	public User getOrganizer() {
@@ -187,7 +197,7 @@ public class Activity {
 		this.organizer = organizer;
 	}
 
-	@JsonSerialize(using=JsonEntityIdSerializer.class)
+	@JsonSerialize(using = JsonEntityIdSerializer.class)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Activity_event_id")
 	public Event getEvent() {
@@ -200,9 +210,7 @@ public class Activity {
 
 	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "user_activity", joinColumns = {
-	      @JoinColumn(name = "User_Activity_Activity_id")}, inverseJoinColumns = {
-	      @JoinColumn(name = "User_Activity_User_id")})
+	@JoinTable(name = "user_activity", joinColumns = { @JoinColumn(name = "User_Activity_Activity_id") }, inverseJoinColumns = { @JoinColumn(name = "User_Activity_User_id") })
 	public List<User> getParticipants() {
 		return participants;
 	}
