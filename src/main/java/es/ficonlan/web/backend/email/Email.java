@@ -1,9 +1,13 @@
 package es.ficonlan.web.backend.email;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Properties;
+
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
-
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.Session;
@@ -96,9 +100,36 @@ public class Email {
         }        
     }
     
+	public String leerTextoArchivo(String nombreArchivo) {
+		String texto = "";
+		FileReader archivo = null;
+		String linea = "";
+		try {
+			archivo = new FileReader(nombreArchivo);
+			BufferedReader lector = new BufferedReader(archivo);
+			while ((linea = lector.readLine()) != null) {
+				texto += linea + "\n";
+				lector.close();
+			}
+		} catch (FileNotFoundException e) {
+			throw new RuntimeException("Archivo no encontrado");
+		} catch (IOException e) {
+			throw new RuntimeException("Ocurrio un error de entrada/salida");
+		} finally {
+			if (archivo != null) {
+				try {
+					archivo.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return texto;
+	}
+    
     public static void main(String[] args){
         String clave = "patrocinioficonlan"; 
-        Email e = new Email("patrocinio@ficonlan.es",clave,"E:\\Imagenes\\Lotus.jpg","adjunto.jpg","surah.harus@gmail.com","Adjunto","Test de Email 1");
+        Email e = new Email("patrocinio@ficonlan.es",clave,"surah.harus@gmail.com","Adjunto","Test de Email 1");
         if (e.sendMail()){
             JOptionPane.showMessageDialog(null,"El email se mandó correctamente");
         }else{
