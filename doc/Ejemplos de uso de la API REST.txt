@@ -846,6 +846,7 @@ Cuenta de Admin:
  		09 - Registration out of time
  		10 - User isn't registered in the event
  		11 - Activity maximum number of participants reached
+ 		12 - Missing config file
  		99 - System unexpected error (RuntimeException)
  	
  	* Arreglado el tratamiento de excepciones lanzadas por jersey. Ahora se envían como una ServiceException con code=99 y useCase=null.		

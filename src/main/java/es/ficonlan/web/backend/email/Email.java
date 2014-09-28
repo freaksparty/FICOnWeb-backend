@@ -125,21 +125,22 @@ public class Email {
 
 	public static void main(String[] args) throws InterruptedException {
 		int i = 0;
-		while(true)
-		{
-		try {
-			Email e = new Email("mail/mail.properties", "mail/InQueue.properties", "surah.harus@gmail.com");
+		while (true) {
+			try {
+				Email e = new Email("mail/mail.properties", "mail/InQueue.properties", "surah.harus@gmail.com");
 
-			if (e.sendMail()) {
-			//	JOptionPane.showMessageDialog(null, "El email se mandó correctamente");
-				System.out.println("Correo mandado " + i++);
-			} else {
-			//	JOptionPane.showMessageDialog(null, "El email no se mandó correctamente");
+				if (e.sendMail()) {
+					// JOptionPane.showMessageDialog(null,
+					// "El email se mandó correctamente");
+					System.out.println("Correo mandado " + i++);
+				} else {
+					// JOptionPane.showMessageDialog(null,
+					// "El email no se mandó correctamente");
+				}
+			} catch (ServiceException e1) {
+				e1.printStackTrace();
 			}
-		} catch (ServiceException e1) {
-			e1.printStackTrace();
-		}
-		Thread.sleep(1000);
+			Thread.sleep(1000);
 		}
 
 	}
