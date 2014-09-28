@@ -81,7 +81,14 @@ public class EventServiceImpl implements EventService {
 
 	@Transactional
 	public void addParticipantToEvent(long sessionId, int userId, int eventId) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "addParticipantToEvent");
+		//FIXME: Añadido nuevo permiso
+		try{
+			SessionManager.checkPermissions(sessionId, "addParticipantToEvent");
+		}
+		catch(ServiceException e){
+			SessionManager.checkPermissions(sessionId, userId, "USERaddParticipantToEvent");
+		}
+		
     	try{
     		User user = userDao.find(userId);
     		Event event = eventDao.find(eventId);    		
@@ -120,7 +127,13 @@ public class EventServiceImpl implements EventService {
 
 	@Transactional
 	public void removeParticipantFromEvent(long sessionId, int userId, int eventId) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "removeParticipantFromEvent");
+		//FIXME: Añadido nuevo permiso
+		try{
+			SessionManager.checkPermissions(sessionId, "removeParticipantFromEvent");
+		}
+		catch(ServiceException e){
+			SessionManager.checkPermissions(sessionId, userId, "USERremoveParticipantFromEvent");
+		}
     	Registration registration = registrationDao.findByUserAndEvent(userId, eventId);
     	if (registration==null) throw new  ServiceException(06,"removeParticipantFromEvent","Registration");	
         try {
