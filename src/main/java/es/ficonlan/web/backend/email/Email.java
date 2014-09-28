@@ -1,5 +1,7 @@
 package es.ficonlan.web.backend.email;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
@@ -12,7 +14,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import javax.swing.JOptionPane;
+
+import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 
 /**
  * @author Miguel Ángel Castillo Bellagona
@@ -20,7 +23,6 @@ import javax.swing.JOptionPane;
  */
 public class Email {
 
-	
 	private String usuarioCorreo;
 	private String password;
 
@@ -31,9 +33,7 @@ public class Email {
 	private String asunto;
 	private String mensaje;
 
-	public Email(String usuarioCorreo, String password, String rutaArchivo,
-			String nombreArchivo, String destinatario, String asunto,
-			String mensaje) {
+	public Email(String usuarioCorreo, String password, String rutaArchivo, String nombreArchivo, String destinatario, String asunto, String mensaje) {
 		this.usuarioCorreo = usuarioCorreo;
 		this.password = password;
 		this.rutaArchivo = rutaArchivo;
@@ -43,14 +43,42 @@ public class Email {
 		this.mensaje = mensaje;
 	}
 
-	public Email(String usuarioCorreo, String password, String destinatario,
-			String mensaje) {
+	public Email(String usuarioCorreo, String password, String destinatario, String mensaje) {
 		this(usuarioCorreo, password, "", "", destinatario, "", mensaje);
 	}
 
-	public Email(String usuarioCorreo, String password, String destinatario,
-			String asunto, String mensaje) {
+	public Email(String usuarioCorreo, String password, String destinatario, String asunto, String mensaje) {
 		this(usuarioCorreo, password, "", "", destinatario, asunto, mensaje);
+	}
+
+	public Email(String mailConfig, String mailContent, String destinatario) throws ServiceException {
+
+		Properties propConfig = new Properties();
+		Properties propContetnt = new Properties();
+
+		InputStream inputStreamConfig = Email.class.getClassLoader().getResourceAsStream(mailConfig);
+		InputStream inputStreamContent = Email.class.getClassLoader().getResourceAsStream(mailContent);
+
+		try {
+			propConfig.load(inputStreamConfig);
+		} catch (IOException e1) {
+			throw new ServiceException(12, "createEmail", mailConfig);
+		}
+		try {
+			propContetnt.load(inputStreamContent);
+		} catch (IOException e1) {
+			throw new ServiceException(12, "createEmail", mailContent);
+		}
+
+		this.usuarioCorreo = propConfig.getProperty("direccion");
+		this.password = propConfig.getProperty("clave");
+
+		this.asunto = propContetnt.getProperty("asunto");
+		this.mensaje = propContetnt.getProperty("mensaje");
+		this.rutaArchivo = propContetnt.getProperty("rutaArchivo");
+		this.nombreArchivo = propContetnt.getProperty("nombreArchivo");
+
+		this.destinatario = destinatario;
 	}
 
 	public boolean sendMail() {
@@ -68,8 +96,7 @@ public class Email {
 
 			BodyPart adjunto = new MimeBodyPart();
 			if (!rutaArchivo.equals("")) {
-				adjunto.setDataHandler(new DataHandler(new FileDataSource(
-						rutaArchivo)));
+				adjunto.setDataHandler(new DataHandler(new FileDataSource(rutaArchivo)));
 				adjunto.setFileName(nombreArchivo);
 			}
 
@@ -81,8 +108,7 @@ public class Email {
 
 			MimeMessage message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(usuarioCorreo));
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(
-					destinatario));
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(destinatario));
 			message.setSubject(asunto);
 			message.setContent(multiParte);
 
@@ -97,20 +123,25 @@ public class Email {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
+		int i = 0;
+		while(true)
+		{
+		try {
+			Email e = new Email("mail/mail.properties", "mail/InQueue.properties", "surah.harus@gmail.com");
 
-		String direccion = "patrocinio@ficonlan.es";
-		String clave = "patrocinioficonlan";
-		Email e = new Email(direccion, clave,
-				"surah.harus@gmail.com", "Adjunto", "Test de Email 1");
-
-		if (e.sendMail()) {
-			JOptionPane.showMessageDialog(null,
-					"El email se mandó correctamente");
-		} else {
-			JOptionPane.showMessageDialog(null,
-					"El email no se mandó correctamente");
+			if (e.sendMail()) {
+			//	JOptionPane.showMessageDialog(null, "El email se mandó correctamente");
+				System.out.println("Correo mandado " + i++);
+			} else {
+			//	JOptionPane.showMessageDialog(null, "El email no se mandó correctamente");
+			}
+		} catch (ServiceException e1) {
+			e1.printStackTrace();
 		}
+		Thread.sleep(1000);
+		}
+
 	}
 
 }

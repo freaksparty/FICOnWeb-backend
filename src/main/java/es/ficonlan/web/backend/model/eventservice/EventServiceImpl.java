@@ -3,6 +3,7 @@ package es.ficonlan.web.backend.model.eventservice;
 import java.util.Calendar;
 import java.util.List;
 
+import es.ficonlan.web.backend.email.Email;
 import es.ficonlan.web.backend.model.activity.Activity;
 import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
 import es.ficonlan.web.backend.model.activity.ActivityDao;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * @author David Pereiro
  * @author Daniel Gómez Silva
+ * @author Miguel Ángel Castillo Bellagona
  */
 @Service("EventService")
 @Transactional
@@ -87,11 +89,28 @@ public class EventServiceImpl implements EventService {
     		Registration registration = new Registration(user, event);
     		int currentParticipants = registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.registered) + 
     								  registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.paid);
-    		if(currentParticipants>=event.getNumParticipants()) registration.setState(RegistrationState.inQueue);
-    		//TODO: else if(user.isInBlackList()) registration.setState(RegistrationState.inQueue);
-    		else registration.setState(RegistrationState.registered);
-    		registrationDao.save(registration);
-        	//TODO: Mandar correo electrónico
+    		if(currentParticipants>=event.getNumParticipants()) {
+    			registration.setState(RegistrationState.inQueue);
+    			//FIXME: Mandar correo electrónico
+    			Email mail = new Email("mail/mail.properties", "mail/InQueue.properties",user.getEmail());
+    			if(mail.sendMail()) System.out.println("Correo de InQueue enviado a " + user.getLogin() + " al correo " + user.getEmail());
+    			else System.out.println("Error en envio de coreo de InQueue a " + user.getLogin() + " al correo " + user.getEmail());
+    		}
+    		else if(user.isInBlackList()) {
+    			registration.setState(RegistrationState.inQueue);
+    			//FIXME: Mandar correo electrónico
+    			Email mail = new Email("mail/mail.properties", "mail/InQueue.properties",user.getEmail());
+    			if(mail.sendMail()) System.out.println("BLACKLIST : Correo de InQueue enviado a " + user.getLogin() + " al correo " + user.getEmail());
+    			else System.out.println("BLACKLIST : Error en envio de coreo de InQueue a " + user.getLogin() + " al correo " + user.getEmail());
+    		}
+    		else registration.setState(RegistrationState.registered); {
+    			registrationDao.save(registration);
+    			Email mail = new Email("mail/mail.properties", "mail/Outstanding.properties",user.getEmail());
+    			if(mail.sendMail()) System.out.println("Correo de Outstanding enviado a " + user.getLogin() + " al correo " + user.getEmail());
+    			else System.out.println("BLACKLIST : Error en envio de coreo de Outstanding a " + user.getLogin() + " al correo " + user.getEmail());
+            	//FIXME: Mandar correo electrónico
+    		}
+    		
     	} catch (InstanceException e) {
 			if (e.getClassName().contentEquals("User")) throw new  ServiceException(06,"addParticipantToEvent","User");
 			else throw new  ServiceException(06,"addParticipantToEvent","Event");
@@ -106,7 +125,13 @@ public class EventServiceImpl implements EventService {
     	if (registration==null) throw new  ServiceException(06,"removeParticipantFromEvent","Registration");	
         try {
 			registrationDao.remove(registration.getRegistrationId());
-			//TODO: if registration.getState()==registered Mandar correo electrónico registration.User()
+			//FIXME: MAndar correo elecrónico if registration.getState()==registered Mandar correo electrónico registration.User()
+			if (registration.getState()==RegistrationState.registered) {
+				Email mail = new Email("mail/mail.properties", "mail/TimeToPayExceeded.properties",registration.getUser().getEmail());
+				if(mail.sendMail()) System.out.println("Correo de TimeToPayExceeded enviado a " + registration.getUser().getLogin() + " al correo " + registration.getUser().getEmail());
+				else System.out.println("Error en envio de coreo de TimeToPayExceeded a " + registration.getUser().getLogin() + " al correo " + registration.getUser().getEmail());
+	        
+			}
 		} catch (InstanceException e) {
 			 throw new  ServiceException(06,"removeParticipantFromEvent","Registration");
 		}
@@ -114,7 +139,11 @@ public class EventServiceImpl implements EventService {
         if(firstInQueue!=null){
         	firstInQueue.setState(RegistrationState.registered);
         	registrationDao.save(firstInQueue);
-        	//TODO: Mandar correo electrónico a firstInQueue.getUser()
+        	//FIXME: Mandar correo electrónico
+        	Email mail = new Email("mail/mail.properties", "mail/OutstandingFromInQueue.properties",firstInQueue.getUser().getEmail());
+			if(mail.sendMail()) System.out.println("Correo de OutstandingFromInQueue enviado a " + firstInQueue.getUser().getLogin() + " al correo " + firstInQueue.getUser().getEmail());
+			else System.out.println("Error en envio de coreo de OutstandingFromInQueue a " + firstInQueue.getUser().getLogin() + " al correo " + firstInQueue.getUser().getEmail());
+        	
         }
 	}
 	
@@ -127,11 +156,14 @@ public class EventServiceImpl implements EventService {
     	registration.setPaid(true);
     	registration.setState(RegistrationState.paid);
 		registrationDao.save(registration);
-    	//TODO: Mandar correo electrónico
+    	//FIXME: Mandar correo electrónico
+		Email mail = new Email("mail/mail.properties", "mail/PaiedMail.properties",registration.getUser().getEmail());
+		if(mail.sendMail()) System.out.println("Correo de PaiedMail enviado a " + registration.getUser().getLogin() + " al correo " + registration.getUser().getEmail());
+		else System.out.println("Error en envio de coreo de PaiedMail a " + registration.getUser().getLogin() + " al correo " + registration.getUser().getEmail());
 	}
 
 	/**
-	 * This method doesn,t check constraints.
+	 * This method doesn,t check constraints. And dont send e-mails
 	 * Use only in exceptional circumstances. Otherways use "setPaid" method.
 	 */
 	@Transactional
