@@ -23,15 +23,15 @@ import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
  */
 public class Email {
 
-	private String usuarioCorreo;
-	private String password;
+	protected String usuarioCorreo;
+	protected String password;
 
-	private String rutaArchivo;
-	private String nombreArchivo;
+	protected String rutaArchivo;
+	protected String nombreArchivo;
 
-	private String destinatario;
-	private String asunto;
-	private String mensaje;
+	protected String destinatario;
+	protected String asunto;
+	protected String mensaje;
 
 	public Email(String usuarioCorreo, String password, String rutaArchivo, String nombreArchivo, String destinatario, String asunto, String mensaje) {
 		this.usuarioCorreo = usuarioCorreo;
@@ -81,6 +81,8 @@ public class Email {
 		this.destinatario = destinatario;
 	}
 
+	public Email() { }
+
 	public boolean sendMail() {
 		try {
 			Properties props = new Properties();
@@ -124,7 +126,7 @@ public class Email {
 	}
 
 	public static void main(String[] args) throws InterruptedException {
-		int i = 0;
+		/*int i = 0;
 		while (true) {
 			try {
 				Email e = new Email("mail/mail.properties", "mail/InQueue.properties", "surah.harus@gmail.com");
@@ -142,7 +144,29 @@ public class Email {
 			}
 			Thread.sleep(1000);
 		}
+		*/
+		
+		try {
+			Email e1 = new EmailInQueue("surah.harus@gmail.com", "FICONLAN", 2);
+			Email e2 = new EmailOutstanding("surah.harus@gmail.com", "FICONLAN", 2);
+			Email e3 = new EmailOutstandingFromInQueue("surah.harus@gmail.com", "FICONLAN");
+			Email e4 = new EmailPaied("surah.harus@gmail.com", "FICONLAN");
+			Email e5 = new EmailTimeToPayExceeded("surah.harus@gmail.com", "FICONLAN");
+			if (e1.sendMail())  System.out.println("Correo mandado 1");
+			else System.out.println("Correo no mandado 1");
+			if (e2.sendMail())  System.out.println("Correo mandado 2");
+			else System.out.println("Correo no mandado 2");
+			if (e3.sendMail())  System.out.println("Correo mandado 3");
+			else System.out.println("Correo no mandado 3");
+			if (e4.sendMail())  System.out.println("Correo mandado 4");
+			else System.out.println("Correo no mandado 4");
+			if (e5.sendMail())  System.out.println("Correo mandado 5");
+			else System.out.println("Correo no mandado 5");
+			} 
+		catch (ServiceException e) { e.printStackTrace();}
+		
+		}
 
-	}
+	
 
 }
