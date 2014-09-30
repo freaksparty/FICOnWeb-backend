@@ -133,7 +133,7 @@ public class Activity {
 		this.type = type;
 	}
 
-	@Column(name = "Activity_kind")
+	@Column(name = "Activity_official")
 	public boolean isOficial() {
 		return oficial;
 	}

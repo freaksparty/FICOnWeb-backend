@@ -10,7 +10,7 @@
 	<!-- Data source. -->
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.SingleConnectionDataSource"
-		p:driverClassName="com.mysql.jdbc.Driver" p:url="jdbc:mysql://localhost:1723/backendtest"
+		p:driverClassName="com.mysql.jdbc.Driver" p:url="jdbc:mysql://localhost:3306/backendtest"
 		p:username="fpbackend" p:password="fpbackendtestps"
 		p:suppressClose="true" />
         

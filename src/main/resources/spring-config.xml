@@ -11,7 +11,7 @@
                         http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<bean id="applicationProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-   	 	<property name="location" value="file:./backend.properties"/>
+   	 	<property name="location" value="classpath:backend.properties"/>
 	</bean>
 
 	<!-- Enable usage of @Autowired. -->

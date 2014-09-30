@@ -1,5 +1,10 @@
 package es.ficonlan.web.backend.jersey;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.Properties;
+
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.ssl.SSLContextConfigurator;
 import org.glassfish.grizzly.ssl.SSLEngineConfigurator;
@@ -19,11 +24,6 @@ import es.ficonlan.web.backend.jersey.util.ServiceExceptionMapper;
 import es.ficonlan.web.backend.model.userservice.UserService;
 import es.ficonlan.web.backend.model.util.session.SessionManager;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.URI;
-import java.util.Properties;
-
 /**
  * Main class.
  *
@@ -35,7 +35,8 @@ public class Main {
 	static {
 		try {
 			properties = new Properties();
-			properties.load(new FileInputStream("./backend.properties"));
+			InputStream inputStream = Main.class.getClassLoader().getResourceAsStream("backend.properties");
+			properties.load(inputStream);
 		} catch (IOException e) {
 			throw new RuntimeException("Could not read config file: " + e.getMessage());
 		}

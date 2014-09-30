@@ -147,7 +147,9 @@ public class UserServiceImpl implements UserService {
 		User user = userDao.findUserBylogin(login);
 		if (user == null) throw new ServiceException(ServiceException.INCORRECT_FIELD,"login");
 		if (!user.getPassword().contentEquals(hashPassword(password)))  throw new ServiceException(ServiceException.INCORRECT_FIELD,"password");
-		return new Session(user);
+		session.setUser(user);
+		return session;
+		//return new Session(user);
 	}
 	
 	public User getCurrenUser(String sessionId) throws ServiceException {
