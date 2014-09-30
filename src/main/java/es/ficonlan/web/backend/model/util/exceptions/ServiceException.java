@@ -20,12 +20,39 @@ package es.ficonlan.web.backend.model.util.exceptions;
  */
 public class ServiceException extends Exception {
 
+	public static final int INVALID_SESSION = 1;
+	public static final int PERMISSION_DENIED=2;
+	public static final int DUPLICATED_FIELD=3;
+	public static final int INCORRECT_FIELD=4;
+	public static final int MISSING_FIELD=5;
+	public static final int INSTANCE_NOT_FOUND=6;
+	public static final int SESSION_ALREADY_EXISTS=7;
+	public static final int MAX_NUM_PARTICIPANTS_REACHED=8;
+	public static final int REGISTRATION_OUT_OF_TIME=9;
+	public static final int USER_NOT_REGISTERED_IN_EVENT=10;
+	public static final int MISSING_CONFIG_FILE=11;
+	public static final int OTHER=99;
+	
 	private static final long serialVersionUID = 1L;
 	private int errorCode;
 	private String useCase;
 	private String field;
 
-	private static String getMessage(int errorCode) {
+	public ServiceException(int errorCode) {
+		this.errorCode = errorCode;
+        this.useCase = Thread.currentThread().getStackTrace()[1].getMethodName();
+	}
+
+	public ServiceException(int errorCode, String field) {
+		this(errorCode);
+		this.field = field;
+	}
+
+	public String getField() {
+		return field;
+	}
+
+	public String getMessage() {
 		switch (errorCode) {
 		case 1:
 			return "Invalid session";
@@ -42,41 +69,18 @@ public class ServiceException extends Exception {
 		case 7:
 			return "There is already a session";
 		case 8:
-			return "Event maximum number of participants reached";
+			return "Maximum number of participants reached";
 		case 9:
 			return "Registration out of time";
 		case 10:
 			return "User isn't registered in the event";
 		case 11:
-			return "Activity maximum number of participants reached";
-		case 12:
 			return "Missing config file";
 		case 99:
 			return "System unexpected error";
 		default:
 			return null;
 		}
-	}
-
-	public ServiceException(int errorCode, String useCase) {
-		super("ServiceException(Code = " + errorCode + ", UseCase = " + useCase + ", Message = " + getMessage(errorCode) + ")");
-		this.errorCode = errorCode;
-		this.useCase = useCase;
-	}
-
-	public ServiceException(int errorCode, String useCase, String field) {
-		super("ServiceException(Code = " + errorCode + ", UseCase = " + useCase + ", Message = " + getMessage(errorCode) + ", Field:" + field + ")");
-		this.errorCode = errorCode;
-		this.useCase = useCase;
-		this.field = field;
-	}
-
-	public String getField() {
-		return field;
-	}
-
-	public String getMessage() {
-		return getMessage(this.errorCode);
 	}
 
 	public int getErrorCode() {

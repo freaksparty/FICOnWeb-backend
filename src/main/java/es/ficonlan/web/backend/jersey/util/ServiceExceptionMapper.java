@@ -15,37 +15,26 @@ import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 public class ServiceExceptionMapper implements ExceptionMapper<Exception> {
 
 	class ErrorMessage{
-		private String exception;
-		private int code;
+		private int exceptionCode;
 		private String useCase;
-		private String message;
+		private String errorMessage;
 		private String field;
 		
 		public ErrorMessage() {}
 
 		public ErrorMessage(ServiceException e) {
-			super();
-			this.exception = "ServiceException";
-			this.code = e.getErrorCode();
+			this.exceptionCode = e.getErrorCode();
 			this.useCase = e.getUseCase();
-			this.message = e.getMessage();
+			this.errorMessage = e.getMessage();
 			this.field = e.getField();
 		}
 		
-		public String getException() {
-			return exception;
+		public int getExceptionCode() {
+			return exceptionCode;
 		}
 
-		public void setException(String exception) {
-			this.exception = exception;
-		}
-
-		public int getCode() {
-			return code;
-		}
-
-		public void setCode(int code) {
-			this.code = code;
+		public void setExceptionCode(int code) {
+			this.exceptionCode = code;
 		}
 
 		public String getUseCase() {
@@ -56,12 +45,12 @@ public class ServiceExceptionMapper implements ExceptionMapper<Exception> {
 			this.useCase = useCase;
 		}
 
-		public String getMessage() {
-			return message;
+		public String getErrorMessage() {
+			return errorMessage;
 		}
 
-		public void setMessage(String message) {
-			this.message = message;
+		public void setErrorMessage(String message) {
+			this.errorMessage = message;
 		}
 
 		public String getField() {

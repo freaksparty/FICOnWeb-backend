@@ -16,7 +16,7 @@ public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> imp
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<NewsItem> getLastNews(long sessionId, Calendar dateLimit, boolean onlyOutstandingNews) {
+	public List<NewsItem> getLastNews(Calendar dateLimit, boolean onlyOutstandingNews) {
 		
 		List<NewsItem> result = getSession().createQuery( "SELECT n " +
                                         				  "FROM NewsItem n " +

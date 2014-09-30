@@ -19,52 +19,52 @@ public interface UserService {
 	
 	public Session newAnonymousSession();
 
-	public User addUser(long sessionId, User user) throws ServiceException;
+	public User addUser(String sessionId, User user) throws ServiceException;
 	
-	public Session login (long sessionId, String login, String password)  throws ServiceException;
+	public Session login (String sessionId, String login, String password)  throws ServiceException;
 	
-	public User getCurrenUser(long sessionId) throws ServiceException;
+	public User getCurrenUser(String sessionId) throws ServiceException;
 	
-	public void closeSession(long sessionId)  throws ServiceException;
+	public void closeSession(String sessionId)  throws ServiceException;
 	
-	public void changeUserData(long sessionId, User userData)  throws ServiceException;
+	public void changeUserData(String sessionId, User userData)  throws ServiceException;
 	
-	public void changeUserPassword(long sessionId, int userId, String oldPassword, String newPassword)  throws ServiceException;
+	public void changeUserPassword(String sessionId, int userId, String oldPassword, String newPassword)  throws ServiceException;
 	
-	public List<User> getUsersByEvent(long sessionId, int eventId, RegistrationState state, int startIndex, int maxResults)  throws ServiceException;
+	public List<User> getUsersByEvent(String sessionId, int eventId, RegistrationState state, int startIndex, int maxResults)  throws ServiceException;
     
-	public List<User> getAllUsers(long sessionId, int startIndex, int maxResults)  throws ServiceException;
+	public List<User> getAllUsers(String sessionId, int startIndex, int maxResults)  throws ServiceException;
 	
-	public List<User> findUsersByName(long sessionId, String name, int startIndex, int maxResults)  throws ServiceException;
+	public List<User> findUsersByName(String sessionId, String name, int startIndex, int maxResults)  throws ServiceException;
 		
-	public void addUserToBlackList(long sessionId, int userId) throws ServiceException;
+	public void addUserToBlackList(String sessionId, int userId) throws ServiceException;
 	
-	public void removeUserFromBlackList(long sessionId, int userId) throws ServiceException;
+	public void removeUserFromBlackList(String sessionId, int userId) throws ServiceException;
 	
-	public List<User> getBlacklistedUsers(long sessionId, int startIndex, int maxResults)  throws ServiceException;
+	public List<User> getBlacklistedUsers(String sessionId, int startIndex, int maxResults)  throws ServiceException;
 	
-	public void setDefaultLanguage(long sessionId, int userId, int languageId) throws ServiceException;
+	public void setDefaultLanguage(String sessionId, int userId, int languageId) throws ServiceException;
 	
-	public void removeUser(long sessionId, int userId) throws ServiceException;
+	public void removeUser(String sessionId, int userId) throws ServiceException;
 	
-	public Role createRole(long sessionId, String roleName) throws ServiceException;
+	public Role createRole(String sessionId, String roleName) throws ServiceException;
 	
-	public void addRole(long sessionId, int roleId, int userId) throws ServiceException;
+	public void addRole(String sessionId, int roleId, int userId) throws ServiceException;
 	
-	public void removeRole(long sessionId, int roleId, int userId) throws ServiceException;
+	public void removeRole(String sessionId, int roleId, int userId) throws ServiceException;
 	
-	public Set<Role> getUserRoles(long sessionId, int userId) throws ServiceException;
+	public Set<Role> getUserRoles(String sessionId, int userId) throws ServiceException;
 	
-	public List<Role> getAllRoles(long sessionId) throws ServiceException;
+	public List<Role> getAllRoles(String sessionId) throws ServiceException;
 	
-	public UseCase createUseCase(long sessionId, String useCaseName) throws ServiceException;
+	public UseCase createUseCase(String sessionId, String useCaseName) throws ServiceException;
 	
-	public void addPermission(long sessionId, int roleId, int useCaseId) throws ServiceException;
+	public void addPermission(String sessionId, int roleId, int useCaseId) throws ServiceException;
 	
-	public void removePermission(long sessionId, int roleId, int useCaseId) throws ServiceException;
+	public void removePermission(String sessionId, int roleId, int useCaseId) throws ServiceException;
 	
-	public Set<UseCase> getRolePermissions(long sessionId, int roleId) throws ServiceException;
+	public Set<UseCase> getRolePermissions(String sessionId, int roleId) throws ServiceException;
 	
-	public List<UseCase> getAllUseCases(long sessionId) throws ServiceException;
+	public List<UseCase> getAllUseCases(String sessionId) throws ServiceException;
 		
 }

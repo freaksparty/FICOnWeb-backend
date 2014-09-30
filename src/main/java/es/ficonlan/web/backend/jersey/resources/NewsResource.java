@@ -4,9 +4,11 @@ import java.util.Calendar;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -29,18 +31,18 @@ public class NewsResource {
 			this.eventService = ApplicationContextProvider.getApplicationContext().getBean(EventService.class);
 		}
 		
-		@Path("/{eventId}/addNews")
-		@POST
+		@Path("/{eventId}")
+		@PUT
 		@Consumes({MediaType.APPLICATION_JSON})
 		@Produces(MediaType.APPLICATION_JSON)
-	    public NewsItem add(@HeaderParam("sessionId") long sessionId, @PathParam("eventId") int eventId, NewsItem newsItem) throws ServiceException{
+	    public NewsItem add(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, NewsItem newsItem) throws ServiceException{
 	    	return eventService.addNews(sessionId, eventId, newsItem);
 	    }
 		
 		@Path("/changeData")
 		@POST
 		@Consumes({MediaType.APPLICATION_JSON})
-	    public void changeData(@HeaderParam("sessionId")long sessionId, NewsItem newsData) throws ServiceException{
+	    public void changeData(@HeaderParam("sessionId")String sessionId, NewsItem newsData) throws ServiceException{
 			eventService.changeNewsData(sessionId, newsData);
 	    }
 	    
@@ -48,15 +50,15 @@ public class NewsResource {
 		@GET
 		@Consumes({MediaType.APPLICATION_JSON})
 		@Produces(MediaType.APPLICATION_JSON)
-	    public List<NewsItem> lastNews(@HeaderParam("sessionId") long sessionId, @PathParam("days") int days, @PathParam("outstandingOnly") boolean outstandingOnly) throws ServiceException{
+	    public List<NewsItem> lastNews(@HeaderParam("sessionId") String sessionId, @PathParam("days") int days, @PathParam("outstandingOnly") boolean outstandingOnly) throws ServiceException{
 			Calendar limitDate = Calendar.getInstance();
 			limitDate.add(Calendar.DAY_OF_YEAR, -1*days);
 			return eventService.getLastNews(sessionId, limitDate, outstandingOnly);
 	    }
 	    
-		@Path("/remove/{newsItemId}")
-		@POST
-	    public void remove(@HeaderParam("sessionId") long sessionId, @PathParam("newsItemId") int newsItemId) throws ServiceException{
+		@Path("/{newsItemId}")
+		@DELETE
+	    public void remove(@HeaderParam("sessionId") String sessionId, @PathParam("newsItemId") int newsItemId) throws ServiceException{
 			eventService.removeNews(sessionId, newsItemId);
 	    }
 

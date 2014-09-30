@@ -62,7 +62,7 @@ public class UserDaoHibernate extends GenericDaoHibernate<User,Integer> implemen
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<User> getBlacklistedUsers(long sessionId, int startIndex, int maxResults) {
+	public List<User> getBlacklistedUsers(int startIndex, int maxResults) {
 		return getSession().createQuery(
 	        	"SELECT u " +
 		        "FROM User u " +

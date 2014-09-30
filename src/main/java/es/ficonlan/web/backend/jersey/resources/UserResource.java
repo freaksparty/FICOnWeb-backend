@@ -7,6 +7,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -59,32 +60,31 @@ public class UserResource {
 		userService = ApplicationContextProvider.getApplicationContext().getBean(UserService.class);
 	}
     
-	@Path("/add")
-	@POST
+	@PUT
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
-	public User adduser(@HeaderParam("sessionId") long sessionId, User user) throws ServiceException {
+	public User adduser(@HeaderParam("sessionId") String sessionId, User user) throws ServiceException {
 		return userService.addUser(sessionId, user);
 	}
 	
 	@Path("/changeData")
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
-	public void changeData(@HeaderParam("sessionId") long sessionId, User user) throws ServiceException {
+	public void changeData(@HeaderParam("sessionId") String sessionId, User user) throws ServiceException {
 		userService.changeUserData(sessionId, user);
 	}
 	
 	@Path("/changePassword/{userId}")
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
-	public void changePassword(@HeaderParam("sessionId") long sessionId, @PathParam("userId") int userId, ChangePasswordData data) throws ServiceException {
+	public void changePassword(@HeaderParam("sessionId") String sessionId, @PathParam("userId") int userId, ChangePasswordData data) throws ServiceException {
 		userService.changeUserPassword(sessionId, userId, data.getOldPassword(), data.getNewPassword());
 	}
 	
 	@Path("/all/{statrtIndex}/{maxResults}")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<User> getAll(@HeaderParam("sessionId") long sessionId, @PathParam("startIndex") int startIndex,  @PathParam("maxResults") int maxResults) throws ServiceException {
+	public List<User> getAll(@HeaderParam("sessionId") String sessionId, @PathParam("startIndex") int startIndex,  @PathParam("maxResults") int maxResults) throws ServiceException {
 		return userService.getAllUsers(sessionId, startIndex, maxResults);
 
 	}
@@ -92,7 +92,7 @@ public class UserResource {
 	@Path("/findByName/{name}/{statrtIndex}/{maxResults}")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<User> findByName(@HeaderParam("sessionId") long sessionId, @PathParam("name") String name, @PathParam("startIndex") int startIndex,  
+	public List<User> findByName(@HeaderParam("sessionId") String sessionId, @PathParam("name") String name, @PathParam("startIndex") int startIndex,  
 			                     @PathParam("maxResults") int maxResults) throws ServiceException {
 		return userService.findUsersByName(sessionId, name, startIndex, maxResults);
 
@@ -101,54 +101,54 @@ public class UserResource {
 	@Path("/byEvent/{eventId}/{state}/{statrtIndex}/{maxResults}")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<User> getByEvent(@HeaderParam("sessionId") long sessionId, @PathParam("eventId") int eventId, @PathParam("state") String state,  
+	public List<User> getByEvent(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("state") String state,  
 			                     @PathParam("startIndex") int startIndex,  @PathParam("maxResults") int maxResults) throws ServiceException {
 		RegistrationState st;
-		if(state==null) throw new ServiceException(05,"getUsersByEvent","state");
+		if(state==null) throw new ServiceException(ServiceException.MISSING_FIELD,"state");
     	if(state.toLowerCase().contentEquals("registered"))  st=RegistrationState.registered;
     	else if(state.toLowerCase().contentEquals("inqueue")) st=RegistrationState.inQueue;
     	else if(state.toLowerCase().contentEquals("paid")) st=RegistrationState.paid;
     	else if(state.toLowerCase().contentEquals("all")) st=null;
-    	else throw new ServiceException(04,"getUsersByEvent","state");
+    	else throw new ServiceException(ServiceException.INCORRECT_FIELD,"state");
 		return userService.getUsersByEvent(sessionId, eventId, st, startIndex, maxResults);
 	}
 	
 	@Path("/addToBlackList/{userId}")
 	@POST
-	public void addToBlackList(@HeaderParam("sessionId") long sessionId, @PathParam("userId") int userId) throws ServiceException {
+	public void addToBlackList(@HeaderParam("sessionId") String sessionId, @PathParam("userId") int userId) throws ServiceException {
 		userService.addUserToBlackList(sessionId, userId);
 	}
 	
 	@Path("/removeFromBlackList/{userId}")
 	@POST
-	public void removeFromBlackList(@HeaderParam("sessionId") long sessionId, @PathParam("userId") int userId) throws ServiceException {
+	public void removeFromBlackList(@HeaderParam("sessionId") String sessionId, @PathParam("userId") int userId) throws ServiceException {
 		userService.removeUserFromBlackList(sessionId, userId);
 	}
 	
 	@Path("/getBlackList/{statrtIndex}/{maxResults}")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<User> getBlackList(@HeaderParam("sessionId") long sessionId, @PathParam("startIndex") int startIndex,  @PathParam("maxResults") int maxResults) throws ServiceException {
+	public List<User> getBlackList(@HeaderParam("sessionId") String sessionId, @PathParam("startIndex") int startIndex,  @PathParam("maxResults") int maxResults) throws ServiceException {
 		return userService.getBlacklistedUsers(sessionId, startIndex, maxResults);
 
 	}
 	
 	@Path("/addRole/{userId}/{roleId}")
 	@POST
-	public void addRole(@HeaderParam("sessionId") long sessionId, @PathParam("roleId") int roleId, @PathParam("userId") int userId) throws ServiceException{
+	public void addRole(@HeaderParam("sessionId") String sessionId, @PathParam("roleId") int roleId, @PathParam("userId") int userId) throws ServiceException{
 		userService.addRole(sessionId, roleId, userId);
 	}
 	
 	@Path("/removeRole/{userId}/{roleId}")
 	@POST
-	public void removeRole(@HeaderParam("sessionId") long sessionId, @PathParam("roleId") int roleId, @PathParam("userId") int userId) throws ServiceException{
+	public void removeRole(@HeaderParam("sessionId") String sessionId, @PathParam("roleId") int roleId, @PathParam("userId") int userId) throws ServiceException{
 		userService.removeRole(sessionId, roleId, userId);
 	} 
 	
 	@Path("/roles/{userId}")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public Set<Role> getUserRoles(@HeaderParam("sessionId") long sessionId, @PathParam("userId") int userId) throws ServiceException {
+	public Set<Role> getUserRoles(@HeaderParam("sessionId") String sessionId, @PathParam("userId") int userId) throws ServiceException {
 		return userService.getUserRoles(sessionId, userId);
 	}
 }

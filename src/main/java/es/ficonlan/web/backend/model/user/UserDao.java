@@ -20,6 +20,6 @@ public interface UserDao extends GenericDao<User,Integer> {
 
 	public List<User> findUsersByName(String name, int startindex, int maxResults);
 
-	public List<User> getBlacklistedUsers(long sessionId, int startIndex, int maxResults);
+	public List<User> getBlacklistedUsers(int startIndex, int maxResults);
 
 }

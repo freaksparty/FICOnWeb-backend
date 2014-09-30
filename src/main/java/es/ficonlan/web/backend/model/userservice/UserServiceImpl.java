@@ -121,17 +121,17 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Transactional
-	public User addUser(long sessionId, User user) throws ServiceException{
+	public User addUser(String sessionId, User user) throws ServiceException{
 		SessionManager.checkPermissions(sessionId, "addUser");
 		User u = userDao.findUserBylogin(user.getLogin());
-		if (u != null) throw new ServiceException(03,"addUser","login");
+		if (u != null) throw new ServiceException(ServiceException.DUPLICATED_FIELD,"login");
 		u = userDao.findUserByDni(user.getDni());
-		if (u != null) throw new ServiceException(03,"addUser","dni");
-		if(user.getLogin()==null) throw new ServiceException(05,"addUser","login");
-		if(user.getPassword()==null) throw new ServiceException(05,"addUser","password");
-		if(user.getName()==null) throw new ServiceException(05,"addUser","name");
-		if(user.getDni()==null) throw new ServiceException(05,"addUser","dni");
-		if(user.getEmail()==null) throw new ServiceException(05,"addUser","email");
+		if (u != null) throw new ServiceException(ServiceException.DUPLICATED_FIELD,"dni");
+		if(user.getLogin()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"login");
+		if(user.getPassword()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"password");
+		if(user.getName()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"name");
+		if(user.getDni()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"dni");
+		if(user.getEmail()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"email");
 		user.getRoles().add(roleDao.findByName("User"));
 		user.setPassword(hashPassword(user.getPassword()));
 		userDao.save(user);
@@ -139,26 +139,26 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Transactional(readOnly=true)
-	public Session login(long sessionId, String login, String password) throws ServiceException {
+	public Session login(String sessionId, String login, String password) throws ServiceException {
 		if (!SessionManager.exists(sessionId)) throw new ServiceException(01,"login");
 		Session session = SessionManager.getSession(sessionId);
 		if(login.contentEquals("anonymous")) return session;
 		if(!session.getUser().getLogin().contentEquals("anonymous")) throw new ServiceException(07,"login");
 		User user = userDao.findUserBylogin(login);
-		if (user == null) throw new ServiceException(04,"login","login");
-		if (!user.getPassword().contentEquals(hashPassword(password)))  throw new ServiceException(04,"login","password");
+		if (user == null) throw new ServiceException(ServiceException.INCORRECT_FIELD,"login");
+		if (!user.getPassword().contentEquals(hashPassword(password)))  throw new ServiceException(ServiceException.INCORRECT_FIELD,"password");
 		session.setUser(user);
 		return session;
 	}
 	
-	public User getCurrenUser(long sessionId) throws ServiceException {
+	public User getCurrenUser(String sessionId) throws ServiceException {
 		if (!SessionManager.exists(sessionId)) throw new ServiceException(01,"getCurrenUser");
 		Session session = SessionManager.getSession(sessionId);
 		if(session.getUser().getLogin().contentEquals("anonymous")) return null;
 		return session.getUser();
 	}
 
-	public void closeSession(long sessionId) throws ServiceException {
+	public void closeSession(String sessionId) throws ServiceException {
 		if (!SessionManager.exists(sessionId)) throw new ServiceException(01,"closeSession");
 		SessionManager.removeSession(sessionId);
 	}
@@ -167,7 +167,7 @@ public class UserServiceImpl implements UserService {
 	 * DNI field can't be changed by the user, only by an admin; 
 	 */
 	@Transactional
-	public void changeUserData(long sessionId, User userData) throws ServiceException {
+	public void changeUserData(String sessionId, User userData) throws ServiceException {
 		SessionManager.checkPermissions(sessionId, userData.getUserId(), "changeUserData");
 		try {
 			User user = userDao.find(userData.getUserId());
@@ -178,7 +178,7 @@ public class UserServiceImpl implements UserService {
 			user.setShirtSize(userData.getShirtSize());
 			userDao.save(user);
 		} catch (InstanceException e) {
-			throw new  ServiceException(06,"changeUserData","User");
+			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
 		}
 	}
 
@@ -187,71 +187,71 @@ public class UserServiceImpl implements UserService {
 	 * Password changed by an admin -> Old password not required.
 	 */
 	@Transactional
-	public void changeUserPassword(long sessionId, int userId, String oldPassword, String newPassword) throws ServiceException {
+	public void changeUserPassword(String sessionId, int userId, String oldPassword, String newPassword) throws ServiceException {
 		SessionManager.checkPermissions(sessionId, userId, "changeUserPassword");
 		Session session = SessionManager.getSession(sessionId);
 		try {
 			User user = userDao.find(userId);
 			if(session.getUser().getUserId() == userId){
-				if(!hashPassword(oldPassword).contentEquals(user.getPassword()))  throw new ServiceException(04,"changeUserPassword","password"); 
+				if(!hashPassword(oldPassword).contentEquals(user.getPassword()))  throw new ServiceException(ServiceException.INCORRECT_FIELD,"password"); 
 			}
 			user.setPassword(hashPassword(newPassword));
 			userDao.save(user);
 		} catch (InstanceException e) {
-			throw new  ServiceException(06,"changeUserPassword","User");
+			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
 		}	
 	}
 
 	@Transactional(readOnly=true)
-	public List<User> getUsersByEvent(long sessionId, int eventId, RegistrationState state, int startindex, int maxResults) throws ServiceException {
+	public List<User> getUsersByEvent(String sessionId, int eventId, RegistrationState state, int startindex, int maxResults) throws ServiceException {
 		SessionManager.checkPermissions(sessionId, "getUsersByEvent");
 		return userDao.getUsersByEvent(eventId,state,startindex,maxResults);
 	}
 	
 	@Transactional(readOnly=true)
-	public List<User> getAllUsers(long sessionId, int startindex, int maxResults) throws ServiceException {
+	public List<User> getAllUsers(String sessionId, int startindex, int maxResults) throws ServiceException {
 		SessionManager.checkPermissions(sessionId, "getAllUsers");
 		return userDao.getAllUsers(startindex, maxResults);
 	}
 	
 	@Transactional(readOnly=true)
-	public List<User> findUsersByName(long sessionId, String name, int startindex, int maxResults) throws ServiceException {
+	public List<User> findUsersByName(String sessionId, String name, int startindex, int maxResults) throws ServiceException {
 		SessionManager.checkPermissions(sessionId, "findUsersByName");
 		return userDao.findUsersByName(name, startindex, maxResults);
 	}
 
 	@Transactional
-	public void addUserToBlackList(long sessionId, int userId) throws ServiceException{
+	public void addUserToBlackList(String sessionId, int userId) throws ServiceException{
 		SessionManager.checkPermissions(sessionId, "addUserToBlackList");
 		try {
 			User user = userDao.find(userId);
 			user.setInBlackList(true);
 			userDao.save(user);
 		} catch (InstanceException e) {
-			throw new  ServiceException(06,"addUserToBlackList","User");
+			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
 		}	
 	}
 
 	@Transactional
-	public void removeUserFromBlackList(long sessionId, int userId) throws ServiceException {
+	public void removeUserFromBlackList(String sessionId, int userId) throws ServiceException {
 		SessionManager.checkPermissions(sessionId, "removeUserFromBlackList");
 		try {
 			User user = userDao.find(userId);
 			user.setInBlackList(false);
 			userDao.save(user);
 		} catch (InstanceException e) {
-			throw new  ServiceException(06,"removeUserFromBlackList","User");
+			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
 		}
 	}
 	
 	@Transactional(readOnly=true)
-	public List<User> getBlacklistedUsers(long sessionId, int startIndex, int maxResults) throws ServiceException {
+	public List<User> getBlacklistedUsers(String sessionId, int startIndex, int maxResults) throws ServiceException {
 		SessionManager.checkPermissions(sessionId, "getBlacklistedUsers");
-		return userDao.getBlacklistedUsers(sessionId, startIndex, maxResults);
+		return userDao.getBlacklistedUsers(startIndex, maxResults);
 	}	
 	
 	@Transactional
-	public void setDefaultLanguage(long sessionId, int userId, int languageId) throws ServiceException {
+	public void setDefaultLanguage(String sessionId, int userId, int languageId) throws ServiceException {
 		SessionManager.checkPermissions(sessionId, userId, "setDefaultLanguage");
 		try {
 			User user = userDao.find(userId);
@@ -259,25 +259,25 @@ public class UserServiceImpl implements UserService {
 			user.setDefaultLanguage(language);
 			userDao.save(user);
 		} catch (InstanceException e) {
-			if (e.getClassName().contentEquals("User")) throw new  ServiceException(06,"setDefaultLanguage","User");
-			else throw new ServiceException(06,"setDefaultLanguage","Language");
+			if (e.getClassName().contentEquals("User")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
+			else throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Language");
 		}	
 	}
 
 	@Transactional
-	public void removeUser(long sessionId, int userId) throws ServiceException {
+	public void removeUser(String sessionId, int userId) throws ServiceException {
 		SessionManager.checkPermissions(sessionId, "removeUser");
 		try {
 			User user = userDao.find(userId);
 			user.setDeleted(true);
 			userDao.save(user);
 		} catch (InstanceException e) {
-			throw new  ServiceException(06,"removeUser","User");
+			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
 		}
 	}
 	
 	@Transactional
-	public Role createRole(long sessionId, String roleName) throws ServiceException {
+	public Role createRole(String sessionId, String roleName) throws ServiceException {
 		SessionManager.checkPermissions(sessionId, "createRole");
 		Role role = new Role(roleName);
 		roleDao.save(role);
@@ -285,7 +285,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Transactional
-	public void addRole(long sessionId, int roleId, int userId) throws ServiceException {
+	public void addRole(String sessionId, int roleId, int userId) throws ServiceException {
 		SessionManager.checkPermissions(sessionId, "addRole");
 		try {
 			User user = userDao.find(userId);
@@ -293,13 +293,13 @@ public class UserServiceImpl implements UserService {
 			user.getRoles().add(role);
 			userDao.save(user);
 		} catch (InstanceException e) {
-			if (e.getClassName().contentEquals("User")) throw new  ServiceException(06,"addRole","User");
-			else throw new ServiceException(06,"addRole","Role");
+			if (e.getClassName().contentEquals("User")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
+			else throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Role");
 		}
 	}
 
 	@Transactional
-	public void removeRole(long sessionId, int roleId, int userId) throws ServiceException {
+	public void removeRole(String sessionId, int roleId, int userId) throws ServiceException {
 		SessionManager.checkPermissions(sessionId, "removeRole");
 		try {
 			User user = userDao.find(userId);
@@ -307,31 +307,31 @@ public class UserServiceImpl implements UserService {
 			user.getRoles().remove(role);
 			userDao.save(user);
 		} catch (InstanceException e) {
-			if (e.getClassName().contentEquals("User")) throw new  ServiceException(06,"removeRole","User");
-			else throw new  ServiceException(06,"removeRole","Role");
+			if (e.getClassName().contentEquals("User")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
+			else throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Role");
 		}
 		
 	}
 	
 	@Transactional(readOnly=true)
-	public Set<Role> getUserRoles(long sessionId, int userId) throws ServiceException {
+	public Set<Role> getUserRoles(String sessionId, int userId) throws ServiceException {
 		SessionManager.checkPermissions(sessionId, "getUserRoles");
 		try {
 			User user = userDao.find(userId);
 			return user.getRoles();
 		} catch (InstanceException e) {
-			throw new  ServiceException(06,"getUserRoles","User");
+			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
 		}
 	}
 	
 	@Transactional(readOnly=true)
-	public List<Role> getAllRoles(long sessionId) throws ServiceException {
+	public List<Role> getAllRoles(String sessionId) throws ServiceException {
 		SessionManager.checkPermissions(sessionId, "getAllRoles");
 		return roleDao.getAllRoles();
 	}
 
 	@Transactional
-	public UseCase createUseCase(long sessionId, String useCaseName) throws ServiceException {
+	public UseCase createUseCase(String sessionId, String useCaseName) throws ServiceException {
 		SessionManager.checkPermissions(sessionId, "createUseCase");
 		UseCase useCase = new UseCase(useCaseName);
 		useCaseDao.save(useCase);
@@ -339,7 +339,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Transactional
-	public void addPermission(long sessionId, int roleId, int useCaseId) throws ServiceException {
+	public void addPermission(String sessionId, int roleId, int useCaseId) throws ServiceException {
 		SessionManager.checkPermissions(sessionId, "addPermission");
 		try {
 			Role role = roleDao.find(roleId);
@@ -347,14 +347,14 @@ public class UserServiceImpl implements UserService {
 			role.getUseCases().add(useCase);
 			roleDao.save(role);
 		} catch (InstanceException e) {
-			if (e.getClassName().contentEquals("UseCase")) throw new  ServiceException(06,"addPermission","UseCase");
-			else throw new  ServiceException(06,"addPermission","Role");
+			if (e.getClassName().contentEquals("UseCase")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"UseCase");
+			else throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Role");
 		}
 		
 	}
 
 	@Transactional
-	public void removePermission(long sessionId, int roleId, int useCaseId) throws ServiceException {
+	public void removePermission(String sessionId, int roleId, int useCaseId) throws ServiceException {
 		SessionManager.checkPermissions(sessionId, "removePermission");
 		try {
 			Role role = roleDao.find(roleId);
@@ -362,25 +362,25 @@ public class UserServiceImpl implements UserService {
 			role.getUseCases().remove(useCase);
 			roleDao.save(role);
 		} catch (InstanceException e) {
-			if (e.getClassName().contentEquals("UseCase")) throw new  ServiceException(06,"removePermission","UseCase");
-			else throw new  ServiceException(06,"removePermission","Role");
+			if (e.getClassName().contentEquals("UseCase")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"UseCase");
+			else throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Role");
 		}
 		
 	}
 	
 	@Transactional(readOnly=true)	
-	public Set<UseCase> getRolePermissions(long sessionId, int roleId) throws ServiceException {
+	public Set<UseCase> getRolePermissions(String sessionId, int roleId) throws ServiceException {
 		SessionManager.checkPermissions(sessionId, "getRolePermissions");
 		try {
 			Role role = roleDao.find(roleId);
 			return role.getUseCases();
 		} catch (InstanceException e) {
-			throw new  ServiceException(06,"getRolePermissions","Role");
+			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Role");
 		}
 	}
 	
 	@Transactional(readOnly=true)	
-	public List<UseCase> getAllUseCases(long sessionId) throws ServiceException {
+	public List<UseCase> getAllUseCases(String sessionId) throws ServiceException {
 		SessionManager.checkPermissions(sessionId, "getAllUseCases");
 		return useCaseDao.getAll();
 	}

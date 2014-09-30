@@ -17,42 +17,42 @@ import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
  */
 public interface EventService {   
 
-	public Event createEvent(long sessionId, Event event) throws ServiceException;
+	public Event createEvent(String sessionId, Event event) throws ServiceException;
 	
-	public void changeEventData(long sessionId, Event eventData) throws ServiceException;
+	public void changeEventData(String sessionId, Event eventData) throws ServiceException;
 		
-	public void addParticipantToEvent(long sessionId, int userId, int eventId) throws ServiceException;
+	public void addParticipantToEvent(String sessionId, int userId, int eventId) throws ServiceException;
 	
-	public void removeParticipantFromEvent(long sessionId, int userId, int eventId) throws ServiceException;
+	public void removeParticipantFromEvent(String sessionId, int userId, int eventId) throws ServiceException;
 	
-	public void setPaid(long sessionId, int userId, int eventId) throws ServiceException;
+	public void setPaid(String sessionId, int userId, int eventId) throws ServiceException;
 	
-	public void changeRegistrationState(long sessionId, int userId, int eventId, RegistrationState state) throws ServiceException;
+	public void changeRegistrationState(String sessionId, int userId, int eventId, RegistrationState state) throws ServiceException;
 
-    public List<Event> findEventByName(long sessionId, String name) throws ServiceException;
+    public List<Event> findEventByName(String sessionId, String name) throws ServiceException;
     
-    public Activity addActivity(long sessionId, int eventId,  Activity activity) throws ServiceException;
+    public Activity addActivity(String sessionId, int eventId,  Activity activity) throws ServiceException;
     
-    public void removeActivity(long sessionId, int activityId) throws ServiceException;
+    public void removeActivity(String sessionId, int activityId) throws ServiceException;
     
-    public void changeActivityData(long sessionId, Activity activityData) throws ServiceException;
+    public void changeActivityData(String sessionId, Activity activityData) throws ServiceException;
     
-    public void setActivityOrganizer(long sessionId, int activityId,  int userId) throws ServiceException;
+    public void setActivityOrganizer(String sessionId, int activityId,  int userId) throws ServiceException;
     
-    public List<Activity> getActivitiesByEvent(long sessionId, int eventId, ActivityType type) throws ServiceException;
+    public List<Activity> getActivitiesByEvent(String sessionId, int eventId, ActivityType type) throws ServiceException;
     
-    public void addParticipantToActivity(long sessionId, int userId, int activityId) throws ServiceException;
+    public void addParticipantToActivity(String sessionId, int userId, int activityId) throws ServiceException;
     
-    public void removeParticipantFromActivity(long sessionId, int userId, int activityId) throws ServiceException;
+    public void removeParticipantFromActivity(String sessionId, int userId, int activityId) throws ServiceException;
     
-    public List<User> getActivityParticipants(long sessionId, int activityId) throws ServiceException;
+    public List<User> getActivityParticipants(String sessionId, int activityId) throws ServiceException;
     
-    public NewsItem addNews(long sessionId, int eventId, NewsItem newsItem) throws ServiceException;
+    public NewsItem addNews(String sessionId, int eventId, NewsItem newsItem) throws ServiceException;
     
-    public void changeNewsData(long sessionId, NewsItem newsData) throws ServiceException;
+    public void changeNewsData(String sessionId, NewsItem newsData) throws ServiceException;
     
-    public List<NewsItem> getLastNews(long sessionId, Calendar dateLimit, boolean onlyOutstandingNews) throws ServiceException;
+    public List<NewsItem> getLastNews(String sessionId, Calendar dateLimit, boolean onlyOutstandingNews) throws ServiceException;
     
-    public void removeNews(long sessionId, int newsItemId) throws ServiceException;
+    public void removeNews(String sessionId, int newsItemId) throws ServiceException;
     
 }

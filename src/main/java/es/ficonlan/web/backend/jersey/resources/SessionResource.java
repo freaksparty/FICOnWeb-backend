@@ -1,9 +1,11 @@
 package es.ficonlan.web.backend.jersey.resources;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -50,8 +52,7 @@ public class SessionResource {
 		userService = ApplicationContextProvider.getApplicationContext().getBean(UserService.class);
 	}
 	    
-	@Path("/anonymous")
-	@POST
+	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	public Session newSession() throws ServiceException {
     	Session s = userService.newAnonymousSession().clone();
@@ -63,20 +64,19 @@ public class SessionResource {
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
-	public Session login(@HeaderParam("sessionId") long sessionId, LoginData loginData) throws ServiceException {
+	public Session login(@HeaderParam("sessionId") String sessionId, LoginData loginData) throws ServiceException {
     	return userService.login(sessionId, loginData.getLogin(), loginData.getPassword());
 	}
 	
 	@Path("/currentUser")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public User currentUser(@HeaderParam("sessionId") long sessionId) throws ServiceException {
+	public User currentUser(@HeaderParam("sessionId") String sessionId) throws ServiceException {
     	return userService.getCurrenUser(sessionId);
 	}
 	
-	@Path("/close")
-	@POST
-	public void close(@HeaderParam("sessionId") long sessionId) throws ServiceException{
+	@DELETE
+	public void close(@HeaderParam("sessionId") String sessionId) throws ServiceException{
     	userService.closeSession(sessionId);
 	}
 	

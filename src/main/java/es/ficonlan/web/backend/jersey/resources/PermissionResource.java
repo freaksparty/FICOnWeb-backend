@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -32,44 +33,43 @@ public class PermissionResource {
 		userService = ApplicationContextProvider.getApplicationContext().getBean(UserService.class);
 	}
 
-	@Path("/all")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<UseCase> getAll(@HeaderParam("sessionId") long sessionId) throws ServiceException {
+	public List<UseCase> getAll(@HeaderParam("sessionId") String sessionId) throws ServiceException {
 		return userService.getAllUseCases(sessionId);
 
 	}
 	
-	@Path("/createRole/{roleName}")
-	@POST
+	@Path("/role/{roleName}")
+	@PUT
 	@Produces({MediaType.APPLICATION_JSON})
-	public Role createRole(@HeaderParam("sessionId") long sessionId, @PathParam("roleName") String roleName) throws ServiceException {
+	public Role createRole(@HeaderParam("sessionId") String sessionId, @PathParam("roleName") String roleName) throws ServiceException {
 		return userService.createRole(sessionId, roleName);
 	}
 	
 	@Path("/add/{roleId}/{useCaseId}")
 	@POST
-	public void addPermissionToRole(@HeaderParam("sessionId") long sessionId, @PathParam("roleId") int roleId, @PathParam("useCaseId") int useCaseId) throws ServiceException{
+	public void addPermissionToRole(@HeaderParam("sessionId") String sessionId, @PathParam("roleId") int roleId, @PathParam("useCaseId") int useCaseId) throws ServiceException{
 		userService.addPermission(sessionId, roleId, useCaseId);
 	}
 	
 	@Path("/remove/{roleId}/{useCaseId}")
 	@POST
-	public void removePermissionFromRole(@HeaderParam("sessionId") long sessionId, @PathParam("roleId") int roleId, @PathParam("useCaseId") int useCaseId) throws ServiceException{
+	public void removePermissionFromRole(@HeaderParam("sessionId") String sessionId, @PathParam("roleId") int roleId, @PathParam("useCaseId") int useCaseId) throws ServiceException{
 		userService.removePermission(sessionId, roleId, useCaseId);
 	} 
 	
 	@Path("/role/{roleId}")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public Set<UseCase> getRolePermissions(@HeaderParam("sessionId") long sessionId, @PathParam("roleId") int roleId) throws ServiceException {
+	public Set<UseCase> getRolePermissions(@HeaderParam("sessionId") String sessionId, @PathParam("roleId") int roleId) throws ServiceException {
 		return userService.getRolePermissions(sessionId, roleId);
 	}
 		
 	@Path("/roles")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<Role> getAllRoles(@HeaderParam("sessionId") long sessionId) throws ServiceException {
+	public List<Role> getAllRoles(@HeaderParam("sessionId") String sessionId) throws ServiceException {
 		return userService.getAllRoles(sessionId);
 	}	
 }

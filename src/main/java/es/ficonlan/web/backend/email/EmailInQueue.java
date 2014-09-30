@@ -22,12 +22,12 @@ public class EmailInQueue extends Email {
 		try {
 			propConfig.load(inputStreamConfig);
 		} catch (IOException e1) {
-			throw new ServiceException(12, "createEmail", mailConfig);
+			throw new ServiceException(ServiceException.MISSING_CONFIG_FILE, mailConfig);
 		}
 		try {
 			propContetnt.load(inputStreamContent);
 		} catch (IOException e1) {
-			throw new ServiceException(12, "createEmail", mailContent);
+			throw new ServiceException(ServiceException.MISSING_CONFIG_FILE, mailContent);
 		}
 		
 		this.usuarioCorreo = propConfig.getProperty("direccion");

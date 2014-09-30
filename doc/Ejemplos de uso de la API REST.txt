@@ -1,4 +1,6 @@
 ﻿
+Url base: https://alguien.servegame.com:1194
+
 Cuenta de Admin:
 	
 	LOGIN: Admin
@@ -6,16 +8,16 @@ Cuenta de Admin:
 
 
 # CREACIÓN DE UNA SESIÓN ANÓNIMA:
-	- Petición: POST https://alguien.servegame.com:1194/ficonlan/session/anonymous
+	- Petición: PUT BASE_URL/ficonlan/session
 	- Respuesta: 200 OK
-		{"sessionId":0,"user":null}
+		{"sessionId":"\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���","user":null}
 	
 		
 # CREACIÓN DE UN USUARIO:
 	- Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/user/add
+		PUT BASE_URL/ficonlan/user
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		body: 
 			{
 			 "name":"User1", 
@@ -41,9 +43,9 @@ Cuenta de Admin:
 
 # LOGIN:
 	- Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/session/login
+		POST BASE_URL/ficonlan/session/login
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		body:
 		  {
  		    "login":"user1", 
@@ -59,9 +61,9 @@ Cuenta de Admin:
 # OBTENER LOS DATOS DEL USUARIO ACTUAL:	
 
 	- Petición: 
-		GET https://alguien.servegame.com:1194/ficonlan/session/currentUser
+		GET BASE_URL/ficonlan/session/currentUser
 		header: 
-			sessionId=0	
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���	
 			
 	- Respuesta: 200 OK		
 			{
@@ -78,17 +80,17 @@ Cuenta de Admin:
 		
 # CIERRE DE SESIÓN:	
 	- Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/session/close
+		DELETE BASE_URL/ficonlan/session
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 	- Respuesta: 204 No Content	
 	
 	
 # MODIFICAR DATOS DEL USUARIO:
 	- Petición: 
-		GET https://alguien.servegame.com:1194/ficonlan/user/changeData
+		POST BASE_URL/ficonlan/user/changeData
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		body:
 		  {
 			"userId":6,
@@ -106,9 +108,9 @@ Cuenta de Admin:
 
 # CAMBIAR PASSWORD:
 	- Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/user/changePassword/6   *(userId=6)
+		POST BASE_URL/ficonlan/user/changePassword/6   *(userId=6)
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		body:
 		  {
  			"oldPassword":"pass",
@@ -120,9 +122,9 @@ Cuenta de Admin:
  
  # LISTAR TODOS LOS USUARIOS:
  	- Petición: 
-		GET https://alguien.servegame.com:1194/ficonlan/user/all/0/10    *(startIndex=0, maxResults=10)
+		GET BASE_URL/ficonlan/user/all/0/10    *(startIndex=0, maxResults=10)
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 						
 	- Respuesta: 200 OK
 		  [
@@ -160,9 +162,9 @@ Cuenta de Admin:
 
  # BUSCAR USUARIOS POR NOMBRE:
  	- Petición: 
-		GET https://alguien.servegame.com:1194/ficonlan/user/findByName/use/0/10    *(name="use", startIndex=0, maxResults=10) el nombre debe ir codificado en la url
+		GET BASE_URL/ficonlan/user/findByName/use/0/10    *(name="use", startIndex=0, maxResults=10) el nombre debe ir codificado en la url
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		
 		* Este metodo busca tanto por login como por nombre. la cadena de búsqueda puede contener espacios y debe ir encodeada en la url. No tiene por que coincidir
 		  exactamente con el nombre buscado, solo es necesario que el nombre o login contenga la cadena buscada. No es case sensitive. 
@@ -204,26 +206,26 @@ Cuenta de Admin:
 
 # AÑADIR USUARIO A LA BLACKLIST:
 	- Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/user/addToBlackList/7     *(userId=7)
+		POST BASE_URL/ficonlan/user/addToBlackList/7     *(userId=7)
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		  
 	- Respuesta: 204 No Content	
 	
 	
 # ELIMINAR USUARIO DE LA BLACKLIST:
 	- Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/user/removeFromBlackList/7     *(userId=7)
+		POST BASE_URL/ficonlan/user/removeFromBlackList/7     *(userId=7)
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		  
 	- Respuesta: 204 No Content	
 	
 # OBTENER BLACKLIST	:
 	- Petición: 
-		GET https://alguien.servegame.com:1194/ficonlan/user/getBlackList/0/10    *(startIndex=0, maxResults=10)
+		GET BASE_URL/ficonlan/user/getBlackList/0/10    *(startIndex=0, maxResults=10)
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 						
 	- Respuesta: 200 OK
 		  [
@@ -252,9 +254,9 @@ Cuenta de Admin:
 	
 # OBTENER TODOS LOS CASOS DE USO:
 	- Petición: 
-		GET https://alguien.servegame.com:1194/ficonlan/permissions/all     
+		GET BASE_URL/ficonlan/permissions     
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		  
 	- Respuesta: 200 OK	
 		[
@@ -281,9 +283,9 @@ Cuenta de Admin:
 
 # CREAR ROL:
 	- Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/permissions/createRole/Nuevo%20Rol   *(roleName="Nuevo Rol")    
+		PUT BASE_URL/ficonlan/permissions/role/Nuevo%20Rol   *(roleName="Nuevo Rol")    
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		  
 	- Respuesta: 200 OK
 		{
@@ -293,25 +295,25 @@ Cuenta de Admin:
 	
 # AÑADIR PERMISO A ROL:
     - Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/permissions/add/6/2   *(roleId=6, useCaseId=2)    
+		POST BASE_URL/ficonlan/permissions/add/6/2   *(roleId=6, useCaseId=2)    
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		  
 	- Respuesta: 204 No Content	
 	
 # QUITAR PERMISO DE UN ROL:
     - Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/permissions/remove/6/2   *(roleId=6, useCaseId=2)    
+		POST BASE_URL/ficonlan/permissions/remove/6/2   *(roleId=6, useCaseId=2)    
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		  
 	- Respuesta: 204 No Content	
 
 # OBTERNER PERMISOS DE UN ROL:
 	- Petición: 
-		GET https://alguien.servegame.com:1194/ficonlan/permissions/role/6   *(roleId=6)
+		GET BASE_URL/ficonlan/permissions/role/6   *(roleId=6)
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		  
 	- Respuesta: 200 OK	
 		[
@@ -331,9 +333,9 @@ Cuenta de Admin:
 	
 # OBTERNER TODOS LOS ROLES:
 	- Petición: 
-		GET https://alguien.servegame.com:1194/ficonlan/permissions/roles
+		GET BASE_URL/ficonlan/permissions/roles
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		  
 	- Respuesta: 200 OK	
 		[
@@ -357,25 +359,25 @@ Cuenta de Admin:
 	
 # AÑADIR ROL A UN USUARIO	
 	- Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/user/addRole/9/6   *(userId=9, roleId=6)     
+		POST BASE_URL/ficonlan/user/addRole/9/6   *(userId=9, roleId=6)     
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		  
 	- Respuesta: 204 No Content
 	
 # QUITAR ROL A UN USUARIO	
 	- Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/user/removeRole/9/6   *(userId=9, roleId=6)    
+		POST BASE_URL/ficonlan/user/removeRole/9/6   *(userId=9, roleId=6)    
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		  
 	- Respuesta: 204 No Content					
 
 # OBTENER ROLES DE UN USUARIO:
 	- Petición: 
-		GET https://alguien.servegame.com:1194/ficonlan/user/roles/7  *(userId=7)  
+		GET BASE_URL/ficonlan/user/roles/7  *(userId=7)  
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		  
 	- Respuesta: 200 OK	
 		[
@@ -389,9 +391,9 @@ Cuenta de Admin:
 		  
 # CREACIÓN DE UN EVENTO:
 	- Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/event/create
+		PUT BASE_URL/ficonlan/event
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		body: 
 			{
     		  "name":"FicOnLan 2014",
@@ -417,9 +419,9 @@ Cuenta de Admin:
 	  		
 # MODIFICAR DATOS DEL EVENTO:
 - Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/event/changeData
+		POST BASE_URL/ficonlan/event/changeData
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		body: 
 			{
 			  "eventId":1,
@@ -438,9 +440,9 @@ Cuenta de Admin:
 	
 # INSCRIPCIÓN EN UN EVENTO:
 	- Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/event/addParticipant/1/6
+		POST BASE_URL/ficonlan/event/addParticipant/1/6
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 			
 		body: 
 		  
@@ -449,27 +451,27 @@ Cuenta de Admin:
 
 # ELIMINAR INSCRIPCIÓN EN UN EVENTO	
 	- Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/event/removeParticipant/1/6     *(eventId=1, userId=6)
+		POST BASE_URL/ficonlan/event/removeParticipant/1/6     *(eventId=1, userId=6)
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		  
 	- Respuesta: 204 No Content	
 	
 
 # CAMBIAR EL ESTADO DE INSCRIPCIÖN DE UN USUARIO A PAGADO:
 	- Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/event/setPaid/1/6    *(eventId=1, userId=6)
+		POST BASE_URL/ficonlan/event/setPaid/1/6    *(eventId=1, userId=6)
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 	
 	- Respuesta: 204 No Content	
 	
 	
 # CAMBIAR ESTADO DE INSCRIPCIÓN EN UN EVENTO	
 	- Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/event/changeRegistrationState/1/6/paid    *(eventId=1, userId=6, state="paid")
+		POST BASE_URL/ficonlan/event/changeRegistrationState/1/6/paid    *(eventId=1, userId=6, state="paid")
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		 
 		 * Posibles valores de state:
 		   - registered (inscrito) 
@@ -485,9 +487,9 @@ Cuenta de Admin:
 
 # BUSCAR EVENTOS POR NOMBRE:
 	- Petición: 
-		GET https://alguien.servegame.com:1194/ficonlan/event/byName/FicOnLan%202014     *(name="FicOnLan 2014", debe ir codificado en la url)
+		GET BASE_URL/ficonlan/event/byName/FicOnLan%202014     *(name="FicOnLan 2014", debe ir codificado en la url)
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		 
 	- Respuesta: 200 OK
 		[	
@@ -507,9 +509,9 @@ Cuenta de Admin:
 
 # OBTENER USUARIOS INSCRITOS EN UN EVENTO Y CON UN ESTADO DE INSCRIPCIÓN DETERMINADO:		
 	- Petición: 
-		GET https://alguien.servegame.com:1194/ficonlan/user/byEvent/1/paid/0/10    *(eventId=1, state="paid",startIndex=0, maxResults=10)
+		GET BASE_URL/ficonlan/user/byEvent/1/paid/0/10    *(eventId=1, state="paid",startIndex=0, maxResults=10)
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		 
 	- Respuesta: 200 OK
 		[
@@ -547,9 +549,9 @@ Cuenta de Admin:
 # CREAR ACTIVIDAD:
 	
 	- Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/event/1/addActivity    *(eventId=1)
+		PUT BASE_URL/ficonlan/activity/1    *(eventId=1)
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		
 		body:
 			{
@@ -587,9 +589,9 @@ Cuenta de Admin:
 
 # MODIFICAR DATOS DE UNA ACTIVIDAD:
 	- Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/activity/changeData
+		POST BASE_URL/ficonlan/activity/changeData
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		
 		body:
 			{
@@ -616,25 +618,25 @@ Cuenta de Admin:
 	
 # ELIMINAR ACTIVIDAD
 	- Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/activity/remove/1    *(activityId=1)
+		DELETE BASE_URL/ficonlan/activity/1    *(activityId=1)
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 			 
 	- Respuesta: 204 No Content
 	
 # ESTABLECER EL ORGANIZADOR DE UNA ACTIVIDAD:	
 	- Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/activity/setOrganizer/4/3   *(activityId=4, userId=3)
+		POST BASE_URL/ficonlan/activity/setOrganizer/4/3   *(activityId=4, userId=3)
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 			 
 	- Respuesta: 204 No Content
 	
 # BUSCAR ACTIVIDADES POR EVENTO Y TIPO:	
 	- Petición: 
-		GET https://alguien.servegame.com:1194/ficonlan/activity/getByEvent/1/All   *(eventId=1, type=All)
+		GET BASE_URL/ficonlan/activity/getByEvent/1/All   *(eventId=1, type=All)
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		
 		* Posibles valores de type:
 			- Torunament
@@ -676,25 +678,25 @@ Cuenta de Admin:
 	
 # AÑADIR PARTICIPANTE A UNA ACTIVIDAD
 	- Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/activity/addParticipant/4/3   *(activityId=4, userId=3)
+		POST BASE_URL/ficonlan/activity/addParticipant/4/3   *(activityId=4, userId=3)
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 			 
 	- Respuesta: 204 No Content
 
 # ELIMINAR PARTICIPANTE A UNA ACTIVIDAD
 	- Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/activity/removeParticipant/4/3   *(activityId=4, userId=3)
+		POST BASE_URL/ficonlan/activity/removeParticipant/4/3   *(activityId=4, userId=3)
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 			 
 	- Respuesta: 204 No Content	
 	
  # OBTENER PARTICIPANTES DE UNA ACTIVIDAD
   	-Petición: 
-		GET https://alguien.servegame.com:1194/ficonlan/activity/getParticipants/4   *(activityId=4)
+		GET BASE_URL/ficonlan/activity/getParticipants/4   *(activityId=4)
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 			 
 	- Respuesta: 200 OK	
 		[
@@ -722,9 +724,9 @@ Cuenta de Admin:
 
 # AÑADIR NOTICIA:
 	-Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/event/7/addNews    *(eventId=7)
+		PUT BASE_URL/ficonlan/news/7    *(eventId=7)
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		
 		body:
 			{
@@ -752,9 +754,9 @@ Cuenta de Admin:
 		
 # MODIFICAR NOTICIA:
 	-Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/news/changeData
+		POST BASE_URL/ficonlan/news/changeData
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		
 		body:
 			{
@@ -769,9 +771,9 @@ Cuenta de Admin:
 	
 # OBTERNER LAS ÚlTIMAS NOTICIAS:
 	-Petición: 
-		GET https://alguien.servegame.com:1194/ficonlan/news/last/5/false  *(days=5, outstandingOnly=false)  
+		GET BASE_URL/ficonlan/news/last/5/false  *(days=5, outstandingOnly=false)  
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
  
  		* days : indica el límite de dias (Ej: se mostrarán las noticias publicadas en los últimos 5 días)
    		* outstandingOnly : solo noticias destacadas
@@ -802,18 +804,18 @@ Cuenta de Admin:
 		
 # BORRAR UNA NOTICIA:
 	-Petición: 
-		POST https://alguien.servegame.com:1194/ficonlan/news/remove/3  *(newsItemId=3)
+		DELETE BASE_URL/ficonlan/news/3  *(newsItemId=3)
 		header: 
-			sessionId=0	
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���	
 			
 	- Respuesta: 204 No Content	
 	
 	
 # EXCEPCIONES:
 
-	- Petición: POST https://alguien.servegame.com:1194/ficonlan/user/add	
+	- Petición: POST BASE_URL/ficonlan/user/add	
 		header: 
-			sessionId=0
+			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
 		body: 
 			{
 			 "name":"User1", 
@@ -827,10 +829,9 @@ Cuenta de Admin:
 			
 	- Respuesta: 400 Bad Request			
 		{
-		 "exception":"ServiceException",
-		 "code":3,
+		 "exceptionCode":3,
 		 "useCase":"addUser",
-		 "message":"Duplicated unique field",
+		 "errorMessage":"Duplicated unique field",
 		 "field":"login"
 		}
 		
