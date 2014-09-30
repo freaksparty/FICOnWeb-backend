@@ -96,10 +96,11 @@ public class EventServiceImpl implements EventService {
     		Registration registration = new Registration(user, event);
     		int currentParticipants = registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.registered) + 
     								  registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.paid);
+    		int queueParticipants = currentParticipants + registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.inQueue);
     		if(currentParticipants>=event.getNumParticipants()) {
     			registration.setState(RegistrationState.inQueue);
     			//FIXME: Mandar correo electrónico
-    			Email mail = new EmailInQueue(user.getEmail(), event.getName(), 1+ currentParticipants - event.getNumParticipants());
+    			Email mail = new EmailInQueue(user.getEmail(), event.getName(), 1 +  queueParticipants);
     			if(mail.sendMail()) System.out.println("Correo de InQueue enviado a " + user.getLogin() + " al correo " + user.getEmail());
     			else System.out.println("Error en envio de coreo de InQueue a " + user.getLogin() + " al correo " + user.getEmail());
     		}
