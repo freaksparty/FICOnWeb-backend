@@ -18,16 +18,6 @@ public class Session {
 	private User user;
 	private Calendar lastAccess;
 	
-	private String generateSessionId(User user){
-		String s = user.getLogin()+user.getName()+user.getPassword()+Calendar.getInstance().getTimeInMillis();
-		try {
-			MessageDigest mdigest = MessageDigest.getInstance("SHA-256");
-			return new String(mdigest.digest(s.getBytes("UTF-8")),"UTF-8");
-		} catch (Exception e) {
-			return null;
-		}
-	}
-	
 	private Session(String sessionId, User user){
 		this.sessionId = sessionId;
 		this.user = user;
@@ -38,6 +28,28 @@ public class Session {
 		this.sessionId = generateSessionId(user);
 		this.user = user;
 		this.lastAccess = Calendar.getInstance();
+	}
+	
+	private String hexEncode(byte[] barray) {
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < barray.length; i++) {
+			String hex = Integer.toHexString(0xff & barray[i]);
+			if (hex.length() == 1)
+				sb.append('0');
+			sb.append(hex);
+		}
+		return sb.toString();
+	}
+
+	private String generateSessionId(User user) {
+		String s = user.getLogin() + user.getName() + user.getPassword()
+				+ Calendar.getInstance().getTimeInMillis();
+		try {
+			MessageDigest mdigest = MessageDigest.getInstance("SHA-256");
+			return hexEncode(mdigest.digest(s.getBytes("UTF-8")));
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	public String getSessionId() {

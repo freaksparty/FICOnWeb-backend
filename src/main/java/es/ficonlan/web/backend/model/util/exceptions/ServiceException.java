@@ -40,12 +40,12 @@ public class ServiceException extends Exception {
 
 	public ServiceException(int errorCode) {
 		this.errorCode = errorCode;
-        this.useCase = Thread.currentThread().getStackTrace()[1].getMethodName();
+        this.useCase = Thread.currentThread().getStackTrace()[2].getMethodName();
 	}
 
 	public ServiceException(int errorCode, String field) {
 		this.errorCode = errorCode;
-        this.useCase = Thread.currentThread().getStackTrace()[1].getMethodName();
+        this.useCase = Thread.currentThread().getStackTrace()[2].getMethodName();
 		this.field = field;
 	}
 

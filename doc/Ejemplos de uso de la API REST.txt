@@ -10,14 +10,14 @@ Cuenta de Admin:
 # CREACIÓN DE UNA SESIÓN ANÓNIMA:
 	- Petición: PUT BASE_URL/ficonlan/session
 	- Respuesta: 200 OK
-		{"sessionId":"\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���","user":null}
+		{"sessionId":"32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd","user":null}
 	
 		
 # CREACIÓN DE UN USUARIO:
 	- Petición: 
 		PUT BASE_URL/ficonlan/user
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		body: 
 			{
 			 "name":"User1", 
@@ -45,7 +45,7 @@ Cuenta de Admin:
 	- Petición: 
 		POST BASE_URL/ficonlan/session/login
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		body:
 		  {
  		    "login":"user1", 
@@ -63,7 +63,7 @@ Cuenta de Admin:
 	- Petición: 
 		GET BASE_URL/ficonlan/session/currentUser
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���	
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd	
 			
 	- Respuesta: 200 OK		
 			{
@@ -82,7 +82,7 @@ Cuenta de Admin:
 	- Petición: 
 		DELETE BASE_URL/ficonlan/session
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 	- Respuesta: 204 No Content	
 	
 	
@@ -90,7 +90,7 @@ Cuenta de Admin:
 	- Petición: 
 		POST BASE_URL/ficonlan/user/changeData
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		body:
 		  {
 			"userId":6,
@@ -110,7 +110,7 @@ Cuenta de Admin:
 	- Petición: 
 		POST BASE_URL/ficonlan/user/changePassword/6   *(userId=6)
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		body:
 		  {
  			"oldPassword":"pass",
@@ -124,7 +124,7 @@ Cuenta de Admin:
  	- Petición: 
 		GET BASE_URL/ficonlan/user/all/0/10    *(startIndex=0, maxResults=10)
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 						
 	- Respuesta: 200 OK
 		  [
@@ -164,7 +164,7 @@ Cuenta de Admin:
  	- Petición: 
 		GET BASE_URL/ficonlan/user/findByName/use/0/10    *(name="use", startIndex=0, maxResults=10) el nombre debe ir codificado en la url
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		
 		* Este metodo busca tanto por login como por nombre. la cadena de búsqueda puede contener espacios y debe ir encodeada en la url. No tiene por que coincidir
 		  exactamente con el nombre buscado, solo es necesario que el nombre o login contenga la cadena buscada. No es case sensitive. 
@@ -208,7 +208,7 @@ Cuenta de Admin:
 	- Petición: 
 		POST BASE_URL/ficonlan/user/addToBlackList/7     *(userId=7)
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		  
 	- Respuesta: 204 No Content	
 	
@@ -217,7 +217,7 @@ Cuenta de Admin:
 	- Petición: 
 		POST BASE_URL/ficonlan/user/removeFromBlackList/7     *(userId=7)
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		  
 	- Respuesta: 204 No Content	
 	
@@ -225,7 +225,7 @@ Cuenta de Admin:
 	- Petición: 
 		GET BASE_URL/ficonlan/user/getBlackList/0/10    *(startIndex=0, maxResults=10)
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 						
 	- Respuesta: 200 OK
 		  [
@@ -256,7 +256,7 @@ Cuenta de Admin:
 	- Petición: 
 		GET BASE_URL/ficonlan/permissions     
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		  
 	- Respuesta: 200 OK	
 		[
@@ -285,7 +285,7 @@ Cuenta de Admin:
 	- Petición: 
 		PUT BASE_URL/ficonlan/permissions/role/Nuevo%20Rol   *(roleName="Nuevo Rol")    
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		  
 	- Respuesta: 200 OK
 		{
@@ -297,7 +297,7 @@ Cuenta de Admin:
     - Petición: 
 		POST BASE_URL/ficonlan/permissions/add/6/2   *(roleId=6, useCaseId=2)    
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		  
 	- Respuesta: 204 No Content	
 	
@@ -305,7 +305,7 @@ Cuenta de Admin:
     - Petición: 
 		POST BASE_URL/ficonlan/permissions/remove/6/2   *(roleId=6, useCaseId=2)    
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		  
 	- Respuesta: 204 No Content	
 
@@ -313,7 +313,7 @@ Cuenta de Admin:
 	- Petición: 
 		GET BASE_URL/ficonlan/permissions/role/6   *(roleId=6)
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		  
 	- Respuesta: 200 OK	
 		[
@@ -335,7 +335,7 @@ Cuenta de Admin:
 	- Petición: 
 		GET BASE_URL/ficonlan/permissions/roles
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		  
 	- Respuesta: 200 OK	
 		[
@@ -361,7 +361,7 @@ Cuenta de Admin:
 	- Petición: 
 		POST BASE_URL/ficonlan/user/addRole/9/6   *(userId=9, roleId=6)     
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		  
 	- Respuesta: 204 No Content
 	
@@ -369,7 +369,7 @@ Cuenta de Admin:
 	- Petición: 
 		POST BASE_URL/ficonlan/user/removeRole/9/6   *(userId=9, roleId=6)    
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		  
 	- Respuesta: 204 No Content					
 
@@ -377,7 +377,7 @@ Cuenta de Admin:
 	- Petición: 
 		GET BASE_URL/ficonlan/user/roles/7  *(userId=7)  
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		  
 	- Respuesta: 200 OK	
 		[
@@ -393,7 +393,7 @@ Cuenta de Admin:
 	- Petición: 
 		PUT BASE_URL/ficonlan/event
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		body: 
 			{
     		  "name":"FicOnLan 2014",
@@ -421,7 +421,7 @@ Cuenta de Admin:
 - Petición: 
 		POST BASE_URL/ficonlan/event/changeData
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		body: 
 			{
 			  "eventId":1,
@@ -442,7 +442,7 @@ Cuenta de Admin:
 	- Petición: 
 		POST BASE_URL/ficonlan/event/addParticipant/1/6
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 			
 		body: 
 		  
@@ -453,7 +453,7 @@ Cuenta de Admin:
 	- Petición: 
 		POST BASE_URL/ficonlan/event/removeParticipant/1/6     *(eventId=1, userId=6)
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		  
 	- Respuesta: 204 No Content	
 	
@@ -462,7 +462,7 @@ Cuenta de Admin:
 	- Petición: 
 		POST BASE_URL/ficonlan/event/setPaid/1/6    *(eventId=1, userId=6)
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 	
 	- Respuesta: 204 No Content	
 	
@@ -471,7 +471,7 @@ Cuenta de Admin:
 	- Petición: 
 		POST BASE_URL/ficonlan/event/changeRegistrationState/1/6/paid    *(eventId=1, userId=6, state="paid")
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		 
 		 * Posibles valores de state:
 		   - registered (inscrito) 
@@ -489,7 +489,7 @@ Cuenta de Admin:
 	- Petición: 
 		GET BASE_URL/ficonlan/event/byName/FicOnLan%202014     *(name="FicOnLan 2014", debe ir codificado en la url)
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		 
 	- Respuesta: 200 OK
 		[	
@@ -511,7 +511,7 @@ Cuenta de Admin:
 	- Petición: 
 		GET BASE_URL/ficonlan/user/byEvent/1/paid/0/10    *(eventId=1, state="paid",startIndex=0, maxResults=10)
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		 
 	- Respuesta: 200 OK
 		[
@@ -551,7 +551,7 @@ Cuenta de Admin:
 	- Petición: 
 		PUT BASE_URL/ficonlan/activity/1    *(eventId=1)
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		
 		body:
 			{
@@ -591,7 +591,7 @@ Cuenta de Admin:
 	- Petición: 
 		POST BASE_URL/ficonlan/activity/changeData
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		
 		body:
 			{
@@ -620,7 +620,7 @@ Cuenta de Admin:
 	- Petición: 
 		DELETE BASE_URL/ficonlan/activity/1    *(activityId=1)
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 			 
 	- Respuesta: 204 No Content
 	
@@ -628,7 +628,7 @@ Cuenta de Admin:
 	- Petición: 
 		POST BASE_URL/ficonlan/activity/setOrganizer/4/3   *(activityId=4, userId=3)
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 			 
 	- Respuesta: 204 No Content
 	
@@ -636,7 +636,7 @@ Cuenta de Admin:
 	- Petición: 
 		GET BASE_URL/ficonlan/activity/getByEvent/1/All   *(eventId=1, type=All)
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		
 		* Posibles valores de type:
 			- Torunament
@@ -680,7 +680,7 @@ Cuenta de Admin:
 	- Petición: 
 		POST BASE_URL/ficonlan/activity/addParticipant/4/3   *(activityId=4, userId=3)
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 			 
 	- Respuesta: 204 No Content
 
@@ -688,7 +688,7 @@ Cuenta de Admin:
 	- Petición: 
 		POST BASE_URL/ficonlan/activity/removeParticipant/4/3   *(activityId=4, userId=3)
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 			 
 	- Respuesta: 204 No Content	
 	
@@ -696,7 +696,7 @@ Cuenta de Admin:
   	-Petición: 
 		GET BASE_URL/ficonlan/activity/getParticipants/4   *(activityId=4)
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 			 
 	- Respuesta: 200 OK	
 		[
@@ -726,7 +726,7 @@ Cuenta de Admin:
 	-Petición: 
 		PUT BASE_URL/ficonlan/news/7    *(eventId=7)
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		
 		body:
 			{
@@ -756,7 +756,7 @@ Cuenta de Admin:
 	-Petición: 
 		POST BASE_URL/ficonlan/news/changeData
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		
 		body:
 			{
@@ -773,7 +773,7 @@ Cuenta de Admin:
 	-Petición: 
 		GET BASE_URL/ficonlan/news/last/5/false  *(days=5, outstandingOnly=false)  
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
  
  		* days : indica el límite de dias (Ej: se mostrarán las noticias publicadas en los últimos 5 días)
    		* outstandingOnly : solo noticias destacadas
@@ -806,7 +806,7 @@ Cuenta de Admin:
 	-Petición: 
 		DELETE BASE_URL/ficonlan/news/3  *(newsItemId=3)
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���	
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd	
 			
 	- Respuesta: 204 No Content	
 	
@@ -815,7 +815,7 @@ Cuenta de Admin:
 
 	- Petición: POST BASE_URL/ficonlan/user/add	
 		header: 
-			sessionId=\u0010ǀLJ\u0018yJ�=�\u001E3�Z�\f�uv\n���N@p���
+			sessionId=32618311a858034f99431170dfc2d6e8ca232234b13eae92a27f9162b83edcfd
 		body: 
 			{
 			 "name":"User1", 

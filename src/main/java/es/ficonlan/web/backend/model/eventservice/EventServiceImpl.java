@@ -50,7 +50,8 @@ public class EventServiceImpl implements EventService {
     
     @Transactional
 	public Event createEvent(String sessionId, Event event) throws ServiceException {
-    	SessionManager.checkPermissions(sessionId, "createEvent");
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "createEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		if(event.getName()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"name");
 		if(event.getStartDate()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"startDate");
 		if(event.getEndDate()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"endDate");
@@ -63,7 +64,8 @@ public class EventServiceImpl implements EventService {
 
     @Transactional
 	public void changeEventData(String sessionId, Event eventData) throws ServiceException {
-    	SessionManager.checkPermissions(sessionId, "changeEventData");
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "changeEventData")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
     	try{
     		Event event = eventDao.find(eventData.getEventId());
     		if(eventData.getName()!=null) event.setName(eventData.getName());
@@ -81,14 +83,8 @@ public class EventServiceImpl implements EventService {
 
 	@Transactional
 	public void addParticipantToEvent(String sessionId, int userId, int eventId) throws ServiceException {
-		//FIXME: Añadido nuevo permiso
-		try{
-			SessionManager.checkPermissions(sessionId, "addParticipantToEvent");
-		}
-		catch(ServiceException e){
-			SessionManager.checkPermissions(sessionId, userId, "USERaddParticipantToEvent");
-		}
-		
+		if (!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), userId, "addParticipantToEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);		
     	try{
     		User user = userDao.find(userId);
     		Event event = eventDao.find(eventId);    		
@@ -128,13 +124,8 @@ public class EventServiceImpl implements EventService {
 
 	@Transactional
 	public void removeParticipantFromEvent(String sessionId, int userId, int eventId) throws ServiceException {
-		//FIXME: Añadido nuevo permiso
-		try{
-			SessionManager.checkPermissions(sessionId, "removeParticipantFromEvent");
-		}
-		catch(ServiceException e){
-			SessionManager.checkPermissions(sessionId, userId, "USERremoveParticipantFromEvent");
-		}
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), userId, "removeParticipantFromEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);	
     	Registration registration = registrationDao.findByUserAndEvent(userId, eventId);
     	if (registration==null) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Registration");
     	Event event = registration.getEvent();
@@ -164,7 +155,8 @@ public class EventServiceImpl implements EventService {
 	
 	@Transactional
 	public void setPaid(String sessionId, int userId, int eventId) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "setPaid");
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "setPaid")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		Registration registration = registrationDao.findByUserAndEvent(userId, eventId);
     	if (registration==null) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Registration");
     	registration.setPaidDate(Calendar.getInstance());
@@ -185,7 +177,8 @@ public class EventServiceImpl implements EventService {
 	@Transactional
 	public void changeRegistrationState(String sessionId, int userId, int eventId, RegistrationState state) throws ServiceException {
 		if(state==null) throw new  ServiceException(ServiceException.MISSING_FIELD,"state");
-		SessionManager.checkPermissions(sessionId, "changeRegistrationState");
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "changeRegistrationState")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
     	Registration registration = registrationDao.findByUserAndEvent(userId, eventId);
     	if (registration==null) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Registration");
     	if(state==RegistrationState.paid){
@@ -198,13 +191,15 @@ public class EventServiceImpl implements EventService {
 
     @Transactional(readOnly = true)
     public List<Event> findEventByName(String sessionId, String name) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "findEventByName");
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "findEventByName")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		return eventDao.searchEventsByName(name);
     }
 
     @Transactional
 	public Activity addActivity(String sessionId, int eventId, Activity activity) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "addActivity");
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "addActivity")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		Event event;
 		try {
 				event = eventDao.find(eventId);
@@ -228,7 +223,8 @@ public class EventServiceImpl implements EventService {
 
     @Transactional
 	public void removeActivity(String sessionId, int activityId) throws ServiceException {
-    	SessionManager.checkPermissions(sessionId, "removeActivity");
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "removeActivity")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			activityDao.remove(activityId);
 		} catch (InstanceException e) {
@@ -238,7 +234,8 @@ public class EventServiceImpl implements EventService {
     
     @Transactional
 	public void changeActivityData(String sessionId, Activity activityData) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "changeActivityData");
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "changeActivityData")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			Activity activity = activityDao.find(activityData.getActivityId());
 			if(activityData.getDescription()!=null) activity.setDescription(activityData.getDescription());
@@ -265,7 +262,8 @@ public class EventServiceImpl implements EventService {
     
     @Transactional
 	public void setActivityOrganizer(String sessionId, int activityId, int userId) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "setActivityOrganizer");
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "setActivityOrganizer")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			Activity activity = activityDao.find(activityId);
 			User user = userDao.find(userId);
@@ -282,7 +280,9 @@ public class EventServiceImpl implements EventService {
 
     @Transactional(readOnly = true)
 	public List<Activity> getActivitiesByEvent(String sessionId, int eventId, ActivityType type) throws ServiceException {
-		try {
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getActivitiesByEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+    	try {
 			eventDao.find(eventId);
 		} catch (InstanceException e) {
 			throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
@@ -292,7 +292,8 @@ public class EventServiceImpl implements EventService {
 
     @Transactional
 	public void addParticipantToActivity(String sessionId, int userId, int activityId) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "addParticipantToActivity");
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), userId, "addParticipantToActivity")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			Activity activity = activityDao.find(activityId);
 			User user = userDao.find(userId);
@@ -310,7 +311,8 @@ public class EventServiceImpl implements EventService {
 
     @Transactional
 	public void removeParticipantFromActivity(String sessionId, int userId, int activityId) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "removeParticipantFromActivity");
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), userId, "removeParticipantFromActivity")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			Activity activity = activityDao.find(activityId);
 			User user = userDao.find(userId);
@@ -326,13 +328,15 @@ public class EventServiceImpl implements EventService {
     
     @Transactional(readOnly = true)
 	public List<User> getActivityParticipants(String sessionId, int activityId) throws ServiceException {
-    	SessionManager.checkPermissions(sessionId, "getActivityParticipants");
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getActivityParticipants")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
     	return activityDao.getParticipants(activityId);
 	}
 
     @Transactional
 	public NewsItem addNews(String sessionId, int eventId, NewsItem newsItem) throws ServiceException {
-    	SessionManager.checkPermissions(sessionId, "addNews");
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "addNews")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			Event event = eventDao.find(eventId);
 			if(newsItem.getTitle()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"title");
@@ -350,7 +354,8 @@ public class EventServiceImpl implements EventService {
 
     @Transactional
 	public void changeNewsData(String sessionId, NewsItem newsData) throws ServiceException {
-    	SessionManager.checkPermissions(sessionId, "changeNewsData");
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "changeNewsData")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			NewsItem news = newsDao.find(newsData.getNewsItemId());
 			if(newsData.getTitle()!=null) news.setTitle(newsData.getTitle());
@@ -366,14 +371,16 @@ public class EventServiceImpl implements EventService {
 
     @Transactional(readOnly = true)
 	public List<NewsItem> getLastNews(String sessionId, Calendar dateLimit, boolean onlyOutstandingNews) throws ServiceException {
-    	SessionManager.checkPermissions(sessionId, "getLastNews");
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getLastNews")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
     	if(dateLimit==null) throw new ServiceException(ServiceException.MISSING_FIELD,"limitDate");
 		return newsDao.getLastNews(dateLimit, onlyOutstandingNews);
 	}
 
     @Transactional
 	public void removeNews(String sessionId, int newsItemId) throws ServiceException {
-    	SessionManager.checkPermissions(sessionId, "removeNews");
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "removeNews")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
     	try {
 			newsDao.remove(newsItemId);
 		} catch (InstanceException e) {

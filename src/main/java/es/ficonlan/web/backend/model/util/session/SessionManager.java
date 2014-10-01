@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import es.ficonlan.web.backend.model.role.Role;
 import es.ficonlan.web.backend.model.usecase.UseCase;
-import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 
 public class SessionManager {
 	
@@ -48,23 +47,17 @@ public class SessionManager {
 	 * @param useCase
 	 * @throws ServiceException
 	 */
-	public static void checkPermissions(String sessionId, int userId, String useCase) throws ServiceException{
-		if (!exists(sessionId)) throw new ServiceException(01,useCase);
-		Session session = getSession(sessionId);
-		if (session.getUser().getUserId() != userId) checkPermissions(session, useCase);
+	public static boolean  checkPermissions(Session session, int userId, String useCase) {
+		if (session.getUser().getUserId() == userId) return true;
+		else return checkPermissions(session, useCase);
 	}
-	
-	public static void checkPermissions(String sessionId, String useCase) throws ServiceException {
-		if (!exists(sessionId)) throw new ServiceException(01,useCase);
-		checkPermissions(openSessions.get(sessionId), useCase);	
-	}
-	
-	public static  void checkPermissions(Session session, String useCase) throws ServiceException{
+
+	public static boolean checkPermissions(Session session, String useCase) {
 		for(Role r:session.getUser().getRoles()){
 		    for (UseCase uc: r.getUseCases()){
-		    	if (uc.getUseCaseName().contentEquals(useCase)) return;
+		    	if (uc.getUseCaseName().contentEquals(useCase)) return true;
 		    }
 		}
-		throw new ServiceException(02, useCase);	
+		return false;
 	}
 }

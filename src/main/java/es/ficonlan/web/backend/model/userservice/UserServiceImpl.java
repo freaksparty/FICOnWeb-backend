@@ -122,7 +122,8 @@ public class UserServiceImpl implements UserService {
 	
 	@Transactional
 	public User addUser(String sessionId, User user) throws ServiceException{
-		SessionManager.checkPermissions(sessionId, "addUser");
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "addUser")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		User u = userDao.findUserBylogin(user.getLogin());
 		if (u != null) throw new ServiceException(ServiceException.DUPLICATED_FIELD,"login");
 		u = userDao.findUserByDni(user.getDni());
@@ -140,27 +141,27 @@ public class UserServiceImpl implements UserService {
 	
 	@Transactional(readOnly=true)
 	public Session login(String sessionId, String login, String password) throws ServiceException {
-		if (!SessionManager.exists(sessionId)) throw new ServiceException(01,"login");
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		Session session = SessionManager.getSession(sessionId);
 		if(login.contentEquals("anonymous")) return session;
-		if(!session.getUser().getLogin().contentEquals("anonymous")) throw new ServiceException(07,"login");
+		if(!session.getUser().getLogin().contentEquals("anonymous")) throw new ServiceException(ServiceException.SESSION_ALREADY_EXISTS);
 		User user = userDao.findUserBylogin(login);
 		if (user == null) throw new ServiceException(ServiceException.INCORRECT_FIELD,"login");
 		if (!user.getPassword().contentEquals(hashPassword(password)))  throw new ServiceException(ServiceException.INCORRECT_FIELD,"password");
-		session.setUser(user);
+		session = new Session(user);
+		SessionManager.addSession(session);
 		return session;
-		//return new Session(user);
 	}
 	
 	public User getCurrenUser(String sessionId) throws ServiceException {
-		if (!SessionManager.exists(sessionId)) throw new ServiceException(01,"getCurrenUser");
+		if (!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		Session session = SessionManager.getSession(sessionId);
 		if(session.getUser().getLogin().contentEquals("anonymous")) return null;
 		return session.getUser();
 	}
 
 	public void closeSession(String sessionId) throws ServiceException {
-		if (!SessionManager.exists(sessionId)) throw new ServiceException(01,"closeSession");
+		if (!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		SessionManager.removeSession(sessionId);
 	}
 
@@ -169,11 +170,13 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Transactional
 	public void changeUserData(String sessionId, User userData) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, userData.getUserId(), "changeUserData");
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		Session session = SessionManager.getSession(sessionId);
+		if(!SessionManager.checkPermissions(session, userData.getUserId(), "changeUserData")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			User user = userDao.find(userData.getUserId());
 			user.setName(userData.getName());
-			if(SessionManager.getSession(sessionId).getUser().getUserId()!=userData.getUserId()) user.setDni(userData.getDni());
+			if(session.getUser().getUserId()!=userData.getUserId()) user.setDni(userData.getDni());
 			user.setEmail(userData.getEmail());
 			user.setPhoneNumber(userData.getPhoneNumber());
 			user.setShirtSize(userData.getShirtSize());
@@ -189,8 +192,9 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Transactional
 	public void changeUserPassword(String sessionId, int userId, String oldPassword, String newPassword) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, userId, "changeUserPassword");
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		Session session = SessionManager.getSession(sessionId);
+		if(!SessionManager.checkPermissions(session, userId, "changeUserPassword")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			User user = userDao.find(userId);
 			if(session.getUser().getUserId() == userId){
@@ -205,25 +209,29 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional(readOnly=true)
 	public List<User> getUsersByEvent(String sessionId, int eventId, RegistrationState state, int startindex, int maxResults) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "getUsersByEvent");
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getUsersByEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		return userDao.getUsersByEvent(eventId,state,startindex,maxResults);
 	}
 	
 	@Transactional(readOnly=true)
 	public List<User> getAllUsers(String sessionId, int startindex, int maxResults) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "getAllUsers");
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getAllUsers")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		return userDao.getAllUsers(startindex, maxResults);
 	}
 	
 	@Transactional(readOnly=true)
 	public List<User> findUsersByName(String sessionId, String name, int startindex, int maxResults) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "findUsersByName");
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "findUsersByName")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		return userDao.findUsersByName(name, startindex, maxResults);
 	}
 
 	@Transactional
 	public void addUserToBlackList(String sessionId, int userId) throws ServiceException{
-		SessionManager.checkPermissions(sessionId, "addUserToBlackList");
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "addUserToBlackList")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			User user = userDao.find(userId);
 			user.setInBlackList(true);
@@ -235,7 +243,8 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	public void removeUserFromBlackList(String sessionId, int userId) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "removeUserFromBlackList");
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "removeUserFromBlackList")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			User user = userDao.find(userId);
 			user.setInBlackList(false);
@@ -247,13 +256,15 @@ public class UserServiceImpl implements UserService {
 	
 	@Transactional(readOnly=true)
 	public List<User> getBlacklistedUsers(String sessionId, int startIndex, int maxResults) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "getBlacklistedUsers");
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getBlacklistedUsers")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		return userDao.getBlacklistedUsers(startIndex, maxResults);
 	}	
 	
 	@Transactional
 	public void setDefaultLanguage(String sessionId, int userId, int languageId) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, userId, "setDefaultLanguage");
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), userId, "setDefaultLanguage")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			User user = userDao.find(userId);
 			SupportedLanguage language = languageDao.find(languageId);
@@ -267,7 +278,8 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	public void removeUser(String sessionId, int userId) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "removeUser");
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "removeUser")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			User user = userDao.find(userId);
 			user.setDeleted(true);
@@ -279,7 +291,8 @@ public class UserServiceImpl implements UserService {
 	
 	@Transactional
 	public Role createRole(String sessionId, String roleName) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "createRole");
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "createRole")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		Role role = new Role(roleName);
 		roleDao.save(role);
 		return role;
@@ -287,7 +300,8 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	public void addRole(String sessionId, int roleId, int userId) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "addRole");
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "addRole")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			User user = userDao.find(userId);
 			Role role = roleDao.find(roleId);
@@ -301,7 +315,8 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	public void removeRole(String sessionId, int roleId, int userId) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "removeRole");
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "removeRole")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			User user = userDao.find(userId);
 			Role role = roleDao.find(roleId);
@@ -316,7 +331,8 @@ public class UserServiceImpl implements UserService {
 	
 	@Transactional(readOnly=true)
 	public Set<Role> getUserRoles(String sessionId, int userId) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "getUserRoles");
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getUserRoles")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			User user = userDao.find(userId);
 			return user.getRoles();
@@ -327,13 +343,15 @@ public class UserServiceImpl implements UserService {
 	
 	@Transactional(readOnly=true)
 	public List<Role> getAllRoles(String sessionId) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "getAllRoles");
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getAllRoles")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		return roleDao.getAllRoles();
 	}
 
 	@Transactional
 	public UseCase createUseCase(String sessionId, String useCaseName) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "createUseCase");
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "createUseCase")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		UseCase useCase = new UseCase(useCaseName);
 		useCaseDao.save(useCase);
 		return useCase;
@@ -341,7 +359,8 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	public void addPermission(String sessionId, int roleId, int useCaseId) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "addPermission");
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "addPermission")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			Role role = roleDao.find(roleId);
 			UseCase useCase = useCaseDao.find(useCaseId);
@@ -356,7 +375,8 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	public void removePermission(String sessionId, int roleId, int useCaseId) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "removePermission");
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "removePermission")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			Role role = roleDao.find(roleId);
 			UseCase useCase = useCaseDao.find(useCaseId);
@@ -371,7 +391,8 @@ public class UserServiceImpl implements UserService {
 	
 	@Transactional(readOnly=true)	
 	public Set<UseCase> getRolePermissions(String sessionId, int roleId) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "getRolePermissions");
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getRolePermissions")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			Role role = roleDao.find(roleId);
 			return role.getUseCases();
@@ -382,7 +403,8 @@ public class UserServiceImpl implements UserService {
 	
 	@Transactional(readOnly=true)	
 	public List<UseCase> getAllUseCases(String sessionId) throws ServiceException {
-		SessionManager.checkPermissions(sessionId, "getAllUseCases");
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getAllUseCases")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		return useCaseDao.getAll();
 	}
 }
