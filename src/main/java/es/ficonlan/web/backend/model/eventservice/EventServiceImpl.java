@@ -96,13 +96,16 @@ public class EventServiceImpl implements EventService {
     		if(currentParticipants>=event.getNumParticipants()) {
     			registration.setState(RegistrationState.inQueue);
     			//FIXME: Mandar correo electrónico
+    			/*
     			Email mail = new EmailInQueue(user.getEmail(), event.getName(), 1 +  queueParticipants);
     			if(mail.sendMail()) System.out.println("Correo de InQueue enviado a " + user.getLogin() + " al correo " + user.getEmail());
     			else System.out.println("Error en envio de coreo de InQueue a " + user.getLogin() + " al correo " + user.getEmail());
+    			*/
     		}
     		else if(user.isInBlackList()) {
     			registration.setState(RegistrationState.inQueue);
     			//FIXME: Mandar correo electrónico
+    			/*
     			Email mail = new EmailInQueue(user.getEmail(), event.getName(), event.getNumParticipants() + 50);
     			if(mail.sendMail()) System.out.println("BLACKLIST : Correo de InQueue enviado a " + user.getLogin() + " al correo " + user.getEmail());
     			else System.out.println("BLACKLIST : Error en envio de coreo de InQueue a " + user.getLogin() + " al correo " + user.getEmail());
@@ -112,6 +115,7 @@ public class EventServiceImpl implements EventService {
     			Email mail = new EmailOutstanding(user.getEmail(), event.getName(), currentParticipants + 1);
     			if(mail.sendMail()) System.out.println("Correo de Outstanding enviado a " + user.getLogin() + " al correo " + user.getEmail());
     			else System.out.println("BLACKLIST : Error en envio de coreo de Outstanding a " + user.getLogin() + " al correo " + user.getEmail());
+            	*/
             	//FIXME: Mandar correo electrónico
     		}
     		
@@ -133,10 +137,11 @@ public class EventServiceImpl implements EventService {
 			registrationDao.remove(registration.getRegistrationId());
 			//FIXME: MAndar correo elecrónico if registration.getState()==registered Mandar correo electrónico registration.User()
 			if (registration.getState()==RegistrationState.registered) {
+				/*
 				Email mail = new EmailTimeToPayExceeded(registration.getUser().getEmail(), event.getName());
 				if(mail.sendMail()) System.out.println("Correo de TimeToPayExceeded enviado a " + registration.getUser().getLogin() + " al correo " + registration.getUser().getEmail());
 				else System.out.println("Error en envio de coreo de TimeToPayExceeded a " + registration.getUser().getLogin() + " al correo " + registration.getUser().getEmail());
-	        
+	        */
 			}
 		} catch (InstanceException e) {
 			 throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Registration");
@@ -146,10 +151,11 @@ public class EventServiceImpl implements EventService {
         	firstInQueue.setState(RegistrationState.registered);
         	registrationDao.save(firstInQueue);
         	//FIXME: Mandar correo electrónico
+        	/*
         	Email mail = new EmailOutstandingFromInQueue(registration.getUser().getEmail(), event.getName());
 			if(mail.sendMail()) System.out.println("Correo de OutstandingFromInQueue enviado a " + firstInQueue.getUser().getLogin() + " al correo " + firstInQueue.getUser().getEmail());
 			else System.out.println("Error en envio de coreo de OutstandingFromInQueue a " + firstInQueue.getUser().getLogin() + " al correo " + firstInQueue.getUser().getEmail());
-        	
+        	*/
         }
 	}
 	
@@ -164,10 +170,12 @@ public class EventServiceImpl implements EventService {
     	registration.setState(RegistrationState.paid);
 		registrationDao.save(registration);
     	//FIXME: Mandar correo electrónico
+		/*
 		Event event = registration.getEvent();
 		Email mail = new EmailPaied(registration.getUser().getEmail(),  event.getName());
 		if(mail.sendMail()) System.out.println("Correo de PaiedMail enviado a " + registration.getUser().getLogin() + " al correo " + registration.getUser().getEmail());
 		else System.out.println("Error en envio de coreo de PaiedMail a " + registration.getUser().getLogin() + " al correo " + registration.getUser().getEmail());
+	    */
 	}
 
 	/**
