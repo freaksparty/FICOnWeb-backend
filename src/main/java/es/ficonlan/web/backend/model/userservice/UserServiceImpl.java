@@ -49,7 +49,9 @@ public class UserServiceImpl implements UserService {
 	private String hashPassword (String password){
 		try {
 			MessageDigest mdigest = MessageDigest.getInstance("SHA-256");
-			return new String(mdigest.digest(password.getBytes("UTF-8")),"UTF-8");
+			String h = new String(mdigest.digest(password.getBytes("UTF-8")),"UTF-8");
+			//System.out.println(h);
+			return h;
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
