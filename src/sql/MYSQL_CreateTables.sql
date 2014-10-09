@@ -23,14 +23,14 @@ CREATE TABLE PingTable (foo CHAR(1));
 -- ------------------------------ EVENT -------------------------------------
 
 CREATE TABLE Event ( 
-	Event_id                   bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
-	Event_name                 varchar(150)  NOT NULL  ,
+	Event_id                   bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+	Event_name                 varchar(150) NOT NULL  ,
 	Event_description          varchar(255)    ,
-	Event_num_participants     int   DEFAULT 1 ,
-	Event_date_start           date  NOT NULL  ,
-	Event_date_end             date  NOT NULL  ,
-	Event_reg_date_open        datetime  NOT NULL  ,
-	Event_reg_date_close       datetime  NOT NULL  ,
+	Event_num_participants     int DEFAULT 1 ,
+	Event_date_start           date NOT NULL  ,
+	Event_date_end             date NOT NULL  ,
+	Event_reg_date_open        datetime NOT NULL  ,
+	Event_reg_date_close       datetime NOT NULL  ,
 	CONSTRAINT pk_event PRIMARY KEY ( Event_id ) ,
 	CONSTRAINT Event_name_UNIQUE UNIQUE ( Event_name )
  ) engine=InnoDB;
@@ -59,9 +59,9 @@ CREATE TABLE Event (
 	User_dni                  varchar(11)  NOT NULL ,
 	User_email                varchar(200)  NOT NULL  ,
 	User_telf                 varchar(15) , 
-	User_shirtSize			     varchar(3) ,
-	User_inBlackList          bit   DEFAULT 0 ,
-	User_defaultLanguage	  bigint UNSIGNED  ,
+	User_shirtSize            varchar(3) ,
+	User_inBlackList          bit DEFAULT 0 ,
+	User_defaultLanguage      bigint UNSIGNED  ,
 	CONSTRAINT pk_user PRIMARY KEY ( User_id ) ,
 	CONSTRAINT User_login_UNIQUE UNIQUE ( User_login )  ,
 	CONSTRAINT User_dni_UNIQUE UNIQUE ( User_dni )  ,
@@ -87,7 +87,7 @@ CREATE TABLE Event (
  CREATE TABLE Activity ( 
 	Activity_id                   bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
 	Activity_organizer_id         bigint UNSIGNED   ,
-	Activity_event_id			  bigint UNSIGNED NOT NULL  ,
+	Activity_event_id             bigint UNSIGNED NOT NULL  ,
 	Activity_name                 varchar(150)  NOT NULL  ,
 	Activity_description          varchar(200)    ,
 	Activity_num_participants     int  NOT NULL DEFAULT 1 ,
@@ -108,9 +108,9 @@ CREATE TABLE Event (
  -- ------------------------------ USER_ACTIVITY -------------------------------------
  
  CREATE TABLE User_Activity (
-	User_Activity_id				bigint UNSIGNED NOT NULL  AUTO_INCREMENT  ,
-	User_Activity_User_id			bigint UNSIGNED NOT NULL  ,
-	User_Activity_Activity_id		bigint UNSIGNED NOT NULL  ,
+	User_Activity_id                bigint UNSIGNED NOT NULL  AUTO_INCREMENT  ,
+	User_Activity_User_id           bigint UNSIGNED NOT NULL  ,
+	User_Activity_Activity_id       bigint UNSIGNED NOT NULL  ,
 	CONSTRAINT pk_User_Activity PRIMARY KEY ( User_Activity_id )
  )  engine=InnoDB;
  
@@ -120,9 +120,9 @@ CREATE TABLE Event (
  -- ------------------------------ ROLE_USER -------------------------------------
  
  CREATE TABLE Role_User ( 
-	Role_User_id					bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
-	Role_User_Role_id            	bigint UNSIGNED NOT NULL  ,
-	Role_User_User_id     	bigint UNSIGNED NOT NULL  ,
+	Role_User_id            bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
+	Role_User_Role_id       bigint UNSIGNED NOT NULL  ,
+	Role_User_User_id       bigint UNSIGNED NOT NULL  ,
 	CONSTRAINT pk_role_user PRIMARY KEY ( Role_User_id )
  ) engine=InnoDB;
  
@@ -132,9 +132,9 @@ CREATE TABLE Event (
   -- ------------------------------ ROLE_USERCASE ----------------------------------
 
  CREATE TABLE Role_UserCase ( 
-	Role_UserCase_id					bigint UNSIGNED NOT NULL AUTO_INCREMENT,
-	Role_UserCase_UserCase_id         	bigint UNSIGNED NOT NULL  ,
-	Role_UserCase_Role_id             	bigint UNSIGNED NOT NULL  ,
+	Role_UserCase_id                    bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+	Role_UserCase_UserCase_id           bigint UNSIGNED NOT NULL  ,
+	Role_UserCase_Role_id               bigint UNSIGNED NOT NULL  ,
 	CONSTRAINT pk_ole_UserCase PRIMARY KEY ( Role_UserCase_id )
  );
 
@@ -145,7 +145,7 @@ CREATE TABLE Event (
  
 CREATE TABLE NewsItem ( 
 	NewsItem_id                   bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
-	NewsItem_Event_id			  bigint UNSIGNED NOT NULL  ,
+	NewsItem_Event_id             bigint UNSIGNED NOT NULL  ,
 	NewsItem_user_id              bigint UNSIGNED   ,
 	NewsItem_title                varchar(200)  NOT NULL  ,
 	NewsItem_date_created         datetime    ,
@@ -161,13 +161,13 @@ CREATE TABLE NewsItem (
 -- ------------------------------ REGISTRATION -------------------------------------
  
  CREATE TABLE Registration ( 
-	Registration_id					  bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
+	Registration_id                   bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
 	Registration_User_id              bigint UNSIGNED NOT NULL  ,
 	Registration_Event_id             bigint UNSIGNED NOT NULL ,
 	Registration_state                int UNSIGNED  DEFAULT 0 ,
 	Registration_date_created         datetime NOT NULL  ,
 	Registration_date_paid            datetime    ,
-	Registration_paid                 bool   DEFAULT 0   ,
+	Registration_paid                 bool DEFAULT 0   ,
 	CONSTRAINT pk_registration PRIMARY KEY ( Registration_id )
  ) engine=InnoDB;
  
@@ -177,7 +177,7 @@ CREATE TABLE NewsItem (
 -- ------------------------------ LANGUAGE ----------------------------------
 
 CREATE TABLE Language ( 
-	Language_id					  bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
+	Language_id                   bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
 	Language_name                 varchar(50)  NOT NULL  ,
 	CONSTRAINT pk_language PRIMARY KEY ( Language_id )
 ) engine=InnoDB;
