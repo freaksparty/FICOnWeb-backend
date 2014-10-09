@@ -109,9 +109,11 @@ public class EventServiceImpl implements EventService {
     			Email mail = new EmailInQueue(user.getEmail(), event.getName(), event.getNumParticipants() + 50);
     			if(mail.sendMail()) System.out.println("BLACKLIST : Correo de InQueue enviado a " + user.getLogin() + " al correo " + user.getEmail());
     			else System.out.println("BLACKLIST : Error en envio de coreo de InQueue a " + user.getLogin() + " al correo " + user.getEmail());
+    			*/
     		}
     		else registration.setState(RegistrationState.registered); {
     			registrationDao.save(registration);
+    			/*
     			Email mail = new EmailOutstanding(user.getEmail(), event.getName(), currentParticipants + 1);
     			if(mail.sendMail()) System.out.println("Correo de Outstanding enviado a " + user.getLogin() + " al correo " + user.getEmail());
     			else System.out.println("BLACKLIST : Error en envio de coreo de Outstanding a " + user.getLogin() + " al correo " + user.getEmail());
