@@ -210,7 +210,7 @@ public class Activity {
 
 	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "user_activity", joinColumns = { @JoinColumn(name = "User_Activity_Activity_id") }, inverseJoinColumns = { @JoinColumn(name = "User_Activity_User_id") })
+	@JoinTable(name = "User_Activity", joinColumns = { @JoinColumn(name = "User_Activity_Activity_id") }, inverseJoinColumns = { @JoinColumn(name = "User_Activity_User_id") })
 	public List<User> getParticipants() {
 		return participants;
 	}

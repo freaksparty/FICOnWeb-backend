@@ -358,7 +358,7 @@ public class EventServiceTest {
     }
     
     @Test
-    public void getLastNewsTest() throws ServiceException {
+    public void getLastNewsTest() throws ServiceException, InterruptedException {
     	Session anonymousSession = userService.newAnonymousSession();
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	Calendar dateStart = Calendar.getInstance();
@@ -373,6 +373,7 @@ public class EventServiceTest {
     	c.add(Calendar.DAY_OF_YEAR, -2);
     	NewsItem news3 = new NewsItem("Nueva noticia3", c, "http://ficonlan/nuevaNoticia3", 0);
     	eventService.addNews(s.getSessionId(), event.getEventId(), news3);
+    	Thread.sleep(10);
     	Calendar limit = Calendar.getInstance();
     	limit.add(Calendar.DAY_OF_YEAR, -1);
     	List<NewsItem> lastNews = eventService.getLastNews(s.getSessionId(), limit, false);

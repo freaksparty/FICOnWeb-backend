@@ -145,7 +145,7 @@ CREATE TABLE Event (
  
 CREATE TABLE NewsItem ( 
 	NewsItem_id                   bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
-	NewsItem_Event_id             bigint UNSIGNED NOT NULL  ,
+	NewsItem_event_id             bigint UNSIGNED NOT NULL  ,
 	NewsItem_user_id              bigint UNSIGNED   ,
 	NewsItem_title                varchar(200)  NOT NULL  ,
 	NewsItem_date_created         datetime    ,
@@ -162,8 +162,8 @@ CREATE TABLE NewsItem (
  
  CREATE TABLE Registration ( 
 	Registration_id                   bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
-	Registration_User_id              bigint UNSIGNED NOT NULL  ,
-	Registration_Event_id             bigint UNSIGNED NOT NULL ,
+	Registration_user_id              bigint UNSIGNED NOT NULL  ,
+	Registration_event_id             bigint UNSIGNED NOT NULL ,
 	Registration_state                int UNSIGNED  DEFAULT 0 ,
 	Registration_date_created         datetime NOT NULL  ,
 	Registration_date_paid            datetime    ,
