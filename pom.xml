@@ -64,7 +64,7 @@
 			<version>4.0.4.Final</version>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
+			<groupId>org.slf4j</groupId> 
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.7.5</version>
 		</dependency>
@@ -137,10 +137,10 @@
 						<manifest>
 							<mainClass>es.ficonlan.web.backend.jersey.Main</mainClass>
 							<addClasspath>true</addClasspath>
-							<classpathPrefix>lib/</classpathPrefix>
+							<classpathPrefix>dependency-jars/</classpathPrefix>
 						</manifest>
 					</archive>
-				</configuration>
+				</configuration> 
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -154,7 +154,11 @@
 							<goal>copy-dependencies</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.build.directory}/alternateLocation</outputDirectory>
+
+							
+							
+							
+							<outputDirectory>${project.build.directory}/dependency-jars/</outputDirectory>
 							<overWriteReleases>false</overWriteReleases>
 							<overWriteSnapshots>false</overWriteSnapshots>
 							<overWriteIfNewer>true</overWriteIfNewer>
