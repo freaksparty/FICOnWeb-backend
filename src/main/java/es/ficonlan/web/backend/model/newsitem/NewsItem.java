@@ -111,7 +111,7 @@ public class NewsItem {
 
 	@JsonSerialize(using=JsonEntityIdSerializer.class)
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "NewsItem_user_id")
+	@JoinColumn(name = "NewsItem_User_id")
 	public User getPublisher() {
 		return publisher;
 	}

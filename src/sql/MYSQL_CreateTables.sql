@@ -87,7 +87,7 @@ CREATE TABLE Event (
  CREATE TABLE Activity ( 
 	Activity_id                   bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
 	Activity_organizer_id         bigint UNSIGNED   ,
-	Activity_event_id             bigint UNSIGNED NOT NULL  ,
+	Activity_Event_id             bigint UNSIGNED NOT NULL  ,
 	Activity_name                 varchar(150)  NOT NULL  ,
 	Activity_description          varchar(200)    ,
 	Activity_num_participants     int  NOT NULL DEFAULT 1 ,
@@ -103,7 +103,7 @@ CREATE TABLE Event (
  
  CREATE INDEX ActivityIndexByActivity_name ON Activity (Activity_name);
  CREATE INDEX ActivityIndexByActivity_organizer_id  ON Activity (Activity_organizer_id);
- CREATE INDEX ActivityIndexByActivity_event_id  ON Activity (Activity_event_id);
+ CREATE INDEX ActivityIndexByActivity_event_id  ON Activity (Activity_Event_id);
  
  -- ------------------------------ USER_ACTIVITY -------------------------------------
  
@@ -145,8 +145,8 @@ CREATE TABLE Event (
  
 CREATE TABLE NewsItem ( 
 	NewsItem_id                   bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
-	NewsItem_event_id             bigint UNSIGNED NOT NULL  ,
-	NewsItem_user_id              bigint UNSIGNED   ,
+	NewsItem_Event_id             bigint UNSIGNED NOT NULL  ,
+	NewsItem_User_id              bigint UNSIGNED   ,
 	NewsItem_title                varchar(200)  NOT NULL  ,
 	NewsItem_date_created         datetime    ,
 	NewsItem_date_publish         datetime  NOT NULL  ,
@@ -156,14 +156,14 @@ CREATE TABLE NewsItem (
  ) engine=InnoDB;
  
  CREATE INDEX NewsItemIndexByNewsItemEvent_id ON NewsItem (NewsItem_Event_id);
- CREATE INDEX NewsItemIndexByNewsItemUser_id ON NewsItem (NewsItem_user_id);
+ CREATE INDEX NewsItemIndexByNewsItemUser_id ON NewsItem (NewsItem_User_id);
  
 -- ------------------------------ REGISTRATION -------------------------------------
  
  CREATE TABLE Registration ( 
 	Registration_id                   bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
-	Registration_user_id              bigint UNSIGNED NOT NULL  ,
-	Registration_event_id             bigint UNSIGNED NOT NULL ,
+	Registration_User_id              bigint UNSIGNED NOT NULL  ,
+	Registration_Event_id             bigint UNSIGNED NOT NULL ,
 	Registration_state                int UNSIGNED  DEFAULT 0 ,
 	Registration_date_created         datetime NOT NULL  ,
 	Registration_date_paid            datetime    ,
@@ -184,7 +184,7 @@ CREATE TABLE Language (
 
 
  ALTER TABLE Activity ADD CONSTRAINT fk_activity_organizer FOREIGN KEY ( Activity_organizer_id ) REFERENCES User( User_id ) ON DELETE SET NULL ON UPDATE CASCADE;
- ALTER TABLE Activity ADD CONSTRAINT fk_activity_event FOREIGN KEY ( Activity_event_id ) REFERENCES Event( Event_id ) ON DELETE CASCADE ON UPDATE CASCADE;
+ ALTER TABLE Activity ADD CONSTRAINT fk_activity_event FOREIGN KEY ( Activity_Event_id ) REFERENCES Event( Event_id ) ON DELETE CASCADE ON UPDATE CASCADE;
  
  ALTER TABLE User_Activity ADD CONSTRAINT fk_user_activity_user FOREIGN KEY ( User_Activity_User_id ) REFERENCES User( User_id ) ON DELETE CASCADE ON UPDATE CASCADE;
  ALTER TABLE User_Activity ADD CONSTRAINT fk_user_activity_activity FOREIGN KEY ( User_Activity_Activity_id ) REFERENCES Activity( Activity_id ) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -196,7 +196,7 @@ CREATE TABLE Language (
  ALTER TABLE Role_UserCase ADD CONSTRAINT fk_role_userCase_role FOREIGN KEY ( Role_UserCase_Role_id  ) REFERENCES Role( Role_id ) ON DELETE CASCADE ON UPDATE CASCADE;
  
  ALTER TABLE NewsItem ADD CONSTRAINT fk_newsItem_event FOREIGN KEY ( NewsItem_Event_id ) REFERENCES Event( Event_id ) ON DELETE CASCADE ON UPDATE CASCADE;
- ALTER TABLE NewsItem ADD CONSTRAINT fk_newsItem_user FOREIGN KEY ( NewsItem_user_id ) REFERENCES User( User_id ) ON DELETE SET NULL ON UPDATE CASCADE;
+ ALTER TABLE NewsItem ADD CONSTRAINT fk_newsItem_user FOREIGN KEY ( NewsItem_User_id ) REFERENCES User( User_id ) ON DELETE SET NULL ON UPDATE CASCADE;
  
  ALTER TABLE Registration ADD CONSTRAINT fk_registration_user FOREIGN KEY ( Registration_User_id ) REFERENCES User( User_id ) ON DELETE CASCADE ON UPDATE CASCADE;
  ALTER TABLE Registration ADD CONSTRAINT fk_registration_event FOREIGN KEY ( Registration_Event_id ) REFERENCES Event( Event_id ) ON DELETE CASCADE ON UPDATE CASCADE;

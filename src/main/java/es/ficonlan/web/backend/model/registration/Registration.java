@@ -45,7 +45,7 @@ public class Registration {
 		this.paid = false;
 	}
 
-	@Column(name = "Registration_Id")
+	@Column(name = "Registration_id")
     @SequenceGenerator(name = "registrationIdGenerator", sequenceName = "registrationSeq")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "registrationIdGenerator")
@@ -58,7 +58,7 @@ public class Registration {
 	}
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="Registration_User_Id")
+	@JoinColumn(name="Registration_User_id")
 	public User getUser() {
 		return user;
 	}
@@ -68,7 +68,7 @@ public class Registration {
 	}
 	
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="Registration_Event_Id")
+	@JoinColumn(name="Registration_Event_id")
 	public Event getEvent() {
 		return event;
 	}

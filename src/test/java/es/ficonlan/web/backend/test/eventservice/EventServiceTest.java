@@ -367,17 +367,21 @@ public class EventServiceTest {
     	eventService.createEvent(s.getSessionId(), event);
     	NewsItem news1 = new NewsItem("Nueva noticia1",  Calendar.getInstance(), "http://ficonlan/nuevaNoticia1", 2);
     	eventService.addNews(s.getSessionId(), event.getEventId(), news1);
+    	Thread.sleep(200);
     	NewsItem news2 = new NewsItem("Nueva noticia2",  Calendar.getInstance(), "http://ficonlan/nuevaNoticia2", 0);
     	eventService.addNews(s.getSessionId(), event.getEventId(), news2);
+    	Thread.sleep(200);
       	Calendar c = Calendar.getInstance();
     	c.add(Calendar.DAY_OF_YEAR, -2);
     	NewsItem news3 = new NewsItem("Nueva noticia3", c, "http://ficonlan/nuevaNoticia3", 0);
     	eventService.addNews(s.getSessionId(), event.getEventId(), news3);
+    	Thread.sleep(200);
     	Thread.sleep(10);
     	Calendar limit = Calendar.getInstance();
     	limit.add(Calendar.DAY_OF_YEAR, -1);
     	List<NewsItem> lastNews = eventService.getLastNews(s.getSessionId(), limit, false);
     	assertTrue(lastNews.size()==2);
+    	
     	assertTrue(lastNews.get(0).getNewsItemId()==news1.getNewsItemId());
     	assertTrue(lastNews.get(1).getNewsItemId()==news2.getNewsItemId());
     	lastNews = eventService.getLastNews(s.getSessionId(), limit, true);

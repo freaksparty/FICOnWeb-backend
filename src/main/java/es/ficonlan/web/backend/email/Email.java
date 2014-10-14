@@ -84,6 +84,7 @@ public class Email {
 	public Email() { }
 
 	public boolean sendMail() {
+		/*
 		try {
 			Properties props = new Properties();
 			props.put("mail.smtp.host", "smtp.gmail.com");
@@ -123,6 +124,8 @@ public class Email {
 			e.printStackTrace();
 			return false;
 		}
+		*/
+		return false; //FIXME BORRAR PARA ACTIVAR CORREOS
 	}
 
 	public static void main(String[] args) throws InterruptedException {

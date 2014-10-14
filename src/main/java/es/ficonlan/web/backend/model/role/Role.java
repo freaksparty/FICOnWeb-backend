@@ -50,7 +50,7 @@ public class Role {
 		this.roleId = newId;
 	}
 	
-	@Column(name = "role_Name")
+	@Column(name = "role_name")
 	public String getRoleName()
 	{
 		return this.roleName;
@@ -64,7 +64,7 @@ public class Role {
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "Role_UserCase", joinColumns = {
 			@JoinColumn(name = "Role_UserCase_Role_id")}, inverseJoinColumns = {
-	        @JoinColumn(name = "Role_UserCase_UserCase_Id")})
+	        @JoinColumn(name = "Role_UserCase_UserCase_id")})
 	public Set<UseCase> getUseCases() {
 		return useCases;
 	}
