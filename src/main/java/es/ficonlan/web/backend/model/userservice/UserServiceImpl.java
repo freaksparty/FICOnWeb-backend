@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.ficonlan.web.backend.model.emailservice.EmailService;
 import es.ficonlan.web.backend.model.eventservice.EventService;
 import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
 import es.ficonlan.web.backend.model.role.Role;
@@ -73,6 +74,14 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		for(Method m:EventService.class.getMethods()){
+			UseCase uc = useCaseDao.findByName(m.getName());
+			if (uc==null){
+				uc=new UseCase(m.getName());
+				useCaseDao.save(uc);
+			}
+		}
+		
+		for(Method m:EmailService.class.getMethods()){
 			UseCase uc = useCaseDao.findByName(m.getName());
 			if (uc==null){
 				uc=new UseCase(m.getName());
