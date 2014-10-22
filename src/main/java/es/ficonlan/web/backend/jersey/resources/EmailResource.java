@@ -30,64 +30,33 @@ public class EmailResource {
 		this.emailService = ApplicationContextProvider.getApplicationContext().getBean(EmailService.class);
 	}
 	
-	@Path("/adress/")
-	@GET
-	@Produces({MediaType.APPLICATION_JSON})
-	public List<Adress> getAllAdress(@HeaderParam("sessionId") String sessionId) throws ServiceException {
-			return emailService.getAllAdress(sessionId);
-	}
-	
-	@Path("/adress/")
-	@PUT
-	@Consumes({MediaType.APPLICATION_JSON})
-	@Produces(MediaType.APPLICATION_JSON)
-	public Adress addAdress(@HeaderParam("sessionId") String sessionId, Adress adress) throws ServiceException {
-		return emailService.addAdress(sessionId, adress);
-	}
-	
-	@Path("/adress/{adressId}")
-	@PUT
-	@Consumes({MediaType.APPLICATION_JSON})
-	@Produces(MediaType.APPLICATION_JSON)
-	public Adress modifyAdress(@HeaderParam("sessionId") String sessionId, @PathParam("adressId") int adressId, Adress adress) throws ServiceException {
-		return emailService.modifyAdress(sessionId, adressId, adress);
-	}
-
-	@Path("/adress/{adressId}")
-	@DELETE
-	public void deleteAdress(@HeaderParam("sessionId") String sessionId, @PathParam("adressId") int adressId) throws ServiceException {
-		emailService.deleteAdress(sessionId, adressId);
-	}
-	
-	@Path("/email/")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<Email> getAllMails(@HeaderParam("sessionId") String sessionId) throws ServiceException {
 		return emailService.getAllMails(sessionId);
 	}
 	
-	@Path("/email/confirmed")
+	@Path("/confirmed")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<Email> getConfirmedMails(@HeaderParam("sessionId") String sessionId) throws ServiceException {
 		return emailService.getConfirmedMails(sessionId);
 	}
 	
-	@Path("/email/unconfirmed")
+	@Path("/unconfirmed")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<Email> getNoConfirmedMails(@HeaderParam("sessionId") String sessionId) throws ServiceException {
 		return emailService.getNoConfirmedMails(sessionId);
 	}
 	
-	@Path("/email/{emailId}")
+	@Path("/{emailId}")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
 	public Email getEmail(@HeaderParam("sessionId") String sessionId, @PathParam("emailId") int emailId) throws ServiceException {
 		return emailService.getEmail(sessionId, emailId);
 	}
 	
-	@Path("/email/")
 	@PUT
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
@@ -95,7 +64,7 @@ public class EmailResource {
 		return emailService.addEmail(sessionId, email);
 	}
 	
-	@Path("/email/{emailId}")
+	@Path("/{emailId}")
 	@PUT
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
@@ -103,13 +72,13 @@ public class EmailResource {
 		return emailService.modifyEmail(sessionId, emailId, email);
 	}
 
-	@Path("/email/{emailId}")
+	@Path("/{emailId}")
 	@DELETE
 	public void deleteEmail(@HeaderParam("sessionId") String sessionId, @PathParam("emailId") int emailId) throws ServiceException {
 		emailService.deleteEmail(sessionId, emailId);
 	}
 	
-	@Path("/email/{emailId}")
+	@Path("/{emailId}")
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	public Email sendEmail(@HeaderParam("sessionId") String sessionId,  @PathParam("emailId") int emailId) throws ServiceException {

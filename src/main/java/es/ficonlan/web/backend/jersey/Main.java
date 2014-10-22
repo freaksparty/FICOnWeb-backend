@@ -15,6 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import es.ficonlan.web.backend.jersey.resources.ActivityResource;
+import es.ficonlan.web.backend.jersey.resources.EmailAdressResource;
 import es.ficonlan.web.backend.jersey.resources.EventResource;
 import es.ficonlan.web.backend.jersey.resources.NewsResource;
 import es.ficonlan.web.backend.jersey.resources.PermissionResource;
@@ -75,6 +76,7 @@ public class Main {
 		rc.register(JacksonFeature.class);
 		rc.register(ServiceExceptionMapper.class);
 		rc.register(ActivityResource.class);
+		rc.register(EmailAdressResource.class);
 
 		SSLContextConfigurator sslContext = new SSLContextConfigurator();
 		sslContext.setKeyStoreFile(KEYSTORE_FILE);
