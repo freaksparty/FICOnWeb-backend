@@ -122,8 +122,7 @@ public class EventServiceTest {
     	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),regCloseDate);
     	eventDao.save(event);
     	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
-    	eventService.addParticipantToEvent(s.getSessionId(), user.getUserId(), event.getEventId());
-    	Registration r = registrationDao.findByUserAndEvent(user.getUserId(), event.getEventId());
+    	Registration r = eventService.addParticipantToEvent(s.getSessionId(), user.getUserId(), event.getEventId());
     	assertTrue(r!=null);
     	assertTrue(r.getUser().getUserId()==user.getUserId());
     	assertTrue(r.getEvent().getEventId()==event.getEventId());
@@ -416,4 +415,20 @@ public class EventServiceTest {
 			fail("This shouldn have thrown an exception");  
 		} catch (InstanceException e) {}
     }    
+    
+    @Test
+    public void getRegistrationTest() throws ServiceException{
+    	Session anonymousSession = userService.newAnonymousSession();
+    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	Calendar regCloseDate = Calendar.getInstance();
+    	regCloseDate.add(Calendar.DAY_OF_YEAR, 1);
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),regCloseDate);
+    	eventDao.save(event);
+    	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
+    	Registration r1 = eventService.addParticipantToEvent(s.getSessionId(), user.getUserId(), event.getEventId());
+    	Registration r2 = eventService.getRegistration(s.getSessionId(), user.getUserId(), event.getEventId());
+    	assertEquals(r1, r2);
+    	
+    	
+    }
 }

@@ -67,7 +67,7 @@ public class ActivityResource {
 	public List<Activity> getByEvent(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("type") String type) throws ServiceException {
 		ActivityType t = null;
 		if(type!=null){
-    		if(type.toLowerCase().contentEquals("tournament"))  t=ActivityType.Tournament;
+    		if(type.toLowerCase().contentEquals("tournament")) t=ActivityType.Tournament;
     		if(type.toLowerCase().contentEquals("production")) t=ActivityType.Production;
     		if(type.toLowerCase().contentEquals("conference")) t=ActivityType.Conference;
 		}

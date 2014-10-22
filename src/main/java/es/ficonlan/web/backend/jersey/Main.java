@@ -74,6 +74,7 @@ public class Main {
 		rc.register(PermissionResource.class);
 		rc.register(JacksonFeature.class);
 		rc.register(ServiceExceptionMapper.class);
+		rc.register(ActivityResource.class);
 
 		SSLContextConfigurator sslContext = new SSLContextConfigurator();
 		sslContext.setKeyStoreFile(KEYSTORE_FILE);

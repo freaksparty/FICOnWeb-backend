@@ -15,11 +15,13 @@ import javax.ws.rs.core.MediaType;
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
 import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.eventservice.EventService;
+import es.ficonlan.web.backend.model.registration.Registration;
 import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 
 /**
  * @author Daniel Gómez Silva
+ * @author Miguel Ángel Castillo Bellagona
  */
 @Path("event")
 public class EventResource {
@@ -47,8 +49,9 @@ public class EventResource {
 	@Path("/addParticipant/{eventId}/{userId}")
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
-	public void addParticipant(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("userId") int userId) throws ServiceException {
-		eventService.addParticipantToEvent(sessionId, userId, eventId);
+	@Produces(MediaType.APPLICATION_JSON)
+	public Registration addParticipant(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("userId") int userId) throws ServiceException {
+		return eventService.addParticipantToEvent(sessionId, userId, eventId);
 	}
 	
 	@Path("/removeParticipant/{eventId}/{userId}")
@@ -76,7 +79,7 @@ public class EventResource {
 		eventService.setPaid(sessionId, userId, eventId);
 	}
 	
-	@Path("/byName/{name}")
+	@Path("/byName/{name}") 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Event> findByName(@HeaderParam("sessionId") String sessionId, @PathParam("name") String name) throws ServiceException {

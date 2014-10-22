@@ -14,12 +14,20 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
+import javax.persistence.Transient;
 
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import es.ficonlan.web.backend.jersey.util.JsonDateDeserializer;
+import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
+import es.ficonlan.web.backend.jersey.util.JsonRegistrationStateDeserializer;
 import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.user.User;
 
 /**
  * @author Daniel Gómez Silva
+ * @author Miguel Ángel Castillo Bellagona
  */
 @Entity
 public class Registration {
@@ -33,8 +41,10 @@ public class Registration {
 	private Calendar registrationDate;
 	private Calendar paidDate;
 	private boolean paid = false;
-	
-	public Registration(){}
+	private int place;
+	private int placeOnQueue;
+
+	public Registration() { }
 	
     public Registration(User user, Event event) {
 		this.user = user;
@@ -77,6 +87,7 @@ public class Registration {
 		this.event = event;
 	}
 	
+	@JsonDeserialize(using = JsonRegistrationStateDeserializer.class)
 	@Column(name="Registration_state") 
 	@Enumerated(EnumType.ORDINAL)  
 	public RegistrationState getState() {
@@ -87,6 +98,8 @@ public class Registration {
 		this.state = state;
 	}
 	
+	@JsonDeserialize(using = JsonDateDeserializer.class)
+    @JsonSerialize(using=JsonDateSerializer.class)
 	@Column(name = "Registration_date_created")
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	public Calendar getRegistrationDate() {
@@ -97,6 +110,8 @@ public class Registration {
 		this.registrationDate = registrationDate;
 	}
 	
+	@JsonDeserialize(using = JsonDateDeserializer.class)
+    @JsonSerialize(using=JsonDateSerializer.class)
 	@Column(name = "Registration_date_paid")
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	public Calendar getPaidDate() {
@@ -115,5 +130,24 @@ public class Registration {
 	public void setPaid(boolean paid) {
 		this.paid = paid;
 	}
+
+	@Column(name = "Registration_place")
+	public int getPlace() {
+		return place;
+	}
+
+	public void setPlace(int place) {
+		this.place = place;
+	}
+	
+	@Transient
+	public int getPlaceOnQueue() {
+		return placeOnQueue;
+	}
+
+	public void setPlaceOnQueue(int placeOnQueue) {
+		this.placeOnQueue = placeOnQueue;
+	}
+	
 	
 }

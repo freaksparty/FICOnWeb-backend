@@ -7,6 +7,7 @@ import es.ficonlan.web.backend.model.activity.Activity;
 import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
 import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.newsitem.NewsItem;
+import es.ficonlan.web.backend.model.registration.Registration;
 import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
 import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
@@ -21,11 +22,13 @@ public interface EventService {
 	
 	public void changeEventData(String sessionId, Event eventData) throws ServiceException;
 		
-	public void addParticipantToEvent(String sessionId, int userId, int eventId) throws ServiceException;
+	public Registration addParticipantToEvent(String sessionId, int userId, int eventId) throws ServiceException;
 	
 	public void removeParticipantFromEvent(String sessionId, int userId, int eventId) throws ServiceException;
 	
 	public void setPaid(String sessionId, int userId, int eventId) throws ServiceException;
+	
+    public Registration getRegistration(String sessionId, int userId, int eventId) throws ServiceException;
 	
 	public void changeRegistrationState(String sessionId, int userId, int eventId, RegistrationState state) throws ServiceException;
 
@@ -54,5 +57,5 @@ public interface EventService {
     public List<NewsItem> getLastNews(String sessionId, Calendar dateLimit, boolean onlyOutstandingNews) throws ServiceException;
     
     public void removeNews(String sessionId, int newsItemId) throws ServiceException;
-    
+     
 }

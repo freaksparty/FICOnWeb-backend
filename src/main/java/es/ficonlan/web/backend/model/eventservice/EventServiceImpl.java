@@ -82,19 +82,26 @@ public class EventServiceImpl implements EventService {
 	}
 
 	@Transactional
-	public void addParticipantToEvent(String sessionId, int userId, int eventId) throws ServiceException {
+	public Registration addParticipantToEvent(String sessionId, int userId, int eventId) throws ServiceException {
 		if (!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), userId, "addParticipantToEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);		
     	try{
     		User user = userDao.find(userId);
+    		
     		Event event = eventDao.find(eventId);    		
     		if(event.getRegistrationOpenDate().compareTo(Calendar.getInstance())>0||event.getRegistrationCloseDate().compareTo(Calendar.getInstance())<0) throw new ServiceException(9,"addParticipantToEvent");
-    		Registration registration = new Registration(user, event);
+    		
+    		Registration registration = registrationDao.findByUserAndEvent(userId, eventId);
+    		if (registration==null) registration = new Registration(user, event);
+    		
     		int currentParticipants = registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.registered) + 
     								  registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.paid);
     		int queueParticipants = currentParticipants + registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.inQueue);
+    		
     		if(currentParticipants>=event.getNumParticipants()) {
+    			registration.setPlaceOnQueue(1 +  queueParticipants); //FIXME SIN TESTEAR
     			registration.setState(RegistrationState.inQueue);
+    			
     			//FIXME: Mandar correo electrónico
     			
     			Email mail = new EmailInQueue(user.getEmail(), event.getName(), 1 +  queueParticipants);
@@ -103,7 +110,9 @@ public class EventServiceImpl implements EventService {
     			
     		}
     		else if(user.isInBlackList()) {
+    			registration.setPlaceOnQueue(event.getNumParticipants() + 50); //FIXME SIN TESTEAR
     			registration.setState(RegistrationState.inQueue);
+    			
     			//FIXME: Mandar correo electrónico
     			
     			Email mail = new EmailInQueue(user.getEmail(), event.getName(), event.getNumParticipants() + 50);
@@ -112,7 +121,7 @@ public class EventServiceImpl implements EventService {
     			
     		}
     		else registration.setState(RegistrationState.registered); {
-    			registrationDao.save(registration);
+    			registration.setPlace(currentParticipants + 1); //FIXME SIN TESTEAR
     			
     			Email mail = new EmailOutstanding(user.getEmail(), event.getName(), currentParticipants + 1);
     			if(mail.sendMail()) System.out.println("Correo de Outstanding enviado a " + user.getLogin() + " al correo " + user.getEmail());
@@ -120,6 +129,9 @@ public class EventServiceImpl implements EventService {
             	
             	//FIXME: Mandar correo electrónico
     		}
+    		
+    		registrationDao.save(registration);
+    		return registration;
     		
     	} catch (InstanceException e) {
 			if (e.getClassName().contentEquals("User")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
@@ -135,22 +147,26 @@ public class EventServiceImpl implements EventService {
     	Registration registration = registrationDao.findByUserAndEvent(userId, eventId);
     	if (registration==null) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Registration");
     	Event event = registration.getEvent();
+    	int place = 0;
         try {
-			registrationDao.remove(registration.getRegistrationId());
 			//FIXME: MAndar correo elecrónico if registration.getState()==registered Mandar correo electrónico registration.User()
 			if (registration.getState()==RegistrationState.registered) {
 				
 				Email mail = new EmailTimeToPayExceeded(registration.getUser().getEmail(), event.getName());
 				if(mail.sendMail()) System.out.println("Correo de TimeToPayExceeded enviado a " + registration.getUser().getLogin() + " al correo " + registration.getUser().getEmail());
 				else System.out.println("Error en envio de coreo de TimeToPayExceeded a " + registration.getUser().getLogin() + " al correo " + registration.getUser().getEmail());
-	        
 			}
+			
+			place = registration.getPlace();
+			registrationDao.remove(registration.getRegistrationId());
+			
 		} catch (InstanceException e) {
 			 throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Registration");
 		}
         Registration firstInQueue = registrationDao.getFirstInQueue(eventId);
         if(firstInQueue!=null){
         	firstInQueue.setState(RegistrationState.registered);
+        	firstInQueue.setPlace(place);
         	registrationDao.save(firstInQueue);
         	//FIXME: Mandar correo electrónico
         	
@@ -178,6 +194,12 @@ public class EventServiceImpl implements EventService {
 		if(mail.sendMail()) System.out.println("Correo de PaiedMail enviado a " + registration.getUser().getLogin() + " al correo " + registration.getUser().getEmail());
 		else System.out.println("Error en envio de coreo de PaiedMail a " + registration.getUser().getLogin() + " al correo " + registration.getUser().getEmail());
 	    
+	}
+	
+	public Registration getRegistration(String sessionId, int userId, int eventId) throws ServiceException {
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getRegistration")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		return registrationDao.findByUserAndEvent(userId, eventId);
 	}
 
 	/**
@@ -284,8 +306,7 @@ public class EventServiceImpl implements EventService {
 			if (e.getClassName().contentEquals("User")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
 			else throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Activity");
 
-		}
-			
+		}		
 	}
 
     @Transactional(readOnly = true)

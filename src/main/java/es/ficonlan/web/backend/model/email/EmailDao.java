@@ -1,0 +1,25 @@
+package es.ficonlan.web.backend.model.email;
+
+import java.util.List;
+
+import es.ficonlan.web.backend.model.emailadress.Adress;
+import es.ficonlan.web.backend.model.util.dao.GenericDao;
+
+
+/**
+ * @author Miguel Ángel Castillo Bellagona
+ * @version 1.0
+ */
+public interface EmailDao extends GenericDao<Email, Integer>{
+	
+	public List<Email> getAllEmails();
+	
+	public List<Email> getConfirmedEmails();
+	
+	public List<Email> getNoConfirmedEmails();
+	
+	public List<Email> getEmailByDestination(String destino);
+	
+	public List<Email> getEmailByDireccionEnvio(Adress direccion);
+
+}
