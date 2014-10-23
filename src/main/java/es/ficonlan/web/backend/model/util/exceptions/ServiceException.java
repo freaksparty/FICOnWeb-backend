@@ -31,6 +31,7 @@ public class ServiceException extends Exception {
 	public static final int REGISTRATION_OUT_OF_TIME=9;
 	public static final int USER_NOT_REGISTERED_IN_EVENT=10;
 	public static final int MISSING_CONFIG_FILE=11;
+	public static final int CANT_BE_MODIFIED=12;
 	public static final int OTHER=99;
 	
 	private static final long serialVersionUID = 1L;
@@ -77,6 +78,8 @@ public class ServiceException extends Exception {
 			return "User isn't registered in the event";
 		case 11:
 			return "Missing config file";
+		case 12:
+			return "Cant be modified";
 		case 99:
 			return "System unexpected error";
 		default:

@@ -158,6 +158,10 @@ public class Email {
 	public Calendar getDate() {
 		return date;
 	}
+	
+	public void setDate(Calendar date) {
+		this.date = date;
+	}
 
 	@Column(name = "Email_senddate")
 	public Calendar getSendDate() {

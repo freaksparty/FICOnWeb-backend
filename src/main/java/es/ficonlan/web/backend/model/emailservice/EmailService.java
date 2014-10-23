@@ -4,35 +4,36 @@ import java.util.List;
 
 import es.ficonlan.web.backend.model.email.Email;
 import es.ficonlan.web.backend.model.emailadress.Adress;
+import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 
 public interface EmailService {
 	
-	public List<Adress> getAllAdress(String sessionId);
+	public List<Adress> getAllAdress(String sessionId) throws ServiceException;
 	
-	public Adress addAdress(String sessionId, Adress adress);
+	public Adress addAdress(String sessionId, Adress adress) throws ServiceException;
 	
-	public Adress modifyAdress(String serssionId, int adressId, Adress newAdress);
+	public Adress modifyAdress(String sessionId, int adressId, Adress newAdress) throws ServiceException;
 	
-	public void deleteAdress(String serssionId, int adressId);
-	
-	
-	public List<Email> getAllMails(String sessionId);
-	
-	public List<Email> getConfirmedMails(String sessionId);
-	
-	public List<Email> getNoConfirmedMails(String sessionId);
-	
-	public Email getEmail(String sessionId, int emailId);
+	public void deleteAdress(String sessionId, int adressId) throws ServiceException;
 	
 	
-	public Email addEmail(String sessionId, Email email);
+	public List<Email> getAllMails(String sessionId) throws ServiceException;
 	
-	public Email modifyEmail(String serssionId, int emailId, Email newEmail);
+	public List<Email> getConfirmedMails(String sessionId) throws ServiceException;
 	
-	public void deleteEmail(String serssionId, int emailId);
+	public List<Email> getNoConfirmedMails(String sessionId) throws ServiceException;
+	
+	public Email getEmail(String sessionId, int emailId) throws ServiceException;
 	
 	
-	public Email sendEmail(String sessionId, int emailId);
+	public Email addEmail(String sessionId, Email email) throws ServiceException;
+	
+	public Email modifyEmail(String sessionId, int emailId, Email newEmail) throws ServiceException;
+	
+	public void deleteEmail(String sessionId, int emailId) throws ServiceException;
+	
+	
+	public Email sendEmail(String sessionId, int emailId) throws ServiceException;
 	
 
 

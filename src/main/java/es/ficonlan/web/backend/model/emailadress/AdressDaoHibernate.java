@@ -1,5 +1,7 @@
 package es.ficonlan.web.backend.model.emailadress;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import es.ficonlan.web.backend.model.util.dao.GenericDaoHibernate;
@@ -8,7 +10,7 @@ import es.ficonlan.web.backend.model.util.dao.GenericDaoHibernate;
  * @author Miguel Ángel Castillo Bellagona
  * @version 1.0
  */
-@Repository("AdressDaoDao")
+@Repository("AdressDao")
 public class AdressDaoHibernate extends GenericDaoHibernate<Adress,Integer> implements AdressDao {
 
 	@Override
@@ -16,6 +18,15 @@ public class AdressDaoHibernate extends GenericDaoHibernate<Adress,Integer> impl
 		return (Adress) getSession()
 				.createQuery("SELECT a FROM Adress a WHERE a.Adress_Name = :adressName")
 				.setParameter("adressName", adressName).uniqueResult();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Adress> getAllAdress() {
+		return getSession().createQuery(
+	        	"SELECT a " +
+		        "FROM Adress a " +
+	        	"ORDER BY a.Adress_user").list();
 	}
 
 
