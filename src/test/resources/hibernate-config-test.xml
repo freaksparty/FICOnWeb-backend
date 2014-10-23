@@ -26,10 +26,17 @@
 		<property name="current_session_context_class">thread</property>
 
 		<!-- List of persistent classes -->
-		<mapping class="es.ficonlan.web.backend.model.user.User" />
+				<mapping class="es.ficonlan.web.backend.model.user.User" />
 		<mapping class="es.ficonlan.web.backend.model.role.Role" />
-		<mapping class="es.ficonlan.web.backend.model.usecase.UseCase" />
+	    <mapping class="es.ficonlan.web.backend.model.usecase.UseCase" />
+        <mapping class="es.ficonlan.web.backend.model.event.Event" />
+        <mapping class="es.ficonlan.web.backend.model.registration.Registration" />
+        <mapping class="es.ficonlan.web.backend.model.activity.Activity" />
+        <mapping class="es.ficonlan.web.backend.model.newsitem.NewsItem" />
 		<mapping class="es.ficonlan.web.backend.model.supportedlanguage.SupportedLanguage" />
+
+		<mapping class="es.ficonlan.web.backend.model.email.Email" />
+		<mapping class="es.ficonlan.web.backend.model.emailadress.Adress" />
 
 	</session-factory>
 </hibernate-configuration>

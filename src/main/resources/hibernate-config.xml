@@ -21,7 +21,7 @@
         <mapping class="es.ficonlan.web.backend.model.newsitem.NewsItem" />
 		<mapping class="es.ficonlan.web.backend.model.supportedlanguage.SupportedLanguage" />
 
-				<mapping class="es.ficonlan.web.backend.model.email.Email" />
+		<mapping class="es.ficonlan.web.backend.model.email.Email" />
 		<mapping class="es.ficonlan.web.backend.model.emailadress.Adress" />
 	</session-factory>
 
