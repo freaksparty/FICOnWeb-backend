@@ -26,6 +26,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import es.ficonlan.web.backend.model.emailadress.Adress;
+import es.ficonlan.web.backend.model.registration.Registration;
 import es.ficonlan.web.backend.model.user.User;
 
 /**
@@ -51,6 +52,8 @@ public class Email {
 
 	protected Calendar sendDate;
 	protected Calendar date;
+	
+	protected Registration registration;
 
 	public Email() {
 		this.date = Calendar.getInstance();
@@ -100,11 +103,11 @@ public class Email {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Email_Adress_id")
-	public Adress getdireccionEnvio() {
+	public Adress getDireccionEnvio() {
 		return this.direccionEnvio;
 	}
 
-	public void setdireccionEnvio(Adress direccionEnvio) {
+	public void setDireccionEnvio(Adress direccionEnvio) {
 		this.direccionEnvio = direccionEnvio;
 	}
 
@@ -171,6 +174,17 @@ public class Email {
 	private void setSendDate(Calendar sendDate) {
 		this.sendDate = sendDate;
 	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "Email_registration_id")
+	public Registration getRegistration() {
+		return registration;
+	}
+
+	public void setRegistration(Registration registration) {
+		this.registration = registration;
+	}
+
 
 	public boolean sendMail() {
 

@@ -2,7 +2,6 @@ package es.ficonlan.web.backend.model.email;
 
 import java.util.List;
 
-import es.ficonlan.web.backend.model.emailadress.Adress;
 import es.ficonlan.web.backend.model.util.dao.GenericDao;
 
 
@@ -20,6 +19,12 @@ public interface EmailDao extends GenericDao<Email, Integer>{
 	
 	public List<Email> getEmailByDestination(String destino);
 	
-	public List<Email> getEmailByDireccionEnvio(Adress direccion);
+	public List<Email> getEmailByDireccionEnvio(int direccionId);
+	
+	public List<Email> getEmailByRegistration(int registrationId);
+	
+	public Email getLasEmailByRegistration(int registrationId);
+	
+	
 
 }

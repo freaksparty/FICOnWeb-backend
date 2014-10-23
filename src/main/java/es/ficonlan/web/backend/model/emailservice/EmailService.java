@@ -35,6 +35,14 @@ public interface EmailService {
 	
 	public Email sendEmail(String sessionId, int emailId) throws ServiceException;
 	
-
+	
+	public List<Email> getAllYorEmails(String sessionId) throws ServiceException;
+	
+	public Email getYorLasEventEmail(String sessionId, int eventId) throws ServiceException;
+	
+	public Email addYorMail(String sessionId, Email email) throws ServiceException;
+	
+	public Email sendYourMail(String sessionId, int emailId) throws ServiceException;
+	
 
 }

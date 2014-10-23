@@ -10,6 +10,9 @@ import es.ficonlan.web.backend.model.email.Email;
 import es.ficonlan.web.backend.model.email.EmailDao;
 import es.ficonlan.web.backend.model.emailadress.Adress;
 import es.ficonlan.web.backend.model.emailadress.AdressDao;
+import es.ficonlan.web.backend.model.event.EventDao;
+import es.ficonlan.web.backend.model.registration.Registration;
+import es.ficonlan.web.backend.model.registration.RegistrationDao;
 import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import es.ficonlan.web.backend.model.util.session.SessionManager;
@@ -26,6 +29,12 @@ public class EmailServiceImpl implements EmailService {
 	
 	@Autowired
 	private AdressDao adressDao;
+	
+	@Autowired
+	private EventDao eventDao;
+	
+	@Autowired
+	private RegistrationDao registrationDao;
 	
 	@Transactional
 	@Override
@@ -148,7 +157,7 @@ public class EmailServiceImpl implements EmailService {
 				if(newEmail.getAsunto()!=null) e.setAsunto(newEmail.getAsunto());
 				if(newEmail.getDate()!=null) e.setDate(newEmail.getDate());
 				if(newEmail.getDestinatario()!=null) e.setDestinatario(newEmail.getDestinatario());
-				if(newEmail.getdireccionEnvio()!=null) e.setdireccionEnvio(newEmail.getdireccionEnvio());
+				if(newEmail.getDireccionEnvio()!=null) e.setDireccionEnvio(newEmail.getDireccionEnvio());
 				if(newEmail.getMensaje()!=null) e.setMensaje(newEmail.getMensaje());
 				if(newEmail.getNombreArchivo()!=null) e.setNombreArchivo(newEmail.getNombreArchivo());
 				if(newEmail.getRutaArchivo()!=null) e.setRutaArchivo(newEmail.getRutaArchivo());
@@ -201,4 +210,48 @@ public class EmailServiceImpl implements EmailService {
 		
 	}
 
+	@Override
+	public List<Email> getAllYorEmails(String sessionId) throws ServiceException {
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getAllYorEmails")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+
+		return emailDao.getEmailByDestination(SessionManager.getSession(sessionId).getUser().getEmail());
+	}
+
+	@Override
+	public Email getYorLasEventEmail(String sessionId, int eventId) throws ServiceException {
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getYorLasEventEmail")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		
+		Registration r = registrationDao.findByUserAndEvent(SessionManager.getSession(sessionId).getUser().getUserId(), eventId);
+		return emailDao.getLasEmailByRegistration(r.getRegistrationId());
+
+	}
+	
+	public Email addYorMail(String sessionId, Email email) throws ServiceException {
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), email.getDestinatario().getUserId(), "addYorMail")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+
+		emailDao.save(email);
+		return email;
+		
+	}
+
+	@Override
+	public Email sendYourMail(String sessionId, int emailId) throws ServiceException {
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+
+		try 
+		{
+			Email e = emailDao.find(emailId);
+			if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), e.getDestinatario().getUserId(), "sendYourMail")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+			e.sendMail();
+			emailDao.save(e);
+			return e;
+		} 
+		catch (InstanceException e) 
+		{
+			throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Email");
+		}
+	}
 }

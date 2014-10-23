@@ -210,9 +210,14 @@ CREATE TABLE Email (
 	Email_case 				varchar(128) NOT NULL,
 	Email_body		 		mediumtext,
 	Email_senddate			datetime,
-	email_date				datetime,
+	Email_date				datetime,
+	Email_registration_id   bigint UNSIGNED,
     CONSTRAINT pk_email PRIMARY KEY(Email_id)
 ) engine=InnoDB;
+
+ CREATE INDEX EmailByAdressId ON Email (Email_adress_id);
+ CREATE INDEX EmailByUserId ON Email (Email_user_id);
+ CREATE INDEX EmailByRegistrationId ON Email (Email_registration_id);
 
 -- ------------------------------ EmailTemplate -------------------------------------
 
@@ -234,14 +239,14 @@ CREATE TABLE EmailTemplate (
 
 
  CREATE INDEX EmailIndexConfirmation ON Email (Email_confirmation) USING BTREE;
- CREATE INDEX EmailByAdressId ON Email (Email_adress_id);
- CREATE INDEX EmailByAUserId ON Email (Email_user_id);
+
 
  ALTER TABLE EmailTemplate ADD CONSTRAINT fk_emailtemplate_adress FOREIGN KEY ( EmailTemplate_adress_id ) REFERENCES Adress (Adress_id) ON DELETE SET NULL ON UPDATE CASCADE;
  ALTER TABLE EmailTemplate ADD CONSTRAINT fk_emailtemplate_event FOREIGN KEY ( EmailTemplate_event_id ) REFERENCES Event (Event_id) ON DELETE CASCADE ON UPDATE CASCADE;
 
  ALTER TABLE Email ADD CONSTRAINT fk_email_adress FOREIGN KEY ( Email_adress_id ) REFERENCES Adress (Adress_id) ON DELETE SET NULL ON UPDATE CASCADE;
  ALTER TABLE Email ADD CONSTRAINT fk_email_user FOREIGN KEY ( Email_user_id ) REFERENCES User (User_id) ON DELETE SET NULL ON UPDATE CASCADE;
+ ALTER TABLE Email ADD CONSTRAINT fk_email_registration FOREIGN KEY ( Email_registration_id ) REFERENCES Registration (Registration_id) ON DELETE SET NULL ON UPDATE CASCADE;
  
  ALTER TABLE Activity ADD CONSTRAINT fk_activity_organizer FOREIGN KEY ( Activity_organizer_id ) REFERENCES User( User_id ) ON DELETE SET NULL ON UPDATE CASCADE;
  ALTER TABLE Activity ADD CONSTRAINT fk_activity_event FOREIGN KEY ( Activity_Event_id ) REFERENCES Event( Event_id ) ON DELETE CASCADE ON UPDATE CASCADE;

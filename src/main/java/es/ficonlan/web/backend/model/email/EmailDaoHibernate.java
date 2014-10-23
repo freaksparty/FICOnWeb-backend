@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import es.ficonlan.web.backend.model.emailadress.Adress;
 import es.ficonlan.web.backend.model.util.dao.GenericDaoHibernate;
 
 /**
@@ -55,12 +54,29 @@ public class EmailDaoHibernate extends GenericDaoHibernate<Email,Integer> implem
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Email> getEmailByDireccionEnvio(Adress direccion) {
+	public List<Email> getEmailByDireccionEnvio(int direccionId) {
 		return getSession().createQuery(
 	        	"SELECT e " +
 		        "FROM Email e " +
 	        	"WHERE e.Adress_Id = :direccionId" +
-	        	"ORDER BY e.Email_Date").setParameter("direccionId", direccion.getAdresslId()).list();
+	        	"ORDER BY e.Email_Date").setParameter("direccionId", direccionId).list();
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Email> getEmailByRegistration(int registrationId) {
+		return getSession().createQuery(
+	        	"SELECT e " +
+		        "FROM Email e " +
+	        	"WHERE e.Email_registration_id = :registrationId" +
+	        	"ORDER BY e.Email_Date").setParameter("registrationId", registrationId).list();
+	}
+	
+	@Override
+	public Email getLasEmailByRegistration(int registrationId){
+		return (Email) getSession()
+				.createQuery("SELECT e FROM Email e e.Email_registration_id = :registrationId ORDER BY e.Email_date DESC")
+				.setParameter("registrationId", registrationId).setFirstResult(0).setMaxResults(1).uniqueResult();
 	}
 
 }
