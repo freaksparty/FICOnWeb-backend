@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS Event_NewsItem;
 DROP TABLE IF EXISTS Language;
 DROP TABLE IF EXISTS Adress;
 DROP TABLE IF EXISTS Email;
+DROP TABLE IF EXISTS EmailTemplate;
 SET foreign_key_checks = 1;
 
 -- ---------- Table for validation queries from the connection pool. ----------
@@ -213,9 +214,31 @@ CREATE TABLE Email (
     CONSTRAINT pk_email PRIMARY KEY(Email_id)
 ) engine=InnoDB;
 
+-- ------------------------------ EmailTemplate -------------------------------------
+
+CREATE TABLE EmailTemplate (
+	EmailTemplate_id             bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
+	EmailTemplate_event_id       bigint UNSIGNED NOT NULL,
+	EmailTemplate_name           varchar(128) NOT NULL, 
+	EmailTemplate_adress_id      bigint UNSIGNED ,
+	EmailTemplate_file           varchar(128), 
+	EmailTemplate_fileName       varchar(128), 
+	EmailTemplate_case           varchar(128) NOT NULL,
+	EmailTemplate_body           mediumtext,
+    CONSTRAINT pk_email PRIMARY KEY(EmailTemplate_id)
+) engine=InnoDB;
+
+ CREATE INDEX EmailTemplateByAdressId ON EmailTemplate (EmailTemplate_adress_id);
+ CREATE INDEX EmailTemplateByEventId ON EmailTemplate (EmailTemplate_event_id);
+ CREATE INDEX EmailTemplateByname ON EmailTemplate (EmailTemplate_name);
+
+
  CREATE INDEX EmailIndexConfirmation ON Email (Email_confirmation) USING BTREE;
  CREATE INDEX EmailByAdressId ON Email (Email_adress_id);
  CREATE INDEX EmailByAUserId ON Email (Email_user_id);
+
+ ALTER TABLE EmailTemplate ADD CONSTRAINT fk_emailtemplate_adress FOREIGN KEY ( EmailTemplate_adress_id ) REFERENCES Adress (Adress_id) ON DELETE SET NULL ON UPDATE CASCADE;
+ ALTER TABLE EmailTemplate ADD CONSTRAINT fk_emailtemplate_event FOREIGN KEY ( EmailTemplate_event_id ) REFERENCES Event (Event_id) ON DELETE CASCADE ON UPDATE CASCADE;
 
  ALTER TABLE Email ADD CONSTRAINT fk_email_adress FOREIGN KEY ( Email_adress_id ) REFERENCES Adress (Adress_id) ON DELETE SET NULL ON UPDATE CASCADE;
  ALTER TABLE Email ADD CONSTRAINT fk_email_user FOREIGN KEY ( Email_user_id ) REFERENCES User (User_id) ON DELETE SET NULL ON UPDATE CASCADE;
