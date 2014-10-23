@@ -1,5 +1,7 @@
 package es.ficonlan.web.backend.model.registration;
 
+import java.util.Calendar;
+
 import org.springframework.stereotype.Repository;
 
 import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
@@ -37,6 +39,14 @@ public class RegistrationDaoHibernate extends GenericDaoHibernate<Registration,I
 		       ).setParameter("state",RegistrationState.inQueue).setInteger("eventId", eventId).setFirstResult(0).setMaxResults(1).uniqueResult();
 	}
 	
+	public int geNumRegistrationsBeforeDate(int eventId, RegistrationState state, Calendar date) {
+		return ((Long) getSession().createQuery(
+	        	"SELECT COUNT(r) " +
+		        "FROM Registration r " +
+		        "WHERE r.event.eventId=:eventId AND r.state=:state AND r.Registration_date_created < :date"
+		       ).setParameter("state", state).setInteger("eventId", eventId).setCalendar("date", date).uniqueResult()).intValue();
+		
+	}
 	
 	
 }

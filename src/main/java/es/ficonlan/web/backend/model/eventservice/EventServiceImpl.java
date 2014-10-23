@@ -93,6 +93,7 @@ public class EventServiceImpl implements EventService {
     		
     		Registration registration = registrationDao.findByUserAndEvent(userId, eventId);
     		if (registration==null) registration = new Registration(user, event);
+    		else return getRegistration(sessionId,userId,eventId);
     		
     		int currentParticipants = registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.registered) + 
     								  registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.paid);
@@ -199,7 +200,27 @@ public class EventServiceImpl implements EventService {
 	public Registration getRegistration(String sessionId, int userId, int eventId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getRegistration")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-		return registrationDao.findByUserAndEvent(userId, eventId);
+		
+		try {
+			Event event = eventDao.find(eventId);
+			
+			Registration registration =  registrationDao.findByUserAndEvent(userId, eventId);
+		
+			if(registration.getState()==RegistrationState.inQueue) {
+				int queueParticipants = event.getNumParticipants() + registrationDao.geNumRegistrationsBeforeDate(event.getEventId(),RegistrationState.inQueue,registration.getRegistrationDate());
+				registration.setPlaceOnQueue(queueParticipants + 1);
+			}
+			else registration.setPlaceOnQueue(0);
+			
+			return registration;
+		} 
+		catch (InstanceException e) 
+		{
+			return null;
+		}
+		
+		
+		
 	}
 
 	/**

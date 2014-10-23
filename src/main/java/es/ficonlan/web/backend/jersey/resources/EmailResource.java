@@ -14,7 +14,6 @@ import javax.ws.rs.core.MediaType;
 
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
 import es.ficonlan.web.backend.model.email.Email;
-import es.ficonlan.web.backend.model.emailadress.Adress;
 import es.ficonlan.web.backend.model.emailservice.EmailService;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 
