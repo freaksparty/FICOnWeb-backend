@@ -18,6 +18,7 @@ import es.ficonlan.web.backend.jersey.resources.ActivityResource;
 import es.ficonlan.web.backend.jersey.resources.EmailAdressResource;
 import es.ficonlan.web.backend.jersey.resources.EmailResource;
 import es.ficonlan.web.backend.jersey.resources.EventResource;
+import es.ficonlan.web.backend.jersey.resources.LoginResource;
 import es.ficonlan.web.backend.jersey.resources.NewsResource;
 import es.ficonlan.web.backend.jersey.resources.PermissionResource;
 import es.ficonlan.web.backend.jersey.resources.SessionResource;
@@ -72,6 +73,7 @@ public class Main {
 		rc.register(EventResource.class);
 		rc.register(UserResource.class);
 		rc.register(SessionResource.class);
+		rc.register(LoginResource.class);
 		rc.register(NewsResource.class);
 		rc.register(PermissionResource.class);
 		rc.register(JacksonFeature.class);

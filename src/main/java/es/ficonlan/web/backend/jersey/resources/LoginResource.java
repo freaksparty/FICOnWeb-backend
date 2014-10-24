@@ -17,7 +17,7 @@ import es.ficonlan.web.backend.model.util.session.Session;
  * @author Daniel Gómez Silva
  */
 @Path("/login")
-public class loginResource {
+public class LoginResource {
 
 	static class LoginData {
 
@@ -51,7 +51,7 @@ public class loginResource {
 
 	private UserService userService;
 
-	public loginResource() {
+	public LoginResource() {
 		userService = ApplicationContextProvider.getApplicationContext()
 				.getBean(UserService.class);
 	}
