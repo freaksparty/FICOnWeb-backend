@@ -1,11 +1,8 @@
 package es.ficonlan.web.backend.jersey.resources;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -18,33 +15,10 @@ import es.ficonlan.web.backend.model.util.session.Session;
 
 /**
  * @author Daniel Gómez Silva
+ * @author Miguel Ángel Castillo Bellagona
  */
 @Path("/session")
 public class SessionResource {
-	
-	static class LoginData{
-		private String login;
-		private String password;
-
-		public LoginData(){}
-		
-		public LoginData(String login, String password) {
-			this.login = login;
-			this.password = password;
-		}
-		public String getLogin() {
-			return login;
-		}
-		public void setLogin(String login) {
-			this.login = login;
-		}
-		public String getPassword() {
-			return password;
-		}
-		public void setPassword(String password) {
-			this.password = password;
-		}	
-	}
 	
 	private UserService userService;
 	
@@ -52,7 +26,7 @@ public class SessionResource {
 		userService = ApplicationContextProvider.getApplicationContext().getBean(UserService.class);
 	}
 	    
-	@PUT
+	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Session newSession() throws ServiceException {
     	Session s = userService.newAnonymousSession().clone();
@@ -60,24 +34,19 @@ public class SessionResource {
     	return s;
 	}
 	
-	@Path("/login")
-	@POST
-	@Consumes({MediaType.APPLICATION_JSON})
-	@Produces(MediaType.APPLICATION_JSON)
-	public Session login(@HeaderParam("sessionId") String sessionId, LoginData loginData) throws ServiceException {
-    	return userService.login(sessionId, loginData.getLogin(), loginData.getPassword());
+	@DELETE
+	public void close(@HeaderParam("sessionId") String sessionId)
+			throws ServiceException {
+		userService.closeSession(sessionId);
 	}
 	
+	//FIXME CAMBIAR A USER SI PUEDE SER
 	@Path("/currentUser")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public User currentUser(@HeaderParam("sessionId") String sessionId) throws ServiceException {
-    	return userService.getCurrenUser(sessionId);
+		return userService.getCurrenUser(sessionId);
 	}
 	
-	@DELETE
-	public void close(@HeaderParam("sessionId") String sessionId) throws ServiceException{
-    	userService.closeSession(sessionId);
-	}
 	
 }

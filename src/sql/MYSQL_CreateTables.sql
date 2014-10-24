@@ -193,7 +193,7 @@ CREATE TABLE Language (
 CREATE TABLE Adress (
     Adress_id 				bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
     Adress_user 			varchar(64) NOT NULL,
-	Adress_password 		varchar(64) NOT NULL,
+	Adress_password 		varchar(256) NOT NULL,
     CONSTRAINT pk_adress PRIMARY KEY(Adress_id),
     CONSTRAINT CategoryUniqueKey UNIQUE (Adress_user)
 ) engine=InnoDB;
