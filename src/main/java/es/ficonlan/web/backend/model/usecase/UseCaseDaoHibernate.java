@@ -6,8 +6,12 @@ import org.springframework.stereotype.Repository;
 
 import es.ficonlan.web.backend.model.util.dao.GenericDaoHibernate;
 
+/**
+ * @author Miguel Ángel Castillo Bellagona
+ * @version 1.0
+ */
 @Repository("useCaseDao")
-public class UseCaseDaoHibernate extends GenericDaoHibernate<UseCase,Integer> implements UseCaseDao{
+public class UseCaseDaoHibernate extends GenericDaoHibernate<UseCase,Integer> implements UseCaseDao {
 
 	@SuppressWarnings("unchecked")
 	public List<UseCase> getAll(){

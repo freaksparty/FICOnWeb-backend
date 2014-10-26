@@ -13,6 +13,16 @@ import es.ficonlan.web.backend.model.util.dao.GenericDaoHibernate;
  */
 @Repository("newsDao")
 public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> implements NewsDao {
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<NewsItem> getAllNewsItem() {
+		return getSession().createQuery(
+	        	"SELECT n " +
+		        "FROM NewsItem n " +
+	        	"ORDER BY n.ewsItem_date_created").list();
+		
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override

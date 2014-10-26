@@ -15,7 +15,6 @@ import javax.ws.rs.core.MediaType;
 
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
 import es.ficonlan.web.backend.model.activity.Activity;
-import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
 import es.ficonlan.web.backend.model.eventservice.EventService;
 import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
@@ -23,6 +22,7 @@ import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 
 /**
  * @author Daniel Gómez Silva
+ * @author Miguel Ángel Castillo
  */
 @Path("activity")
 public class ActivityResource {
@@ -33,13 +33,33 @@ public class ActivityResource {
 		this.eventService = ApplicationContextProvider.getApplicationContext().getBean(EventService.class);
 	}
 	
+	//EL evento alque va referido viene en el cuerpo de Activity
+	@POST
+	@Consumes({MediaType.APPLICATION_JSON})
+	@Produces(MediaType.APPLICATION_JSON)
+	public Activity addActivity(@HeaderParam("sessionId") String sessionId, Activity activity) throws ServiceException {
+		return eventService.addActivity(sessionId, activity.getEvent().getEventId(), activity);
+	}
 	
-	@Path("/{eventId}")
+	@Path("/{activityId}")
 	@PUT
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
-	public Activity addActivity(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, Activity activity) throws ServiceException {
-		return eventService.addActivity(sessionId, eventId, activity);
+	public Activity changeData(@HeaderParam("sessionId") String sessionId, @PathParam("activityId") int activityId, Activity activityData) throws ServiceException {
+		return eventService.changeActivityData(sessionId, activityId, activityData);
+	}
+	
+	@Path("/{activityId}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Activity getActivity(@HeaderParam("sessionId") String sessionId, @PathParam("activityId") int activityId) throws ServiceException {
+		return eventService.getActivity(sessionId, activityId);
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Activity> getAllActivities(@HeaderParam("sessionId") String sessionId) throws ServiceException {
+		return eventService.getAllActivities(sessionId);
 	}
 	
 	@Path("/{activityId}")
@@ -48,49 +68,22 @@ public class ActivityResource {
 			eventService.removeActivity(sessionId, activityId);
 	}
 	
-	@Path("/changeData")
-	@POST
-	@Consumes({MediaType.APPLICATION_JSON})
-	public void changeData(@HeaderParam("sessionId") String sessionId, Activity activityData) throws ServiceException {
-		eventService.changeActivityData(sessionId, activityData);
-	}
-	
-	@Path("/setOrganizer/{activityId}/{userId}")
-	@POST
-	public void setOrganizer(@HeaderParam("sessionId") String sessionId, @PathParam("activityId") int activityId,  @PathParam("userId") int userId) throws ServiceException {
-		eventService.setActivityOrganizer(sessionId, activityId, userId);
-	}
-	
-	@Path("/getByEvent/{eventId}/{type}")
-	@GET
-	@Produces({MediaType.APPLICATION_JSON})
-	public List<Activity> getByEvent(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("type") String type) throws ServiceException {
-		ActivityType t = null;
-		if(type!=null){
-    		if(type.toLowerCase().contentEquals("tournament")) t=ActivityType.Tournament;
-    		if(type.toLowerCase().contentEquals("production")) t=ActivityType.Production;
-    		if(type.toLowerCase().contentEquals("conference")) t=ActivityType.Conference;
-		}
-		return eventService.getActivitiesByEvent(sessionId, eventId, t);
-	}
-	
-	@Path("/addParticipant/{activityId}/{userId}")
-	@POST
-	public void addParticipant(@HeaderParam("sessionId") String sessionId, @PathParam("userId") int userId, @PathParam("activityId") int activityId) throws ServiceException {
-		eventService.addParticipantToActivity(sessionId, userId, activityId);
-	}
-	    
-	@Path("/removeParticipant/{activityId}/{userId}")
-	@POST
-	public void removeParticipant(@HeaderParam("sessionId") String sessionId, @PathParam("userId") int userId, @PathParam("activityId") int activityId) throws ServiceException {
-		eventService.removeParticipantFromActivity(sessionId, userId, activityId);
-	}
-	
-	@Path("/getParticipants/{activityId}")
+	@Path("/user/{activityId}")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<User> getActivityParticipants(@HeaderParam("sessionId") String sessionId,  @PathParam("activityId") int activityId) throws ServiceException {
 			return eventService.getActivityParticipants(sessionId, activityId);
 	}
-
+	
+	@Path("/user/{activityId}/{userId}")
+	@PUT
+	public void addParticipant(@HeaderParam("sessionId") String sessionId, @PathParam("userId") int userId, @PathParam("activityId") int activityId) throws ServiceException {
+		eventService.addParticipantToActivity(sessionId, userId, activityId);
+	}
+	    
+	@Path("/user/{activityId}/{userId}")
+	@DELETE
+	public void removeParticipant(@HeaderParam("sessionId") String sessionId, @PathParam("userId") int userId, @PathParam("activityId") int activityId) throws ServiceException {
+		eventService.removeParticipantFromActivity(sessionId, userId, activityId);
+	}
 }

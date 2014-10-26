@@ -16,6 +16,9 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import es.ficonlan.web.backend.jersey.util.JsonDateDeserializer;
 import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
 
+/**
+ * @author Miguel Ángel Castillo Bellagona
+ */
 @Entity
 public class Event {
 
@@ -27,7 +30,7 @@ public class Event {
     private Calendar endDate;
     private Calendar registrationOpenDate;
     private Calendar registrationCloseDate;
-    //private Set<Activity> activities;
+
 
     public Event() {
     }
@@ -131,13 +134,4 @@ public class Event {
     public void setRegistrationCloseDate(Calendar registrationCloseDate) {
         this.registrationCloseDate = registrationCloseDate;
     }
-
-    /*@OneToMany(mappedBy = "Activity_event_id", fetch = FetchType.LAZY)
-     public Set<Activity> getActivities() {
-     return activities;
-     }
-
-     public void setActivities(Set<Activity> activities) {
-     this.activities = activities;
-     }*/
 }

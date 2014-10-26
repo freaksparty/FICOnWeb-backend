@@ -15,7 +15,13 @@ import es.ficonlan.web.backend.model.util.dao.GenericDaoHibernate;
 @Repository("activityDao")
 public class ActivityDaoHibernate extends
 		GenericDaoHibernate<Activity, Integer> implements ActivityDao {
-
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Activity> getAllActivity() {
+		return getSession().createQuery("SELECT a FROM Activity a ").list();
+	}
+	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Activity> findActivitiesByEvent(int eventId, ActivityType type) {
@@ -49,5 +55,6 @@ public class ActivityDaoHibernate extends
 								+ "ORDER BY p.login")
 				.setParameter("activityId", activityId).list();
 	}
+	
 
 }

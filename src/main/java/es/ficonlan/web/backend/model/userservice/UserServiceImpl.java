@@ -180,10 +180,10 @@ public class UserServiceImpl implements UserService {
 	 * DNI field can't be changed by the user, only by an admin; 
 	 */
 	@Transactional
-	public void changeUserData(String sessionId, User userData) throws ServiceException {
+	public void changeUserData(String sessionId, int userId, User userData) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		Session session = SessionManager.getSession(sessionId);
-		if(!SessionManager.checkPermissions(session, userData.getUserId(), "changeUserData")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		if(!SessionManager.checkPermissions(session, userId, "changeUserData")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			User user = userDao.find(userData.getUserId());
 			user.setName(userData.getName());
@@ -286,27 +286,70 @@ public class UserServiceImpl implements UserService {
 			else throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Language");
 		}	
 	}
+	
+	@Transactional
+	public void removeOwnUser(String sessionId, int userId) throws ServiceException {
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "removeOwnUser")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		try 
+		{
+			User user = userDao.find(userId);
+			user.setDeleted(true);
+			userDao.save(user);
+		}
+		catch (InstanceException e) 
+		{
+			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
+		}
+	}
 
 	@Transactional
 	public void removeUser(String sessionId, int userId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "removeUser")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-		try {
-			User user = userDao.find(userId);
-			user.setDeleted(true);
-			userDao.save(user);
-		} catch (InstanceException e) {
-			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "removeUser"))
+		{
+			removeOwnUser(sessionId,userId);
 		}
+		else try {
+				User user = userDao.find(userId);
+				user.setDeleted(true);
+				userDao.save(user);
+			} catch (InstanceException e) {
+				throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
+			}
 	}
 	
 	@Transactional
-	public Role createRole(String sessionId, String roleName) throws ServiceException {
+	public Role createRole(String sessionId, String rolename) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "createRole")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-		Role role = new Role(roleName);
-		roleDao.save(role);
-		return role;
+
+		Role rol = roleDao.findByName(rolename);
+		
+		if(rol==null)
+		{
+			rol = new Role(rolename);
+			roleDao.save(rol);
+			return rol;
+		}
+		else throw new ServiceException(ServiceException.DUPLICATED_FIELD);
+		
+	}
+	
+	@Transactional
+	public void removeRole(String sessionId, int roleid) throws ServiceException {
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "removeRole")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+
+		try 
+		{
+			roleDao.remove(roleid);
+		}
+		catch (InstanceException e) 
+		{
+			throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"role");
+		}
+		
 	}
 
 	@Transactional

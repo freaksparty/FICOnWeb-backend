@@ -10,6 +10,8 @@ import es.ficonlan.web.backend.model.util.dao.GenericDao;
  */
 public interface NewsDao extends GenericDao<NewsItem,Integer> {
 	
+	public List<NewsItem> getAllNewsItem();
+	
 	public List<NewsItem> getLastNews(Calendar dateLimit, boolean onlyOutstandingNews); 
 	
 }

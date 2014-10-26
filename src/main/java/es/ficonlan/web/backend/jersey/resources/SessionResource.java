@@ -35,13 +35,12 @@ public class SessionResource {
 	}
 	
 	@DELETE
-	public void close(@HeaderParam("sessionId") String sessionId)
-			throws ServiceException {
+	public void close(@HeaderParam("sessionId") String sessionId) throws ServiceException {
 		userService.closeSession(sessionId);
 	}
 	
-	//FIXME CAMBIAR A USER SI PUEDE SER
-	@Path("/currentUser")
+	//FIXME Ya está cambiado a user, si haces un GET a user/{userId} con userId < 0
+	@Path("/currentUser/")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public User currentUser(@HeaderParam("sessionId") String sessionId) throws ServiceException {

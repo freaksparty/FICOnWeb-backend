@@ -163,7 +163,7 @@ public class UserServiceTest {
     	Session anonymousSession = userService.newAnonymousSession();
     	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	Session s = userService.login(anonymousSession.getSessionId(),"login1", "pass");
-    	userService.changeUserData(s.getSessionId(), new User(user.getUserId(),"new name", "87654321Y", "newEmail@gmail.com", "666666666", "XL"));
+    	userService.changeUserData(s.getSessionId(), user.getUserId(), new User(user.getUserId(),"new name", "87654321Y", "newEmail@gmail.com", "666666666", "XL"));
     	User u = userDao.find(user.getUserId());
     	assertTrue(u.getName().contentEquals("new name"));
     	assertTrue(u.getDni().contentEquals("12345678R")); //DNI can't be changed by the user.
@@ -177,7 +177,7 @@ public class UserServiceTest {
     	Session anonymousSession = userService.newAnonymousSession();
     	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
-    	userService.changeUserData(s.getSessionId(),  new User(user.getUserId(),"new name", "87654321Y", "newEmail@gmail.com", "666666666", "XL"));
+    	userService.changeUserData(s.getSessionId(), user.getUserId(), new User(user.getUserId(),"new name", "87654321Y", "newEmail@gmail.com", "666666666", "XL"));
     	User u = userDao.find(user.getUserId());
     	assertTrue(u.getName().contentEquals("new name"));
     	assertTrue(u.getDni().contentEquals("87654321Y")); //DNI can be changed by an admin.
@@ -193,7 +193,7 @@ public class UserServiceTest {
     	userService.addUser(anonymousSession.getSessionId(),  new User("User2", "login2", "pass", "22321321R", "user2@gmail.com", "690047407", "L"));
     	Session s = userService.login(anonymousSession.getSessionId(),"login2", "pass");
     	try {
-			userService.changeUserData(s.getSessionId(), new User(user.getUserId(), "new name", "87654321Y", "newEmail@gmail.com", "666666666", "XL"));
+			userService.changeUserData(s.getSessionId(), user.getUserId(), new User(user.getUserId(), "new name", "87654321Y", "newEmail@gmail.com", "666666666", "XL"));
 		    fail("This should have thrown an exception");  
 		} catch (ServiceException e) {
 			assertTrue(e.getUseCase().contentEquals("changeUserData"));
@@ -206,7 +206,7 @@ public class UserServiceTest {
     	Session anonymousSession = userService.newAnonymousSession();
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	try {
-			userService.changeUserData(s.getSessionId(), new User(NON_EXISTENT_USER_ID, "new name", "87654321Y", "newEmail@gmail.com", "666666666", "XL"));
+			userService.changeUserData(s.getSessionId(), s.getUser().getUserId(), new User(NON_EXISTENT_USER_ID, "new name", "87654321Y", "newEmail@gmail.com", "666666666", "XL"));
 		    fail("This should have thrown an exception");  
 		} catch (ServiceException e) {
 			assertTrue(e.getUseCase().contentEquals("changeUserData"));

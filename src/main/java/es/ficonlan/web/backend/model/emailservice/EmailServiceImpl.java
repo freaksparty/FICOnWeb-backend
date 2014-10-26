@@ -1,5 +1,6 @@
 package es.ficonlan.web.backend.model.emailservice;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class EmailServiceImpl implements EmailService {
 	@Autowired
 	private RegistrationDao registrationDao;
 	
-	@Transactional
+	@Transactional(readOnly = true)
 	@Override
 	public List<Adress> getAllAdress(String sessionId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -53,6 +54,22 @@ public class EmailServiceImpl implements EmailService {
 		
 		adressDao.save(adress);
 		return adress;
+	}
+	
+	@Transactional(readOnly = true)
+	@Override
+	public Adress getAdress(String sessionId, int adressId) throws ServiceException {
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getAdress")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		
+		try 
+		{
+			return adressDao.find(adressId);
+		} 
+		catch (InstanceException e) 
+		{
+			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Adress");
+		}
 	}
 
 	@Transactional
@@ -91,7 +108,7 @@ public class EmailServiceImpl implements EmailService {
 		}
 	}
 	
-	@Transactional
+	@Transactional(readOnly = true)
 	@Override
 	public List<Email> getAllMails(String sessionId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -100,7 +117,7 @@ public class EmailServiceImpl implements EmailService {
 		return emailDao.getAllEmails();
 	}
 
-	@Transactional
+	@Transactional(readOnly = true)
 	@Override
 	public List<Email> getConfirmedMails(String sessionId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -109,7 +126,7 @@ public class EmailServiceImpl implements EmailService {
 		return emailDao.getConfirmedEmails();
 	}
 	
-	@Transactional
+	@Transactional(readOnly = true)
 	@Override
 	public List<Email> getNoConfirmedMails(String sessionId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -118,7 +135,7 @@ public class EmailServiceImpl implements EmailService {
 		return emailDao.getNoConfirmedEmails();
 	}
 
-	@Transactional
+	@Transactional(readOnly = true)
 	@Override
 	public Email getEmail(String sessionId, int emailId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -210,6 +227,7 @@ public class EmailServiceImpl implements EmailService {
 		
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public List<Email> getAllYorEmails(String sessionId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -218,6 +236,7 @@ public class EmailServiceImpl implements EmailService {
 		return emailDao.getEmailByDestination(SessionManager.getSession(sessionId).getUser().getEmail());
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public Email getYorLasEventEmail(String sessionId, int eventId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -228,6 +247,7 @@ public class EmailServiceImpl implements EmailService {
 
 	}
 	
+	@Transactional
 	public Email addYorMail(String sessionId, Email email) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), email.getDestinatario().getUserId(), "addYorMail")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
@@ -237,6 +257,7 @@ public class EmailServiceImpl implements EmailService {
 		
 	}
 
+	@Transactional
 	@Override
 	public Email sendYourMail(String sessionId, int emailId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -245,6 +266,9 @@ public class EmailServiceImpl implements EmailService {
 		{
 			Email e = emailDao.find(emailId);
 			if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), e.getDestinatario().getUserId(), "sendYourMail")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+			Calendar time = Calendar.getInstance();
+			time.add(Calendar.MINUTE, 1);
+			if(!e.getSendDate().before(time)) throw new ServiceException(ServiceException.WAIT_FOR_SEND);
 			e.sendMail();
 			emailDao.save(e);
 			return e;

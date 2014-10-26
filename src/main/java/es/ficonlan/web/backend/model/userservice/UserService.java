@@ -27,7 +27,7 @@ public interface UserService {
 	
 	public void closeSession(String sessionId)  throws ServiceException;
 	
-	public void changeUserData(String sessionId, User userData)  throws ServiceException;
+	public void changeUserData(String sessionId, int userId, User userData)  throws ServiceException;
 	
 	public void changeUserPassword(String sessionId, int userId, String oldPassword, String newPassword)  throws ServiceException;
 	
@@ -45,9 +45,13 @@ public interface UserService {
 	
 	public void setDefaultLanguage(String sessionId, int userId, int languageId) throws ServiceException;
 	
+	public void removeOwnUser(String sessionId, int userId) throws ServiceException;
+	
 	public void removeUser(String sessionId, int userId) throws ServiceException;
 	
-	public Role createRole(String sessionId, String roleName) throws ServiceException;
+	public Role createRole(String sessionId, String rolename) throws ServiceException;
+	
+	public void removeRole(String sessionId, int roleid) throws ServiceException;
 	
 	public void addRole(String sessionId, int roleId, int userId) throws ServiceException;
 	

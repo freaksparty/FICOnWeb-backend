@@ -1,6 +1,7 @@
 package es.ficonlan.web.backend.jersey.resources;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -52,17 +53,19 @@ public class LoginResource {
 	private UserService userService;
 
 	public LoginResource() {
-		userService = ApplicationContextProvider.getApplicationContext()
-				.getBean(UserService.class);
+		userService = ApplicationContextProvider.getApplicationContext().getBean(UserService.class);
 	}
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public Session login(@HeaderParam("sessionId") String sessionId,
-			LoginData loginData) throws ServiceException {
-		return userService.login(sessionId, loginData.getLogin(),
-				loginData.getPassword());
+	public Session login(@HeaderParam("sessionId") String sessionId, LoginData loginData) throws ServiceException {
+		return userService.login(sessionId, loginData.getLogin(), loginData.getPassword());
+	}
+	
+	@DELETE
+	public void logout(@HeaderParam("sessionId") String sessionId) throws ServiceException {
+		userService.closeSession(sessionId);
 	}
 
 }

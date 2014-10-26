@@ -16,6 +16,7 @@ DROP TABLE IF EXISTS Language;
 DROP TABLE IF EXISTS Adress;
 DROP TABLE IF EXISTS Email;
 DROP TABLE IF EXISTS EmailTemplate;
+DROP TABLE IF EXISTS Sponsor;
 SET foreign_key_checks = 1;
 
 -- ---------- Table for validation queries from the connection pool. ----------
@@ -89,7 +90,6 @@ CREATE TABLE Event (
  
  CREATE TABLE Activity ( 
 	Activity_id                   bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
-	Activity_organizer_id         bigint UNSIGNED   ,
 	Activity_Event_id             bigint UNSIGNED NOT NULL  ,
 	Activity_name                 varchar(150)  NOT NULL  ,
 	Activity_description          varchar(200)    ,
@@ -105,7 +105,6 @@ CREATE TABLE Event (
  ) engine=InnoDB;
  
  CREATE INDEX ActivityIndexByActivity_name ON Activity (Activity_name);
- CREATE INDEX ActivityIndexByActivity_organizer_id  ON Activity (Activity_organizer_id);
  CREATE INDEX ActivityIndexByActivity_event_id  ON Activity (Activity_Event_id);
  
  -- ------------------------------ USER_ACTIVITY -------------------------------------
@@ -218,6 +217,7 @@ CREATE TABLE Email (
  CREATE INDEX EmailByAdressId ON Email (Email_adress_id);
  CREATE INDEX EmailByUserId ON Email (Email_user_id);
  CREATE INDEX EmailByRegistrationId ON Email (Email_registration_id);
+ CREATE INDEX EmailIndexConfirmation ON Email (Email_confirmation) USING BTREE;
 
 -- ------------------------------ EmailTemplate -------------------------------------
 
@@ -237,9 +237,19 @@ CREATE TABLE EmailTemplate (
  CREATE INDEX EmailTemplateByEventId ON EmailTemplate (EmailTemplate_event_id);
  CREATE INDEX EmailTemplateByname ON EmailTemplate (EmailTemplate_name);
 
+-- ------------------------------ Sponsor -------------------------------------
 
- CREATE INDEX EmailIndexConfirmation ON Email (Email_confirmation) USING BTREE;
+CREATE TABLE Sponsor (
+	Sponsor_id             bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
+	Sponsor_event_id       bigint UNSIGNED NOT NULL,
+	Sponsor_name           varchar(128),
+	Sponsor_imageurl       varchar(256),
+    CONSTRAINT pk_sponsor PRIMARY KEY(Sponsor_id)
+) engine=InnoDB;
 
+ CREATE INDEX SponsorByEvent ON Sponsor (Sponsor_event_id);
+
+ ALTER TABLE Sponsor ADD CONSTRAINT fk_sponsor_event FOREIGN KEY ( Sponsor_event_id ) REFERENCES Event (Event_id) ON DELETE CASCADE ON UPDATE CASCADE;
 
  ALTER TABLE EmailTemplate ADD CONSTRAINT fk_emailtemplate_adress FOREIGN KEY ( EmailTemplate_adress_id ) REFERENCES Adress (Adress_id) ON DELETE SET NULL ON UPDATE CASCADE;
  ALTER TABLE EmailTemplate ADD CONSTRAINT fk_emailtemplate_event FOREIGN KEY ( EmailTemplate_event_id ) REFERENCES Event (Event_id) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -248,7 +258,6 @@ CREATE TABLE EmailTemplate (
  ALTER TABLE Email ADD CONSTRAINT fk_email_user FOREIGN KEY ( Email_user_id ) REFERENCES User (User_id) ON DELETE SET NULL ON UPDATE CASCADE;
  ALTER TABLE Email ADD CONSTRAINT fk_email_registration FOREIGN KEY ( Email_registration_id ) REFERENCES Registration (Registration_id) ON DELETE SET NULL ON UPDATE CASCADE;
  
- ALTER TABLE Activity ADD CONSTRAINT fk_activity_organizer FOREIGN KEY ( Activity_organizer_id ) REFERENCES User( User_id ) ON DELETE SET NULL ON UPDATE CASCADE;
  ALTER TABLE Activity ADD CONSTRAINT fk_activity_event FOREIGN KEY ( Activity_Event_id ) REFERENCES Event( Event_id ) ON DELETE CASCADE ON UPDATE CASCADE;
  
  ALTER TABLE User_Activity ADD CONSTRAINT fk_user_activity_user FOREIGN KEY ( User_Activity_User_id ) REFERENCES User( User_id ) ON DELETE CASCADE ON UPDATE CASCADE;

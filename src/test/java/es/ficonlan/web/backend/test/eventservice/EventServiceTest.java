@@ -103,7 +103,7 @@ public class EventServiceTest {
     	Calendar newDate = Calendar.getInstance();
     	newDate.set(1, 2, 2015);
     	Event newEventData = new Event(event.getEventId(),"FicOnLan 2015","FicOnLan 2015", 200, newDate, newDate, newDate, newDate);
-    	eventService.changeEventData(s.getSessionId(), newEventData);
+    	eventService.changeEventData(s.getSessionId(), event.getEventId(), newEventData);
     	assertTrue(event.getName().contentEquals("FicOnLan 2015"));
     	assertTrue(event.getDescription().contentEquals("FicOnLan 2015"));
     	assertTrue(event.getNumParticipants()==200);
@@ -220,7 +220,7 @@ public class EventServiceTest {
     	Activity activity = eventService.addActivity(s.getSessionId(), event.getEventId(), new Activity(event, "Torneo de Lol", "Torneo de Lol", 10, ActivityType.Tournament, true, dateStart,dateEnd,dateStart,dateEnd));
     	dateStart.add(Calendar.HOUR, 1);
     	dateEnd.add(Calendar.HOUR, 2);
-    	eventService.changeActivityData(s.getSessionId(), new Activity(activity.getActivityId(), "Concurso de hacking", "Concurso de hacking", 20, ActivityType.Production, false, dateStart,dateEnd,dateStart,dateEnd));
+    	eventService.changeActivityData(s.getSessionId(), activity.getActivityId(), new Activity(activity.getActivityId(), "Concurso de hacking", "Concurso de hacking", 20, ActivityType.Production, false, dateStart,dateEnd,dateStart,dateEnd));
     	assertTrue(activity.getName().contentEquals("Concurso de hacking"));
     	assertTrue(activity.getDescription().contentEquals("Concurso de hacking"));
     	assertTrue(activity.getNumParticipants()==20);
@@ -230,21 +230,6 @@ public class EventServiceTest {
       	assertTrue(activity.getEndDate().compareTo(dateEnd)==0);
     	assertTrue(activity.getRegDateOpen().compareTo(dateStart)==0);
       	assertTrue(activity.getRegDateClose().compareTo(dateEnd)==0);
-    }
-    
-    @Test
-    public void testSetActivityOrganizer() throws ServiceException{
-    	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
-    	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
-    	Calendar dateStart = Calendar.getInstance();
-    	Calendar dateEnd = Calendar.getInstance();
-    	dateEnd.add(Calendar.DAY_OF_YEAR, 1);
-    	Event event = eventService.createEvent(s.getSessionId(), new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd));
-    	eventService.addParticipantToEvent(s.getSessionId(), user.getUserId(), event.getEventId());
-    	Activity activity = eventService.addActivity(s.getSessionId(), event.getEventId(), new Activity(event, "Torneo de Lol", "Torneo de Lol", 10, ActivityType.Tournament, true, dateStart,dateEnd,dateStart,dateEnd));
-    	eventService.setActivityOrganizer(s.getSessionId(), activity.getActivityId(), user.getUserId());
-    	assertTrue(activity.getOrganizer().getUserId()==user.getUserId());
     }
     
     @Test
@@ -349,7 +334,7 @@ public class EventServiceTest {
     	c.add(Calendar.DAY_OF_YEAR, 1);
     	NewsItem newsData = new NewsItem("Nueva noticia2", c , "http://ficonlan/nuevaNoticia2", 3);
     	newsData.setNewsItemId(news.getNewsItemId());
-    	eventService.changeNewsData(s.getSessionId(), newsData);
+    	eventService.changeNewsData(s.getSessionId(), newsData.getNewsItemId(), newsData);
     	assertTrue(news.getTitle().contentEquals("Nueva noticia2"));
     	assertTrue(news.getUrl().contentEquals("http://ficonlan/nuevaNoticia2"));
     	assertTrue(news.getPublishDate().compareTo(c)==0);

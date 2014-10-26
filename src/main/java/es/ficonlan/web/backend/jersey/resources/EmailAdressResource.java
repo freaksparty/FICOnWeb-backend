@@ -6,6 +6,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -29,13 +30,7 @@ public class EmailAdressResource {
 		this.emailService = ApplicationContextProvider.getApplicationContext().getBean(EmailService.class);
 	}
 
-	@GET
-	@Produces({MediaType.APPLICATION_JSON})
-	public List<Adress> getAllAdress(@HeaderParam("sessionId") String sessionId) throws ServiceException {
-			return emailService.getAllAdress(sessionId);
-	}
-	
-	@PUT
+	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
 	public Adress addAdress(@HeaderParam("sessionId") String sessionId, Adress adress) throws ServiceException {
@@ -49,7 +44,20 @@ public class EmailAdressResource {
 	public Adress modifyAdress(@HeaderParam("sessionId") String sessionId, @PathParam("adressId") int adressId, Adress adress) throws ServiceException {
 		return emailService.modifyAdress(sessionId, adressId, adress);
 	}
-
+	
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	public List<Adress> getAllAdress(@HeaderParam("sessionId") String sessionId) throws ServiceException {
+			return emailService.getAllAdress(sessionId);
+	}
+	
+	@Path("/{adressId}")
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	public Adress getAdress(@HeaderParam("sessionId") String sessionId, @PathParam("adressId") int adressId) throws ServiceException {
+			return emailService.getAdress(sessionId,adressId);
+	}
+	
 	@Path("/{adressId}")
 	@DELETE
 	public void deleteAdress(@HeaderParam("sessionId") String sessionId, @PathParam("adressId") int adressId) throws ServiceException {

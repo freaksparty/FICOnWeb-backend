@@ -21,7 +21,11 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import es.ficonlan.web.backend.jersey.util.JsonDateDeserializer;
 import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
+import es.ficonlan.web.backend.jersey.util.JsonEntityIdSerializer;
+import es.ficonlan.web.backend.jersey.util.JsonEventDeserializer;
 import es.ficonlan.web.backend.jersey.util.JsonRegistrationStateDeserializer;
+import es.ficonlan.web.backend.jersey.util.JsonRegistrationStateSerializer;
+import es.ficonlan.web.backend.jersey.util.JsonUserDeserializer;
 import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.user.User;
 
@@ -67,6 +71,8 @@ public class Registration {
 		this.registrationId = registrationId;
 	}
 
+	@JsonDeserialize(using = JsonUserDeserializer.class)
+	@JsonSerialize(using=JsonEntityIdSerializer.class)
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="Registration_User_id")
 	public User getUser() {
@@ -77,6 +83,8 @@ public class Registration {
 		this.user = user;
 	}
 	
+	@JsonDeserialize(using = JsonEventDeserializer.class)
+	@JsonSerialize(using = JsonEntityIdSerializer.class)
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="Registration_Event_id")
 	public Event getEvent() {
@@ -87,7 +95,9 @@ public class Registration {
 		this.event = event;
 	}
 	
+	
 	@JsonDeserialize(using = JsonRegistrationStateDeserializer.class)
+	@JsonSerialize(using = JsonRegistrationStateSerializer.class)
 	@Column(name="Registration_state") 
 	@Enumerated(EnumType.ORDINAL)  
 	public RegistrationState getState() {

@@ -15,14 +15,18 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import es.ficonlan.web.backend.jersey.resources.ActivityResource;
+import es.ficonlan.web.backend.jersey.resources.BlackListResource;
 import es.ficonlan.web.backend.jersey.resources.EmailAdressResource;
 import es.ficonlan.web.backend.jersey.resources.EmailResource;
 import es.ficonlan.web.backend.jersey.resources.EventResource;
 import es.ficonlan.web.backend.jersey.resources.LoginResource;
 import es.ficonlan.web.backend.jersey.resources.NewsResource;
-import es.ficonlan.web.backend.jersey.resources.PermissionResource;
+import es.ficonlan.web.backend.jersey.resources.RoleResource;
 import es.ficonlan.web.backend.jersey.resources.SessionResource;
+import es.ficonlan.web.backend.jersey.resources.SponsorResource;
 import es.ficonlan.web.backend.jersey.resources.UserResource;
+import es.ficonlan.web.backend.jersey.resources.UserRolesResource;
+import es.ficonlan.web.backend.jersey.resources.UsersResource;
 import es.ficonlan.web.backend.jersey.util.ServiceExceptionMapper;
 import es.ficonlan.web.backend.model.userservice.UserService;
 import es.ficonlan.web.backend.model.util.session.SessionManager;
@@ -68,18 +72,23 @@ public class Main {
 		// providers
 		// in es.ficonlan.web.prueba package
 		final ResourceConfig rc = new ResourceConfig();
-		// rc.packages("es.ficonlan.web.backend.jersey");
+		//rc.packages("es.ficonlan.web.backend.jersey.resources");
+		
 		rc.register(ActivityResource.class);
 		rc.register(EventResource.class);
 		rc.register(UserResource.class);
+		rc.register(UsersResource.class);
 		rc.register(SessionResource.class);
 		rc.register(LoginResource.class);
 		rc.register(NewsResource.class);
-		rc.register(PermissionResource.class);
 		rc.register(JacksonFeature.class);
 		rc.register(ServiceExceptionMapper.class);
 		rc.register(EmailResource.class);
 		rc.register(EmailAdressResource.class);
+		rc.register(RoleResource.class);
+		rc.register(UserRolesResource.class);
+		rc.register(BlackListResource.class); 
+		rc.register(SponsorResource.class);
 
 		SSLContextConfigurator sslContext = new SSLContextConfigurator();
 		sslContext.setKeyStoreFile(KEYSTORE_FILE);

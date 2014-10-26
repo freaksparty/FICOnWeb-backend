@@ -21,6 +21,7 @@ import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 
 /**
  * @author Daniel Gómez Silva
+ * @author Miguel Ángel Castillo Bellagona
  */
 @Path("news")
 public class NewsResource {
@@ -31,21 +32,34 @@ public class NewsResource {
 			this.eventService = ApplicationContextProvider.getApplicationContext().getBean(EventService.class);
 		}
 		
-		@Path("/{eventId}")
-		@PUT
-		@Consumes({MediaType.APPLICATION_JSON})
-		@Produces(MediaType.APPLICATION_JSON)
-	    public NewsItem add(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, NewsItem newsItem) throws ServiceException{
-	    	return eventService.addNews(sessionId, eventId, newsItem);
-	    }
-		
-		@Path("/changeData")
+		// FIXME añade una nueva noticia, el evento al que va asociado la niticia va en el cuerpo de está (dará error si no exixte un evento con esa id)
 		@POST
 		@Consumes({MediaType.APPLICATION_JSON})
-	    public void changeData(@HeaderParam("sessionId")String sessionId, NewsItem newsData) throws ServiceException{
-			eventService.changeNewsData(sessionId, newsData);
+		@Produces(MediaType.APPLICATION_JSON)
+	    public NewsItem add(@HeaderParam("sessionId") String sessionId, NewsItem newsItem) throws ServiceException{
+	    	return eventService.addNews(sessionId, newsItem.getEvent().getEventId(), newsItem);
+	    }
+		
+		@Path("/{newsItemId}")
+		@PUT
+		@Consumes({MediaType.APPLICATION_JSON})
+	    public void changeData(@HeaderParam("sessionId")String sessionId, @PathParam("days") int newsItemId, NewsItem newsData) throws ServiceException{
+			eventService.changeNewsData(sessionId, newsItemId, newsData);
 	    }
 	    
+		@Path("/{newsItemId}")
+		@GET
+		@Produces(MediaType.APPLICATION_JSON)
+		public NewsItem getNewsItem(@HeaderParam("sessionId") String sessionId, @PathParam("newsItemId") int newsItemId) throws ServiceException {
+			return eventService.getNewsItem(sessionId, newsItemId);
+		}
+		
+		@GET
+		@Produces(MediaType.APPLICATION_JSON)
+		public List<NewsItem> getAllNewsItem(@HeaderParam("sessionId") String sessionId) throws ServiceException {
+			return eventService.getAllNewsItem(sessionId);
+		}
+		
 		@Path("/last/{days}/{outstandingOnly}")
 		@GET
 		@Consumes({MediaType.APPLICATION_JSON})
@@ -55,11 +69,10 @@ public class NewsResource {
 			limitDate.add(Calendar.DAY_OF_YEAR, -1*days);
 			return eventService.getLastNews(sessionId, limitDate, outstandingOnly);
 	    }
-	    
+		
 		@Path("/{newsItemId}")
 		@DELETE
 	    public void remove(@HeaderParam("sessionId") String sessionId, @PathParam("newsItemId") int newsItemId) throws ServiceException{
 			eventService.removeNews(sessionId, newsItemId);
 	    }
-
 }

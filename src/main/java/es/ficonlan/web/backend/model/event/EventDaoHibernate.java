@@ -20,6 +20,12 @@ import org.springframework.stereotype.Repository;
 @Repository("eventDao")
 public class EventDaoHibernate extends GenericDaoHibernate<Event, Integer> implements EventDao {
 
+	@SuppressWarnings("unchecked")
+	public List<Event> getAllEvents() {
+		return getSession().createQuery( "SELECT e " +
+				 "FROM Event e ").list();
+	}
+	
     @SuppressWarnings("unchecked")
 	public List<Event> searchEventsByName(String name) {
         return getSession().createQuery( "SELECT e " +

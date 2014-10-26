@@ -25,6 +25,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import es.ficonlan.web.backend.jersey.util.JsonDateDeserializer;
+import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
+import es.ficonlan.web.backend.jersey.util.JsonEntityIdSerializer;
+import es.ficonlan.web.backend.jersey.util.JsonAdressDeserializer; 
+import es.ficonlan.web.backend.jersey.util.JsonRegistrationDeserializer;
+import es.ficonlan.web.backend.jersey.util.JsonUserDeserializer;
 import es.ficonlan.web.backend.model.emailadress.Adress;
 import es.ficonlan.web.backend.model.registration.Registration;
 import es.ficonlan.web.backend.model.user.User;
@@ -56,7 +65,7 @@ public class Email {
 	protected Registration registration;
 
 	public Email() {
-		this.date = Calendar.getInstance();
+		
 	}
 
 	public Email(boolean isTemplate, Adress direccionEnvio, String rutaArchivo,String nombreArchivo, User destinatario, String asunto,String mensaje) {
@@ -101,6 +110,8 @@ public class Email {
 		this.confirmation = confirmation;
 	}
 
+	@JsonDeserialize(using = JsonAdressDeserializer.class)
+	@JsonSerialize(using = JsonEntityIdSerializer.class) 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Email_Adress_id")
 	public Adress getDireccionEnvio() {
@@ -129,6 +140,8 @@ public class Email {
 		this.nombreArchivo = nombreArchivo;
 	}
 
+	@JsonDeserialize(using = JsonUserDeserializer.class)
+	@JsonSerialize(using = JsonEntityIdSerializer.class)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Email_User_id")
 	public User getDestinatario() {
@@ -157,6 +170,8 @@ public class Email {
 		this.mensaje = mensaje;
 	}
 
+	@JsonDeserialize(using = JsonDateDeserializer.class)
+	@JsonSerialize(using = JsonDateSerializer.class)
 	@Column(name = "Email_date")
 	public Calendar getDate() {
 		return date;
@@ -166,6 +181,8 @@ public class Email {
 		this.date = date;
 	}
 
+	@JsonDeserialize(using = JsonDateDeserializer.class)
+	@JsonSerialize(using = JsonDateSerializer.class)
 	@Column(name = "Email_senddate")
 	public Calendar getSendDate() {
 		return sendDate;
@@ -175,6 +192,8 @@ public class Email {
 		this.sendDate = sendDate;
 	}
 	
+	@JsonDeserialize(using = JsonRegistrationDeserializer.class)
+	@JsonSerialize(using = JsonEntityIdSerializer.class)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Email_registration_id")
 	public Registration getRegistration() {

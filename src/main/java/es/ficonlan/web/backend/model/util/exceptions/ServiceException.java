@@ -32,6 +32,7 @@ public class ServiceException extends Exception {
 	public static final int USER_NOT_REGISTERED_IN_EVENT=10;
 	public static final int MISSING_CONFIG_FILE=11;
 	public static final int CANT_BE_MODIFIED=12;
+	public static final int WAIT_FOR_SEND=13;
 	public static final int OTHER=99;
 	
 	private static final long serialVersionUID = 1L;
@@ -80,6 +81,8 @@ public class ServiceException extends Exception {
 			return "Missing config file";
 		case 12:
 			return "Cant be modified";
+		case 13:
+			return "Wait for send";
 		case 99:
 			return "System unexpected error";
 		default:

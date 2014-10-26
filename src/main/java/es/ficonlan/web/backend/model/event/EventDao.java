@@ -14,6 +14,8 @@ import es.ficonlan.web.backend.model.util.dao.GenericDao;
  * @author david
  */
 public interface EventDao extends GenericDao<Event, Integer> {
+	
+	public List<Event> getAllEvents();
 
     public List<Event> searchEventsByName(String name);
     

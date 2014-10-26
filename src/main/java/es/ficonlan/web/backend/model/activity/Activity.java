@@ -17,15 +17,18 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Temporal;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import es.ficonlan.web.backend.jersey.util.JsonActivityTypeDeserializer;
+import es.ficonlan.web.backend.jersey.util.JsonActivityTypeSerializer;
 import es.ficonlan.web.backend.jersey.util.JsonDateDeserializer;
 import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
 import es.ficonlan.web.backend.jersey.util.JsonEntityIdSerializer;
+import es.ficonlan.web.backend.jersey.util.JsonEventDeserializer;
 import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.user.User;
 
@@ -41,7 +44,6 @@ public class Activity {
 	};
 
 	private int activityId;
-	private User organizer;
 	private Event event;
 	private String name;
 	private String description;
@@ -123,6 +125,7 @@ public class Activity {
 	}
 
 	@JsonDeserialize(using = JsonActivityTypeDeserializer.class)
+	@JsonSerialize(using = JsonActivityTypeSerializer.class)
 	@Column(name = "Activity_type_activity")
 	@Enumerated(EnumType.ORDINAL)
 	public ActivityType getType() {
@@ -145,6 +148,7 @@ public class Activity {
 	@JsonDeserialize(using = JsonDateDeserializer.class)
 	@JsonSerialize(using = JsonDateSerializer.class)
 	@Column(name = "Activity_date_start")
+	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	public Calendar getStartDate() {
 		return startDate;
 	}
@@ -156,6 +160,7 @@ public class Activity {
 	@JsonDeserialize(using = JsonDateDeserializer.class)
 	@JsonSerialize(using = JsonDateSerializer.class)
 	@Column(name = "Activity_date_end")
+	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	public Calendar getEndDate() {
 		return endDate;
 	}
@@ -167,6 +172,7 @@ public class Activity {
 	@JsonDeserialize(using = JsonDateDeserializer.class)
 	@JsonSerialize(using = JsonDateSerializer.class)
 	@Column(name = "Activity_reg_date_open")
+	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	public Calendar getRegDateOpen() {
 		return regDateOpen;
 	}
@@ -178,6 +184,7 @@ public class Activity {
 	@JsonDeserialize(using = JsonDateDeserializer.class)
 	@JsonSerialize(using = JsonDateSerializer.class)
 	@Column(name = "Activity_reg_date_close")
+	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	public Calendar getRegDateClose() {
 		return regDateClose;
 	}
@@ -186,17 +193,7 @@ public class Activity {
 		this.regDateClose = regDateClose;
 	}
 
-	@JsonSerialize(using = JsonEntityIdSerializer.class)
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "Activity_organizer_id ")
-	public User getOrganizer() {
-		return organizer;
-	}
-
-	public void setOrganizer(User organizer) {
-		this.organizer = organizer;
-	}
-
+	@JsonDeserialize(using = JsonEventDeserializer.class)
 	@JsonSerialize(using = JsonEntityIdSerializer.class)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Activity_event_id")

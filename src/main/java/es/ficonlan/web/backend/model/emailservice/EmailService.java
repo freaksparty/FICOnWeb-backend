@@ -12,6 +12,8 @@ public interface EmailService {
 	
 	public Adress addAdress(String sessionId, Adress adress) throws ServiceException;
 	
+	public Adress getAdress(String sessionId, int adressId) throws ServiceException;
+	
 	public Adress modifyAdress(String sessionId, int adressId, Adress newAdress) throws ServiceException;
 	
 	public void deleteAdress(String sessionId, int adressId) throws ServiceException;
