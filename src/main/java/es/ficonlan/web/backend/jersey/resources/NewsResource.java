@@ -35,12 +35,11 @@ public class NewsResource {
 		this.eventService = ApplicationContextProvider.getApplicationContext().getBean(EventService.class);
 	}
 	
-	// FIXME añade una nueva noticia, el evento al que va asociado la niticia va en el cuerpo de está (dará error si no exixte un evento con esa id)
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
 	public NewsItem add(@HeaderParam("sessionId") String sessionId, NewsItem newsItem) throws ServiceException{
-		return eventService.addNews(sessionId, newsItem.getEvent().getEventId(), newsItem);
+		return eventService.addNews(sessionId, newsItem);
 	}
 		
 	@Path("/{newsItemId}")

@@ -52,7 +52,7 @@ public class EventServiceImpl implements EventService {
 	@Autowired
 	private SponsorDao sponsorDao;
 
-    
+    @Override
     @Transactional
 	public Event createEvent(String sessionId, Event event) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -67,6 +67,7 @@ public class EventServiceImpl implements EventService {
     	return event;
 	}
     
+    @Override
     @Transactional
     public void removeEvent(String sessionId, int eventId) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -82,6 +83,7 @@ public class EventServiceImpl implements EventService {
 		}
     }
     
+    @Override
     @Transactional(readOnly = true)
     public Event getEvent(String sessionId, int eventId) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -97,6 +99,7 @@ public class EventServiceImpl implements EventService {
 		}
     }
 
+    @Override
     @Transactional
 	public Event changeEventData(String sessionId, int eventId, Event eventData) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -118,6 +121,7 @@ public class EventServiceImpl implements EventService {
 		}	
 	}
 
+    @Override
 	@Transactional
 	public Registration addParticipantToEvent(String sessionId, int userId, int eventId) throws ServiceException {
 		if (!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -164,6 +168,7 @@ public class EventServiceImpl implements EventService {
 		
 	}
 
+    @Override
 	@Transactional
 	public void removeParticipantFromEvent(String sessionId, int userId, int eventId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -194,6 +199,7 @@ public class EventServiceImpl implements EventService {
         }
 	}
 	
+    @Override
 	@Transactional
 	public void setPaid(String sessionId, int userId, int eventId) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -208,6 +214,7 @@ public class EventServiceImpl implements EventService {
 		
 	}
 	
+    @Override
 	@Transactional(readOnly = true)
 	public Registration getRegistration(String sessionId, int userId, int eventId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -236,6 +243,7 @@ public class EventServiceImpl implements EventService {
 	 * This method doesn,t check constraints. And dont send e-mails
 	 * Use only in exceptional circumstances. Otherways use "setPaid" method.
 	 */
+    @Override
 	@Transactional
 	public void changeRegistrationState(String sessionId, int userId, int eventId, RegistrationState state) throws ServiceException {
 		if(state==null) throw new  ServiceException(ServiceException.MISSING_FIELD,"state");
@@ -251,6 +259,7 @@ public class EventServiceImpl implements EventService {
 		registrationDao.save(registration);
 	}
 	
+    @Override
 	@Transactional(readOnly = true)
 	public List<Event> getAllEvents(String sessionId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -260,6 +269,7 @@ public class EventServiceImpl implements EventService {
 		
 	}
 
+    @Override
     @Transactional(readOnly = true)
     public List<Event> findEventByName(String sessionId, String name) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -267,6 +277,7 @@ public class EventServiceImpl implements EventService {
 		return eventDao.searchEventsByName(name);
     }
 
+    @Override
     @Transactional
 	public Activity addActivity(String sessionId, int eventId, Activity activity) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -281,6 +292,7 @@ public class EventServiceImpl implements EventService {
 		return addActivity(sessionId,activity);
 	}
     
+    @Override
     @Transactional
     public Activity addActivity(String sessionId, Activity activity) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -302,6 +314,7 @@ public class EventServiceImpl implements EventService {
 		return activity;
     }
 
+    @Override
     @Transactional
 	public void removeActivity(String sessionId, int activityId) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -313,6 +326,7 @@ public class EventServiceImpl implements EventService {
 		}
 	}
     
+    @Override
     @Transactional
 	public Activity changeActivityData(String sessionId, int activityId, Activity activityData) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -344,6 +358,7 @@ public class EventServiceImpl implements EventService {
 		}	
 	}
     
+    @Override
     @Transactional(readOnly = true)
     public Activity getActivity(String sessionId, int activityId) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -355,6 +370,7 @@ public class EventServiceImpl implements EventService {
 		}
     }
     
+    @Override
     @Transactional(readOnly = true)
     public List<Activity> getAllActivities(String sessionId) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -362,6 +378,7 @@ public class EventServiceImpl implements EventService {
 		return activityDao.getAllActivity();
     }
 
+    @Override
     @Transactional(readOnly = true)
 	public List<Activity> getActivitiesByEvent(String sessionId, int eventId, ActivityType type) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -374,6 +391,7 @@ public class EventServiceImpl implements EventService {
 		return activityDao.findActivitiesByEvent(eventId, type);
 	}
 
+    @Override
     @Transactional
 	public void addParticipantToActivity(String sessionId, int userId, int activityId) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -388,11 +406,10 @@ public class EventServiceImpl implements EventService {
 		} catch (InstanceException e) {
 			if (e.getClassName().contentEquals("User")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
 			else throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Activity");
-
 		}
-		
 	}
 
+    @Override
     @Transactional
 	public void removeParticipantFromActivity(String sessionId, int userId, int activityId) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -405,37 +422,49 @@ public class EventServiceImpl implements EventService {
 		} catch (InstanceException e) {
 			if (e.getClassName().contentEquals("User")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
 			else throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Activity");
-
-		}
-		
+		}	
 	}
     
+    @Override
     @Transactional(readOnly = true)
 	public List<User> getActivityParticipants(String sessionId, int activityId) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getActivityParticipants")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
     	return activityDao.getParticipants(activityId);
 	}
+    
+    @Override
+    @Transactional
+    public NewsItem addNews(String sessionId, NewsItem newsItem) throws ServiceException {
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "addNews")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		
+		if(newsItem.getEvent()==null) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
+		if(newsItem.getTitle()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"title");
+		if(newsItem.getUrl()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"url");
+		if(newsItem.getPublishDate()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"publishDate");
 
+		newsItem.setPublisher(SessionManager.getSession(sessionId).getUser());
+		newsItem.setCreationDate(Calendar.getInstance());
+		newsDao.save(newsItem);
+		return newsItem;
+    }
+
+    @Override
     @Transactional
 	public NewsItem addNews(String sessionId, int eventId, NewsItem newsItem) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "addNews")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			Event event = eventDao.find(eventId);
-			if(newsItem.getTitle()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"title");
-			if(newsItem.getUrl()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"url");
-			if(newsItem.getPublishDate()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"publishDate");
 			newsItem.setEvent(event);
-			newsItem.setPublisher(SessionManager.getSession(sessionId).getUser());
-			newsItem.setCreationDate(Calendar.getInstance());
-			newsDao.save(newsItem);
-			return newsItem;
+			return addNews(sessionId,newsItem);
 		} catch (InstanceException e) {
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
 		}
 	}
 
+    @Override
     @Transactional
 	public void changeNewsData(String sessionId, int newsItemId, NewsItem newsData) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -451,9 +480,9 @@ public class EventServiceImpl implements EventService {
 		} catch (InstanceException e) {
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"NewsItem");
 		}
-
 	}
     
+    @Override
     @Transactional
     public NewsItem getNewsItem(String sessionId, int newsItemId) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -468,6 +497,7 @@ public class EventServiceImpl implements EventService {
 		}
     }
     
+    @Override
     @Transactional(readOnly = true)
     public List<NewsItem> getAllNewsItem(String sessionId) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -475,7 +505,17 @@ public class EventServiceImpl implements EventService {
     	
     	return newsDao.getAllNewsItem();
     }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public List<NewsItem> getAllNewsItemFormEvent(String sessionId, int eventId) throws ServiceException {
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getAllNewsItemFormEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+    	
+		return newsDao.getAllNewsItemFromEvent(eventId);
+    }
 
+    @Override
     @Transactional(readOnly = true)
 	public List<NewsItem> getLastNews(String sessionId, Calendar dateLimit, boolean onlyOutstandingNews) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -483,7 +523,17 @@ public class EventServiceImpl implements EventService {
     	if(dateLimit==null) throw new ServiceException(ServiceException.MISSING_FIELD,"limitDate");
 		return newsDao.getLastNews(dateLimit, onlyOutstandingNews);
 	}
+    
+    @Override
+    @Transactional(readOnly = true)
+    public List<NewsItem> getLastNewsFromEvent(String sessionId, int eventId, Calendar dateLimit, boolean onlyOutstandingNews) throws ServiceException {
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getLastNewsFromEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+    	if(dateLimit==null) throw new ServiceException(ServiceException.MISSING_FIELD,"limitDate");
+		return newsDao.getLastNewsFormEvent(eventId, dateLimit, onlyOutstandingNews);
+    }
 
+    @Override
     @Transactional
 	public void removeNews(String sessionId, int newsItemId) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -495,22 +545,34 @@ public class EventServiceImpl implements EventService {
 		}
 	}
     
+    @Override
+    @Transactional
+    public Sponsor addSponsor(String sessionId, Sponsor sponsor) throws ServiceException {
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "addSponsor")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		
+		if(sponsor.getEvent()==null) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
+		if(sponsor.getName()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"name");
+		if(sponsor.getImageurl()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"url");
+		sponsorDao.save(sponsor);
+		return sponsor;
+    }
+    
+    @Override
     @Transactional
     public Sponsor addSponsor(String sessionId, int eventId, Sponsor sponsor) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "addSponsor")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			Event event = eventDao.find(eventId);
-			if(sponsor.getName()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"name");
-			if(sponsor.getImageurl()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"url");
 			sponsor.setEvent(event);
-			sponsorDao.save(sponsor);
-			return sponsor;
+			return addSponsor(sessionId,sponsor);
 		} catch (InstanceException e) {
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
 		}
     }
     
+    @Override
     @Transactional
     public void removeSponsor(String sessionId, int sponsorId) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -522,6 +584,7 @@ public class EventServiceImpl implements EventService {
 		}
     }
     
+    @Override
     @Transactional(readOnly = true)
     public List<Sponsor> getSponsors(String sessionId) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -529,6 +592,7 @@ public class EventServiceImpl implements EventService {
     	return sponsorDao.getAll();
     }
     
+    @Override
     @Transactional(readOnly = true)
     public List<Sponsor> getSponsorsByEvent(String sessionId, int eventId) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);

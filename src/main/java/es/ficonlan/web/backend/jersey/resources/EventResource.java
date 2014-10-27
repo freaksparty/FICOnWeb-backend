@@ -1,5 +1,6 @@
 package es.ficonlan.web.backend.jersey.resources;
 
+import java.util.Calendar;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -22,6 +23,7 @@ import es.ficonlan.web.backend.model.emailservice.EmailService;
 import es.ficonlan.web.backend.model.emailtemplate.EmailTemplate;
 import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.eventservice.EventService;
+import es.ficonlan.web.backend.model.newsitem.NewsItem;
 import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
 import es.ficonlan.web.backend.model.sponsor.Sponsor;
 import es.ficonlan.web.backend.model.user.User;
@@ -112,6 +114,14 @@ public class EventResource {
 	}
 	
 	@Path("/sponsor/{eventId}")
+	@POST
+	@Consumes({MediaType.APPLICATION_JSON})
+	@Produces(MediaType.APPLICATION_JSON)
+	public Sponsor addSponsor(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, Sponsor sponsor) throws ServiceException {
+		return eventService.addSponsor(sessionId,eventId,sponsor);
+	}
+	
+	@Path("/sponsor/{eventId}")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<Sponsor> getSponsorsByEvent(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
@@ -146,5 +156,30 @@ public class EventResource {
     	else if(state.toLowerCase().contentEquals("all")) st=null;
     	else throw new ServiceException(ServiceException.INCORRECT_FIELD,"state");
 		return userService.getUsersByEvent(sessionId, eventId, st, startIndex, maxResults);
+	}
+	
+	@Path("/news/{eventId}")
+	@POST
+	@Consumes({MediaType.APPLICATION_JSON})
+	@Produces(MediaType.APPLICATION_JSON)
+	public NewsItem add(@HeaderParam("sessionId") String sessionId, NewsItem newsItem) throws ServiceException{
+		return eventService.addNews(sessionId, newsItem);
+	}
+	
+	@Path("/news/{eventId}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<NewsItem> getAllNewsItem(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
+		return eventService.getAllNewsItemFormEvent(sessionId, eventId);
+	}
+	
+	@Path("/news/{eventId}/last/{days}/{outstandingOnly}")
+	@GET
+	@Consumes({MediaType.APPLICATION_JSON})
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<NewsItem> lastNews(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("days") int days, @PathParam("outstandingOnly") boolean outstandingOnly) throws ServiceException{
+		Calendar limitDate = Calendar.getInstance();
+		limitDate.add(Calendar.DAY_OF_YEAR, -1*days);
+		return eventService.getLastNewsFromEvent(sessionId, eventId, limitDate, outstandingOnly);
 	}
 }

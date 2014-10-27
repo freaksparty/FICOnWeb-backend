@@ -67,6 +67,7 @@ public interface EventService {
     public List<User> getActivityParticipants(String sessionId, int activityId) throws ServiceException;
     
     
+    public NewsItem addNews(String sessionId, NewsItem newsItem) throws ServiceException;
     
     public NewsItem addNews(String sessionId, int eventId, NewsItem newsItem) throws ServiceException;
     
@@ -76,11 +77,16 @@ public interface EventService {
     
     public List<NewsItem> getAllNewsItem(String sessionId) throws ServiceException;
     
+    public List<NewsItem> getAllNewsItemFormEvent(String sessionId, int eventId) throws ServiceException;
+    
     public List<NewsItem> getLastNews(String sessionId, Calendar dateLimit, boolean onlyOutstandingNews) throws ServiceException;
+    
+    public List<NewsItem> getLastNewsFromEvent(String sessionId, int eventId, Calendar dateLimit, boolean onlyOutstandingNews) throws ServiceException;
     
     public void removeNews(String sessionId, int newsItemId) throws ServiceException;
     
     
+    public Sponsor addSponsor(String sessionId, Sponsor sponsor) throws ServiceException;
     
     public Sponsor addSponsor(String sessionId, int eventId, Sponsor sponsor) throws ServiceException;
     

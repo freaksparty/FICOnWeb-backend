@@ -37,7 +37,7 @@ public class SponsorResource {
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
 	public Sponsor addSponsor(@HeaderParam("sessionId") String sessionId, Sponsor sponsor) throws ServiceException {
-		return eventService.addSponsor(sessionId,sponsor.getEvent().getEventId(),sponsor);
+		return eventService.addSponsor(sessionId,sponsor);
 	}
 	
 	@GET
