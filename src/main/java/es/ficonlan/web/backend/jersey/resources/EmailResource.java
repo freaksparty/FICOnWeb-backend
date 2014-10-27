@@ -13,6 +13,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
 import es.ficonlan.web.backend.model.email.Email;
 import es.ficonlan.web.backend.model.emailservice.EmailService;
@@ -24,6 +26,7 @@ import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 @Path("email")
 public class EmailResource {
 	
+	@Autowired
 	private EmailService emailService;
 	
 	public EmailResource(){
@@ -81,7 +84,7 @@ public class EmailResource {
 	@Path("/send/{emailId}")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Email sendEmail(@HeaderParam("sessionId") String sessionId,  @PathParam("emailId") int emailId) throws ServiceException {
+	public Email sendEmail(@HeaderParam("sessionId") String sessionId, @PathParam("emailId") int emailId) throws ServiceException {
 		return emailService.sendEmail(sessionId, emailId);
 	}
 }

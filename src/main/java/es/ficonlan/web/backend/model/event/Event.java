@@ -31,7 +31,6 @@ public class Event {
     private Calendar registrationOpenDate;
     private Calendar registrationCloseDate;
 
-
     public Event() {
     }
 
@@ -134,4 +133,5 @@ public class Event {
     public void setRegistrationCloseDate(Calendar registrationCloseDate) {
         this.registrationCloseDate = registrationCloseDate;
     }
+
 }

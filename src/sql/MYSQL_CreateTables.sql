@@ -224,7 +224,7 @@ CREATE TABLE Email (
 CREATE TABLE EmailTemplate (
 	EmailTemplate_id             bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
 	EmailTemplate_event_id       bigint UNSIGNED NOT NULL,
-	EmailTemplate_name           varchar(128) NOT NULL, 
+	EmailTemplate_name           varchar(128) NOT NULL UNIQUE, 
 	EmailTemplate_adress_id      bigint UNSIGNED ,
 	EmailTemplate_file           varchar(128), 
 	EmailTemplate_fileName       varchar(128), 

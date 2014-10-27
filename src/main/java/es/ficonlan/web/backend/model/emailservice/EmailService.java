@@ -4,6 +4,7 @@ import java.util.List;
 
 import es.ficonlan.web.backend.model.email.Email;
 import es.ficonlan.web.backend.model.emailadress.Adress;
+import es.ficonlan.web.backend.model.emailtemplate.EmailTemplate;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 
 public interface EmailService {
@@ -38,13 +39,28 @@ public interface EmailService {
 	public Email sendEmail(String sessionId, int emailId) throws ServiceException;
 	
 	
-	public List<Email> getAllYorEmails(String sessionId) throws ServiceException;
+	public List<Email> getAllUserEmails(String sessionId, int userId) throws ServiceException;
 	
-	public Email getYorLasEventEmail(String sessionId, int eventId) throws ServiceException;
+	public Email getUserLastEventEmail(String sessionId, int userId, int eventId) throws ServiceException;
 	
-	public Email addYorMail(String sessionId, Email email) throws ServiceException;
+	public Email sendUserMail(String sessionId, int userId, int emailId) throws ServiceException;
 	
-	public Email sendYourMail(String sessionId, int emailId) throws ServiceException;
+    
+	
+    public EmailTemplate createEmailTemplate(String sessionId, EmailTemplate emailTemplate) throws ServiceException;
+    
+    public EmailTemplate createEmailTemplate(String sessionId, int eventId, EmailTemplate emailTemplate) throws ServiceException;
+	
+	public void removeEmailTemplate(String sessionId, int emailTemplateId) throws ServiceException;
+	
+	public EmailTemplate changeEmailTemplate(String sessionId, int emailTemplateId, EmailTemplate emailTemplateData) throws ServiceException;
+    
+    public List<EmailTemplate> getAllEmailTemplate(String sessionId) throws ServiceException;
+    
+    
+    public List<EmailTemplate> searchEmailTemplatesByEvent(String sessionId, int eventId) throws ServiceException;
+    
+    public EmailTemplate findEmailTemplateByName(String sessionId, String name) throws ServiceException;
 	
 
 }

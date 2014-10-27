@@ -18,6 +18,7 @@ import es.ficonlan.web.backend.jersey.resources.ActivityResource;
 import es.ficonlan.web.backend.jersey.resources.BlackListResource;
 import es.ficonlan.web.backend.jersey.resources.EmailAdressResource;
 import es.ficonlan.web.backend.jersey.resources.EmailResource;
+import es.ficonlan.web.backend.jersey.resources.EmailTemplateResource;
 import es.ficonlan.web.backend.jersey.resources.EventResource;
 import es.ficonlan.web.backend.jersey.resources.LoginResource;
 import es.ficonlan.web.backend.jersey.resources.NewsResource;
@@ -25,7 +26,6 @@ import es.ficonlan.web.backend.jersey.resources.RoleResource;
 import es.ficonlan.web.backend.jersey.resources.SessionResource;
 import es.ficonlan.web.backend.jersey.resources.SponsorResource;
 import es.ficonlan.web.backend.jersey.resources.UserResource;
-import es.ficonlan.web.backend.jersey.resources.UserRolesResource;
 import es.ficonlan.web.backend.jersey.resources.UsersResource;
 import es.ficonlan.web.backend.jersey.util.ServiceExceptionMapper;
 import es.ficonlan.web.backend.model.userservice.UserService;
@@ -86,10 +86,10 @@ public class Main {
 		rc.register(EmailResource.class);
 		rc.register(EmailAdressResource.class);
 		rc.register(RoleResource.class);
-		rc.register(UserRolesResource.class);
 		rc.register(BlackListResource.class); 
 		rc.register(SponsorResource.class);
-
+		rc.register(EmailTemplateResource.class);
+		
 		SSLContextConfigurator sslContext = new SSLContextConfigurator();
 		sslContext.setKeyStoreFile(KEYSTORE_FILE);
 		sslContext.setKeyStorePass(KEYSTORE_PASS);

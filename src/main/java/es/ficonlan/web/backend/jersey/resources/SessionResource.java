@@ -7,6 +7,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
 import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.userservice.UserService;
@@ -20,6 +22,7 @@ import es.ficonlan.web.backend.model.util.session.Session;
 @Path("/session")
 public class SessionResource {
 	
+	@Autowired
 	private UserService userService;
 	
 	public SessionResource(){

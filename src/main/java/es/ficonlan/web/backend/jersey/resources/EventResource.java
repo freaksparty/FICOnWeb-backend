@@ -13,12 +13,19 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
 import es.ficonlan.web.backend.model.activity.Activity;
 import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
+import es.ficonlan.web.backend.model.emailservice.EmailService;
+import es.ficonlan.web.backend.model.emailtemplate.EmailTemplate;
 import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.eventservice.EventService;
+import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
 import es.ficonlan.web.backend.model.sponsor.Sponsor;
+import es.ficonlan.web.backend.model.user.User;
+import es.ficonlan.web.backend.model.userservice.UserService;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 
 /**
@@ -28,10 +35,19 @@ import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 @Path("event")
 public class EventResource {
 	
+	@Autowired
 	private EventService eventService;
+	
+	@Autowired
+	private EmailService emailService;
+	
+	@Autowired
+	private UserService userService;
 	
 	public EventResource(){
 		this.eventService = ApplicationContextProvider.getApplicationContext().getBean(EventService.class);
+		this.emailService = ApplicationContextProvider.getApplicationContext().getBean(EmailService.class);
+		this.userService  = ApplicationContextProvider.getApplicationContext().getBean(UserService.class);
 	}
 
 	@POST
@@ -74,6 +90,14 @@ public class EventResource {
 		eventService.removeEvent(sessionId, eventId);
 	}
 	
+	@Path("/activity/{eventId}")
+	@POST
+	@Consumes({MediaType.APPLICATION_JSON})
+	@Produces(MediaType.APPLICATION_JSON)
+	public Activity addActivity(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, Activity activity) throws ServiceException {
+		return eventService.addActivity(sessionId, eventId, activity);
+	}
+	
 	@Path("/activity/{eventId}/{type}")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
@@ -87,10 +111,40 @@ public class EventResource {
 		return eventService.getActivitiesByEvent(sessionId, eventId, t);
 	}
 	
-	@Path("/sponsor/{sponsorId}")
+	@Path("/sponsor/{eventId}")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<Sponsor> getSponsorsByEvent(@HeaderParam("sessionId") String sessionId, @PathParam("sponsorId") int sponsorId) throws ServiceException {
-		return eventService.getSponsorsByEvent(sessionId,sponsorId);
+	public List<Sponsor> getSponsorsByEvent(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
+		return eventService.getSponsorsByEvent(sessionId,eventId);
+	}
+	
+	@Path("/emailtemplate/")
+	@POST
+	@Consumes({MediaType.APPLICATION_JSON})
+	@Produces(MediaType.APPLICATION_JSON)
+	public EmailTemplate createEmailTemplate(@HeaderParam("sessionId") String sessionId, EmailTemplate emailTemplate) throws ServiceException {
+		return emailService.createEmailTemplate(sessionId, emailTemplate);
+	}
+	
+	@Path("/emailtemplate/{eventId}")
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	public List<EmailTemplate> searchEmailTemplatesByEvent(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
+		return emailService.searchEmailTemplatesByEvent(sessionId, eventId);
+	}
+	
+	@Path("/users/{eventId}/{state}/{statrtIndex}/{maxResults}")
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	public List<User> getByEvent(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("state") String state,  
+			                     @PathParam("startIndex") int startIndex,  @PathParam("maxResults") int maxResults) throws ServiceException {
+		RegistrationState st;
+		if(state==null) throw new ServiceException(ServiceException.MISSING_FIELD,"state");
+    	if(state.toLowerCase().contentEquals("registered"))  st=RegistrationState.registered;
+    	else if(state.toLowerCase().contentEquals("inqueue")) st=RegistrationState.inQueue;
+    	else if(state.toLowerCase().contentEquals("paid")) st=RegistrationState.paid;
+    	else if(state.toLowerCase().contentEquals("all")) st=null;
+    	else throw new ServiceException(ServiceException.INCORRECT_FIELD,"state");
+		return userService.getUsersByEvent(sessionId, eventId, st, startIndex, maxResults);
 	}
 }

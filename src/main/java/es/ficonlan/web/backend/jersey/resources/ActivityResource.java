@@ -13,6 +13,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
 import es.ficonlan.web.backend.model.activity.Activity;
 import es.ficonlan.web.backend.model.eventservice.EventService;
@@ -27,18 +29,18 @@ import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 @Path("activity")
 public class ActivityResource {
 	
+	@Autowired
 	private EventService eventService;
 	
 	public ActivityResource(){
 		this.eventService = ApplicationContextProvider.getApplicationContext().getBean(EventService.class);
 	}
 	
-	//EL evento alque va referido viene en el cuerpo de Activity
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
 	public Activity addActivity(@HeaderParam("sessionId") String sessionId, Activity activity) throws ServiceException {
-		return eventService.addActivity(sessionId, activity.getEvent().getEventId(), activity);
+		return eventService.addActivity(sessionId, activity);
 	}
 	
 	@Path("/{activityId}")

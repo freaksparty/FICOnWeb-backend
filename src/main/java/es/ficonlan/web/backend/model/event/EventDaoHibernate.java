@@ -13,9 +13,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 /**
- * 
  * @author Daniel Gómez Silva
- *
  */
 @Repository("eventDao")
 public class EventDaoHibernate extends GenericDaoHibernate<Event, Integer> implements EventDao {

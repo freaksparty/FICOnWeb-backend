@@ -13,6 +13,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
 import es.ficonlan.web.backend.model.emailadress.Adress;
 import es.ficonlan.web.backend.model.emailservice.EmailService;
@@ -24,6 +26,7 @@ import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 @Path("adress")
 public class EmailAdressResource {
 	
+	@Autowired
 	private EmailService emailService;
 	
 	public EmailAdressResource(){

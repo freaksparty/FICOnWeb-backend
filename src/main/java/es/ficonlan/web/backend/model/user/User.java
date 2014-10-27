@@ -1,8 +1,5 @@
 package es.ficonlan.web.backend.model.user;
 
-import es.ficonlan.web.backend.model.role.Role;
-import es.ficonlan.web.backend.model.supportedlanguage.SupportedLanguage;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,6 +18,9 @@ import javax.persistence.SequenceGenerator;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import es.ficonlan.web.backend.model.role.Role;
+import es.ficonlan.web.backend.model.supportedlanguage.SupportedLanguage;
+
 /**
  * @author Daniel Gómez Silva
  */
@@ -35,12 +35,12 @@ public class User {
     private String email;
     private String phoneNumber;
     private boolean deleted;
-    private Set<Role> roles = new HashSet<Role>(); ;
+    private Set<Role> roles = new HashSet<Role>();
     private String shirtSize;
     private boolean inBlackList;
     private SupportedLanguage defaultLanguage;
-
-    public User() {}
+    
+	public User() {}
 
 	public User(int userId, String name, String dni, String email, String phoneNumber, String shirtSize) {
         this(name, null, null, dni, email, phoneNumber, shirtSize);
@@ -178,4 +178,5 @@ public class User {
 	public void setDefaultLanguage(SupportedLanguage defaultLanguage) {
 		this.defaultLanguage = defaultLanguage;
 	}
+
 }

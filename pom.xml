@@ -31,6 +31,7 @@
 				<dataSource.url>jdbc:mysql://localhost/backendtest</dataSource.url>
 				<testDataSource.url>jdbc:mysql://localhost/backendtest</testDataSource.url>
 				<dataSource.createTablesScript>MYSQL_CreateTables.sql</dataSource.createTablesScript>
+				<dataSource.createTablesScript>MYSQL_CreateData.sql</dataSource.createTablesScript>
 
 				<!-- Hibernate properties -->
 				<hibernate.dialect>org.hibernate.dialect.MySQLDialect</hibernate.dialect>

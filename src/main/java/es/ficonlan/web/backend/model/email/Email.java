@@ -68,7 +68,7 @@ public class Email {
 		
 	}
 
-	public Email(boolean isTemplate, Adress direccionEnvio, String rutaArchivo,String nombreArchivo, User destinatario, String asunto,String mensaje) {
+	public Email( Adress direccionEnvio, String rutaArchivo,String nombreArchivo, User destinatario, String asunto,String mensaje) {
 		this.direccionEnvio = direccionEnvio;
 		this.rutaArchivo = rutaArchivo;
 		this.nombreArchivo = nombreArchivo;
@@ -81,12 +81,12 @@ public class Email {
 	}
 
 	public Email(Adress direccionEnvio, User destinatario, String mensaje) {
-		this(false, direccionEnvio, "", "", destinatario, "", mensaje);
+		this( direccionEnvio, "", "", destinatario, "", mensaje);
 	}
 
 	public Email(Adress direccionEnvio, User destinatario, String asunto,
 			String mensaje) {
-		this(false, direccionEnvio, "", "", destinatario, asunto, mensaje);
+		this( direccionEnvio, "", "", destinatario, asunto, mensaje);
 	}
 
 	@Column(name = "Email_id")

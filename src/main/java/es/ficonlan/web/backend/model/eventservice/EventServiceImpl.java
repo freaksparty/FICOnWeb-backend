@@ -3,6 +3,10 @@ package es.ficonlan.web.backend.model.eventservice;
 import java.util.Calendar;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import es.ficonlan.web.backend.model.activity.Activity;
 import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
 import es.ficonlan.web.backend.model.activity.ActivityDao;
@@ -20,10 +24,6 @@ import es.ficonlan.web.backend.model.user.UserDao;
 import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import es.ficonlan.web.backend.model.util.session.SessionManager;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author David Pereiro
@@ -51,6 +51,7 @@ public class EventServiceImpl implements EventService {
 	
 	@Autowired
 	private SponsorDao sponsorDao;
+
     
     @Transactional
 	public Event createEvent(String sessionId, Event event) throws ServiceException {
@@ -273,23 +274,33 @@ public class EventServiceImpl implements EventService {
 		Event event;
 		try {
 				event = eventDao.find(eventId);
+				activity.setEvent(event);
 		} catch (InstanceException e) {
 			throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
 		}
+		return addActivity(sessionId,activity);
+	}
+    
+    @Transactional
+    public Activity addActivity(String sessionId, Activity activity) throws ServiceException {
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "addActivity")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+
+		if(activity.getEvent()==null) throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
+	
 		if(activity.getName()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"name");
 		if(activity.getNumParticipants()<1) throw new ServiceException(ServiceException.INCORRECT_FIELD,"numParticipants");
 		if(activity.getNumParticipants()<1) throw new ServiceException(ServiceException.INCORRECT_FIELD,"numParticipants");
 		if(activity.getStartDate()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"startDate");
-		if(activity.getStartDate().compareTo(event.getStartDate())<0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"startDate");
+		if(activity.getStartDate().compareTo(activity.getEvent().getStartDate())<0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"startDate");
 		if(activity.getEndDate()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"endDate");
-		if(activity.getEndDate().compareTo(event.getEndDate())>0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"endDate");
+		if(activity.getEndDate().compareTo(activity.getEvent().getEndDate())>0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"endDate");
 		if(activity.getRegDateOpen()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"regDateOpen");
 		if(activity.getRegDateClose()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"regDateClose");
-		activity.setEvent(event);
+		
 		activityDao.save(activity);
 		return activity;
-	}
-    
+    }
 
     @Transactional
 	public void removeActivity(String sessionId, int activityId) throws ServiceException {
@@ -524,4 +535,5 @@ public class EventServiceImpl implements EventService {
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getSponsors")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
     	return sponsorDao.getByEvent(eventId);
     }
+
 }

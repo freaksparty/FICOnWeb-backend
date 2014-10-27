@@ -27,6 +27,12 @@ public interface EventService {
 	public Event getEvent(String sessionId, int eventId) throws ServiceException;
 	
 	public Event changeEventData(String sessionId, int eventId, Event eventData) throws ServiceException;
+	
+	public List<Event> getAllEvents(String sessionId) throws ServiceException;
+
+    public List<Event> findEventByName(String sessionId, String name) throws ServiceException;
+    
+    
 		
 	public Registration addParticipantToEvent(String sessionId, int userId, int eventId) throws ServiceException;
 	
@@ -38,11 +44,11 @@ public interface EventService {
 	
 	public void changeRegistrationState(String sessionId, int userId, int eventId, RegistrationState state) throws ServiceException;
 	
-	public List<Event> getAllEvents(String sessionId) throws ServiceException;
-
-    public List<Event> findEventByName(String sessionId, String name) throws ServiceException;
+	
     
     public Activity addActivity(String sessionId, int eventId,  Activity activity) throws ServiceException;
+    
+    public Activity addActivity(String sessionId, Activity activity) throws ServiceException;
     
     public void removeActivity(String sessionId, int activityId) throws ServiceException;
     
@@ -60,6 +66,8 @@ public interface EventService {
     
     public List<User> getActivityParticipants(String sessionId, int activityId) throws ServiceException;
     
+    
+    
     public NewsItem addNews(String sessionId, int eventId, NewsItem newsItem) throws ServiceException;
     
     public void changeNewsData(String sessionId, int newsItemId, NewsItem newsData) throws ServiceException;
@@ -72,6 +80,8 @@ public interface EventService {
     
     public void removeNews(String sessionId, int newsItemId) throws ServiceException;
     
+    
+    
     public Sponsor addSponsor(String sessionId, int eventId, Sponsor sponsor) throws ServiceException;
     
     public void removeSponsor(String sessionId, int sponsorId) throws ServiceException;
@@ -79,5 +89,6 @@ public interface EventService {
     public List<Sponsor> getSponsors(String sessionId) throws ServiceException;
     
     public List<Sponsor> getSponsorsByEvent(String sessionId, int eventId) throws ServiceException;
+    
      
 }
