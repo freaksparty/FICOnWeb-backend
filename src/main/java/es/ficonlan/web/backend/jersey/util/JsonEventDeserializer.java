@@ -18,7 +18,7 @@ import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
 public class JsonEventDeserializer extends JsonDeserializer<Event> {
 	
 	@Autowired
-	EventDao eventDao;
+	private EventDao eventDao;
 
 	@Override
 	public Event deserialize(JsonParser jsonparser, DeserializationContext deserializationcontext) throws IOException, JsonProcessingException {

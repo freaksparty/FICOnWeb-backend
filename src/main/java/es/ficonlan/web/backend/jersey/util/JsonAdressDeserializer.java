@@ -18,7 +18,7 @@ import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
 public class JsonAdressDeserializer extends JsonDeserializer<Adress> {
 	
 	@Autowired
-	AdressDao adressDao;
+	private AdressDao adressDao;
 
 	@Override
 	public Adress deserialize(JsonParser jsonparser, DeserializationContext deserializationcontext) throws IOException, JsonProcessingException {

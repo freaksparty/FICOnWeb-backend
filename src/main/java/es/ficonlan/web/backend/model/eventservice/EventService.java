@@ -44,6 +44,7 @@ public interface EventService {
 	
 	public void changeRegistrationState(String sessionId, int userId, int eventId, RegistrationState state) throws ServiceException;
 	
+	public void eventNumParticipantsChanged(String sessionId, int eventId) throws ServiceException;
 	
     
     public Activity addActivity(String sessionId, int eventId,  Activity activity) throws ServiceException;

@@ -18,7 +18,7 @@ import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
 public class JsonUserDeserializer extends JsonDeserializer<User> {
 	
 	@Autowired
-	UserDao userDao;
+	private UserDao userDao;
 
 	@Override
 	public User deserialize(JsonParser jsonparser, DeserializationContext deserializationcontext) throws IOException, JsonProcessingException {

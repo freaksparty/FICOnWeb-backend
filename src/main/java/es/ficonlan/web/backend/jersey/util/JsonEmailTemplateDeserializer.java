@@ -8,24 +8,24 @@ import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import es.ficonlan.web.backend.model.registration.Registration;
-import es.ficonlan.web.backend.model.registration.RegistrationDao;
+import es.ficonlan.web.backend.model.emailtemplate.EmailTemplate;
+import es.ficonlan.web.backend.model.emailtemplate.EmailTemplateDao;
 import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
 
 /**
  * @author Miguel Ángel Castillo Bellagona
  */
-public class JsonRegistrationDeserializer extends JsonDeserializer<Registration> {
+public class JsonEmailTemplateDeserializer extends JsonDeserializer<EmailTemplate> {
 	
 	@Autowired
-	private RegistrationDao registrationDao;
+	private EmailTemplateDao emailTemplateDao;
 
 	@Override
-	public Registration deserialize(JsonParser jsonparser, DeserializationContext deserializationcontext) throws IOException, JsonProcessingException {
+	public EmailTemplate deserialize(JsonParser jsonparser, DeserializationContext deserializationcontext) throws IOException, JsonProcessingException {
 		int id = jsonparser.getIntValue();
 		try
 		{
-			return registrationDao.find(id);
+			return emailTemplateDao.find(id);
 		} 
 		catch (InstanceException e)
 		{

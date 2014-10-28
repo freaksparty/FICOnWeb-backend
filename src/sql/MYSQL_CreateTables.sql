@@ -27,14 +27,19 @@ CREATE TABLE PingTable (foo CHAR(1));
 -- ------------------------------ EVENT -------------------------------------
 
 CREATE TABLE Event ( 
-	Event_id                   bigint UNSIGNED NOT NULL AUTO_INCREMENT,
-	Event_name                 varchar(150) NOT NULL  ,
-	Event_description          varchar(255)    ,
-	Event_num_participants     int DEFAULT 1 ,
-	Event_date_start           date NOT NULL  ,
-	Event_date_end             date NOT NULL  ,
-	Event_reg_date_open        datetime NOT NULL  ,
-	Event_reg_date_close       datetime NOT NULL  ,
+	Event_id                           bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+	Event_name                         varchar(150) NOT NULL  ,
+	Event_description                  varchar(255)    ,
+	Event_num_participants             int DEFAULT 1 ,
+	Event_date_start                   date NOT NULL  ,
+	Event_date_end                     date NOT NULL  ,
+	Event_reg_date_open                datetime NOT NULL  ,
+	Event_reg_date_close               datetime NOT NULL  ,
+	Event_setPaidTemplate_id           bigint UNSIGNED ,
+	Event_onQueueTemplate_id           bigint UNSIGNED ,
+	Event_outstandingTemplate_id       bigint UNSIGNED ,
+	Event_outOfDateTemplate_id         bigint UNSIGNED ,
+	Event_fromQueueToOutstanding_id    bigint UNSIGNED ,
 	CONSTRAINT pk_event PRIMARY KEY ( Event_id ) ,
 	CONSTRAINT Event_name_UNIQUE UNIQUE ( Event_name )
  ) engine=InnoDB;
@@ -248,6 +253,13 @@ CREATE TABLE Sponsor (
 ) engine=InnoDB;
 
  CREATE INDEX SponsorByEvent ON Sponsor (Sponsor_event_id);
+
+
+ ALTER TABLE Event ADD CONSTRAINT fk_event_setPaidTemplate FOREIGN KEY ( Event_setPaidTemplate_id ) REFERENCES EmailTemplate (EmailTemplate_id) ON DELETE SET NULL ON UPDATE CASCADE;
+ ALTER TABLE Event ADD CONSTRAINT fk_event_onQueueTemplate FOREIGN KEY ( Event_onQueueTemplate_id ) REFERENCES EmailTemplate (EmailTemplate_id) ON DELETE SET NULL ON UPDATE CASCADE;
+ ALTER TABLE Event ADD CONSTRAINT fk_event_outstandingTemplate FOREIGN KEY (Event_outstandingTemplate_id ) REFERENCES EmailTemplate (EmailTemplate_id) ON DELETE SET NULL ON UPDATE CASCADE;
+ ALTER TABLE Event ADD CONSTRAINT fk_event_outOfDateTemplate FOREIGN KEY ( Event_outOfDateTemplate_id ) REFERENCES EmailTemplate (EmailTemplate_id) ON DELETE SET NULL ON UPDATE CASCADE;
+ ALTER TABLE Event ADD CONSTRAINT fk_event_fromQueueToOutstanding FOREIGN KEY ( Event_fromQueueToOutstanding_id ) REFERENCES EmailTemplate (EmailTemplate_id) ON DELETE SET NULL ON UPDATE CASCADE;
 
  ALTER TABLE Sponsor ADD CONSTRAINT fk_sponsor_event FOREIGN KEY ( Sponsor_event_id ) REFERENCES Event (Event_id) ON DELETE CASCADE ON UPDATE CASCADE;
 
