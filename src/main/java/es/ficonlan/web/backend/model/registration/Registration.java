@@ -21,11 +21,13 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import es.ficonlan.web.backend.jersey.util.JsonDateDeserializer;
 import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
+import es.ficonlan.web.backend.jersey.util.JsonEmailDeserializer;
 import es.ficonlan.web.backend.jersey.util.JsonEntityIdSerializer;
 import es.ficonlan.web.backend.jersey.util.JsonEventDeserializer;
 import es.ficonlan.web.backend.jersey.util.JsonRegistrationStateDeserializer;
 import es.ficonlan.web.backend.jersey.util.JsonRegistrationStateSerializer;
 import es.ficonlan.web.backend.jersey.util.JsonUserDeserializer;
+import es.ficonlan.web.backend.model.email.Email;
 import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.user.User;
 
@@ -47,6 +49,7 @@ public class Registration {
 	private boolean paid = false;
 	private int place;
 	private int placeOnQueue;
+	private Email lastemail;
 
 	public Registration() { }
 	
@@ -157,6 +160,18 @@ public class Registration {
 
 	public void setPlaceOnQueue(int placeOnQueue) {
 		this.placeOnQueue = placeOnQueue;
+	}
+
+	@JsonDeserialize(using = JsonEmailDeserializer.class)
+    @JsonSerialize(using=JsonEntityIdSerializer.class)
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "Registration_lastemail")
+	public Email getLastemail() {
+		return lastemail;
+	}
+
+	public void setLastemail(Email lastemail) {
+		this.lastemail = lastemail;
 	}
 	
 	

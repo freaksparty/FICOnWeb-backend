@@ -269,16 +269,16 @@ public class EmailServiceImpl implements EmailService {
 			User user = userDao.find(userId);
 			@SuppressWarnings("unused")
 			Event event = eventDao.find(eventId);
+			
+			Registration registration = registrationDao.findByUserAndEvent(userId, eventId);
+			
+			return registration.getLastemail();
 		} 
 		catch (InstanceException e) 
 		{
 			if (e.getClassName().contentEquals("User")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
 			else throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
 		}
-		
-		Registration r = registrationDao.findByUserAndEvent(userId, eventId);
-		return emailDao.getLasEmailByRegistration(r.getRegistrationId());
-
 	}
 
 	@Transactional

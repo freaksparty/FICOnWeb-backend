@@ -176,6 +176,7 @@ CREATE TABLE NewsItem (
 	Registration_date_paid            datetime    ,
 	Registration_paid                 bool DEFAULT 0  ,
 	Registration_place                int DEFAULT -1 ,
+	Registration_lastemail            bigint UNSIGNED ,
 	CONSTRAINT pk_registration PRIMARY KEY ( Registration_id )
  ) engine=InnoDB;
  
@@ -286,5 +287,6 @@ CREATE TABLE Sponsor (
  
  ALTER TABLE Registration ADD CONSTRAINT fk_registration_user FOREIGN KEY ( Registration_User_id ) REFERENCES User( User_id ) ON DELETE CASCADE ON UPDATE CASCADE;
  ALTER TABLE Registration ADD CONSTRAINT fk_registration_event FOREIGN KEY ( Registration_Event_id ) REFERENCES Event( Event_id ) ON DELETE CASCADE ON UPDATE CASCADE;
+ ALTER TABLE Registration ADD CONSTRAINT fk_registration_email FOREIGN KEY ( Registration_lastemail ) REFERENCES Email ( Email_id ) ON DELETE SET NULL ON UPDATE CASCADE;
  
  ALTER TABLE User ADD CONSTRAINT fk_default_language FOREIGN KEY ( User_defaultLanguage ) REFERENCES Language( Language_id ) ON DELETE CASCADE ON UPDATE CASCADE;
