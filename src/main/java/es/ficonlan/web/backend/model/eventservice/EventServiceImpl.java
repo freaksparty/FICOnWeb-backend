@@ -57,7 +57,7 @@ public class EventServiceImpl implements EventService {
 	private SponsorDao sponsorDao;
 	
 	@Autowired
-	private EmailDao emailDao;
+	private EmailDao emailDao; 
 	
 	@Autowired
 	private EmailTemplateDao emailTemplateDao;
