@@ -40,6 +40,3 @@ INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE U
 INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE UserCase_name =  "getUserLastEventEmail" ), ( SELECT Role_id FROM Role WHERE Role_name =  "User" ) );
 INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE UserCase_name =  "sendUserMail" ), ( SELECT Role_id FROM Role WHERE Role_name =  "User" ) );
 
-
---INSERT INTO `Event` (Event_id, Event_name, Event_description, Event_num_participants, Event_date_start, Event_date_end, Event_reg_date_open, Event_reg_date_close)
---	VALUES (0,'Evento 1','Descripcion Evento 1',5,'2014-12-1 12:11:03','2014-12-7 12:11:03','2014-10-25 12:11:03','2014-11-20 12:11:03');
