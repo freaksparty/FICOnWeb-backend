@@ -49,7 +49,6 @@ public interface EmailService {
 	
     public EmailTemplate createEmailTemplate(String sessionId, EmailTemplate emailTemplate) throws ServiceException;
     
-    public EmailTemplate createEmailTemplate(String sessionId, int eventId, EmailTemplate emailTemplate) throws ServiceException;
 	
 	public void removeEmailTemplate(String sessionId, int emailTemplateId) throws ServiceException;
 	

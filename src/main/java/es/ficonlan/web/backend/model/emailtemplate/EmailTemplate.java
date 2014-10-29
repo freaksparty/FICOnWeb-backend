@@ -19,10 +19,8 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import es.ficonlan.web.backend.jersey.util.JsonAdressDeserializer;
 import es.ficonlan.web.backend.jersey.util.JsonEntityIdSerializer;
-import es.ficonlan.web.backend.jersey.util.JsonEventDeserializer;
 import es.ficonlan.web.backend.model.email.Email;
 import es.ficonlan.web.backend.model.emailadress.Adress;
-import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.user.User;
 
 /**
@@ -34,7 +32,6 @@ import es.ficonlan.web.backend.model.user.User;
 public class EmailTemplate {
 	
 	private int emailtemplateid;
-	private Event event;
 	private String name;
 	private Adress adress;
 	private String filepath;
@@ -56,18 +53,6 @@ public class EmailTemplate {
 
 	public void setEmailtemplateid(int emailtemplateid) {
 		this.emailtemplateid = emailtemplateid;
-	}
-
-	@JsonDeserialize(using = JsonEventDeserializer.class)
-	@JsonSerialize(using = JsonEntityIdSerializer.class)
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "EmailTemplate_event_id")
-	public Event getEvent() {
-		return event;
-	}
-
-	public void setEvent(Event event) {
-		this.event = event;
 	}
 
 	@Column(name = "EmailTemplate_name")

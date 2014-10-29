@@ -312,8 +312,6 @@ public class EmailServiceImpl implements EmailService {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "createEmailTemplate")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		
-		if(emailTemplate.getEvent()==null) throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
-		
 		if(emailTemplate.getAdress()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"adress");
 		if(emailTemplate.getAsunto()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"asunto");
 		if(emailTemplate.getContenido()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"contenido");
@@ -322,24 +320,6 @@ public class EmailServiceImpl implements EmailService {
 		emailTemplateDao.save(emailTemplate);
 		
 		return emailTemplate;
-	}
-	
-	@Transactional
-	@Override
-	public EmailTemplate createEmailTemplate(String sessionId, int eventId, EmailTemplate emailTemplate) throws ServiceException {
-		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "createEmailTemplate")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-		
-		try 
-		{
-			Event event = eventDao.find(eventId);
-			emailTemplate.setEvent(event);
-			return createEmailTemplate(sessionId,emailTemplate);
-		} 
-		catch (InstanceException e) {
-			throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
-		}
-		
 	}
 
 	@Transactional
@@ -371,8 +351,7 @@ public class EmailServiceImpl implements EmailService {
 			if(emailTemplateData.getName()!=null) e.setName(emailTemplateData.getName());
 			if(emailTemplateData.getFilepath()!=null) e.setFilepath(emailTemplateData.getFilepath());
 			if(emailTemplateData.getFilename()!=null) e.setFilename(emailTemplateData.getFilename());
-			if(emailTemplateData.getEvent()!=null) e.setEvent(emailTemplateData.getEvent());
-			else throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
+
 			if(emailTemplateData.getContenido()!=null) e.setContenido(emailTemplateData.getContenido());
 			if(emailTemplateData.getAsunto()!=null) e.setAsunto(emailTemplateData.getAsunto());
 			if(emailTemplateData.getAdress()!=null) e.setAdress(emailTemplateData.getAdress());

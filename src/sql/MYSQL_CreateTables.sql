@@ -229,7 +229,6 @@ CREATE TABLE Email (
 
 CREATE TABLE EmailTemplate (
 	EmailTemplate_id             bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
-	EmailTemplate_event_id       bigint UNSIGNED ,
 	EmailTemplate_name           varchar(128) NOT NULL UNIQUE, 
 	EmailTemplate_adress_id      bigint UNSIGNED ,
 	EmailTemplate_file           varchar(128), 
@@ -240,7 +239,6 @@ CREATE TABLE EmailTemplate (
 ) engine=InnoDB;
 
  CREATE INDEX EmailTemplateByAdressId ON EmailTemplate (EmailTemplate_adress_id);
- CREATE INDEX EmailTemplateByEventId ON EmailTemplate (EmailTemplate_event_id);
  CREATE INDEX EmailTemplateByname ON EmailTemplate (EmailTemplate_name);
 
 -- ------------------------------ Sponsor -------------------------------------
@@ -265,8 +263,7 @@ CREATE TABLE Sponsor (
  ALTER TABLE Sponsor ADD CONSTRAINT fk_sponsor_event FOREIGN KEY ( Sponsor_event_id ) REFERENCES Event (Event_id) ON DELETE CASCADE ON UPDATE CASCADE;
 
  ALTER TABLE EmailTemplate ADD CONSTRAINT fk_emailtemplate_adress FOREIGN KEY ( EmailTemplate_adress_id ) REFERENCES Adress (Adress_id) ON DELETE SET NULL ON UPDATE CASCADE;
- ALTER TABLE EmailTemplate ADD CONSTRAINT fk_emailtemplate_event FOREIGN KEY ( EmailTemplate_event_id ) REFERENCES Event (Event_id) ON DELETE SET NULL ON UPDATE CASCADE;
-
+ 
  ALTER TABLE Email ADD CONSTRAINT fk_email_adress FOREIGN KEY ( Email_adress_id ) REFERENCES Adress (Adress_id) ON DELETE SET NULL ON UPDATE CASCADE;
  ALTER TABLE Email ADD CONSTRAINT fk_email_user FOREIGN KEY ( Email_user_id ) REFERENCES User (User_id) ON DELETE SET NULL ON UPDATE CASCADE;
  ALTER TABLE Email ADD CONSTRAINT fk_email_registration FOREIGN KEY ( Email_registration_id ) REFERENCES Registration (Registration_id) ON DELETE SET NULL ON UPDATE CASCADE;

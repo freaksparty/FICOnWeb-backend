@@ -234,7 +234,7 @@ public class EventServiceImpl implements EventService {
 	@Transactional
 	public void removeParticipantFromEvent(String sessionId, int userId, int eventId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), userId, "removeParticipantFromEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);	
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "removeParticipantFromEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);	
     	Registration registration = registrationDao.findByUserAndEvent(userId, eventId);
     	if (registration==null) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Registration");
 
