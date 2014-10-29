@@ -8,6 +8,8 @@ package es.ficonlan.web.backend.test.eventservice;
 import es.ficonlan.web.backend.model.activity.Activity;
 import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
 import es.ficonlan.web.backend.model.activity.ActivityDao;
+import es.ficonlan.web.backend.model.emailtemplate.EmailTemplate;
+import es.ficonlan.web.backend.model.emailtemplate.EmailTemplateDao;
 import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.event.EventDao;
 import es.ficonlan.web.backend.model.eventservice.EventService;
@@ -78,6 +80,9 @@ public class EventServiceTest {
 	
 	@Autowired
 	private UseCaseDao useCaseDao;
+	
+	@Autowired
+	private EmailTemplateDao emailTemplateDao;
 	 
 	@Before 
 	public void initialize() {
@@ -88,7 +93,7 @@ public class EventServiceTest {
     public void testCreateEvent() throws ServiceException, InstanceException{
     	Session anonymousSession = userService.newAnonymousSession();
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
-    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance());
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(), null, null, null, null, null);
     	eventService.createEvent(s.getSessionId(), event);
     	assertTrue(eventDao.find(event.getEventId()).getEventId()==event.getEventId());
     	
@@ -98,11 +103,14 @@ public class EventServiceTest {
     public void testChangeEventData() throws ServiceException{
     	Session anonymousSession = userService.newAnonymousSession();
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
-    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance());
+    	EmailTemplate et1 = new EmailTemplate();
+    	et1.setAsunto(""); et1.setContenido(""); et1.setFilename(""); et1.setFilepath(""); et1.setName("");
+    	emailTemplateDao.save(et1);
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(), et1, et1, et1, et1, et1);
     	eventDao.save(event);
     	Calendar newDate = Calendar.getInstance();
     	newDate.set(1, 2, 2015);
-    	Event newEventData = new Event(event.getEventId(),"FicOnLan 2015","FicOnLan 2015", 200, newDate, newDate, newDate, newDate);
+    	Event newEventData = new Event(event.getEventId(),"FicOnLan 2015","FicOnLan 2015", 200, newDate, newDate, newDate, newDate, et1, et1, et1, et1, et1);
     	eventService.changeEventData(s.getSessionId(), event.getEventId(), newEventData);
     	assertTrue(event.getName().contentEquals("FicOnLan 2015"));
     	assertTrue(event.getDescription().contentEquals("FicOnLan 2015"));
@@ -119,7 +127,7 @@ public class EventServiceTest {
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	Calendar regCloseDate = Calendar.getInstance();
     	regCloseDate.add(Calendar.DAY_OF_YEAR, 1);
-    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),regCloseDate);
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),regCloseDate, null, null, null, null, null);
     	eventDao.save(event);
     	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	Registration r = eventService.addParticipantToEvent(s.getSessionId(), user.getUserId(), event.getEventId());
@@ -133,7 +141,7 @@ public class EventServiceTest {
     public void testRemoveParticipantFromEvent() throws ServiceException{
     	Session anonymousSession = userService.newAnonymousSession();
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
-    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance());
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(), null, null, null, null, null);
     	eventDao.save(event);
     	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	Registration r = new Registration(user,event);
@@ -147,7 +155,11 @@ public class EventServiceTest {
     public void testChangeRegistrationState() throws ServiceException{
     	Session anonymousSession = userService.newAnonymousSession();
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
-    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance());
+    	EmailTemplate et1 = new EmailTemplate();
+    	et1.setAsunto(""); et1.setContenido(""); et1.setFilename(""); et1.setFilepath(""); et1.setName("");
+    	emailTemplateDao.save(et1);
+    	
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(), et1, et1, et1, et1, et1);
     	eventDao.save(event);
     	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	Registration r = new Registration(user,event);
@@ -162,7 +174,7 @@ public class EventServiceTest {
     public void testFindEventByName() throws ServiceException {
     	Session anonymousSession = userService.newAnonymousSession();
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
-        Event event = new Event(0, "Awesome event!", "Curling world cup.", 10, Calendar.getInstance(), Calendar.getInstance(),Calendar.getInstance(), Calendar.getInstance());
+        Event event = new Event(0, "Awesome event!", "Curling world cup.", 10, Calendar.getInstance(), Calendar.getInstance(),Calendar.getInstance(), Calendar.getInstance(), null, null, null, null, null);
         eventDao.save(event);
         List<Event> result = eventService.findEventByName(s.getSessionId(), "awesome");
         assertTrue(result.size()==1);
@@ -184,7 +196,7 @@ public class EventServiceTest {
     	Calendar dateStart = Calendar.getInstance();
     	Calendar dateEnd = Calendar.getInstance();
     	dateEnd.add(Calendar.DAY_OF_YEAR, 1);
-    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd);
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd, null, null, null, null, null);
     	eventDao.save(event);
     	Activity activity = eventService.addActivity(s.getSessionId(), event.getEventId(), 
     													new Activity(event, "Torneo de Lol", "Torneo de Lol", 10, ActivityType.Tournament, true, dateStart,dateEnd,dateStart,dateEnd));
@@ -198,7 +210,7 @@ public class EventServiceTest {
     	Calendar dateStart = Calendar.getInstance();
     	Calendar dateEnd = Calendar.getInstance();
     	dateEnd.add(Calendar.DAY_OF_YEAR, 1);
-    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd);
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd, null, null, null, null, null);
     	eventDao.save(event);
     	Activity activity = eventService.addActivity(s.getSessionId(), event.getEventId(), new Activity(event, "Torneo de Lol", "Torneo de Lol", 10, ActivityType.Tournament, true, dateStart,dateEnd,dateStart,dateEnd));
     	eventService.removeActivity(s.getSessionId(), activity.getActivityId());
@@ -215,7 +227,7 @@ public class EventServiceTest {
     	Calendar dateStart = Calendar.getInstance();
     	Calendar dateEnd = Calendar.getInstance();
     	dateEnd.add(Calendar.DAY_OF_YEAR, 1);
-    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd);
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd, null, null, null,null, null);
     	eventDao.save(event);
     	Activity activity = eventService.addActivity(s.getSessionId(), event.getEventId(), new Activity(event, "Torneo de Lol", "Torneo de Lol", 10, ActivityType.Tournament, true, dateStart,dateEnd,dateStart,dateEnd));
     	dateStart.add(Calendar.HOUR, 1);
@@ -238,7 +250,10 @@ public class EventServiceTest {
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	Calendar dateStart = Calendar.getInstance();
     	Calendar dateEnd = Calendar.getInstance();
-    	Event event = eventService.createEvent(s.getSessionId(), new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd));
+    	EmailTemplate et1 = new EmailTemplate();
+    	et1.setAsunto(""); et1.setContenido(""); et1.setFilename(""); et1.setFilepath(""); et1.setName("");
+    	emailTemplateDao.save(et1);
+    	Event event = eventService.createEvent(s.getSessionId(), new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd,et1, et1, et1, et1, et1));
     	Activity activity1 = eventService.addActivity(s.getSessionId(), event.getEventId(), new Activity(event, "Torneo de Lol", "Torneo de Lol", 10, ActivityType.Tournament, true, dateStart,dateEnd,dateStart,dateEnd));
     	Activity activity2 = eventService.addActivity(s.getSessionId(), event.getEventId(), new Activity(event, "Concurso de hacking", "Concurso de hacking", 20, ActivityType.Production, false, dateStart,dateEnd,dateStart,dateEnd));
     	List<Activity> result = eventService.getActivitiesByEvent(s.getSessionId(), event.getEventId(), null);
@@ -261,7 +276,8 @@ public class EventServiceTest {
     	Calendar dateStart = Calendar.getInstance();
     	Calendar dateEnd = Calendar.getInstance();
     	dateEnd.add(Calendar.DAY_OF_YEAR, 1);
-    	Event event = eventService.createEvent(s.getSessionId(), new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd));
+    	
+    	Event event = eventService.createEvent(s.getSessionId(), new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd, null, null, null, null, null));
     	eventService.addParticipantToEvent(s.getSessionId(), user.getUserId(), event.getEventId());
     	Activity activity = eventService.addActivity(s.getSessionId(), event.getEventId(), new Activity(event, "Torneo de Lol", "Torneo de Lol", 10, ActivityType.Tournament, true, dateStart,dateEnd,dateStart,dateEnd));
     	eventService.addParticipantToActivity(s.getSessionId(), user.getUserId(), activity.getActivityId());
@@ -276,7 +292,8 @@ public class EventServiceTest {
     	Calendar dateStart = Calendar.getInstance();
     	Calendar dateEnd = Calendar.getInstance();
     	dateEnd.add(Calendar.DAY_OF_YEAR, 1);
-    	Event event = eventService.createEvent(s.getSessionId(), new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd));
+
+    	Event event = eventService.createEvent(s.getSessionId(), new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd, null, null, null, null, null));
     	eventService.addParticipantToEvent(s.getSessionId(), user.getUserId(), event.getEventId());
     	Activity activity = eventService.addActivity(s.getSessionId(), event.getEventId(), new Activity(event, "Torneo de Lol", "Torneo de Lol", 10, ActivityType.Tournament, true, dateStart,dateEnd,dateStart,dateEnd));
     	eventService.addParticipantToActivity(s.getSessionId(), user.getUserId(), activity.getActivityId());
@@ -294,7 +311,9 @@ public class EventServiceTest {
     	Calendar dateStart = Calendar.getInstance();
     	Calendar dateEnd = Calendar.getInstance();
     	dateEnd.add(Calendar.DAY_OF_YEAR, 1);
-    	Event event = eventService.createEvent(s.getSessionId(), new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd));
+    	
+    	
+    	Event event = eventService.createEvent(s.getSessionId(), new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd, null, null, null, null, null));
     	eventService.addParticipantToEvent(s.getSessionId(), user1.getUserId(), event.getEventId());
     	eventService.addParticipantToEvent(s.getSessionId(), user2.getUserId(), event.getEventId());
     	Activity activity = eventService.addActivity(s.getSessionId(), event.getEventId(), new Activity(event, "Torneo de Lol", "Torneo de Lol", 10, ActivityType.Tournament, true, dateStart,dateEnd,dateStart,dateEnd));
@@ -313,7 +332,7 @@ public class EventServiceTest {
     	NewsItem news = new NewsItem("Nueva noticia", Calendar.getInstance(), "http://ficonlan/nuevaNoticia", 2);
     	Calendar dateStart = Calendar.getInstance();
     	Calendar dateEnd = Calendar.getInstance();
-    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd);
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd, null, new EmailTemplate(), null, null, null);
     	eventService.createEvent(s.getSessionId(), event);
     	eventService.addNews(s.getSessionId(), event.getEventId(), news);
     	assertEquals(news, newsDao.find(news.getNewsItemId()));
@@ -327,7 +346,7 @@ public class EventServiceTest {
     	NewsItem news = new NewsItem("Nueva noticia", Calendar.getInstance(), "http://ficonlan/nuevaNoticia", 2);
     	Calendar dateStart = Calendar.getInstance();
     	Calendar dateEnd = Calendar.getInstance();
-    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd);
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd, null, null, null, null, null);
     	eventService.createEvent(s.getSessionId(), event);
     	eventService.addNews(s.getSessionId(), event.getEventId(), news);
     	Calendar c = Calendar.getInstance();
@@ -347,7 +366,7 @@ public class EventServiceTest {
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	Calendar dateStart = Calendar.getInstance();
     	Calendar dateEnd = Calendar.getInstance();
-    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd);
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd, null, null, null, null, null);
     	eventService.createEvent(s.getSessionId(), event);
     	NewsItem news1 = new NewsItem("Nueva noticia1",  Calendar.getInstance(), "http://ficonlan/nuevaNoticia1", 2);
     	eventService.addNews(s.getSessionId(), event.getEventId(), news1);
@@ -386,7 +405,7 @@ public class EventServiceTest {
     	NewsItem news = new NewsItem("Nueva noticia", Calendar.getInstance(), "http://ficonlan/nuevaNoticia", 2);
     	Calendar dateStart = Calendar.getInstance();
     	Calendar dateEnd = Calendar.getInstance();
-    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd);
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd, null, null, null, null, null);
     	eventService.createEvent(s.getSessionId(), event);
     	eventService.addNews(s.getSessionId(), event.getEventId(), news);
     	try {
@@ -407,7 +426,7 @@ public class EventServiceTest {
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	Calendar regCloseDate = Calendar.getInstance();
     	regCloseDate.add(Calendar.DAY_OF_YEAR, 1);
-    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),regCloseDate);
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),regCloseDate, null, null, null, null, null);
     	eventDao.save(event);
     	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	Registration r1 = eventService.addParticipantToEvent(s.getSessionId(), user.getUserId(), event.getEventId());

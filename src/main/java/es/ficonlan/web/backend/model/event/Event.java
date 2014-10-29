@@ -48,7 +48,9 @@ public class Event {
 
     public Event(int eventId, String name, String description, int numParticipants,
             Calendar startDate, Calendar endDate, Calendar registrationOpenDate,
-            Calendar registrationCloseDate) {
+            Calendar registrationCloseDate, EmailTemplate setPaidTemplate, 
+            EmailTemplate onQueueTemplate, EmailTemplate outstandingTemplate, 
+            EmailTemplate outOfDateTemplate, EmailTemplate fromQueueToOutstanding) {
         this.eventId = eventId;
         this.name = name;
         this.description = description;
@@ -57,6 +59,10 @@ public class Event {
         this.endDate = endDate;
         this.registrationOpenDate = registrationOpenDate;
         this.registrationCloseDate = registrationCloseDate;
+        this.setPaidTemplate = setPaidTemplate;
+        this.onQueueTemplate = onQueueTemplate;
+        this.outstandingTemplate = outstandingTemplate;
+        
     }
 
     @Column(name = "Event_id")
@@ -72,7 +78,7 @@ public class Event {
     }
 
     @Column(name = "Event_name")
-    public String getName() {
+    public String getName() { 
         return name;
     }
 
