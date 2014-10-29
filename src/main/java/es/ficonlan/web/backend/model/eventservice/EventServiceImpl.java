@@ -176,7 +176,6 @@ public class EventServiceImpl implements EventService {
     			{
     				Email email = event.getOnQueueTemplate().generateEmail(user, tabla);
     				email.setRegistration(registration);
-    				registration.setLastemail(email);
     				//email.sendMail();
     				emailDao.save(email);
     			}
@@ -196,7 +195,6 @@ public class EventServiceImpl implements EventService {
     			{
     				Email email = event.getOnQueueTemplate().generateEmail(user, tabla);
     				email.setRegistration(registration);
-    				registration.setLastemail(email);
     				//email.sendMail();
     				emailDao.save(email);
     			}
@@ -214,7 +212,6 @@ public class EventServiceImpl implements EventService {
     			{
     				Email email = event.getOutstandingTemplate().generateEmail(user, tabla);
     				email.setRegistration(registration);
-    				registration.setLastemail(email);
     				//email.sendMail();
     				emailDao.save(email);
     			}
@@ -262,7 +259,6 @@ public class EventServiceImpl implements EventService {
     			{
     				Email email = event.getOutOfDateTemplate().generateEmail(user, tabla);
     				email.setRegistration(registration);
-    				registration.setLastemail(email);
     				//email.sendMail();
     				emailDao.save(email);
     			}
@@ -288,7 +284,6 @@ public class EventServiceImpl implements EventService {
 			{
 				Email email = event.getFromQueueToOutstanding().generateEmail(user, tabla);
 				email.setRegistration(registration);
-				registration.setLastemail(email);
 				//email.sendMail();
 				emailDao.save(email);
 			}
@@ -327,7 +322,6 @@ public class EventServiceImpl implements EventService {
 		{
 			Email email = event.getSetPaidTemplate().generateEmail(user, tabla);
 			email.setRegistration(registration);
-			registration.setLastemail(email);
 			//email.sendMail();
 			emailDao.save(email);
 		}	
