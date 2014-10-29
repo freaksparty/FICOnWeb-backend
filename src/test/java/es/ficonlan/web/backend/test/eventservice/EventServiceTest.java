@@ -366,8 +366,10 @@ public class EventServiceTest {
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	Calendar dateStart = Calendar.getInstance();
     	Calendar dateEnd = Calendar.getInstance();
+    	dateEnd.add(Calendar.MINUTE, 2);
     	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd, null, null, null, null, null);
     	eventService.createEvent(s.getSessionId(), event);
+    	
     	NewsItem news1 = new NewsItem("Nueva noticia1",  Calendar.getInstance(), "http://ficonlan/nuevaNoticia1", 2);
     	eventService.addNews(s.getSessionId(), event.getEventId(), news1);
     	Thread.sleep(200);
