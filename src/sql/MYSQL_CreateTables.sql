@@ -29,7 +29,7 @@ CREATE TABLE PingTable (foo CHAR(1));
 CREATE TABLE Event ( 
 	Event_id                           bigint UNSIGNED NOT NULL AUTO_INCREMENT,
 	Event_name                         varchar(150) NOT NULL  ,
-	Event_description                  varchar(255)    ,
+	Event_description                  TEXT    ,
 	Event_num_participants             int DEFAULT 1 ,
 	Event_date_start                   date NOT NULL  ,
 	Event_date_end                     date NOT NULL  ,
@@ -97,7 +97,7 @@ CREATE TABLE Event (
 	Activity_id                   bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
 	Activity_Event_id             bigint UNSIGNED NOT NULL  ,
 	Activity_name                 varchar(150)  NOT NULL  ,
-	Activity_description          varchar(200)    ,
+	Activity_description          TEXT ,
 	Activity_num_participants     int  NOT NULL DEFAULT 1 ,
 	Activity_type_activity        int UNSIGNED   ,
 	Activity_official             bool DEFAULT 0   ,
@@ -213,7 +213,7 @@ CREATE TABLE Email (
 	Email_fileName	 		varchar(128), 
 	Email_user_id			bigint UNSIGNED   ,
 	Email_case 				varchar(128) NOT NULL,
-	Email_body		 		mediumtext,
+	Email_body		 		TEXT,
 	Email_senddate			datetime,
 	Email_date				datetime,
 	Email_registration_id   bigint UNSIGNED,
@@ -234,7 +234,7 @@ CREATE TABLE EmailTemplate (
 	EmailTemplate_file           varchar(128), 
 	EmailTemplate_fileName       varchar(128), 
 	EmailTemplate_case           varchar(128) NOT NULL,
-	EmailTemplate_body           mediumtext,
+	EmailTemplate_body           TEXT,
     CONSTRAINT pk_email PRIMARY KEY(EmailTemplate_id)
 ) engine=InnoDB;
 
