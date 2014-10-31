@@ -27,6 +27,7 @@ import es.ficonlan.web.backend.jersey.resources.SessionResource;
 import es.ficonlan.web.backend.jersey.resources.SponsorResource;
 import es.ficonlan.web.backend.jersey.resources.UserResource;
 import es.ficonlan.web.backend.jersey.resources.UsersResource;
+import es.ficonlan.web.backend.jersey.util.CORSResponseFilter;
 import es.ficonlan.web.backend.jersey.util.ServiceExceptionMapper;
 import es.ficonlan.web.backend.model.userservice.UserService;
 import es.ficonlan.web.backend.model.util.session.SessionManager;
@@ -74,6 +75,7 @@ public class Main {
 		final ResourceConfig rc = new ResourceConfig();
 		//rc.packages("es.ficonlan.web.backend.jersey.resources");
 		
+		
 		rc.register(ActivityResource.class);
 		rc.register(EventResource.class);
 		rc.register(UserResource.class);
@@ -89,6 +91,7 @@ public class Main {
 		rc.register(BlackListResource.class); 
 		rc.register(SponsorResource.class);
 		rc.register(EmailTemplateResource.class);
+		rc.register(CORSResponseFilter.class);
 		
 		SSLContextConfigurator sslContext = new SSLContextConfigurator();
 		sslContext.setKeyStoreFile(KEYSTORE_FILE);
