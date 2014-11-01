@@ -91,6 +91,7 @@ public class Main {
 		rc.register(BlackListResource.class); 
 		rc.register(SponsorResource.class);
 		rc.register(EmailTemplateResource.class);
+		
 		rc.register(CORSResponseFilter.class);
 		
 		SSLContextConfigurator sslContext = new SSLContextConfigurator();

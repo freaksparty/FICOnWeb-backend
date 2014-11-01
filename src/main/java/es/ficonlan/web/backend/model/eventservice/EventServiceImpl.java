@@ -164,7 +164,8 @@ public class EventServiceImpl implements EventService {
     		tabla.put("#fechafinevento", event.getEndDate().toString());
 
     		
-    		if(currentParticipants>=event.getNumParticipants()) {
+    		if(currentParticipants>=event.getNumParticipants()) 
+    		{
     			registration.setPlaceOnQueue(1 +  queueParticipants); //FIXME SIN TESTEAR
     			registration.setState(RegistrationState.inQueue);
     			
@@ -182,7 +183,8 @@ public class EventServiceImpl implements EventService {
     			}
     			
     		}
-    		else if(user.isInBlackList()) {
+    		else if(user.isInBlackList()) 
+    		{
     			registration.setPlaceOnQueue(event.getNumParticipants() + 50); //FIXME SIN TESTEAR
     			registration.setState(RegistrationState.inQueue);
     			
@@ -275,10 +277,11 @@ public class EventServiceImpl implements EventService {
 			 throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Registration");
 		}
         Registration firstInQueue = registrationDao.getFirstInQueue(eventId);
-        if(firstInQueue!=null){
+        if(firstInQueue!=null)
+        {
         	firstInQueue.setState(RegistrationState.registered);
         	firstInQueue.setPlace(place);
-        	registrationDao.save(firstInQueue);
+        	
         	//FIXME: Mandar correo electrónico
         	
         	tabla.put("#plazaencola", "");
@@ -292,6 +295,7 @@ public class EventServiceImpl implements EventService {
 				//email.sendMail();
 				emailDao.save(email);
 			}
+			registrationDao.save(firstInQueue);
         }
 	}
 	
@@ -305,32 +309,32 @@ public class EventServiceImpl implements EventService {
     	registration.setPaidDate(Calendar.getInstance());
     	registration.setPaid(true);
     	registration.setState(RegistrationState.paid);
-		registrationDao.save(registration);
+		
     	//FIXME: Mandar correo electrónico
 		
     	User user = registration.getUser();
     	Event event = registration.getEvent();
 
-		Hashtable<String,String> tabla = new Hashtable<String,String>();
-		tabla.put("#nombreusuario", user.getName());
-		tabla.put("#loginusuario", user.getLogin());
-		tabla.put("#numerotelefonousuario", user.getPhoneNumber());
-		tabla.put("#tallacamisetausuario", user.getShirtSize());
-		tabla.put("#nombreevento", event.getName());
-		tabla.put("#fechainicioevento", event.getStartDate().toString());
-		tabla.put("#fechafinevento", event.getEndDate().toString());
-		
-		tabla.put("#plazaencola", "");
-		tabla.put("#plazaenevento", Integer.toString(registration.getPlace()));
-		
 		if(event.getSetPaidTemplate()!=null) 
 		{
+			Hashtable<String,String> tabla = new Hashtable<String,String>();
+			tabla.put("#nombreusuario", user.getName());
+			tabla.put("#loginusuario", user.getLogin());
+			tabla.put("#numerotelefonousuario", user.getPhoneNumber());
+			tabla.put("#tallacamisetausuario", user.getShirtSize());
+			tabla.put("#nombreevento", event.getName());
+			tabla.put("#fechainicioevento", event.getStartDate().toString());
+			tabla.put("#fechafinevento", event.getEndDate().toString());
+			
+			tabla.put("#plazaencola", "");
+			tabla.put("#plazaenevento", Integer.toString(registration.getPlace()));
 			Email email = event.getSetPaidTemplate().generateEmail(user, tabla);
 			email.setRegistration(registration);
 			registration.setLastemail(email);
 			//email.sendMail();
 			emailDao.save(email);
 		}	
+		registrationDao.save(registration);
 	}
 	
     @Override
@@ -407,33 +411,32 @@ public class EventServiceImpl implements EventService {
 	        {
 	        	firstInQueue.setState(RegistrationState.registered);
 	        	firstInQueue.setPlace(currentParticipants+1+i);
-	        	registrationDao.save(firstInQueue);
 	        	//FIXME: Mandar correo electrónico
 	        	
 	        	User user = firstInQueue.getUser();
 
-	    		Hashtable<String,String> tabla = new Hashtable<String,String>();
-	    		tabla.put("#nombreusuario", user.getName());
-	    		tabla.put("#loginusuario", user.getLogin());
-	    		tabla.put("#numerotelefonousuario", user.getPhoneNumber());
-	    		tabla.put("#tallacamisetausuario", user.getShirtSize());
-	    		tabla.put("#nombreevento", event.getName());
-	    		tabla.put("#fechainicioevento", event.getStartDate().toString());
-	    		tabla.put("#fechafinevento", event.getEndDate().toString());
-	    		
-	    		tabla.put("#plazaencola", "");
-	    		tabla.put("#plazaenevento", Integer.toString(firstInQueue.getPlace()));
-				
 				if(event.getFromQueueToOutstanding()!=null) 
 				{
+					Hashtable<String,String> tabla = new Hashtable<String,String>();
+		    		tabla.put("#nombreusuario", user.getName());
+		    		tabla.put("#loginusuario", user.getLogin());
+		    		tabla.put("#numerotelefonousuario", user.getPhoneNumber());
+		    		tabla.put("#tallacamisetausuario", user.getShirtSize());
+		    		tabla.put("#nombreevento", event.getName());
+		    		tabla.put("#fechainicioevento", event.getStartDate().toString());
+		    		tabla.put("#fechafinevento", event.getEndDate().toString());
+		    		
+		    		tabla.put("#plazaencola", "");
+		    		tabla.put("#plazaenevento", Integer.toString(firstInQueue.getPlace()));
 					Email email = event.getFromQueueToOutstanding().generateEmail(user, tabla);
 					email.setRegistration(firstInQueue);
 					//email.sendMail();
 					emailDao.save(email);
+					firstInQueue.setLastemail(email);
 				}
+				registrationDao.save(firstInQueue);
 	        }
 		}
-
     }
 	
     @Override
@@ -456,6 +459,28 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
+    public Activity addActivity(String sessionId, Activity activity) throws ServiceException {
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "addActivity")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+
+		if(activity.getEvent()==null) throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
+	
+		if(activity.getName()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"name");
+		if(activity.getNumParticipants()<1) throw new ServiceException(ServiceException.INCORRECT_FIELD,"numParticipants");
+		if(activity.getNumParticipants()<1) throw new ServiceException(ServiceException.INCORRECT_FIELD,"numParticipants");
+		if(activity.getStartDate()==null) activity.setStartDate(activity.getEvent().getStartDate());
+		if(activity.getStartDate().compareTo(activity.getEvent().getStartDate())<0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"startDate");
+		if(activity.getEndDate()==null) activity.setStartDate(activity.getEvent().getEndDate());
+		if(activity.getEndDate().compareTo(activity.getEvent().getEndDate())>0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"endDate");
+		if(activity.getRegDateOpen()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"regDateOpen");
+		if(activity.getRegDateClose()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"regDateClose");
+		
+		activityDao.save(activity);
+		return activity;
+    }
+    
+    @Override
+    @Transactional
 	public Activity addActivity(String sessionId, int eventId, Activity activity) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "addActivity")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
@@ -468,28 +493,6 @@ public class EventServiceImpl implements EventService {
 		}
 		return addActivity(sessionId,activity);
 	}
-    
-    @Override
-    @Transactional
-    public Activity addActivity(String sessionId, Activity activity) throws ServiceException {
-    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "addActivity")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-
-		if(activity.getEvent()==null) throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
-	
-		if(activity.getName()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"name");
-		if(activity.getNumParticipants()<1) throw new ServiceException(ServiceException.INCORRECT_FIELD,"numParticipants");
-		if(activity.getNumParticipants()<1) throw new ServiceException(ServiceException.INCORRECT_FIELD,"numParticipants");
-		if(activity.getStartDate()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"startDate");
-		if(activity.getStartDate().compareTo(activity.getEvent().getStartDate())<0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"startDate");
-		if(activity.getEndDate()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"endDate");
-		if(activity.getEndDate().compareTo(activity.getEvent().getEndDate())>0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"endDate");
-		if(activity.getRegDateOpen()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"regDateOpen");
-		if(activity.getRegDateClose()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"regDateClose");
-		
-		activityDao.save(activity);
-		return activity;
-    }
 
     @Override
     @Transactional
