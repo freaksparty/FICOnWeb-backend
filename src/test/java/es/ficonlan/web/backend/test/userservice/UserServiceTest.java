@@ -1,6 +1,7 @@
 package es.ficonlan.web.backend.test.userservice;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -60,6 +61,38 @@ public class UserServiceTest {
 	@Before 
 	public void initialize() {
 	     userService.initialize();
+	}
+	
+	private String hashPassword (String password){
+		/*
+		try {
+			MessageDigest mdigest = MessageDigest.getInstance("SHA-256");
+			String h = new String(mdigest.digest(password.getBytes("UTF-8")),"UTF-8");
+
+			//System.out.println(h);
+			return h;
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+		*/
+		// FIXME he cambiado el hasheo a MD5 porque con SHA-256 habia errores en lo que guardaba la bd
+		try {
+			MessageDigest m = MessageDigest.getInstance("MD5");
+		
+			m.reset();
+			m.update(password.getBytes());
+			byte[] digest = m.digest();
+			BigInteger bigInt = new BigInteger(1,digest);
+			String hashtext = bigInt.toString(16);
+			
+			while(hashtext.length() < 32 ){
+				hashtext = "0"+hashtext;
+			}
+			return hashtext;
+		}
+		catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e.getMessage());
+		}
 	}
 	
     @Test
@@ -221,8 +254,8 @@ public class UserServiceTest {
     	Session s = userService.login(anonymousSession.getSessionId(),"login1", "pass");
     	userService.changeUserPassword(s.getSessionId(), user.getUserId(), "pass", "newpass");
     	User u = userDao.find(user.getUserId());
-    	MessageDigest mdigest = MessageDigest.getInstance("SHA-256");
-    	String newPassHash = new String(mdigest.digest("newpass".getBytes("UTF-8")),"UTF-8");
+
+    	String newPassHash = hashPassword("newpass");
     	assertTrue(u.getPassword().contentEquals(newPassHash));
 	}
 	
@@ -247,8 +280,7 @@ public class UserServiceTest {
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	userService.changeUserPassword(s.getSessionId(), user.getUserId(), null, "newpass"); //Old password not required in this case
     	User u = userDao.find(user.getUserId());
-    	MessageDigest mdigest = MessageDigest.getInstance("SHA-256");
-    	String newPassHash = new String(mdigest.digest("newpass".getBytes("UTF-8")),"UTF-8");
+    	String newPassHash = hashPassword("newpass");
     	assertTrue(u.getPassword().contentEquals(newPassHash));
 	}
 	
