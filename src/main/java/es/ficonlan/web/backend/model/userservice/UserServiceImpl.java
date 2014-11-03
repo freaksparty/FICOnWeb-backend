@@ -157,8 +157,8 @@ public class UserServiceImpl implements UserService {
 		if(login.contentEquals("anonymous")) return session;
 		if(!session.getUser().getLogin().contentEquals("anonymous")) throw new ServiceException(ServiceException.SESSION_ALREADY_EXISTS);
 		User user = userDao.findUserBylogin(login);
-		if (user == null) throw new ServiceException(ServiceException.INCORRECT_FIELD,"login");
-		if (!user.getPassword().contentEquals(hashPassword(password)))  throw new ServiceException(ServiceException.INCORRECT_FIELD,"password");
+		if (user == null) throw new ServiceException(ServiceException.INCORRECT_FIELD,"");
+		if (!user.getPassword().contentEquals(hashPassword(password)))  throw new ServiceException(ServiceException.INCORRECT_FIELD,"");
 		session = new Session(user);
 		SessionManager.addSession(session);
 		return session;
