@@ -1,5 +1,7 @@
 package es.ficonlan.web.backend.jersey.resources;
 
+import java.util.Set;
+
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -10,11 +12,11 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
+import es.ficonlan.web.backend.model.role.Role;
 import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.userservice.UserService;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import es.ficonlan.web.backend.model.util.session.Session;
-import es.ficonlan.web.backend.model.util.session.SessionManager;
 
 /**
  * @author Daniel Gómez Silva
@@ -51,11 +53,11 @@ public class SessionResource {
 		return userService.getCurrenUser(sessionId);
 	}
 	
-	@Path("/isvalid/")
+	@Path("/role/")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public boolean validSesion(@HeaderParam("sessionId") String sessionId) throws ServiceException {
-		return SessionManager.exists(sessionId);
+	public Set<Role> validSesion(@HeaderParam("sessionId") String sessionId) throws ServiceException {
+		return userService.getUserRoles(sessionId, userService.getCurrenUser(sessionId).getUserId());
 	}
 	
 }
