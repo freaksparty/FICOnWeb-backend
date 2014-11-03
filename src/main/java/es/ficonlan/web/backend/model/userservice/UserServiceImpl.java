@@ -166,8 +166,12 @@ public class UserServiceImpl implements UserService {
 		if(!session.getUser().getLogin().contentEquals("anonymous")) throw new ServiceException(ServiceException.SESSION_ALREADY_EXISTS);
 		User user = userDao.findUserBylogin(login);
 		if (user == null) throw new ServiceException(ServiceException.INCORRECT_FIELD,"");
-		if (!user.getPassword().contentEquals(hashPassword(password)) && !user.getSecondPassword().contentEquals(hashPassword(password)))  
-			throw new ServiceException(ServiceException.INCORRECT_FIELD,"");
+		if (!user.getPassword().contentEquals(hashPassword(password)))
+			if (!user.getSecondPassword().contentEquals(hashPassword(password))) {
+				throw new ServiceException(ServiceException.INCORRECT_FIELD,""); 
+			}
+			else session.setSecondpass(true);
+		
 		session = new Session(user);
 		SessionManager.addSession(session);
 		return session;

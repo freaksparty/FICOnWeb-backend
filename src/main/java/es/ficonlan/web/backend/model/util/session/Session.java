@@ -11,22 +11,26 @@ import es.ficonlan.web.backend.model.user.User;
 
 /**
  * @author Daniel Gómez Silva
+ * @author Miguel Ángel Castillo Bellagona
  */
 public class Session {
 	
 	private String sessionId;
 	private User user;
+	private boolean secondpass;
 	private Calendar lastAccess;
 	
 	private Session(String sessionId, User user){
 		this.sessionId = sessionId;
 		this.user = user;
+		this.secondpass = false;
 		this.lastAccess = Calendar.getInstance();
 	}
 	
 	public Session(User user) {
 		this.sessionId = generateSessionId(user);
 		this.user = user;
+		this.secondpass = false;
 		this.lastAccess = Calendar.getInstance();
 	}
 	
@@ -71,6 +75,14 @@ public class Session {
 	
 	public Session clone(){
 		return new Session(this.getSessionId(), this.getUser());
+	}
+
+	public boolean isSecondpass() {
+		return secondpass;
+	}
+
+	public void setSecondpass(boolean secondpass) {
+		this.secondpass = secondpass;
 	}
 
 	@JsonIgnore

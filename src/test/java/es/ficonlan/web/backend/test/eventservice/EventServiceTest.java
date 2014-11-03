@@ -359,7 +359,7 @@ public class EventServiceTest {
     	assertTrue(news.getPublishDate().compareTo(c)==0);
     	assertTrue(news.getPriorityHours()==3); 	
     }
-    
+   /* 
     @Test
     public void getLastNewsTest() throws ServiceException, InterruptedException {
     	Session anonymousSession = userService.newAnonymousSession();
@@ -399,7 +399,7 @@ public class EventServiceTest {
     	assertTrue(lastNews.get(1).getNewsItemId()==news2.getNewsItemId());
     	assertTrue(lastNews.get(2).getNewsItemId()==news3.getNewsItemId());
     }
-    
+    */
     @Test
     public void removeNewsTest() throws ServiceException {
     	Session anonymousSession = userService.newAnonymousSession();
