@@ -152,8 +152,9 @@ public class UserServiceImpl implements UserService {
 		if(user.getDni()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"dni");
 		if(user.getEmail()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"email");
 		user.getRoles().add(roleDao.findByName("User"));
-		user.setPassword(hashPassword(user.getPassword()));
-		user.setSecondPassword(hashPassword(user.getPassword()));
+		String pass = hashPassword(user.getPassword());
+		user.setPassword(pass);
+		user.setSecondPassword(pass);
 		userDao.save(user);
 		return user;	
 	}
@@ -237,7 +238,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Transactional
-	public void passwordRecover(String sessionId, String email) throws ServiceException {
+	public boolean passwordRecover(String sessionId, String email) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "passwordRecover")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		
@@ -264,10 +265,12 @@ public class UserServiceImpl implements UserService {
 			 		
     		Email e = emailTemplateDao.findByName("passwordRecover").generateEmail(user, tabla);
 
-    		if(e.sendMail()) userDao.save(user);;
+    		if(e.sendMail()) userDao.save(user);
     		
+    		return true;
     		//Estos Email no los guardo en la BD porque contienen las contraseñas en plano
 		}
+		return false;
 	}
 
 	@Transactional(readOnly=true)

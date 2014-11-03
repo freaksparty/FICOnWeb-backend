@@ -23,6 +23,7 @@ import es.ficonlan.web.backend.model.supportedlanguage.SupportedLanguage;
 
 /**
  * @author Daniel Gómez Silva
+ * @author Miguel Ángel Castillo Bellagona
  */
 @Entity
 public class User {

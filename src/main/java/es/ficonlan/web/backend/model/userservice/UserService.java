@@ -31,7 +31,7 @@ public interface UserService {
 	
 	public void changeUserPassword(String sessionId, int userId, String oldPassword, String newPassword)  throws ServiceException;
 	
-	public void passwordRecover(String sessionId, String email) throws ServiceException;
+	public boolean passwordRecover(String sessionId, String email) throws ServiceException;
 	
 	public List<User> getUsersByEvent(String sessionId, int eventId, RegistrationState state, int startIndex, int maxResults)  throws ServiceException;
     

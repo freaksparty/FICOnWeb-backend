@@ -95,6 +95,13 @@ public class UserResource {
 		userService.changeUserPassword(sessionId, userId, data.getOldPassword(), data.getNewPassword());
 	}
 	
+	@Path("/passwordrecover/{email}")
+	@GET
+	@Consumes({MediaType.APPLICATION_JSON})
+	public boolean passwordRecover(@HeaderParam("sessionId") String sessionId, @PathParam("email") String email) throws ServiceException {
+		return userService.passwordRecover(sessionId, email);
+	}
+	
 	@Path("/email/{userId}")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
@@ -129,7 +136,7 @@ public class UserResource {
 		return userService.getUserRoles(sessionId, userId);
 	}
 	
-	@Path("/reole/{userId}/{roleId}")
+	@Path("/role/{userId}/{roleId}")
 	@DELETE
 	public void removeRole(@HeaderParam("sessionId") String sessionId, @PathParam("roleId") int roleId, @PathParam("userId") int userId) throws ServiceException{
 		userService.removeRole(sessionId, roleId, userId);
