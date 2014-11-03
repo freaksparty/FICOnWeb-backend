@@ -29,6 +29,7 @@ public class Sponsor {
 	private int sponsorId;
 	private Event event;
 	private String name;
+	private String url;
 	private String imageurl;
 	
 	public Sponsor() {
@@ -66,6 +67,15 @@ public class Sponsor {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	@Column(name = "Sponsor_url")
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	@Column(name = "Sponsor_imageurl")

@@ -7,6 +7,7 @@ import es.ficonlan.web.backend.model.util.dao.GenericDao;
 
 /**
  * @author Daniel Gómez Silva
+ * @author Miguel Ángel Castillo Bellagona
  */
 public interface UserDao extends GenericDao<User,Integer> {
 	
@@ -15,6 +16,8 @@ public interface UserDao extends GenericDao<User,Integer> {
 	public User findUserBylogin(String login);
 	
 	public User findUserByDni(String dni);
+	
+	public User findUserByEmail(String email);
 
 	public List<User> getUsersByEvent(int eventId, RegistrationState state, int startindex, int maxResults);
 

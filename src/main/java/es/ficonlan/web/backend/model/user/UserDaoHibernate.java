@@ -9,6 +9,7 @@ import es.ficonlan.web.backend.model.util.dao.GenericDaoHibernate;
 
 /**
  * @author Daniel Gómez Silva
+ * @author Miguel Ángel Castillo Bellagona
  */
 @Repository("userDao")
 public class UserDaoHibernate extends GenericDaoHibernate<User,Integer> implements UserDao {
@@ -40,6 +41,12 @@ public class UserDaoHibernate extends GenericDaoHibernate<User,Integer> implemen
                    							  "WHERE r.event.id = :eventId AND r.state = :state AND u.deleted=FALSE " +
                    							  "ORDER BY r.registrationDate" 
 				 						    ).setParameter("eventId",eventId).setParameter("state",state).setFirstResult(startindex).setMaxResults(maxResults).list(); 			
+	}
+	
+	public User findUserByEmail(String email) {
+		return (User) getSession()
+				.createQuery("SELECT u FROM User u Where User_email = :email AND u.deleted=FALSE")
+				.setParameter("email", email).uniqueResult();
 	}
 
 	public User findUserByDni(String dni) {

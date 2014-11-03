@@ -2,6 +2,7 @@ package es.ficonlan.web.backend.model.userservice;
 
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
 
@@ -9,7 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.ficonlan.web.backend.model.email.Email;
 import es.ficonlan.web.backend.model.emailservice.EmailService;
+import es.ficonlan.web.backend.model.emailtemplate.EmailTemplate;
+import es.ficonlan.web.backend.model.emailtemplate.EmailTemplateDao;
 import es.ficonlan.web.backend.model.eventservice.EventService;
 import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
 import es.ficonlan.web.backend.model.role.Role;
@@ -33,7 +37,7 @@ import es.ficonlan.web.backend.model.util.session.SessionManager;
 public class UserServiceImpl implements UserService {
 	
 	private static final String ADMIN_LOGIN = "Admin";
-	private static final String INITIAL_ADMIN_PASS = "initialAdminPass";
+	private static final String INITIAL_ADMIN_PASS = "admin";
 		
 	@Autowired
 	private UserDao userDao;
@@ -43,6 +47,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private UseCaseDao useCaseDao;
+	
+	@Autowired
+	private EmailTemplateDao emailTemplateDao;
 	
 	@Autowired
 	private SupportedLanguageDao languageDao;
@@ -146,6 +153,7 @@ public class UserServiceImpl implements UserService {
 		if(user.getEmail()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"email");
 		user.getRoles().add(roleDao.findByName("User"));
 		user.setPassword(hashPassword(user.getPassword()));
+		user.setSecondPassword(hashPassword(user.getPassword()));
 		userDao.save(user);
 		return user;	
 	}
@@ -158,7 +166,8 @@ public class UserServiceImpl implements UserService {
 		if(!session.getUser().getLogin().contentEquals("anonymous")) throw new ServiceException(ServiceException.SESSION_ALREADY_EXISTS);
 		User user = userDao.findUserBylogin(login);
 		if (user == null) throw new ServiceException(ServiceException.INCORRECT_FIELD,"");
-		if (!user.getPassword().contentEquals(hashPassword(password)))  throw new ServiceException(ServiceException.INCORRECT_FIELD,"");
+		if (!user.getPassword().contentEquals(hashPassword(password)) && !user.getSecondPassword().contentEquals(hashPassword(password)))  
+			throw new ServiceException(ServiceException.INCORRECT_FIELD,"");
 		session = new Session(user);
 		SessionManager.addSession(session);
 		return session;
@@ -208,14 +217,53 @@ public class UserServiceImpl implements UserService {
 		if(!SessionManager.checkPermissions(session, userId, "changeUserPassword")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			User user = userDao.find(userId);
-			if(session.getUser().getUserId() == userId){
-				if(!hashPassword(oldPassword).contentEquals(user.getPassword()))  throw new ServiceException(ServiceException.INCORRECT_FIELD,"password"); 
+			if(session.getUser().getUserId() == userId)
+			{
+				if(!hashPassword(oldPassword).contentEquals(user.getPassword()) && !hashPassword(oldPassword).contentEquals(user.getSecondPassword())) 
+					throw new ServiceException(ServiceException.INCORRECT_FIELD,"password");
+
+				user.setPassword(hashPassword(newPassword));
+				user.setSecondPassword(hashPassword(newPassword));
+				userDao.save(user);
 			}
-			user.setPassword(hashPassword(newPassword));
-			userDao.save(user);
+			
 		} catch (InstanceException e) {
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
 		}	
+	}
+	
+	@Transactional
+	public void passwordRecover(String sessionId, String email) throws ServiceException {
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "passwordRecover")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		
+		User user = userDao.findUserByEmail(email);
+		EmailTemplate template = emailTemplateDao.findByName("passwordRecover");
+		
+		if((user!=null) && (template!=null)) { 
+			char[] elementos={'0','1','2','3','4','5','6','7','8','9' ,'a',
+					'b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t',
+					'u','v','w','x','y','z'};
+			char[] conjunto = new char[8];
+			
+			for(int i=0;i<12;i++){
+				int el = (int)(Math.random()*36);
+				conjunto[i] = (char)elementos[el];
+			}
+			String pass = new String(conjunto);
+			
+			user.setSecondPassword(hashPassword(pass));
+			
+			Hashtable<String,String> tabla = new Hashtable<String,String>();
+    		tabla.put("#loginusuario", user.getLogin());
+    		tabla.put("#nuevapass", pass);
+			 		
+    		Email e = emailTemplateDao.findByName("passwordRecover").generateEmail(user, tabla);
+
+    		if(e.sendMail()) userDao.save(user);;
+    		
+    		//Estos Email no los guardo en la BD porque contienen las contraseñas en plano
+		}
 	}
 
 	@Transactional(readOnly=true)

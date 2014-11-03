@@ -31,6 +31,7 @@ public class User {
     private String name;
     private String login;
     private String password;
+    private String secondPassword;
     private String dni;
     private String email;
     private String phoneNumber;
@@ -51,6 +52,7 @@ public class User {
         this.name = name;
         this.login = login;
         this.password = password;
+        this.secondPassword = password;
         this.dni = dni;
         this.email = email;
         this.phoneNumber = phoneNumber;
@@ -100,7 +102,18 @@ public class User {
         this.password = password;
     }
 
-    @Column(name = "User_dni")
+    @JsonIgnore
+    @Column(name = "User_secondPassword")
+    public String getSecondPassword() {
+		return secondPassword;
+	}
+
+    @JsonProperty(value = "password")
+	public void setSecondPassword(String secondPassword) {
+		this.secondPassword = secondPassword;
+	}
+
+	@Column(name = "User_dni")
     public String getDni() {
         return dni;
     }

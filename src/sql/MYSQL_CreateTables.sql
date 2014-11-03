@@ -61,8 +61,9 @@ CREATE TABLE Event (
  
  CREATE TABLE User ( 
 	User_id                   bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
-	User_login                varchar(200)  NOT NULL  ,
-	User_password             varchar(200)  NOT NULL  ,
+	User_login                varchar(200) NOT NULL  ,
+	User_password             varchar(200) NOT NULL  ,
+	User_secondPassword       varchar(200) NOT NULL  ,  
 	User_checked              bit   DEFAULT 0 ,
 	User_name                 varchar(250)  NOT NULL  ,
 	User_dni                  varchar(11)  NOT NULL ,
@@ -247,6 +248,7 @@ CREATE TABLE Sponsor (
 	Sponsor_id             bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
 	Sponsor_event_id       bigint UNSIGNED NOT NULL,
 	Sponsor_name           varchar(128),
+	Sponsor_url            varchar(255),
 	Sponsor_imageurl       varchar(256),
     CONSTRAINT pk_sponsor PRIMARY KEY(Sponsor_id)
 ) engine=InnoDB;
