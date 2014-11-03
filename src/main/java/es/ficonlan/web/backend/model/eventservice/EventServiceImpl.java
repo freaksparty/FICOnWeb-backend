@@ -147,7 +147,7 @@ public class EventServiceImpl implements EventService {
     		
     		Registration registration = registrationDao.findByUserAndEvent(userId, eventId);
     		if (registration==null) registration = new Registration(user, event);
-    		else return getRegistration(sessionId,userId,eventId);
+    		else throw new  ServiceException(ServiceException.DUPLICATED_FIELD,"Event");
     		
     		int currentParticipants = registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.registered) + 
     								  registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.paid);
