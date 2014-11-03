@@ -127,6 +127,7 @@ public class EventServiceImpl implements EventService {
     		if(eventData.getRegistrationCloseDate()!=null) event.setRegistrationCloseDate(eventData.getRegistrationCloseDate());
         	eventDao.save(event);
         	if(eventData.getNumParticipants()>oldNumParticipants) eventNumParticipantsChanged(sessionId,eventId);
+        	if(eventData.getNormas()!=null) event.setNormas(eventData.getNormas());
         	return event;
     	} catch (InstanceException e) {
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");

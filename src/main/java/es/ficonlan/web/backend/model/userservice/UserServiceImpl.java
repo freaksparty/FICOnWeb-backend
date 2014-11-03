@@ -1,7 +1,9 @@
 package es.ficonlan.web.backend.model.userservice;
 
 import java.lang.reflect.Method;
+import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +33,7 @@ import es.ficonlan.web.backend.model.util.session.SessionManager;
 
 /**
  * @author Daniel Gómez Silva
+ * @author Miguel Ángel Castillo Bellagona
  */
 @Service("UserService")
 @Transactional
@@ -55,12 +58,33 @@ public class UserServiceImpl implements UserService {
 	private SupportedLanguageDao languageDao;
 	
 	private String hashPassword (String password){
+		/*
 		try {
 			MessageDigest mdigest = MessageDigest.getInstance("SHA-256");
 			String h = new String(mdigest.digest(password.getBytes("UTF-8")),"UTF-8");
+
 			//System.out.println(h);
 			return h;
 		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+		*/
+		// FIXME he cambiado el hasheo a MD5 porque con SHA-256 habia errores en lo que guardaba la bd
+		try {
+			MessageDigest m = MessageDigest.getInstance("MD5");
+		
+			m.reset();
+			m.update(password.getBytes());
+			byte[] digest = m.digest();
+			BigInteger bigInt = new BigInteger(1,digest);
+			String hashtext = bigInt.toString(16);
+			
+			while(hashtext.length() < 32 ){
+				hashtext = "0"+hashtext;
+			}
+			return hashtext;
+		}
+		catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException(e.getMessage());
 		}
 	}
@@ -151,7 +175,7 @@ public class UserServiceImpl implements UserService {
 		if(user.getName()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"name");
 		if(user.getDni()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"dni");
 		if(user.getEmail()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"email");
-		user.getRoles().add(roleDao.findByName("User"));
+		user.getRoles().add(roleDao.findByName("User"));	
 		String pass = hashPassword(user.getPassword());
 		user.setPassword(pass);
 		user.setSecondPassword(pass);
@@ -166,10 +190,12 @@ public class UserServiceImpl implements UserService {
 		if(login.contentEquals("anonymous")) return session;
 		if(!session.getUser().getLogin().contentEquals("anonymous")) throw new ServiceException(ServiceException.SESSION_ALREADY_EXISTS);
 		User user = userDao.findUserBylogin(login);
-		if (user == null) throw new ServiceException(ServiceException.INCORRECT_FIELD,"");
+		
+		
+		if (user == null) throw new ServiceException(ServiceException.INCORRECT_FIELD,"user");
 		if (!user.getPassword().contentEquals(hashPassword(password)))
 			if (!user.getSecondPassword().contentEquals(hashPassword(password))) {
-				throw new ServiceException(ServiceException.INCORRECT_FIELD,""); 
+				throw new ServiceException(ServiceException.INCORRECT_FIELD,"pass"); 
 			}
 			else session.setSecondpass(true);
 		

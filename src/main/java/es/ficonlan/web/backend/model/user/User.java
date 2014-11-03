@@ -109,7 +109,7 @@ public class User {
 		return secondPassword;
 	}
 
-    @JsonProperty(value = "password")
+    @JsonProperty(value = "secondpassword")
 	public void setSecondPassword(String secondPassword) {
 		this.secondPassword = secondPassword;
 	}

@@ -41,6 +41,7 @@ public class Event {
     private EmailTemplate outstandingTemplate;
     private EmailTemplate outOfDateTemplate;
     private EmailTemplate fromQueueToOutstanding;
+    private String normas;
     
 
     public Event() {
@@ -211,5 +212,16 @@ public class Event {
 	public void setFromQueueToOutstanding(EmailTemplate fromQueueToOutstanding) {
 		this.fromQueueToOutstanding = fromQueueToOutstanding;
 	}
+
+	@Column(name = "Event_rules")
+	public String getNormas() {
+		return normas;
+	}
+
+	public void setNormas(String normas) {
+		this.normas = normas;
+	}
+	
+	
 
 }

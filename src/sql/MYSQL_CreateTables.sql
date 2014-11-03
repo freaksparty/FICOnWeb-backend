@@ -40,6 +40,7 @@ CREATE TABLE Event (
 	Event_outstandingTemplate_id       bigint UNSIGNED ,
 	Event_outOfDateTemplate_id         bigint UNSIGNED ,
 	Event_fromQueueToOutstanding_id    bigint UNSIGNED ,
+	Event_rules                        TEXT,
 	CONSTRAINT pk_event PRIMARY KEY ( Event_id ) ,
 	CONSTRAINT Event_name_UNIQUE UNIQUE ( Event_name )
  ) engine=InnoDB;
@@ -74,8 +75,7 @@ CREATE TABLE Event (
 	User_defaultLanguage      bigint UNSIGNED  ,
 	CONSTRAINT pk_user PRIMARY KEY ( User_id ) ,
 	CONSTRAINT User_login_UNIQUE UNIQUE ( User_login )  ,
-	CONSTRAINT User_dni_UNIQUE UNIQUE ( User_dni )  ,
-	CONSTRAINT User_email_UNIQUE UNIQUE ( User_email )
+	CONSTRAINT User_dni_UNIQUE UNIQUE ( User_dni )  
  ) engine=InnoDB;
  
  CREATE INDEX UserIndexByUser_login ON User (User_login);
