@@ -52,7 +52,7 @@ public class EventServiceTest {
 
     private final String NON_EXISTENT_EVENT_NAME = "Boring event";
     private final String ADMIN_LOGIN = "Admin";
-    private final String ADMIN_PASS = "admin";
+    private final String ADMIN_PASS = "initialAdminPass";
 
     @Autowired
     private EventDao eventDao;

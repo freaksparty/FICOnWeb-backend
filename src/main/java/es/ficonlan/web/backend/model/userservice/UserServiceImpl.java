@@ -37,7 +37,7 @@ import es.ficonlan.web.backend.model.util.session.SessionManager;
 public class UserServiceImpl implements UserService {
 	
 	private static final String ADMIN_LOGIN = "Admin";
-	private static final String INITIAL_ADMIN_PASS = "admin";
+	private static final String INITIAL_ADMIN_PASS = "initialAdminPass";
 		
 	@Autowired
 	private UserDao userDao;
