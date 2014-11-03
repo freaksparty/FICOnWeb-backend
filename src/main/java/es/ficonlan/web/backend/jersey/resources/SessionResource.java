@@ -57,7 +57,10 @@ public class SessionResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Set<Role> validSesion(@HeaderParam("sessionId") String sessionId) throws ServiceException {
-		return userService.getUserRoles(sessionId, userService.getCurrenUser(sessionId).getUserId());
+		try {
+			return userService.getUserRoles(sessionId, userService.getCurrenUser(sessionId).getUserId());
+		}
+		catch (Exception e) { return null; }
 	}
 	
 }
