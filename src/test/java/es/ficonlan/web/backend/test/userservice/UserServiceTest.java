@@ -39,7 +39,7 @@ public class UserServiceTest {
     private final String NON_EXISTENT_PASSWORD = "-3";
     private final String NON_EXISTENT_SESSION_ID = "Non existent session ID.";
     private final String ADMIN_LOGIN = "Admin";
-    private final String ADMIN_PASS = "initialAdminPass";
+    private final String ADMIN_PASS = "admin";
 
 
     @Autowired

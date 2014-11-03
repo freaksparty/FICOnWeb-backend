@@ -222,10 +222,10 @@ public class UserServiceImpl implements UserService {
 				if(!hashPassword(oldPassword).contentEquals(user.getPassword()) && !hashPassword(oldPassword).contentEquals(user.getSecondPassword())) 
 					throw new ServiceException(ServiceException.INCORRECT_FIELD,"password");
 
-				user.setPassword(hashPassword(newPassword));
-				user.setSecondPassword(hashPassword(newPassword));
-				userDao.save(user);
 			}
+			user.setPassword(hashPassword(newPassword));
+			user.setSecondPassword(hashPassword(newPassword));
+			userDao.save(user);
 			
 		} catch (InstanceException e) {
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
