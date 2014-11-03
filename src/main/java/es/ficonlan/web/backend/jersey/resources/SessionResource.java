@@ -14,6 +14,7 @@ import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.userservice.UserService;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import es.ficonlan.web.backend.model.util.session.Session;
+import es.ficonlan.web.backend.model.util.session.SessionManager;
 
 /**
  * @author Daniel Gómez Silva
@@ -50,5 +51,11 @@ public class SessionResource {
 		return userService.getCurrenUser(sessionId);
 	}
 	
+	@Path("/isvalid/")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public boolean validSesion(@HeaderParam("sessionId") String sessionId) throws ServiceException {
+		return SessionManager.exists(sessionId);
+	}
 	
 }
