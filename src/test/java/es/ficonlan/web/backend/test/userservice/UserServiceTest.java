@@ -75,9 +75,8 @@ public class UserServiceTest {
 			throw new RuntimeException(e.getMessage());
 		}
 		*/
-		// FIXME he cambiado el hasheo a MD5 porque con SHA-256 habia errores en lo que guardaba la bd
 		try {
-			MessageDigest m = MessageDigest.getInstance("MD5");
+			MessageDigest m = MessageDigest.getInstance("SHA-512");
 		
 			m.reset();
 			m.update(password.getBytes());

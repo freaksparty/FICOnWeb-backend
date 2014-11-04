@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
@@ -69,9 +70,8 @@ public class UserServiceImpl implements UserService {
 			throw new RuntimeException(e.getMessage());
 		}
 		*/
-		// FIXME he cambiado el hasheo a MD5 porque con SHA-256 habia errores en lo que guardaba la bd
 		try {
-			MessageDigest m = MessageDigest.getInstance("MD5");
+			MessageDigest m = MessageDigest.getInstance("SHA-512");
 		
 			m.reset();
 			m.update(password.getBytes());
@@ -194,7 +194,7 @@ public class UserServiceImpl implements UserService {
 		
 		if (user == null) throw new ServiceException(ServiceException.INCORRECT_FIELD,"user");
 		if (!user.getPassword().contentEquals(hashPassword(password)))
-			if (!user.getSecondPassword().contentEquals(hashPassword(password))) {
+			if ((user.getSecondPasswordExpDate()==null) || (user.getSecondPasswordExpDate().before(Calendar.getInstance())) || (!user.getSecondPassword().contentEquals(hashPassword(password)))) {
 				throw new ServiceException(ServiceException.INCORRECT_FIELD,"pass"); 
 			}
 			else session.setSecondpass(true);
@@ -250,9 +250,10 @@ public class UserServiceImpl implements UserService {
 			User user = userDao.find(userId);
 			if(session.getUser().getUserId() == userId)
 			{
-				if(!hashPassword(oldPassword).contentEquals(user.getPassword()) && !hashPassword(oldPassword).contentEquals(user.getSecondPassword())) 
-					throw new ServiceException(ServiceException.INCORRECT_FIELD,"password");
-
+				if(!hashPassword(oldPassword).contentEquals(user.getPassword())) 
+						if ((user.getSecondPasswordExpDate()==null) || (user.getSecondPasswordExpDate().before(Calendar.getInstance())) || (!user.getSecondPassword().contentEquals(hashPassword(oldPassword)))) 
+							throw new ServiceException(ServiceException.INCORRECT_FIELD,"pass"); 
+				user.setSecondPasswordExpDate(null);
 			}
 			user.setPassword(hashPassword(newPassword));
 			user.setSecondPassword(hashPassword(newPassword));
@@ -267,6 +268,8 @@ public class UserServiceImpl implements UserService {
 	public boolean passwordRecover(String sessionId, String email) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "passwordRecover")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		
+		int minutos = 30;
 		
 		User user = userDao.findUserByEmail(email);
 		EmailTemplate template = emailTemplateDao.findByName("passwordRecover");
@@ -284,10 +287,14 @@ public class UserServiceImpl implements UserService {
 			String pass = new String(conjunto);
 			
 			user.setSecondPassword(hashPassword(pass));
+			Calendar now = Calendar.getInstance();
+			now.add(Calendar.MINUTE,minutos); //Tiene 3 minutos
+			user.setSecondPasswordExpDate(now);
 			
 			Hashtable<String,String> tabla = new Hashtable<String,String>();
     		tabla.put("#loginusuario", user.getLogin());
     		tabla.put("#nuevapass", pass);
+    		tabla.put("#tiemporestante",Integer.toString(minutos));
 			 		
     		Email e = emailTemplateDao.findByName("passwordRecover").generateEmail(user, tabla);
 
@@ -542,4 +549,5 @@ public class UserServiceImpl implements UserService {
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getAllUseCases")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		return useCaseDao.getAll();
 	}
+	
 }

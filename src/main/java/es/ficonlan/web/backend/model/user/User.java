@@ -1,5 +1,6 @@
 package es.ficonlan.web.backend.model.user;
 
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,6 +34,7 @@ public class User {
     private String login;
     private String password;
     private String secondPassword;
+    private Calendar secondPasswordExpDate;
     private String dni;
     private String email;
     private String phoneNumber;
@@ -112,6 +114,16 @@ public class User {
     @JsonProperty(value = "secondpassword")
 	public void setSecondPassword(String secondPassword) {
 		this.secondPassword = secondPassword;
+	}
+    
+    @JsonIgnore
+    @Column(name = "User_secondPasswordExpDate")
+	public Calendar getSecondPasswordExpDate() {
+		return secondPasswordExpDate;
+	}
+
+	public void setSecondPasswordExpDate(Calendar secondPasswordExpDate) {
+		this.secondPasswordExpDate = secondPasswordExpDate;
 	}
 
 	@Column(name = "User_dni")

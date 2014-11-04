@@ -44,4 +44,4 @@ INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE U
 INSERT INTO Adress VALUES (0, "patrocinio@ficonlan.es", "patrocinioficonlan");
 
 INSERT INTO EmailTemplate VALUES ( 0, "passwordRecover", ( SELECT Adress_id FROM Adress WHERE Adress_user =  "patrocinio@ficonlan.es" ), "", "", "Recuperación contraseña plataforma Freak's Party webs",
- "La nueva contraseña para la cuenta #loginusuario es #nuevapas recuerda cambiarla");
+ "La nueva contraseña para la cuenta #loginusuario es #nuevapas esta contraseña solo será válida durante #tiemporestante minutos, recuerda cambiarla.");
