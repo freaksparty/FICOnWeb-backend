@@ -278,10 +278,10 @@ public class UserServiceImpl implements UserService {
 			char[] elementos={'0','1','2','3','4','5','6','7','8','9' ,'a',
 					'b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t',
 					'u','v','w','x','y','z'};
-			char[] conjunto = new char[8];
+			char[] conjunto = new char[12];
 			
 			for(int i=0;i<12;i++){
-				int el = (int)(Math.random()*36);
+				int el = (int)(Math.random()*35);
 				conjunto[i] = (char)elementos[el];
 			}
 			String pass = new String(conjunto);
@@ -293,7 +293,7 @@ public class UserServiceImpl implements UserService {
 			
 			Hashtable<String,String> tabla = new Hashtable<String,String>();
     		tabla.put("#loginusuario", user.getLogin());
-    		tabla.put("#nuevapass", pass);
+    		tabla.put("#nuevapas", pass);
     		tabla.put("#tiemporestante",Integer.toString(minutos));
 			 		
     		Email e = emailTemplateDao.findByName("passwordRecover").generateEmail(user, tabla);

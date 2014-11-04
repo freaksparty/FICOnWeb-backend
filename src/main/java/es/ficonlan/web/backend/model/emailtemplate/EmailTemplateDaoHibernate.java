@@ -23,13 +23,13 @@ public class EmailTemplateDaoHibernate extends GenericDaoHibernate<EmailTemplate
 	@Override
 	public List<EmailTemplate> searchEmailTemplatesByEvent(int eventId) {
 		return getSession().createQuery( "SELECT e " +
-				 "FROM EmailTemplate e WHERE e.EmailTemplate_event_id = :eventId").setParameter("eventId", eventId).list();
+				 "FROM EmailTemplate e WHERE e.eventId = :eventId").setParameter("eventId", eventId).list();
 	}
 
 	@Override
 	public EmailTemplate findByName(String name) {
 		return (EmailTemplate) getSession()
-				.createQuery("SELECT e FROM EmailTemplate e WHERE e.EmailTemplate_name = :name")
+				.createQuery("SELECT e FROM EmailTemplate e WHERE e.name = :name")
 				.setParameter("name", name).uniqueResult();
 	}
 

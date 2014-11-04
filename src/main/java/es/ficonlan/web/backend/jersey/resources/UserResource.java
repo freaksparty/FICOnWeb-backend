@@ -23,6 +23,7 @@ import es.ficonlan.web.backend.model.role.Role;
 import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.userservice.UserService;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
+import es.ficonlan.web.backend.util.direcionCorreo;
 
 /**
  * @author Daniel Gómez Silva
@@ -95,11 +96,11 @@ public class UserResource {
 		userService.changeUserPassword(sessionId, userId, data.getOldPassword(), data.getNewPassword());
 	}
 	
-	@Path("/passwordrecover/{email}")
-	@GET
+	@Path("/passwordrecover/")
+	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
-	public boolean passwordRecover(@HeaderParam("sessionId") String sessionId, @PathParam("email") String email) throws ServiceException {
-		return userService.passwordRecover(sessionId, email);
+	public boolean passwordRecover(@HeaderParam("sessionId") String sessionId, direcionCorreo email) throws ServiceException {
+		return userService.passwordRecover(sessionId, email.getContenido());
 	}
 	
 	@Path("/email/{userId}")
