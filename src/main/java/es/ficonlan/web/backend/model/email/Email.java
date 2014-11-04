@@ -1,19 +1,7 @@
 package es.ficonlan.web.backend.model.email;
 
 import java.util.Calendar;
-import java.util.Properties;
 
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,10 +16,10 @@ import javax.persistence.Table;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
+import es.ficonlan.web.backend.jersey.util.JsonAdressDeserializer;
 import es.ficonlan.web.backend.jersey.util.JsonDateDeserializer;
 import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
 import es.ficonlan.web.backend.jersey.util.JsonEntityIdSerializer;
-import es.ficonlan.web.backend.jersey.util.JsonAdressDeserializer; 
 import es.ficonlan.web.backend.jersey.util.JsonRegistrationDeserializer;
 import es.ficonlan.web.backend.jersey.util.JsonUserDeserializer;
 import es.ficonlan.web.backend.model.emailadress.Adress;
@@ -106,7 +94,7 @@ public class Email {
 		return this.confirmation;
 	}
 
-	private void setConfirmation(boolean confirmation) {
+	void setConfirmation(boolean confirmation) {
 		this.confirmation = confirmation;
 	}
 
@@ -188,7 +176,7 @@ public class Email {
 		return sendDate;
 	}
 
-	private void setSendDate(Calendar sendDate) {
+	void setSendDate(Calendar sendDate) {
 		this.sendDate = sendDate;
 	}
 	
@@ -207,56 +195,9 @@ public class Email {
 
 	public boolean sendMail() {
 
-		try {
-			Properties props = new Properties();
-			props.put("mail.smtp.host", "smtp.gmail.com");
-			props.setProperty("mail.smtp.starttls.enable", "true");
-			props.setProperty("mail.smtp.port", "587");
-			props.setProperty("mail.smtp.user",this.direccionEnvio.getUsuarioCorreo());
-			props.setProperty("mail.smtp.auth", "true");
-
-			Session session = Session.getDefaultInstance(props, null);
-			BodyPart texto = new MimeBodyPart();
-			texto.setText(mensaje);
-
-			BodyPart adjunto = new MimeBodyPart();
-			if (!rutaArchivo.equals("")) {
-				adjunto.setDataHandler(new DataHandler(new FileDataSource(rutaArchivo)));
-				adjunto.setFileName(nombreArchivo);
-			}
-
-			MimeMultipart multiParte = new MimeMultipart();
-			multiParte.addBodyPart(texto);
-			if (!rutaArchivo.equals("")) {
-				multiParte.addBodyPart(adjunto);
-			}
-
-			MimeMessage message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(this.direccionEnvio.getUsuarioCorreo()));
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(destinatario.getEmail()));
-			message.setSubject(asunto);
-			message.setContent(multiParte);
-
-			Transport t = session.getTransport("smtp");
-			t.connect(this.direccionEnvio.getUsuarioCorreo(),this.direccionEnvio.getPassword());
-			t.sendMessage(message, message.getAllRecipients());
-			t.close();
-
-			this.setSendDate(Calendar.getInstance());
-			this.setConfirmation(true);
-
-			return true;
-		} 
-		catch (MessagingException e) 
-		{
-			e.printStackTrace();
-
-			this.setSendDate(null);
-			this.setConfirmation(false);
-
-			return false;
-		}
-
+		SendMailThread trhead = new SendMailThread(this);
+		trhead.start();
+		return true;
 	}
 
 }

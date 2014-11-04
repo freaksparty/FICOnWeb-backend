@@ -2,11 +2,13 @@ package es.ficonlan.web.backend.model.util.session;
 
 import java.security.MessageDigest;
 import java.util.Calendar;
+import java.util.Set;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import es.ficonlan.web.backend.jersey.util.JsonEntityIdSerializer;
+import es.ficonlan.web.backend.model.role.Role;
 import es.ficonlan.web.backend.model.user.User;
 
 /**
@@ -18,12 +20,16 @@ public class Session {
 	private String sessionId;
 	private User user;
 	private boolean secondpass;
+	private String loginName;
+	private Set<Role> role;
 	private Calendar lastAccess;
 	
 	private Session(String sessionId, User user){
 		this.sessionId = sessionId;
 		this.user = user;
 		this.secondpass = false;
+		this.loginName = user.getLogin();
+		this.role=user.getRoles();
 		this.lastAccess = Calendar.getInstance();
 	}
 	
@@ -31,6 +37,8 @@ public class Session {
 		this.sessionId = generateSessionId(user);
 		this.user = user;
 		this.secondpass = false;
+		this.loginName = user.getLogin();
+		this.role=user.getRoles();
 		this.lastAccess = Calendar.getInstance();
 	}
 	
@@ -83,6 +91,22 @@ public class Session {
 
 	public void setSecondpass(boolean secondpass) {
 		this.secondpass = secondpass;
+	}
+	
+	public String getLoginName() {
+		return loginName;
+	}
+
+	public void setLoginName(String loginName) {
+		this.loginName = loginName;
+	}
+
+	public Set<Role> getRole() {
+		return role;
+	}
+
+	public void setRole(Set<Role> role) {
+		this.role = role;
 	}
 
 	@JsonIgnore
