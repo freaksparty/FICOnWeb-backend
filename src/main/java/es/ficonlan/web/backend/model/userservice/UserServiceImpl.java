@@ -191,15 +191,18 @@ public class UserServiceImpl implements UserService {
 		if(!session.getUser().getLogin().contentEquals("anonymous")) throw new ServiceException(ServiceException.SESSION_ALREADY_EXISTS);
 		User user = userDao.findUserBylogin(login);
 		
+		boolean secondPass = false;
 		
 		if (user == null) throw new ServiceException(ServiceException.INCORRECT_FIELD,"user");
-		if (!user.getPassword().contentEquals(hashPassword(password)))
+		if (!user.getPassword().contentEquals(hashPassword(password))) {
 			if ((user.getSecondPasswordExpDate()==null) || (user.getSecondPasswordExpDate().before(Calendar.getInstance())) || (!user.getSecondPassword().contentEquals(hashPassword(password)))) {
 				throw new ServiceException(ServiceException.INCORRECT_FIELD,"pass"); 
 			}
-			else session.setSecondpass(true);
+			else secondPass = true;
+		}
 		
 		session = new Session(user);
+		session.setSecondpass(secondPass);
 		SessionManager.addSession(session);
 		return session;
 	}
@@ -226,11 +229,11 @@ public class UserServiceImpl implements UserService {
 		if(!SessionManager.checkPermissions(session, userId, "changeUserData")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			User user = userDao.find(userData.getUserId());
-			user.setName(userData.getName());
-			if(session.getUser().getUserId()!=userData.getUserId()) user.setDni(userData.getDni());
-			user.setEmail(userData.getEmail());
-			user.setPhoneNumber(userData.getPhoneNumber());
-			user.setShirtSize(userData.getShirtSize());
+			if(userData.getName()!=null) user.setName(userData.getName());
+			if(session.getUser().getUserId()!=userData.getUserId()) if(userData.getDni()!=null) user.setDni(userData.getDni());
+			if(userData.getEmail()!=null) user.setEmail(userData.getEmail());
+			if(userData.getPhoneNumber()!=null )user.setPhoneNumber(userData.getPhoneNumber());
+			if(userData.getShirtSize()!=null) user.setShirtSize(userData.getShirtSize());
 			userDao.save(user);
 		} catch (InstanceException e) {
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
@@ -288,7 +291,7 @@ public class UserServiceImpl implements UserService {
 			
 			user.setSecondPassword(hashPassword(pass));
 			Calendar now = Calendar.getInstance();
-			now.add(Calendar.MINUTE,minutos); //Tiene 3 minutos
+			now.add(Calendar.MINUTE,minutos); //Tiene 30 minutos
 			user.setSecondPasswordExpDate(now);
 			
 			Hashtable<String,String> tabla = new Hashtable<String,String>();
