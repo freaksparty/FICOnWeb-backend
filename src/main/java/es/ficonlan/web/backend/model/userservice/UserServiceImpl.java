@@ -235,6 +235,7 @@ public class UserServiceImpl implements UserService {
 			if(userData.getPhoneNumber()!=null )user.setPhoneNumber(userData.getPhoneNumber());
 			if(userData.getShirtSize()!=null) user.setShirtSize(userData.getShirtSize());
 			userDao.save(user);
+			session.setUser(user);
 		} catch (InstanceException e) {
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
 		}
