@@ -224,6 +224,9 @@ public class UserServiceImpl implements UserService {
 			if(userData.getName()!=null) user.setName(userData.getName());
 			if(session.getUser().getUserId()!=userData.getUserId()) if(userData.getDni()!=null) user.setDni(userData.getDni());
 			User u = userDao.findUserByEmail(userData.getEmail());
+			System.out.println(!u.getEmail().equals(userData.getEmail())); 
+			System.out.println(u.getEmail());
+			System.out.println(userData.getEmail());
 			if(u!=null && !u.getEmail().equals(userData.getEmail())) throw new ServiceException(ServiceException.DUPLICATED_FIELD,"email");
 			if(userData.getEmail()!=null) user.setEmail(userData.getEmail());
 			if(userData.getPhoneNumber()!=null )user.setPhoneNumber(userData.getPhoneNumber());
