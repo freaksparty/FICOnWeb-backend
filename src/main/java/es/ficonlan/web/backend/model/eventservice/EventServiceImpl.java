@@ -3,6 +3,7 @@ package es.ficonlan.web.backend.model.eventservice;
 import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -144,7 +145,7 @@ public class EventServiceImpl implements EventService {
     		User user = userDao.find(userId);
     		
     		Event event = eventDao.find(eventId);    		
-    		if(event.getRegistrationOpenDate().compareTo(Calendar.getInstance())>0||event.getRegistrationCloseDate().compareTo(Calendar.getInstance())<0) throw new ServiceException(9,"addParticipantToEvent");
+    		if(event.getRegistrationOpenDate().compareTo(Calendar.getInstance(TimeZone.getTimeZone("UTC")))>0||event.getRegistrationCloseDate().compareTo(Calendar.getInstance(TimeZone.getTimeZone("UTC")))<0) throw new ServiceException(9,"addParticipantToEvent");
     		
     		Registration registration = registrationDao.findByUserAndEvent(userId, eventId);
     		if (registration==null) registration = new Registration(user, event);
@@ -307,7 +308,7 @@ public class EventServiceImpl implements EventService {
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "setPaid")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		Registration registration = registrationDao.findByUserAndEvent(userId, eventId);
     	if (registration==null) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Registration");
-    	registration.setPaidDate(Calendar.getInstance());
+    	registration.setPaidDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
     	registration.setPaid(true);
     	registration.setState(RegistrationState.paid);
 		
@@ -376,7 +377,7 @@ public class EventServiceImpl implements EventService {
     	Registration registration = registrationDao.findByUserAndEvent(userId, eventId);
     	if (registration==null) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Registration");
     	if(state==RegistrationState.paid){
-    		registration.setPaidDate(Calendar.getInstance());
+    		registration.setPaidDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
     		registration.setPaid(true);
     	}
     	registration.setState(state);
@@ -626,7 +627,7 @@ public class EventServiceImpl implements EventService {
 		if(newsItem.getPublishDate()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"publishDate");
 
 		newsItem.setPublisher(SessionManager.getSession(sessionId).getUser());
-		newsItem.setCreationDate(Calendar.getInstance());
+		newsItem.setCreationDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
 		newsDao.save(newsItem);
 		return newsItem;
     }

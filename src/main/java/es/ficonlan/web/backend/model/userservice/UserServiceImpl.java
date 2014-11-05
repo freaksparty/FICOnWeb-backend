@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -187,7 +188,7 @@ public class UserServiceImpl implements UserService {
 		
 		if (user == null) throw new ServiceException(ServiceException.INCORRECT_FIELD,"");
 		if (!user.getPassword().contentEquals(hashPassword(password))) {
-			if ((user.getSecondPasswordExpDate()==null) || (user.getSecondPasswordExpDate().before(Calendar.getInstance())) || (!user.getSecondPassword().contentEquals(hashPassword(password)))) {
+			if ((user.getSecondPasswordExpDate()==null) || (user.getSecondPasswordExpDate().before(Calendar.getInstance(TimeZone.getTimeZone("UTC")))) || (!user.getSecondPassword().contentEquals(hashPassword(password)))) {
 				throw new ServiceException(ServiceException.INCORRECT_FIELD,""); 
 			}
 			else secondPass = true;
@@ -253,7 +254,7 @@ public class UserServiceImpl implements UserService {
 			if(session.getUser().getUserId() == userId)
 			{
 				if(!hashPassword(oldPassword).contentEquals(user.getPassword())) 
-						if ((user.getSecondPasswordExpDate()==null) || (user.getSecondPasswordExpDate().before(Calendar.getInstance())) || (!user.getSecondPassword().contentEquals(hashPassword(oldPassword)))) 
+						if ((user.getSecondPasswordExpDate()==null) || (user.getSecondPasswordExpDate().before(Calendar.getInstance(TimeZone.getTimeZone("UTC")))) || (!user.getSecondPassword().contentEquals(hashPassword(oldPassword)))) 
 							throw new ServiceException(ServiceException.INCORRECT_FIELD,"pass"); 
 				user.setSecondPasswordExpDate(null);
 			}
@@ -291,7 +292,7 @@ public class UserServiceImpl implements UserService {
 			String pass = new String(conjunto);
 			
 			user.setSecondPassword(hashPassword(pass));
-			Calendar now = Calendar.getInstance();
+			Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 			now.add(Calendar.MINUTE,minutos); //Tiene 30 minutos
 			user.setSecondPasswordExpDate(now);
 			

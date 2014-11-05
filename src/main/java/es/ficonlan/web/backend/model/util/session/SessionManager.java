@@ -2,6 +2,7 @@ package es.ficonlan.web.backend.model.util.session;
 
 import java.util.Calendar;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 
 import es.ficonlan.web.backend.model.role.Role;
@@ -21,7 +22,7 @@ public class SessionManager {
 	
 	public static Session getSession(String sessionId){
 		Session s = openSessions.get(sessionId);
-		s.setLastAccess(Calendar.getInstance());
+		s.setLastAccess(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
 		return s;
 	}
 	
@@ -30,7 +31,7 @@ public class SessionManager {
 	}
 	
 	public static void cleanOldSessions(int timeout){
-		Calendar limitTime = Calendar.getInstance();
+		Calendar limitTime = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		limitTime.add(Calendar.SECOND, -timeout);
 		for(Map.Entry<String,Session> e:openSessions.entrySet()){
 			if(e.getValue().getLastAccess().before(limitTime))

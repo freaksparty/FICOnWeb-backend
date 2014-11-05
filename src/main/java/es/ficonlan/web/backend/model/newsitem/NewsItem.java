@@ -15,6 +15,7 @@ import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 
 import es.ficonlan.web.backend.jersey.util.JsonDateDeserializer;
 import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
@@ -45,7 +46,7 @@ public class NewsItem {
 	public NewsItem (String title, Calendar publishDate, String url, int priorityHours) {
 		super();
 		this.title = title;
-		this.creationDate = Calendar.getInstance();
+		this.creationDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		this.publishDate = publishDate;
 		this.url = url;
 		this.priorityHours = priorityHours;

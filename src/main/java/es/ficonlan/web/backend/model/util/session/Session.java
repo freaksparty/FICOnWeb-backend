@@ -3,6 +3,7 @@ package es.ficonlan.web.backend.model.util.session;
 import java.security.MessageDigest;
 import java.util.Calendar;
 import java.util.Set;
+import java.util.TimeZone;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -30,7 +31,7 @@ public class Session {
 		this.secondpass = false;
 		this.loginName = user.getLogin();
 		this.role=user.getRoles();
-		this.lastAccess = Calendar.getInstance();
+		this.lastAccess = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 	}
 	
 	public Session(User user) {
@@ -39,7 +40,7 @@ public class Session {
 		this.secondpass = false;
 		this.loginName = user.getLogin();
 		this.role=user.getRoles();
-		this.lastAccess = Calendar.getInstance();
+		this.lastAccess = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 	}
 	
 	private String hexEncode(byte[] barray) {
@@ -55,7 +56,7 @@ public class Session {
 
 	private String generateSessionId(User user) {
 		String s = user.getLogin() + user.getName() + user.getPassword()
-				+ Calendar.getInstance().getTimeInMillis();
+				+ Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis();
 		try {
 			MessageDigest mdigest = MessageDigest.getInstance("SHA-256");
 			return hexEncode(mdigest.digest(s.getBytes("UTF-8")));

@@ -1,6 +1,7 @@
 package es.ficonlan.web.backend.model.email;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -63,7 +64,7 @@ public class Email {
 		this.destinatario = destinatario;
 		this.asunto = asunto;
 		this.mensaje = mensaje;
-		this.date = Calendar.getInstance();
+		this.date = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		this.sendDate = null;
 		this.confirmation = false;
 	}

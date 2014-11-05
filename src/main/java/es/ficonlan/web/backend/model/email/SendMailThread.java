@@ -2,6 +2,7 @@ package es.ficonlan.web.backend.model.email;
 
 import java.util.Calendar;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -72,7 +73,7 @@ public class SendMailThread extends Thread {
 			t.sendMessage(message, message.getAllRecipients());
 			t.close();
 
-			email.setSendDate(Calendar.getInstance());
+			email.setSendDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
 			email.setConfirmation(true);
 
 			return true;

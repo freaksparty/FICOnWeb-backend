@@ -1,6 +1,7 @@
 package es.ficonlan.web.backend.model.registration;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -57,7 +58,7 @@ public class Registration {
 		this.user = user;
 		this.event = event;
 		this.state = RegistrationState.registered;
-		this.registrationDate = Calendar.getInstance();
+		this.registrationDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		this.paidDate = null;
 		this.paid = false;
 	}

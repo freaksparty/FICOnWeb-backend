@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.TimeZone;
 
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonProcessingException;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author Daniel Gómez Silva
+ * @author Miguel Ángel Castillo Bellagona
  */
 @Component
 public class JsonDateDeserializer extends JsonDeserializer<Calendar> {
@@ -22,7 +24,7 @@ public class JsonDateDeserializer extends JsonDeserializer<Calendar> {
 
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy/HH:mm:ss");
 		String date = jsonparser.getText();
-		Calendar c = Calendar.getInstance();
+		Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		try {
 			c.setTimeInMillis(format.parse(date).getTime());
 		} catch (ParseException e) {

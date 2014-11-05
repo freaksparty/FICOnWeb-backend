@@ -2,6 +2,7 @@ package es.ficonlan.web.backend.model.emailservice;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -293,7 +294,7 @@ public class EmailServiceImpl implements EmailService {
 			Email email = emailDao.find(emailId);
 			if(email.getDestinatario().getUserId()!=userId) if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), userId, "getUserLastEventEmail")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 			if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), email.getDestinatario().getUserId(), "sendUserMail")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-			Calendar time = Calendar.getInstance();
+			Calendar time = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 			time.add(Calendar.MINUTE, 1);
 			if(!email.getSendDate().before(time)) throw new ServiceException(ServiceException.WAIT_FOR_SEND);
 			email.sendMail();
