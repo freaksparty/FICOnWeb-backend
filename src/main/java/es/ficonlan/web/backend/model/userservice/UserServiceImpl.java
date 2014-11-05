@@ -163,6 +163,8 @@ public class UserServiceImpl implements UserService {
 		if(user.getPassword()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"password");
 		if(user.getName()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"name");
 		if(user.getDni()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"dni");
+		u = userDao.findUserByEmail(user.getEmail());
+		if (u != null) throw new ServiceException(ServiceException.DUPLICATED_FIELD,"email");
 		if(user.getEmail()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"email");
 		//if(user.getDob()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"fecha nacimiento"); //FIXME
 		user.getRoles().add(roleDao.findByName("User"));	
@@ -183,10 +185,10 @@ public class UserServiceImpl implements UserService {
 		
 		boolean secondPass = false;
 		
-		if (user == null) throw new ServiceException(ServiceException.INCORRECT_FIELD,"user");
+		if (user == null) throw new ServiceException(ServiceException.INCORRECT_FIELD,"");
 		if (!user.getPassword().contentEquals(hashPassword(password))) {
 			if ((user.getSecondPasswordExpDate()==null) || (user.getSecondPasswordExpDate().before(Calendar.getInstance())) || (!user.getSecondPassword().contentEquals(hashPassword(password)))) {
-				throw new ServiceException(ServiceException.INCORRECT_FIELD,"pass"); 
+				throw new ServiceException(ServiceException.INCORRECT_FIELD,""); 
 			}
 			else secondPass = true;
 		}
@@ -221,6 +223,8 @@ public class UserServiceImpl implements UserService {
 			User user = userDao.find(userData.getUserId());
 			if(userData.getName()!=null) user.setName(userData.getName());
 			if(session.getUser().getUserId()!=userData.getUserId()) if(userData.getDni()!=null) user.setDni(userData.getDni());
+			User u = userDao.findUserByEmail(userData.getEmail());
+			if(u!=null && !u.getEmail().equals(userData.getEmail())) throw new ServiceException(ServiceException.DUPLICATED_FIELD,"email");
 			if(userData.getEmail()!=null) user.setEmail(userData.getEmail());
 			if(userData.getPhoneNumber()!=null )user.setPhoneNumber(userData.getPhoneNumber());
 			if(userData.getShirtSize()!=null) user.setShirtSize(userData.getShirtSize());
