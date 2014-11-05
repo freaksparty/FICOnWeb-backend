@@ -15,10 +15,15 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Temporal;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
+import es.ficonlan.web.backend.jersey.util.JsonDateDeserializer;
+import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
 import es.ficonlan.web.backend.model.role.Role;
 import es.ficonlan.web.backend.model.supportedlanguage.SupportedLanguage;
 
@@ -206,7 +211,10 @@ public class User {
 		this.defaultLanguage = defaultLanguage;
 	}
 
+	@JsonDeserialize(using = JsonDateDeserializer.class)
+    @JsonSerialize(using=JsonDateSerializer.class)
 	@Column(name = "User_borndate")
+	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	public Calendar getDob() {
 		return dob;
 	}

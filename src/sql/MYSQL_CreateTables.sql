@@ -79,7 +79,8 @@ CREATE TABLE Event (
 	User_borndate                datetime ,
 	CONSTRAINT pk_user PRIMARY KEY ( User_id ) ,
 	CONSTRAINT User_login_UNIQUE UNIQUE ( User_login )  ,
-	CONSTRAINT User_dni_UNIQUE UNIQUE ( User_dni )  
+	CONSTRAINT User_dni_UNIQUE UNIQUE ( User_dni )  ,
+	CONSTRAINT User_email_UNIQUE UNIQUE ( User_email )  
  ) engine=InnoDB;
  
  CREATE INDEX UserIndexByUser_login ON User (User_login);
