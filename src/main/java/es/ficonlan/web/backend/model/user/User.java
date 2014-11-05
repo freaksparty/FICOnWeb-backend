@@ -43,6 +43,7 @@ public class User {
     private String shirtSize;
     private boolean inBlackList;
     private SupportedLanguage defaultLanguage;
+    private Calendar dob;
     
 	public User() {}
 
@@ -205,4 +206,14 @@ public class User {
 		this.defaultLanguage = defaultLanguage;
 	}
 
+	@Column(name = "User_borndate")
+	public Calendar getDob() {
+		return dob;
+	}
+
+	public void setDob(Calendar fechaNacimiento) {
+		this.dob = fechaNacimiento;
+	}
+
+	
 }

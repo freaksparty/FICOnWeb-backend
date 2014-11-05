@@ -342,7 +342,7 @@ public class EventServiceImpl implements EventService {
 	@Transactional(readOnly = true)
 	public Registration getRegistration(String sessionId, int userId, int eventId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getRegistration")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), userId, "getRegistration")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		
 		try {
 			Event event = eventDao.find(eventId);

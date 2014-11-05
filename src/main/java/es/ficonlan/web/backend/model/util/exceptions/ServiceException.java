@@ -13,6 +13,9 @@ package es.ficonlan.web.backend.model.util.exceptions;
  * 09 - Registration out of time<br>
  * 10 - User isn't registered in the event<br>
  * 11 - Activity maximum number of participants reached<br>
+ * 12 - This field can´t be modified<br>
+ * 13 - You must wait for send your email<br>
+ * 14 - Don have enouth age for register in this event<br>
  * 99 - System unexpected error (RuntimeException)
  * 
  * @author Daniel Gómez Silva
@@ -21,19 +24,20 @@ package es.ficonlan.web.backend.model.util.exceptions;
 public class ServiceException extends Exception {
 
 	public static final int INVALID_SESSION = 1;
-	public static final int PERMISSION_DENIED=2;
-	public static final int DUPLICATED_FIELD=3;
-	public static final int INCORRECT_FIELD=4;
-	public static final int MISSING_FIELD=5;
-	public static final int INSTANCE_NOT_FOUND=6;
-	public static final int SESSION_ALREADY_EXISTS=7;
-	public static final int MAX_NUM_PARTICIPANTS_REACHED=8;
-	public static final int REGISTRATION_OUT_OF_TIME=9;
-	public static final int USER_NOT_REGISTERED_IN_EVENT=10;
-	public static final int MISSING_CONFIG_FILE=11;
-	public static final int CANT_BE_MODIFIED=12;
-	public static final int WAIT_FOR_SEND=13;
-	public static final int OTHER=99;
+	public static final int PERMISSION_DENIED = 2;
+	public static final int DUPLICATED_FIELD = 3;
+	public static final int INCORRECT_FIELD = 4;
+	public static final int MISSING_FIELD = 5;
+	public static final int INSTANCE_NOT_FOUND = 6;
+	public static final int SESSION_ALREADY_EXISTS = 7;
+	public static final int MAX_NUM_PARTICIPANTS_REACHED = 8;
+	public static final int REGISTRATION_OUT_OF_TIME = 9;
+	public static final int USER_NOT_REGISTERED_IN_EVENT = 10;
+	public static final int MISSING_CONFIG_FILE = 11;
+	public static final int CANT_BE_MODIFIED = 12;
+	public static final int WAIT_FOR_SEND = 13;
+	public static final int YOUR_ARE_TOO_YOUNG = 14;
+	public static final int OTHER = 99;
 	
 	private static final long serialVersionUID = 1L;
 	private int errorCode;
@@ -83,6 +87,8 @@ public class ServiceException extends Exception {
 			return "Cant be modified";
 		case 13:
 			return "Wait for send";
+		case 14:
+			return "You are too young";
 		case 99:
 			return "System unexpected error";
 		default:

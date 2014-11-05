@@ -28,7 +28,7 @@ import es.ficonlan.web.backend.model.user.User;
 
 /**
  * @author Miguel Ángel Castillo Bellagona
- * @version 2.0
+ * @version 2.1
  */
 @Entity
 @Table(name = "Email")

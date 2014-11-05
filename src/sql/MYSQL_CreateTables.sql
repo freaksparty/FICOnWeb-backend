@@ -31,6 +31,8 @@ CREATE TABLE Event (
 	Event_name                         varchar(150) NOT NULL  ,
 	Event_description                  TEXT    ,
 	Event_num_participants             int DEFAULT 1 ,
+	Event_minimunAge                   int DEFAULT 0 ,
+	Event_minimunAgeWithAuthorization  int DEFAULT 0 ,
 	Event_date_start                   date NOT NULL  ,
 	Event_date_end                     date NOT NULL  ,
 	Event_reg_date_open                datetime NOT NULL  ,
@@ -74,6 +76,7 @@ CREATE TABLE Event (
 	User_shirtSize               varchar(3) ,
 	User_inBlackList             bit DEFAULT 0 ,
 	User_defaultLanguage         bigint UNSIGNED  ,
+	User_borndate                datetime ,
 	CONSTRAINT pk_user PRIMARY KEY ( User_id ) ,
 	CONSTRAINT User_login_UNIQUE UNIQUE ( User_login )  ,
 	CONSTRAINT User_dni_UNIQUE UNIQUE ( User_dni )  

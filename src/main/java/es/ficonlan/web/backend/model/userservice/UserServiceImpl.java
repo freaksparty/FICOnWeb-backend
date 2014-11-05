@@ -59,17 +59,6 @@ public class UserServiceImpl implements UserService {
 	private SupportedLanguageDao languageDao;
 	
 	private String hashPassword (String password){
-		/*
-		try {
-			MessageDigest mdigest = MessageDigest.getInstance("SHA-256");
-			String h = new String(mdigest.digest(password.getBytes("UTF-8")),"UTF-8");
-
-			//System.out.println(h);
-			return h;
-		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
-		}
-		*/
 		try {
 			MessageDigest m = MessageDigest.getInstance("SHA-512");
 		
@@ -175,6 +164,7 @@ public class UserServiceImpl implements UserService {
 		if(user.getName()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"name");
 		if(user.getDni()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"dni");
 		if(user.getEmail()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"email");
+		//if(user.getDob()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"fecha nacimiento"); //FIXME
 		user.getRoles().add(roleDao.findByName("User"));	
 		String pass = hashPassword(user.getPassword());
 		user.setPassword(pass);
@@ -234,6 +224,7 @@ public class UserServiceImpl implements UserService {
 			if(userData.getEmail()!=null) user.setEmail(userData.getEmail());
 			if(userData.getPhoneNumber()!=null )user.setPhoneNumber(userData.getPhoneNumber());
 			if(userData.getShirtSize()!=null) user.setShirtSize(userData.getShirtSize());
+			if(session.getUser().getDob()!=userData.getDob()) if(userData.getDob()!=null) user.setDob(userData.getDob());
 			userDao.save(user);
 			session.setUser(user);
 		} catch (InstanceException e) {
@@ -250,6 +241,7 @@ public class UserServiceImpl implements UserService {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		Session session = SessionManager.getSession(sessionId);
 		if(!SessionManager.checkPermissions(session, userId, "changeUserPassword")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		
 		try {
 			User user = userDao.find(userId);
 			if(session.getUser().getUserId() == userId)
@@ -274,6 +266,7 @@ public class UserServiceImpl implements UserService {
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "passwordRecover")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		
 		int minutos = 30;
+		int passtam = 12;
 		
 		User user = userDao.findUserByEmail(email);
 		EmailTemplate template = emailTemplateDao.findByName("passwordRecover");
@@ -282,9 +275,10 @@ public class UserServiceImpl implements UserService {
 			char[] elementos={'0','1','2','3','4','5','6','7','8','9' ,'a',
 					'b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t',
 					'u','v','w','x','y','z'};
-			char[] conjunto = new char[12];
 			
-			for(int i=0;i<12;i++){
+			char[] conjunto = new char[passtam];
+			
+			for(int i=0;i<passtam;i++){
 				int el = (int)(Math.random()*35);
 				conjunto[i] = (char)elementos[el];
 			}
@@ -382,7 +376,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public void removeOwnUser(String sessionId, int userId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "removeOwnUser")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), userId, "removeOwnUser")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try 
 		{
 			User user = userDao.find(userId);
