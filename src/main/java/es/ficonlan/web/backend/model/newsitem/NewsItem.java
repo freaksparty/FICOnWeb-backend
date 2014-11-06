@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
+import javax.persistence.Transient;
 
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -40,6 +41,8 @@ public class NewsItem {
 	private int priorityHours;
 	private User publisher;
 	private Event event;
+	@SuppressWarnings("unused")
+	private String login;
 	
 	public NewsItem () {};
 	
@@ -138,4 +141,15 @@ public class NewsItem {
 	public void setEvent(Event event) {
 		this.event = event;
 	}
+
+	@Transient
+	public String getLogin() {
+		return this.getPublisher().getLogin();
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
+	
+	
 }

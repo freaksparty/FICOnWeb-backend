@@ -167,7 +167,7 @@ public class UserServiceImpl implements UserService {
 		u = userDao.findUserByEmail(user.getEmail());
 		if (u != null) throw new ServiceException(ServiceException.DUPLICATED_FIELD,"email");
 		if(user.getEmail()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"email");
-		//if(user.getDob()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"fecha nacimiento"); //FIXME
+		if(user.getDob()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"fecha nacimiento"); //FIXME
 		user.getRoles().add(roleDao.findByName("User"));	
 		String pass = hashPassword(user.getPassword());
 		user.setPassword(pass);
