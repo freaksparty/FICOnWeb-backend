@@ -37,7 +37,7 @@ public class NewsItem {
 	private String title;
 	private Calendar creationDate;
 	private Calendar publishDate;
-	private String url;
+	private String content;
 	private int priorityHours;
 	private User publisher;
 	private Event event;
@@ -46,12 +46,12 @@ public class NewsItem {
 	
 	public NewsItem () {};
 	
-	public NewsItem (String title, Calendar publishDate, String url, int priorityHours) {
+	public NewsItem (String title, Calendar publishDate, String content, int priorityHours) {
 		super();
 		this.title = title;
 		this.creationDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		this.publishDate = publishDate;
-		this.url = url;
+		this.content = content;
 		this.priorityHours = priorityHours;
 	}
 
@@ -100,13 +100,13 @@ public class NewsItem {
 		this.publishDate = publishDate;
 	}
 
-	@Column(name = "NewsItem_url")
-	public String getUrl() {
-		return url;
+	@Column(name = "NewsItem_content")
+	public String getContent() {
+		return content;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 	@Column(name = "NewsItem_hours_priority")

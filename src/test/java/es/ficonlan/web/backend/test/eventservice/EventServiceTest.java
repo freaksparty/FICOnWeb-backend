@@ -355,7 +355,7 @@ public class EventServiceTest {
     	newsData.setNewsItemId(news.getNewsItemId());
     	eventService.changeNewsData(s.getSessionId(), newsData.getNewsItemId(), newsData);
     	assertTrue(news.getTitle().contentEquals("Nueva noticia2"));
-    	assertTrue(news.getUrl().contentEquals("http://ficonlan/nuevaNoticia2"));
+    	assertTrue(news.getContent().contentEquals("http://ficonlan/nuevaNoticia2"));
     	assertTrue(news.getPublishDate().compareTo(c)==0);
     	assertTrue(news.getPriorityHours()==3); 	
     }

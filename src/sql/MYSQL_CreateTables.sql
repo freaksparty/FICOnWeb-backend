@@ -163,7 +163,7 @@ CREATE TABLE NewsItem (
 	NewsItem_title                varchar(200)  NOT NULL  ,
 	NewsItem_date_created         datetime    ,
 	NewsItem_date_publish         datetime  NOT NULL  ,
-	NewsItem_url                  varchar(250)    ,
+	NewsItem_content              MEDIUMTEXT   ,
 	NewsItem_hours_priority       int UNSIGNED  DEFAULT 1 ,
 	CONSTRAINT pk_news PRIMARY KEY ( NewsItem_id )
  ) engine=InnoDB;

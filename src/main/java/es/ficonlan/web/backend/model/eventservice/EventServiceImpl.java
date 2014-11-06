@@ -646,7 +646,7 @@ public class EventServiceImpl implements EventService {
 		
 		if(newsItem.getEvent()==null) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
 		if(newsItem.getTitle()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"title");
-		if(newsItem.getUrl()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"url");
+		if(newsItem.getContent()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"Content");
 		if(newsItem.getPublishDate()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"publishDate");
 
 		newsItem.setPublisher(SessionManager.getSession(sessionId).getUser());
@@ -679,7 +679,7 @@ public class EventServiceImpl implements EventService {
 			newsData.setNewsItemId(newsItemId);
 			if(newsData.getTitle()!=null) news.setTitle(newsData.getTitle());
 			if(newsData.getPublishDate()!=null) news.setPublishDate(newsData.getPublishDate());
-			if(newsData.getUrl()!=null) news.setUrl(newsData.getUrl());
+			if(newsData.getContent()!=null) news.setContent(newsData.getContent());
 			if(newsData.getPriorityHours()!=0) news.setPriorityHours(newsData.getPriorityHours());
 			newsDao.save(news);
 		} catch (InstanceException e) {
