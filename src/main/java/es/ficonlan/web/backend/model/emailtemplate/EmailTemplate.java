@@ -126,6 +126,7 @@ public class EmailTemplate {
 		}
 		
 		return new Email(this.getAdress(),this.getFilepath(),this.getFilename(),destinatario,this.getAsunto(),contenido);
+
 	}
 	
 	public static void main(String[] args) {

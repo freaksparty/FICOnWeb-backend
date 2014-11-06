@@ -140,12 +140,21 @@ public class EventServiceImpl implements EventService {
 	public Registration addParticipantToEvent(String sessionId, int userId, int eventId) throws ServiceException {
 		if (!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), userId, "addParticipantToEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);		
-
-		try{
+		
+		try{ 
     		User user = userDao.find(userId);
-    		
+  	
     		Event event = eventDao.find(eventId);    		
     		if(event.getRegistrationOpenDate().compareTo(Calendar.getInstance(TimeZone.getTimeZone("UTC")))>0||event.getRegistrationCloseDate().compareTo(Calendar.getInstance(TimeZone.getTimeZone("UTC")))<0) throw new ServiceException(9,"addParticipantToEvent");
+    		
+    		if(event.getMinimunAge()!=0)
+    		{
+    			Calendar agedif = user.getDob();
+    			Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    			
+    			agedif.add(Calendar.YEAR, event.getMinimunAgeWithAuthorization());
+    			if(agedif.after(now)) throw new ServiceException(ServiceException.YOUR_ARE_TOO_YOUNG);
+    		}
     		
     		Registration registration = registrationDao.findByUserAndEvent(userId, eventId);
     		if (registration==null) registration = new Registration(user, event);
@@ -164,8 +173,7 @@ public class EventServiceImpl implements EventService {
     		tabla.put("#nombreevento", event.getName());
     		tabla.put("#fechainicioevento", event.getStartDate().toString());
     		tabla.put("#fechafinevento", event.getEndDate().toString());
-
-    		
+ 
     		if(currentParticipants>=event.getNumParticipants()) 
     		{
     			registration.setPlaceOnQueue(1 +  queueParticipants); //FIXME SIN TESTEAR
@@ -280,7 +288,7 @@ public class EventServiceImpl implements EventService {
 		}
         Registration firstInQueue = registrationDao.getFirstInQueue(eventId);
         if(firstInQueue!=null)
-        {
+        {	
         	firstInQueue.setState(RegistrationState.registered);
         	firstInQueue.setPlace(place);
         	
