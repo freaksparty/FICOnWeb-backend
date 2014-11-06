@@ -67,6 +67,7 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.deleted = false;
         this.shirtSize = shirtSize;
+        this.dob = Calendar.getInstance();
     }
 
     @Column(name = "User_id")

@@ -147,7 +147,7 @@ public class EventServiceImpl implements EventService {
     		Event event = eventDao.find(eventId);    		
     		if(event.getRegistrationOpenDate().compareTo(Calendar.getInstance(TimeZone.getTimeZone("UTC")))>0||event.getRegistrationCloseDate().compareTo(Calendar.getInstance(TimeZone.getTimeZone("UTC")))<0) throw new ServiceException(9,"addParticipantToEvent");
     		
-    		if(event.getMinimunAge()!=0)
+    		if(event.getMinimunAgeWithAuthorization()!=0)
     		{
     			Calendar agedif = user.getDob();
     			Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
@@ -173,6 +173,7 @@ public class EventServiceImpl implements EventService {
     		tabla.put("#nombreevento", event.getName());
     		tabla.put("#fechainicioevento", event.getStartDate().toString());
     		tabla.put("#fechafinevento", event.getEndDate().toString());
+    		tabla.put("#edadminima", Integer.toString(event.getMinimunAge()));
  
     		if(currentParticipants>=event.getNumParticipants()) 
     		{
@@ -261,6 +262,7 @@ public class EventServiceImpl implements EventService {
 		tabla.put("#nombreevento", event.getName());
 		tabla.put("#fechainicioevento", event.getStartDate().toString());
 		tabla.put("#fechafinevento", event.getEndDate().toString());
+		tabla.put("#edadminima", Integer.toString(event.getMinimunAge()));
     	
     	int place = 0;
         try {
@@ -294,12 +296,22 @@ public class EventServiceImpl implements EventService {
         	
         	//FIXME: Mandar correo electrónico
         	
+        	Hashtable<String,String> tabla2 = new Hashtable<String,String>();
+    		tabla.put("#nombreusuario", firstInQueue.getUser().getName());
+    		tabla.put("#loginusuario", firstInQueue.getUser().getLogin());
+    		tabla.put("#numerotelefonousuario", firstInQueue.getUser().getPhoneNumber());
+    		tabla.put("#tallacamisetausuario", firstInQueue.getUser().getShirtSize());
+    		tabla.put("#nombreevento", event.getName());
+    		tabla.put("#fechainicioevento", event.getStartDate().toString());
+    		tabla.put("#fechafinevento", event.getEndDate().toString());
+    		tabla.put("#edadminima", Integer.toString(event.getMinimunAge()));
+        	
         	tabla.put("#plazaencola", "");
 			tabla.put("#plazaenevento", Integer.toString(registration.getPlace()));
 			
 			if(event.getFromQueueToOutstanding()!=null) 
 			{
-				Email email = event.getFromQueueToOutstanding().generateEmail(user, tabla);
+				Email email = event.getFromQueueToOutstanding().generateEmail(user, tabla2);
 				email.setRegistration(registration);
 				registration.setLastemail(email);
 				//email.sendMail();
@@ -338,6 +350,9 @@ public class EventServiceImpl implements EventService {
 			
 			tabla.put("#plazaencola", "");
 			tabla.put("#plazaenevento", Integer.toString(registration.getPlace()));
+			
+			tabla.put("#edadminima", Integer.toString(event.getMinimunAge()));
+			
 			Email email = event.getSetPaidTemplate().generateEmail(user, tabla);
 			email.setRegistration(registration);
 			registration.setLastemail(email);
