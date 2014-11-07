@@ -255,7 +255,7 @@ public class EmailServiceImpl implements EmailService {
 		{
 			throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"user");
 		}
-		return emailDao.getEmailByDestination(user.getEmail());
+		return emailDao.getEmailByDestination(user.getUserId());
 	}
 
 	@Transactional(readOnly = true)

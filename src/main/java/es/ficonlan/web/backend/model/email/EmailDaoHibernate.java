@@ -19,7 +19,7 @@ public class EmailDaoHibernate extends GenericDaoHibernate<Email,Integer> implem
 		return getSession().createQuery(
 	        	"SELECT e " +
 		        "FROM Email e " +
-	        	"ORDER BY e.Email_Date").list();
+	        	"ORDER BY e.date").list();
 	}
 
 	@Override
@@ -28,8 +28,8 @@ public class EmailDaoHibernate extends GenericDaoHibernate<Email,Integer> implem
 		return getSession().createQuery(
 	        	"SELECT e " +
 		        "FROM Email e " +
-	        	"WHERE e.Email_Confirmation = true" +
-	        	"ORDER BY e.Email_SendDate").list();
+	        	"WHERE e.confirmation = true" +
+	        	"ORDER BY e.sendDate").list();
 	}
 
 	@Override
@@ -38,18 +38,18 @@ public class EmailDaoHibernate extends GenericDaoHibernate<Email,Integer> implem
 		return getSession().createQuery(
 	        	"SELECT e " +
 		        "FROM Email e " +
-	        	"WHERE e.Email_Confirmation = false" +
-	        	"ORDER BY e.Email_Date").list();
+	        	"WHERE e.confirmation = false" +
+	        	"ORDER BY e.date").list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Email> getEmailByDestination(String destino) {
+	public List<Email> getEmailByDestination(int destinatario) {
 		return getSession().createQuery(
 	        	"SELECT e " +
 		        "FROM Email e " +
-	        	"WHERE e.Email_destination =  :destino" +
-	        	"ORDER BY e.Email_Date").setParameter("destino", destino).list();
+	        	"WHERE e.destinatario.userId =  :destino" +
+	        	"ORDER BY e.date").setParameter("destino", destinatario).list();
 	}
 
 	@Override
@@ -58,8 +58,8 @@ public class EmailDaoHibernate extends GenericDaoHibernate<Email,Integer> implem
 		return getSession().createQuery(
 	        	"SELECT e " +
 		        "FROM Email e " +
-	        	"WHERE e.Adress_Id = :direccionId" +
-	        	"ORDER BY e.Email_Date").setParameter("direccionId", direccionId).list();
+	        	"WHERE e.adresslId = :direccionId" +
+	        	"ORDER BY e.date").setParameter("direccionId", direccionId).list();
 	}
 	
 	@Override
@@ -68,14 +68,14 @@ public class EmailDaoHibernate extends GenericDaoHibernate<Email,Integer> implem
 		return getSession().createQuery(
 	        	"SELECT e " +
 		        "FROM Email e " +
-	        	"WHERE e.Email_registration_id = :registrationId" +
-	        	"ORDER BY e.Email_Date").setParameter("registrationId", registrationId).list();
+	        	"WHERE e.registration.registrationId = :registrationId" +
+	        	"ORDER BY e.date").setParameter("registrationId", registrationId).list();
 	}
 	
 	@Override
 	public Email getLasEmailByRegistration(int registrationId){
 		return (Email) getSession()
-				.createQuery("SELECT e FROM Email e e.Email_registration_id = :registrationId ORDER BY e.Email_date DESC")
+				.createQuery("SELECT e FROM Email e e.registration.registrationId = :registrationId ORDER BY e.date DESC")
 				.setParameter("registrationId", registrationId).setFirstResult(0).setMaxResults(1).uniqueResult();
 	}
 

@@ -49,6 +49,7 @@ public class Registration {
 	private Calendar paidDate;
 	private boolean paid = false;
 	private int place;
+	@Transient
 	private int placeOnQueue;
 	private Email lastemail;
 
@@ -159,6 +160,7 @@ public class Registration {
 		return placeOnQueue;
 	}
 
+	@Transient
 	public void setPlaceOnQueue(int placeOnQueue) {
 		this.placeOnQueue = placeOnQueue;
 	}

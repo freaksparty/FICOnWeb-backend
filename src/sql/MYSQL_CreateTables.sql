@@ -32,7 +32,6 @@ CREATE TABLE Event (
 	Event_description                  TEXT    ,
 	Event_num_participants             int DEFAULT 1 ,
 	Event_minimunAge                   int DEFAULT 0 ,
-	Event_minimunAgeWithAuthorization  int DEFAULT 0 ,
 	Event_date_start                   date NOT NULL  ,
 	Event_date_end                     date NOT NULL  ,
 	Event_reg_date_open                datetime NOT NULL  ,

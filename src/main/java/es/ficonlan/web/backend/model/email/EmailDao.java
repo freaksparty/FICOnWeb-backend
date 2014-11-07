@@ -17,7 +17,7 @@ public interface EmailDao extends GenericDao<Email, Integer>{
 	
 	public List<Email> getNoConfirmedEmails();
 	
-	public List<Email> getEmailByDestination(String destino);
+	public List<Email> getEmailByDestination(int userId);
 	
 	public List<Email> getEmailByDireccionEnvio(int direccionId);
 	

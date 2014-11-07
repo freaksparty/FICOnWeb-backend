@@ -16,7 +16,7 @@ public class AdressDaoHibernate extends GenericDaoHibernate<Adress,Integer> impl
 	@Override
 	public Adress findAdressByName(String adressName) {
 		return (Adress) getSession()
-				.createQuery("SELECT a FROM Adress a WHERE a.Adress_Name = :adressName")
+				.createQuery("SELECT a FROM Adress a WHERE a.usuarioCorreo = :adressName")
 				.setParameter("adressName", adressName).uniqueResult();
 	}
 
@@ -26,7 +26,7 @@ public class AdressDaoHibernate extends GenericDaoHibernate<Adress,Integer> impl
 		return getSession().createQuery(
 	        	"SELECT a " +
 		        "FROM Adress a " +
-	        	"ORDER BY a.Adress_user").list();
+	        	"ORDER BY a.usuarioCorreo").list();
 	}
 
 

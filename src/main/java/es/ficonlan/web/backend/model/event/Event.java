@@ -33,7 +33,6 @@ public class Event {
     private String description;
     private int numParticipants;
     private int minimunAge;
-    private int minimunAgeWithAuthorization;
     private Calendar startDate;
     private Calendar endDate;
     private Calendar registrationOpenDate;
@@ -59,7 +58,6 @@ public class Event {
         this.description = description;
         this.numParticipants = numParticipants;
         this.minimunAge = 0;
-        this.minimunAgeWithAuthorization = 0;
         this.startDate = startDate;
         this.endDate = endDate;
         this.registrationOpenDate = registrationOpenDate;
@@ -116,15 +114,6 @@ public class Event {
 
 	public void setMinimunAge(int minimunAge) {
 		this.minimunAge = minimunAge;
-	}
-
-	@Column(name = "Event_minimunAgeWithAuthorization")
-	public int getMinimunAgeWithAuthorization() {
-		return minimunAgeWithAuthorization;
-	}
-
-	public void setMinimunAgeWithAuthorization(int minimunAgeWithAuthorization) {
-		this.minimunAgeWithAuthorization = minimunAgeWithAuthorization;
 	}
 
 	@JsonDeserialize(using = JsonDateDeserializer.class)

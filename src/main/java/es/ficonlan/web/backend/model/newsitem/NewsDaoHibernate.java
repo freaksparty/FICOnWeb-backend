@@ -20,7 +20,7 @@ public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> imp
 		return getSession().createQuery(
 	        	"SELECT n " +
 		        "FROM NewsItem n " +
-	        	"ORDER BY n.ewsItem_date_created").list();
+	        	"ORDER BY n.creationDate").list();
 		
 	}
 	
@@ -28,9 +28,9 @@ public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> imp
 	public List<NewsItem> getAllNewsItemFromEvent(int eventId) {
 		return getSession().createQuery(
 	        	"SELECT n " +
-		        "FROM NewsItem n WHERE n.NewsItem_Event_id = :eventId" +
-	        	"ORDER BY n.ewsItem_date_created").setParameter("eventId", eventId).list();
-	}
+		        "FROM NewsItem n WHERE n.event.eventId = :eventId ORDER BY n.publishDate"
+		        + "").setParameter("eventId", eventId).list();
+	} 
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -64,7 +64,7 @@ public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> imp
                                         				  "FROM NewsItem n " +
                                         				  "WHERE n.publishDate <= current_timestamp() " + 
                                         				  	"AND n.publishDate >= :dateLimit " +
-                                        				    "AND n.NewsItem_Event_id = :eventId" +
+                                        				    "AND n.event.id = :eventId" +
                                                           "ORDER BY n.publishDate DESC" 
 														).setParameter("eventId", eventId).setDate("dateLimit", dateLimit.getTime()).list();
 

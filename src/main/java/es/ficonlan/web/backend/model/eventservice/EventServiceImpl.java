@@ -147,14 +147,13 @@ public class EventServiceImpl implements EventService {
     		Event event = eventDao.find(eventId);    		
     		if(event.getRegistrationOpenDate().compareTo(Calendar.getInstance(TimeZone.getTimeZone("UTC")))>0||event.getRegistrationCloseDate().compareTo(Calendar.getInstance(TimeZone.getTimeZone("UTC")))<0) throw new ServiceException(9,"addParticipantToEvent");
     		
-    		if(event.getMinimunAgeWithAuthorization()!=0)
-    		{
-    			Calendar agedif = user.getDob();
-    			Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+
+    		Calendar agedif = user.getDob();
+    		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     			
-    			agedif.add(Calendar.YEAR, event.getMinimunAgeWithAuthorization());
-    			if(agedif.after(now)) throw new ServiceException(ServiceException.YOUR_ARE_TOO_YOUNG);
-    		}
+    		agedif.add(Calendar.YEAR, event.getMinimunAge());
+    		if(agedif.after(now)) throw new ServiceException(ServiceException.YOUR_ARE_TOO_YOUNG);
+
     		
     		Registration registration = registrationDao.findByUserAndEvent(userId, eventId);
     		if (registration==null) registration = new Registration(user, event);

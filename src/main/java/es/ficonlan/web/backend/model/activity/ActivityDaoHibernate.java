@@ -30,7 +30,7 @@ public class ActivityDaoHibernate extends
 			return getSession()
 					.createQuery(
 							"SELECT a " + "FROM Activity a "
-									+ "WHERE a.event.id = :eventId "
+									+ "WHERE a.event.eventId = :eventId "
 									+ "ORDER BY a.startDate")
 					.setParameter("eventId", eventId).list();
 		else
@@ -38,7 +38,7 @@ public class ActivityDaoHibernate extends
 					.createQuery(
 							"SELECT a "
 									+ "FROM Activity a "
-									+ "WHERE a.event.id = :eventId AND a.type = :type "
+									+ "WHERE a.event.eventId = :eventId AND a.type = :type "
 									+ "ORDER BY a.startDate")
 					.setParameter("eventId", eventId)
 					.setParameter("type", type).list();

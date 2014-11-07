@@ -41,7 +41,7 @@ public class NewsItem {
 	private int priorityHours;
 	private User publisher;
 	private Event event;
-	@SuppressWarnings("unused")
+	@Transient
 	private String login;
 	
 	public NewsItem () {};
@@ -144,12 +144,6 @@ public class NewsItem {
 
 	@Transient
 	public String getLogin() {
-		return this.getPublisher().getLogin();
+		return this.publisher.getLogin();
 	}
-
-	public void setLogin(String login) {
-		this.login = login;
-	}
-	
-	
 }

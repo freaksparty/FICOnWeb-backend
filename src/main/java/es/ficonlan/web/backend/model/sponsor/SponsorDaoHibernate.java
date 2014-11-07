@@ -27,7 +27,7 @@ public class SponsorDaoHibernate extends GenericDaoHibernate<Sponsor,Integer> im
 		return getSession().createQuery(
 	        	"SELECT s " +
 		        "FROM Sponsor s " + 
-	        	"WHERE s.Sponsor_event_id = :eventId").setParameter("eventId", eventId).list();
+	        	"WHERE s.event.eventId = :eventId").setParameter("eventId", eventId).list();
 	}
 
 }

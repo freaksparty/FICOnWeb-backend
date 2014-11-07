@@ -18,14 +18,7 @@ public class EmailTemplateDaoHibernate extends GenericDaoHibernate<EmailTemplate
 		return getSession().createQuery( "SELECT e " +
 				 "FROM EmailTemplate e ").list();
 	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<EmailTemplate> searchEmailTemplatesByEvent(int eventId) {
-		return getSession().createQuery( "SELECT e " +
-				 "FROM EmailTemplate e WHERE e.eventId = :eventId").setParameter("eventId", eventId).list();
-	}
-
+	
 	@Override
 	public EmailTemplate findByName(String name) {
 		return (EmailTemplate) getSession()
