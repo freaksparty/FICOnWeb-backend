@@ -7,7 +7,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -34,21 +33,14 @@ public class NewsResource {
 	public NewsResource() {
 		this.eventService = ApplicationContextProvider.getApplicationContext().getBean(EventService.class);
 	}
-	
-	@POST
-	@Consumes({MediaType.APPLICATION_JSON})
-	@Produces(MediaType.APPLICATION_JSON)
-	public NewsItem add(@HeaderParam("sessionId") String sessionId, NewsItem newsItem) throws ServiceException{
-		return eventService.addNews(sessionId, newsItem);
-	}
-		
-	@Path("/{newsItemId}")
+	    
+	@Path("/news/{newsItemId}")
 	@PUT
 	@Consumes({MediaType.APPLICATION_JSON})
-	public void changeData(@HeaderParam("sessionId")String sessionId, @PathParam("days") int newsItemId, NewsItem newsData) throws ServiceException{
+	public void changeNewsData(@HeaderParam("sessionId")String sessionId, @PathParam("newsItemId") int newsItemId,  @PathParam("eventId") int eventId, NewsItem newsData) throws ServiceException{
 		eventService.changeNewsData(sessionId, newsItemId, newsData);
 	}
-	    
+	
 	@Path("/{newsItemId}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

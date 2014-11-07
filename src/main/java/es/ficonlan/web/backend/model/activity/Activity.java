@@ -28,7 +28,6 @@ import es.ficonlan.web.backend.jersey.util.JsonActivityTypeSerializer;
 import es.ficonlan.web.backend.jersey.util.JsonDateDeserializer;
 import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
 import es.ficonlan.web.backend.jersey.util.JsonEntityIdSerializer;
-import es.ficonlan.web.backend.jersey.util.JsonEventDeserializer;
 import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.user.User;
 
@@ -193,7 +192,6 @@ public class Activity {
 		this.regDateClose = regDateClose;
 	}
 
-	@JsonDeserialize(using = JsonEventDeserializer.class)
 	@JsonSerialize(using = JsonEntityIdSerializer.class)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Activity_event_id")

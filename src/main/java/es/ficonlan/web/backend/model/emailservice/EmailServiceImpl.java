@@ -309,18 +309,25 @@ public class EmailServiceImpl implements EmailService {
 	
 	@Transactional
 	@Override
-	public EmailTemplate createEmailTemplate(String sessionId, EmailTemplate emailTemplate) throws ServiceException {
+	public EmailTemplate createEmailTemplate(String sessionId, int adressId, EmailTemplate emailTemplate) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "createEmailTemplate")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		
-		if(emailTemplate.getAdress()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"adress");
-		if(emailTemplate.getAsunto()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"asunto");
-		if(emailTemplate.getContenido()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"contenido");
-		if(emailTemplate.getName()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"name");
+		try {
+			emailTemplate.setAdress(adressDao.find(adressId));
 		
-		emailTemplateDao.save(emailTemplate);
+			if(emailTemplate.getAsunto()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"asunto");
+			if(emailTemplate.getContenido()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"contenido");
+			if(emailTemplate.getName()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"name");
 		
-		return emailTemplate;
+			emailTemplateDao.save(emailTemplate);
+		
+			return emailTemplate;
+		
+		}
+		catch (InstanceException e) {
+			throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Adress");
+		}
 	}
 
 	@Transactional
@@ -341,13 +348,15 @@ public class EmailServiceImpl implements EmailService {
 
 	@Transactional
 	@Override
-	public EmailTemplate changeEmailTemplate(String sessionId, int emailTemplateId, EmailTemplate emailTemplateData) throws ServiceException {
+	public EmailTemplate changeEmailTemplate(String sessionId, int adressId, int emailTemplateId, EmailTemplate emailTemplateData) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "changeEmailTemplate")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		
 		try 
 		{
 			EmailTemplate e = emailTemplateDao.find(emailTemplateId);
+			
+			e.setAdress(adressDao.find(adressId));
 
 			if(emailTemplateData.getName()!=null) e.setName(emailTemplateData.getName());
 			if(emailTemplateData.getFilepath()!=null) e.setFilepath(emailTemplateData.getFilepath());
@@ -355,7 +364,6 @@ public class EmailServiceImpl implements EmailService {
 
 			if(emailTemplateData.getContenido()!=null) e.setContenido(emailTemplateData.getContenido());
 			if(emailTemplateData.getAsunto()!=null) e.setAsunto(emailTemplateData.getAsunto());
-			if(emailTemplateData.getAdress()!=null) e.setAdress(emailTemplateData.getAdress());
 			else throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Adress");
 				
 			emailTemplateDao.save(e);
@@ -363,7 +371,8 @@ public class EmailServiceImpl implements EmailService {
 		}
 		catch (InstanceException e) 
 		{
-			throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"EmailTemplate");
+			if (e.getClassName().contentEquals("EmailTemplate")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"EmailTemplate");
+			else throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Adress");
 		}
 	}
 

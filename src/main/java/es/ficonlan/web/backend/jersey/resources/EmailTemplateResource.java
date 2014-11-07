@@ -33,19 +33,20 @@ public class EmailTemplateResource {
 		this.emailService = ApplicationContextProvider.getApplicationContext().getBean(EmailService.class);
 	}
 	
+	@Path("/{adressId}")
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
-	public EmailTemplate createEmailTemplate(@HeaderParam("sessionId") String sessionId, EmailTemplate emailTemplate) throws ServiceException {
-		return emailService.createEmailTemplate(sessionId, emailTemplate);
+	public EmailTemplate createEmailTemplate(@HeaderParam("sessionId") String sessionId, @PathParam("adressId") int adressId, EmailTemplate emailTemplate) throws ServiceException {
+		return emailService.createEmailTemplate(sessionId, adressId, emailTemplate);
 	}
 	
-	@Path("/{emailTemplateId}")
+	@Path("/{adressId}/{emailTemplateId}")
 	@PUT
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
-	public EmailTemplate changeEmailTemplate(@HeaderParam("sessionId") String sessionId, @PathParam("emailTemplateId") int emailTemplateId, EmailTemplate emailTemplate) throws ServiceException {
-		return emailService.changeEmailTemplate(sessionId, emailTemplateId, emailTemplate);
+	public EmailTemplate changeEmailTemplate(@HeaderParam("sessionId") String sessionId, @PathParam("adressId") int adressId, @PathParam("emailTemplateId") int emailTemplateId, EmailTemplate emailTemplate) throws ServiceException {
+		return emailService.changeEmailTemplate(sessionId, adressId, emailTemplateId, emailTemplate);
 	}
 	
 	@GET

@@ -14,6 +14,7 @@ import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
 import es.ficonlan.web.backend.model.activity.ActivityDao;
 import es.ficonlan.web.backend.model.email.Email;
 import es.ficonlan.web.backend.model.email.EmailDao;
+import es.ficonlan.web.backend.model.emailtemplate.EmailTemplate;
 import es.ficonlan.web.backend.model.emailtemplate.EmailTemplateDao;
 import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.event.EventDao;
@@ -480,29 +481,7 @@ public class EventServiceImpl implements EventService {
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "findEventByName")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		return eventDao.searchEventsByName(name);
     }
-
-    @Override
-    @Transactional
-    public Activity addActivity(String sessionId, Activity activity) throws ServiceException {
-    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "addActivity")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-
-		if(activity.getEvent()==null) throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
-	
-		if(activity.getName()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"name");
-		if(activity.getNumParticipants()<1) throw new ServiceException(ServiceException.INCORRECT_FIELD,"numParticipants");
-		if(activity.getNumParticipants()<1) throw new ServiceException(ServiceException.INCORRECT_FIELD,"numParticipants");
-		if(activity.getStartDate()==null) activity.setStartDate(activity.getEvent().getStartDate());
-		if(activity.getStartDate().compareTo(activity.getEvent().getStartDate())<0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"startDate");
-		if(activity.getEndDate()==null) activity.setStartDate(activity.getEvent().getEndDate());
-		if(activity.getEndDate().compareTo(activity.getEvent().getEndDate())>0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"endDate");
-		if(activity.getRegDateOpen()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"regDateOpen");
-		if(activity.getRegDateClose()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"regDateClose");
-		
-		activityDao.save(activity);
-		return activity;
-    }
-    
+   
     @Override
     @Transactional
 	public Activity addActivity(String sessionId, int eventId, Activity activity) throws ServiceException {
@@ -512,10 +491,20 @@ public class EventServiceImpl implements EventService {
 		try {
 				event = eventDao.find(eventId);
 				activity.setEvent(event);
+				if(activity.getName()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"name");
+				if(activity.getNumParticipants()<1) throw new ServiceException(ServiceException.INCORRECT_FIELD,"numParticipants");
+				if(activity.getNumParticipants()<1) throw new ServiceException(ServiceException.INCORRECT_FIELD,"numParticipants");
+				if(activity.getStartDate()==null) activity.setStartDate(activity.getEvent().getStartDate());
+				if(activity.getStartDate().compareTo(activity.getEvent().getStartDate())<0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"startDate");
+				if(activity.getEndDate()==null) activity.setStartDate(activity.getEvent().getEndDate());
+				if(activity.getEndDate().compareTo(activity.getEvent().getEndDate())>0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"endDate");
+				if(activity.getRegDateOpen()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"regDateOpen");
+				if(activity.getRegDateClose()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"regDateClose");
+				activityDao.save(activity);
+				return activity;
 		} catch (InstanceException e) {
 			throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
 		}
-		return addActivity(sessionId,activity);
 	}
 
     @Override
@@ -636,23 +625,7 @@ public class EventServiceImpl implements EventService {
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getActivityParticipants")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
     	return activityDao.getParticipants(activityId);
 	}
-    
-    @Override
-    @Transactional
-    public NewsItem addNews(String sessionId, NewsItem newsItem) throws ServiceException {
-    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "addNews")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-		
-		if(newsItem.getEvent()==null) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
-		if(newsItem.getTitle()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"title");
-		if(newsItem.getContent()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"Content");
-		if(newsItem.getPublishDate()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"publishDate");
 
-		newsItem.setPublisher(SessionManager.getSession(sessionId).getUser());
-		newsItem.setCreationDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
-		newsDao.save(newsItem);
-		return newsItem;
-    }
 
     @Override
     @Transactional
@@ -661,8 +634,17 @@ public class EventServiceImpl implements EventService {
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "addNews")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
 			Event event = eventDao.find(eventId);
+			
 			newsItem.setEvent(event);
-			return addNews(sessionId,newsItem);
+			if(newsItem.getEvent()==null) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
+			if(newsItem.getTitle()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"title");
+			if(newsItem.getContent()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"Content");
+			if(newsItem.getPublishDate()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"publishDate");
+
+			newsItem.setPublisher(SessionManager.getSession(sessionId).getUser());
+			newsItem.setCreationDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+			newsDao.save(newsItem);
+			return newsItem;
 		} catch (InstanceException e) {
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
 		}
@@ -803,5 +785,90 @@ public class EventServiceImpl implements EventService {
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getSponsors")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
     	return sponsorDao.getByEvent(eventId);
     }
+
+	@Override
+	public void setPaidTemplate(String sessionId, int eventId, int emailTemplateId) throws ServiceException {
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "setPaidTemplate")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		try 
+		{
+			Event event = eventDao.find(eventId);
+			EmailTemplate emailtemplate = emailTemplateDao.find(emailTemplateId);
+			event.setSetPaidTemplate(emailtemplate);
+			eventDao.save(event);
+		}
+		catch (InstanceException e) {
+			if (e.getClassName().contentEquals("Event")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
+			else throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"EmailTemplate");
+		}
+	}
+
+	@Override
+	public void onQueueTemplate(String sessionId, int eventId, int emailTemplateId) throws ServiceException {
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "onQueueTemplate")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		try 
+		{
+			Event event = eventDao.find(eventId);
+			EmailTemplate emailtemplate = emailTemplateDao.find(emailTemplateId);
+			event.setOnQueueTemplate(emailtemplate);
+			eventDao.save(event);
+		}
+		catch (InstanceException e) {
+			if (e.getClassName().contentEquals("Event")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
+			else throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"EmailTemplate");
+		}
+	}
+
+	@Override
+	public void outstandingTemplate(String sessionId, int eventId, int emailTemplateId) throws ServiceException {
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "outstandingTemplate")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		try 
+		{
+			Event event = eventDao.find(eventId);
+			EmailTemplate emailtemplate = emailTemplateDao.find(emailTemplateId);
+			event.setOutstandingTemplate(emailtemplate);
+			eventDao.save(event);
+		}
+		catch (InstanceException e) {
+			if (e.getClassName().contentEquals("Event")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
+			else throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"EmailTemplate");
+		}
+	}
+
+	@Override
+	public void outOfDateTemplate(String sessionId, int eventId, int emailTemplateId) throws ServiceException {
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "outOfDateTemplate")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		try 
+		{
+			Event event = eventDao.find(eventId);
+			EmailTemplate emailtemplate = emailTemplateDao.find(emailTemplateId);
+			event.setOutOfDateTemplate(emailtemplate);
+			eventDao.save(event);
+		}
+		catch (InstanceException e) {
+			if (e.getClassName().contentEquals("Event")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
+			else throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"EmailTemplate");
+		}
+	}
+
+	@Override
+	public void fromQueueToOutstanding(String sessionId, int eventId, int emailTemplateId) throws ServiceException {
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "fromQueueToOutstanding")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		try 
+		{
+			Event event = eventDao.find(eventId);
+			EmailTemplate emailtemplate = emailTemplateDao.find(emailTemplateId);
+			event.setFromQueueToOutstanding(emailtemplate);
+			eventDao.save(event);
+		}
+		catch (InstanceException e) {
+			if (e.getClassName().contentEquals("Event")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
+			else throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"EmailTemplate");
+		}
+	}
 
 }

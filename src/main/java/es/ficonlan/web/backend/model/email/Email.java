@@ -17,12 +17,9 @@ import javax.persistence.Table;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
-import es.ficonlan.web.backend.jersey.util.JsonAdressDeserializer;
 import es.ficonlan.web.backend.jersey.util.JsonDateDeserializer;
 import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
 import es.ficonlan.web.backend.jersey.util.JsonEntityIdSerializer;
-import es.ficonlan.web.backend.jersey.util.JsonRegistrationDeserializer;
-import es.ficonlan.web.backend.jersey.util.JsonUserDeserializer;
 import es.ficonlan.web.backend.model.emailadress.Adress;
 import es.ficonlan.web.backend.model.registration.Registration;
 import es.ficonlan.web.backend.model.user.User;
@@ -99,7 +96,6 @@ public class Email {
 		this.confirmation = confirmation;
 	}
 
-	@JsonDeserialize(using = JsonAdressDeserializer.class)
 	@JsonSerialize(using = JsonEntityIdSerializer.class) 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Email_Adress_id")
@@ -129,7 +125,6 @@ public class Email {
 		this.nombreArchivo = nombreArchivo;
 	}
 
-	@JsonDeserialize(using = JsonUserDeserializer.class)
 	@JsonSerialize(using = JsonEntityIdSerializer.class)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Email_User_id")
@@ -181,7 +176,6 @@ public class Email {
 		this.sendDate = sendDate;
 	}
 	
-	@JsonDeserialize(using = JsonRegistrationDeserializer.class)
 	@JsonSerialize(using = JsonEntityIdSerializer.class)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Email_registration_id")

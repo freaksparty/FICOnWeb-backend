@@ -49,8 +49,6 @@ public interface EventService {
     
     public Activity addActivity(String sessionId, int eventId,  Activity activity) throws ServiceException;
     
-    public Activity addActivity(String sessionId, Activity activity) throws ServiceException;
-    
     public void removeActivity(String sessionId, int activityId) throws ServiceException;
     
     public Activity changeActivityData(String sessionId, int activityId, Activity activityData) throws ServiceException;
@@ -67,8 +65,6 @@ public interface EventService {
     
     public List<User> getActivityParticipants(String sessionId, int activityId) throws ServiceException;
     
-    
-    public NewsItem addNews(String sessionId, NewsItem newsItem) throws ServiceException;
     
     public NewsItem addNews(String sessionId, int eventId, NewsItem newsItem) throws ServiceException;
     
@@ -97,5 +93,17 @@ public interface EventService {
     
     public List<Sponsor> getSponsorsByEvent(String sessionId, int eventId) throws ServiceException;
     
+    
+
+	public void setPaidTemplate (String sessionId, int eventId, int emailTemplateId) throws ServiceException;
+	
+	public void onQueueTemplate (String sessionId, int eventId, int emailTemplateId) throws ServiceException;
+	
+	public void outstandingTemplate (String sessionId, int eventId, int emailTemplateId) throws ServiceException;
+	
+	public void outOfDateTemplate (String sessionId, int eventId, int emailTemplateId) throws ServiceException;
+	
+	public void fromQueueToOutstanding (String sessionId, int eventId, int emailTemplateId) throws ServiceException;
+	
      
 }

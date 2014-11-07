@@ -47,12 +47,12 @@ public interface EmailService {
 	
     
 	
-    public EmailTemplate createEmailTemplate(String sessionId, EmailTemplate emailTemplate) throws ServiceException;
+    public EmailTemplate createEmailTemplate(String sessionId, int adressId, EmailTemplate emailTemplate) throws ServiceException;
     
 	
 	public void removeEmailTemplate(String sessionId, int emailTemplateId) throws ServiceException;
 	
-	public EmailTemplate changeEmailTemplate(String sessionId, int emailTemplateId, EmailTemplate emailTemplateData) throws ServiceException;
+	public EmailTemplate changeEmailTemplate(String sessionId, int adressId, int emailTemplateId, EmailTemplate emailTemplateData) throws ServiceException;
     
     public List<EmailTemplate> getAllEmailTemplate(String sessionId) throws ServiceException;
     

@@ -14,10 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
-import es.ficonlan.web.backend.jersey.util.JsonAdressDeserializer;
 import es.ficonlan.web.backend.jersey.util.JsonEntityIdSerializer;
 import es.ficonlan.web.backend.model.email.Email;
 import es.ficonlan.web.backend.model.emailadress.Adress;
@@ -64,7 +62,6 @@ public class EmailTemplate {
 		this.name = name;
 	}
 
-	@JsonDeserialize(using = JsonAdressDeserializer.class)
 	@JsonSerialize(using = JsonEntityIdSerializer.class) 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "EmailTemplate_adress_id")

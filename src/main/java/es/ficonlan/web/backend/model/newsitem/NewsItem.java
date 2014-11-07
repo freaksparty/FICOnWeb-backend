@@ -1,5 +1,8 @@
 package es.ficonlan.web.backend.model.newsitem;
 
+import java.util.Calendar;
+import java.util.TimeZone;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,16 +18,11 @@ import javax.persistence.Transient;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
-import java.util.Calendar;
-import java.util.TimeZone;
-
 import es.ficonlan.web.backend.jersey.util.JsonDateDeserializer;
 import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
 import es.ficonlan.web.backend.jersey.util.JsonEntityIdSerializer;
-import es.ficonlan.web.backend.jersey.util.JsonEventDeserializer;
-import es.ficonlan.web.backend.jersey.util.JsonUserDeserializer;
-import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.event.Event;
+import es.ficonlan.web.backend.model.user.User;
 
 /**
  * @author Miguel Ángel Castillo Bellagona
@@ -118,7 +116,6 @@ public class NewsItem {
 		this.priorityHours = priorityHours;
 	}
 
-	@JsonDeserialize(using = JsonUserDeserializer.class)
 	@JsonSerialize(using=JsonEntityIdSerializer.class)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "NewsItem_User_id")
@@ -128,9 +125,9 @@ public class NewsItem {
 
 	public void setPublisher(User publisher) {
 		this.publisher = publisher;
+		this.login = this.publisher.getLogin();
 	}
 	
-	@JsonDeserialize(using = JsonEventDeserializer.class)
 	@JsonSerialize(using = JsonEntityIdSerializer.class)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "NewsItem_Event_id")
@@ -144,6 +141,6 @@ public class NewsItem {
 
 	@Transient
 	public String getLogin() {
-		return this.publisher.getLogin();
+		return this.login;
 	}
 }

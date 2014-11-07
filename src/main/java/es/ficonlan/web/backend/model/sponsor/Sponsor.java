@@ -11,11 +11,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import es.ficonlan.web.backend.jersey.util.JsonEntityIdSerializer;
-import es.ficonlan.web.backend.jersey.util.JsonEventDeserializer;
 import es.ficonlan.web.backend.model.event.Event;
 
 /**
@@ -48,7 +46,6 @@ public class Sponsor {
 		this.sponsorId = sponsorId;
 	}
 
-	@JsonDeserialize(using = JsonEventDeserializer.class)
 	@JsonSerialize(using = JsonEntityIdSerializer.class)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Sponsor_event_id")
