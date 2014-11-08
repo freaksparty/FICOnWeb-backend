@@ -91,6 +91,18 @@ public class EventResource {
 		eventService.removeEvent(sessionId, eventId);
 	}
 	
+	@Path("/rules/{eventId}")
+	@GET
+	public String getEventRules(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
+		return eventService.getEventRules(sessionId, eventId);
+	}
+	
+	@Path("/resgistrationIsOpen/{eventId}")
+	@GET
+	public boolean eventIsOpen(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
+		return eventService.eventIsOpen(sessionId, eventId);
+	}
+	
 	@Path("/activity/{eventId}")
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})

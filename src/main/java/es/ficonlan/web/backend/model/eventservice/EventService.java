@@ -33,6 +33,10 @@ public interface EventService {
     public List<Event> findEventByName(String sessionId, String name) throws ServiceException;
     
     
+    public String getEventRules(String sessionId, int eventId) throws ServiceException;
+    
+    public boolean eventIsOpen(String sessionId, int eventId) throws ServiceException;
+    
 		
 	public Registration addParticipantToEvent(String sessionId, int userId, int eventId) throws ServiceException;
 	

@@ -32,6 +32,7 @@ public class Event {
     private String description;
     private int numParticipants;
     private int minimunAge;
+    private int price; 
     private Calendar startDate;
     private Calendar endDate;
     private Calendar registrationOpenDate;
@@ -112,6 +113,15 @@ public class Event {
 
 	public void setMinimunAge(int minimunAge) {
 		this.minimunAge = minimunAge;
+	}
+	
+	@Column(name = "Event_price") 
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
 	}
 
 	@JsonDeserialize(using = JsonDateDeserializer.class)

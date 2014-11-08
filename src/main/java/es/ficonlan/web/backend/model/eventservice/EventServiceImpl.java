@@ -110,6 +110,34 @@ public class EventServiceImpl implements EventService {
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
 		}
     }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public String getEventRules(String sessionId, int eventId) throws ServiceException {
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getEventRules")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+    	try{
+    		Event event = eventDao.find(eventId);
+    		return event.getNormas();
+    	} catch (InstanceException e) {
+			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
+		}	
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public boolean eventIsOpen(String sessionId, int eventId) throws ServiceException {
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "eventIsOpen")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+    	try{
+    		Event event = eventDao.find(eventId);
+    		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    		if(now.after(event.getStartDate()) && now.before(event.getEndDate())) return true;
+    		else return false;
+    	} catch (InstanceException e) {
+		throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
+    	}	
+    }
 
     @Override
     @Transactional
@@ -123,6 +151,8 @@ public class EventServiceImpl implements EventService {
     		if(eventData.getName()!=null) event.setName(eventData.getName());
     		if(eventData.getDescription()!=null) event.setDescription(eventData.getDescription());
     	    if(eventData.getNumParticipants()>0) event.setNumParticipants(eventData.getNumParticipants());
+    	    if(eventData.getMinimunAge()>=0) event.setMinimunAge(eventData.getMinimunAge());
+    	    if(eventData.getPrice()>=0) event.setPrice(eventData.getPrice());
     		if(eventData.getStartDate()!=null) event.setStartDate(eventData.getStartDate());
     		if(eventData.getEndDate()!=null) event.setEndDate(eventData.getEndDate()); 
     		if(eventData.getRegistrationOpenDate()!=null) event.setRegistrationOpenDate(eventData.getRegistrationOpenDate());
@@ -174,6 +204,7 @@ public class EventServiceImpl implements EventService {
     		tabla.put("#fechainicioevento", event.getStartDate().toString());
     		tabla.put("#fechafinevento", event.getEndDate().toString());
     		tabla.put("#edadminima", Integer.toString(event.getMinimunAge()));
+    		tabla.put("#precio", Integer.toString(event.getPrice()));
  
     		if(currentParticipants>=event.getNumParticipants()) 
     		{
@@ -263,6 +294,7 @@ public class EventServiceImpl implements EventService {
 		tabla.put("#fechainicioevento", event.getStartDate().toString());
 		tabla.put("#fechafinevento", event.getEndDate().toString());
 		tabla.put("#edadminima", Integer.toString(event.getMinimunAge()));
+		tabla.put("#precio", Integer.toString(event.getPrice()));
     	
     	int place = 0;
         try {
@@ -297,17 +329,18 @@ public class EventServiceImpl implements EventService {
         	//FIXME: Mandar correo electrónico
         	
         	Hashtable<String,String> tabla2 = new Hashtable<String,String>();
-    		tabla.put("#nombreusuario", firstInQueue.getUser().getName());
-    		tabla.put("#loginusuario", firstInQueue.getUser().getLogin());
-    		tabla.put("#numerotelefonousuario", firstInQueue.getUser().getPhoneNumber());
-    		tabla.put("#tallacamisetausuario", firstInQueue.getUser().getShirtSize());
-    		tabla.put("#nombreevento", event.getName());
-    		tabla.put("#fechainicioevento", event.getStartDate().toString());
-    		tabla.put("#fechafinevento", event.getEndDate().toString());
-    		tabla.put("#edadminima", Integer.toString(event.getMinimunAge()));
+    		tabla2.put("#nombreusuario", firstInQueue.getUser().getName());
+    		tabla2.put("#loginusuario", firstInQueue.getUser().getLogin());
+    		tabla2.put("#numerotelefonousuario", firstInQueue.getUser().getPhoneNumber());
+    		tabla2.put("#tallacamisetausuario", firstInQueue.getUser().getShirtSize());
+    		tabla2.put("#nombreevento", event.getName());
+    		tabla2.put("#fechainicioevento", event.getStartDate().toString());
+    		tabla2.put("#fechafinevento", event.getEndDate().toString());
+    		tabla2.put("#edadminima", Integer.toString(event.getMinimunAge()));
+    		tabla2.put("#precio", Integer.toString(event.getPrice()));
         	
-        	tabla.put("#plazaencola", "");
-			tabla.put("#plazaenevento", Integer.toString(registration.getPlace()));
+        	tabla2.put("#plazaencola", "");
+			tabla2.put("#plazaenevento", Integer.toString(registration.getPlace()));
 			
 			if(event.getFromQueueToOutstanding()!=null) 
 			{
