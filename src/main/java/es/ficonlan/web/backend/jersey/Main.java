@@ -143,7 +143,7 @@ public class Main {
 		// Server Start
 		final HttpServer server = startServer();   
 		//Añadir parte estatica en la siguente linea
-		server.getServerConfiguration().addHttpHandler(new StaticHttpHandler("D:\\Surah\\Mis documentos\\httptest"),"/eventos");
+		//server.getServerConfiguration().addHttpHandler(new StaticHttpHandler("D:\\Surah\\Mis documentos\\httptest"),"/eventos");
 		System.out.println(String.format("Jersey app started with WADL available at " + "%sapplication.wadl\nHit enter to stop it...", properties.getProperty("server.baseUri")));
 		System.in.read();
 		server.stop();
