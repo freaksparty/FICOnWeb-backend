@@ -6,6 +6,7 @@ import java.net.URI;
 import java.util.Properties;
 
 import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.grizzly.http.server.StaticHttpHandler;
 import org.glassfish.grizzly.ssl.SSLContextConfigurator;
 import org.glassfish.grizzly.ssl.SSLEngineConfigurator;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
@@ -34,7 +35,8 @@ import es.ficonlan.web.backend.model.util.session.SessionManager;
 
 /**
  * Main class.
- *
+ * @author Daniel Gómez Silva
+ * @author Miguel Ángel Castillo
  */
 public class Main {
 
@@ -139,7 +141,9 @@ public class Main {
 		scth.start();
 
 		// Server Start
-		final HttpServer server = startServer();
+		final HttpServer server = startServer();   
+		//Añadir parte estatica en la siguente linea
+		server.getServerConfiguration().addHttpHandler(new StaticHttpHandler("D:\\Surah\\Mis documentos\\httptest"),"/eventos");
 		System.out.println(String.format("Jersey app started with WADL available at " + "%sapplication.wadl\nHit enter to stop it...", properties.getProperty("server.baseUri")));
 		System.in.read();
 		server.stop();
