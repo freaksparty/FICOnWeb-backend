@@ -33,6 +33,7 @@ public class NewsItem {
 	
 	private int newsItemId;
 	private String title;
+	private String imageurl;
 	private Calendar creationDate;
 	private Calendar publishDate;
 	private String content;
@@ -72,6 +73,15 @@ public class NewsItem {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	
+	@Column(name = "NewsItem_image")
+	public String getImageurl() {
+		return imageurl;
+	}
+
+	public void setImageurl(String imageurl) {
+		this.imageurl = imageurl;
 	}
 
 	@JsonDeserialize(using = JsonDateDeserializer.class)

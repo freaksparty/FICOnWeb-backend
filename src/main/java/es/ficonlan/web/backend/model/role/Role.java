@@ -49,7 +49,7 @@ public class Role {
 	{
 		this.roleId = newId;
 	}
-	
+
 	@Column(name = "role_name")
 	public String getRoleName()
 	{

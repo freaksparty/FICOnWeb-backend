@@ -672,10 +672,10 @@ public class EventServiceImpl implements EventService {
 			if(newsItem.getEvent()==null) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
 			if(newsItem.getTitle()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"title");
 			if(newsItem.getContent()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"Content");
-			if(newsItem.getPublishDate()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"publishDate");
 
 			newsItem.setPublisher(SessionManager.getSession(sessionId).getUser());
 			newsItem.setCreationDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+			if(newsItem.getPublishDate()==null) newsItem.setPublishDate(newsItem.getCreationDate());
 			newsDao.save(newsItem);
 			return newsItem;
 		} catch (InstanceException e) {
