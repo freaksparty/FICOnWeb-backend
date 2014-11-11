@@ -10,6 +10,7 @@ import es.ficonlan.web.backend.model.util.dao.GenericDaoHibernate;
 
 /**
  * @author Daniel Gómez Silva
+ * @author Miguel Ángel Castillo Bellagona
  */
 @Repository("newsDao")
 public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> implements NewsDao {
@@ -28,7 +29,7 @@ public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> imp
 	public List<NewsItem> getAllNewsItemFromEvent(int eventId) {
 		return getSession().createQuery(
 	        	"SELECT n " +
-		        "FROM NewsItem n WHERE n.event.eventId = :eventId ORDER BY n.publishDate"
+		        "FROM NewsItem n WHERE n.event.eventId = :eventId ORDER BY n.publishDate DESC"
 		        + "").setParameter("eventId", eventId).list();
 	} 
 
@@ -38,7 +39,7 @@ public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> imp
 		
 		List<NewsItem> result = getSession().createQuery( "SELECT n " +
                                         				  "FROM NewsItem n " +
-                                        				  "WHERE n.publishDate <= current_timestamp() " + 
+                                        				  "WHERE n.publishDate <= SYSUTCDATETIME() " + 
                                         				  	"AND n.publishDate >= :dateLimit " +
                                                           "ORDER BY n.publishDate DESC" 
 														).setDate("dateLimit", dateLimit.getTime()).list();
@@ -62,9 +63,9 @@ public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> imp
 
 		List<NewsItem> result = getSession().createQuery( "SELECT n " +
                                         				  "FROM NewsItem n " +
-                                        				  "WHERE n.publishDate <= current_timestamp() " + 
+                                        				  "WHERE n.publishDate <= SYSUTCDATETIME() " + 
                                         				  	"AND n.publishDate >= :dateLimit " +
-                                        				    "AND n.event.id = :eventId" +
+                                        				    "AND n.event.eventId = :eventId" +
                                                           "ORDER BY n.publishDate DESC" 
 														).setParameter("eventId", eventId).setDate("dateLimit", dateLimit.getTime()).list();
 

@@ -2,6 +2,7 @@ package es.ficonlan.web.backend.jersey.resources;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -175,7 +176,7 @@ public class EventResource {
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<NewsItem> lastNews(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("days") int days, @PathParam("outstandingOnly") boolean outstandingOnly) throws ServiceException{
-		Calendar limitDate = Calendar.getInstance();
+		Calendar limitDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		limitDate.add(Calendar.DAY_OF_YEAR, -1*days);
 		return eventService.getLastNewsFromEvent(sessionId, eventId, limitDate, outstandingOnly);
 	}
