@@ -97,7 +97,7 @@ public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> imp
 	public int getAllPublishedNewsItemFromEventTam(int eventId) {
 		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		return (int) getSession().createQuery(
-	        	"SELECT cout(*) " +
+	        	"SELECT cout(n) " +
 		        "FROM NewsItem n WHERE n.event.eventId = :eventId" 
 	        	+ " AND n.publishDate <= :now"
 	        	+ " ORDER BY n.publishDate DESC"
