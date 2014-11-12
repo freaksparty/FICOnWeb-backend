@@ -736,6 +736,15 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<NewsItem>getAllPublishedNewsItemFormEvent(String sessionId, int eventId) throws ServiceException {
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getAllPublishedNewsItemFormEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+    	
+		return newsDao.getAllPublishedNewsItemFromEvent(eventId);
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
 	public List<NewsItem> getLastNews(String sessionId, Calendar dateLimit, boolean onlyOutstandingNews) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getLastNews")) throw new ServiceException(ServiceException.PERMISSION_DENIED);

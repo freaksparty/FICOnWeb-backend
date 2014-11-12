@@ -18,4 +18,6 @@ public interface NewsDao extends GenericDao<NewsItem,Integer> {
 	
 	public List<NewsItem> getLastNewsFormEvent(int eventId, Calendar dateLimit, boolean onlyOutstandingNews); 
 	
+	public List<NewsItem> getAllPublishedNewsItemFromEvent(int eventId);
+	
 }

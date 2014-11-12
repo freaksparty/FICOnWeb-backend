@@ -82,4 +82,14 @@ public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> imp
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<NewsItem> getAllPublishedNewsItemFromEvent(int eventId) {
+		return getSession().createQuery(
+	        	"SELECT n " +
+		        "FROM NewsItem n WHERE n.event.eventId = :eventId" 
+	        	+ "AND n.publishDate <= SYSUTCDATETIME()"
+	        	+ "ORDER BY n.publishDate DESC"
+		        + "").setParameter("eventId", eventId).list();
+	}
+	
 }
