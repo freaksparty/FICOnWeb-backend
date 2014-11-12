@@ -3,6 +3,7 @@ package es.ficonlan.web.backend.model.newsitem;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.springframework.stereotype.Repository;
 
@@ -84,12 +85,13 @@ public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> imp
 	
 	@SuppressWarnings("unchecked")
 	public List<NewsItem> getAllPublishedNewsItemFromEvent(int eventId) {
+		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		return getSession().createQuery(
 	        	"SELECT n " +
 		        "FROM NewsItem n WHERE n.event.eventId = :eventId" 
-	        	+ "AND n.publishDate <= SYSUTCDATETIME()"
+	        	+ "AND n.publishDate <= :now"
 	        	+ "ORDER BY n.publishDate DESC"
-		        + "").setParameter("eventId", eventId).list();
+		        + "").setParameter("eventId", eventId).setParameter("now", now).list();
 	}
 	
 }
