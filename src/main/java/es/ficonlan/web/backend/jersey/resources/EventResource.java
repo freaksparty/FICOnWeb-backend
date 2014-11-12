@@ -164,18 +164,18 @@ public class EventResource {
 	}
 
 	
-	@Path("/news/{eventId}")
+	@Path("/news/{eventId}/{startIndex}/{cont}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<NewsItem> getAllNewsItem(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
-		return eventService.getAllNewsItemFormEvent(sessionId,  eventId);
+	public List<NewsItem> getAllNewsItem(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("startIndex") int startIndex, @PathParam("cont") int cont) throws ServiceException {
+		return eventService.getAllNewsItemFormEvent(sessionId,eventId,startIndex,cont);
 	}
 	
-	@Path("/news/published/{eventId}")
+	@Path("/news/published/{eventId}/{startIndex}/{cont}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<NewsItem> getAllNewsPublishedItem(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
-		return eventService.getAllPublishedNewsItemFormEvent(sessionId,  eventId);
+	public List<NewsItem> getAllNewsPublishedItem(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("startIndex") int startIndex, @PathParam("cont") int cont) throws ServiceException {
+		return eventService.getAllPublishedNewsItemFormEvent(sessionId,eventId,startIndex,cont);
 	}
 	
 	@Path("/news/{eventId}/last/{days}")

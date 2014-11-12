@@ -27,23 +27,23 @@ public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> imp
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<NewsItem> getAllNewsItemFromEvent(int eventId) {
+	public List<NewsItem> getAllNewsItemFromEvent(int eventId, int startIndex, int cont) {
 		return getSession().createQuery(
 	        	"SELECT n " +
 		        "FROM NewsItem n WHERE n.event.eventId = :eventId ORDER BY n.publishDate DESC"
-		        + "").setParameter("eventId", eventId).list();
+		        + "").setParameter("eventId", eventId).setFirstResult(startIndex).setMaxResults(cont).list();
 	} 
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<NewsItem> getLastNews(Calendar dateLimit, boolean onlyOutstandingNews) {
-		
+		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		List<NewsItem> result = getSession().createQuery( "SELECT n " +
                                         				  "FROM NewsItem n " +
                                         				  "WHERE n.publishDate <= SYSUTCDATETIME() " + 
                                         				  	"AND n.publishDate >= :dateLimit " +
                                                           "ORDER BY n.publishDate DESC" 
-														).setDate("dateLimit", dateLimit.getTime()).list();
+														).setDate("dateLimit", dateLimit.getTime()).setParameter("now", now).list();
 
 		
 		if (onlyOutstandingNews) {
@@ -61,14 +61,14 @@ public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> imp
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<NewsItem> getLastNewsFormEvent(int eventId, Calendar dateLimit, boolean onlyOutstandingNews) {
-
+		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		List<NewsItem> result = getSession().createQuery( "SELECT n " +
                                         				  "FROM NewsItem n " +
-                                        				  "WHERE n.publishDate <= SYSUTCDATETIME() " + 
+                                        				  "WHERE n.publishDate <= :now " + 
                                         				  	"AND n.publishDate >= :dateLimit " +
                                         				    "AND n.event.eventId = :eventId" +
                                                           "ORDER BY n.publishDate DESC" 
-														).setParameter("eventId", eventId).setDate("dateLimit", dateLimit.getTime()).list();
+														).setParameter("eventId", eventId).setParameter("now", now).setDate("dateLimit", dateLimit.getTime()).list();
 
 		
 		if (onlyOutstandingNews) {
@@ -84,14 +84,14 @@ public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> imp
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<NewsItem> getAllPublishedNewsItemFromEvent(int eventId) {
+	public List<NewsItem> getAllPublishedNewsItemFromEvent(int eventId, int startIndex, int cont) {
 		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		return getSession().createQuery(
 	        	"SELECT n " +
 		        "FROM NewsItem n WHERE n.event.eventId = :eventId" 
 	        	+ " AND n.publishDate <= :now"
 	        	+ " ORDER BY n.publishDate DESC"
-		        ).setParameter("eventId", eventId).setParameter("now", now).list();
+		        ).setParameter("eventId", eventId).setParameter("now", now).setFirstResult(startIndex).setMaxResults(cont).list();
 	}
 	
 }
