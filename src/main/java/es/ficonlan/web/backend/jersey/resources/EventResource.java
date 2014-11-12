@@ -185,7 +185,7 @@ public class EventResource {
 	@Path("/news/published/size/{eventId}/")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public int getAllPublishedNewsItemFromEventTam(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
+	public long getAllPublishedNewsItemFromEventTam(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
 		return eventService.getAllPublishedNewsItemFromEventTam(sessionId,eventId);
 	}
 	

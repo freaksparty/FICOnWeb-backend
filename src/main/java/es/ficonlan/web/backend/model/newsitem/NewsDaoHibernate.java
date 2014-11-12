@@ -94,16 +94,14 @@ public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> imp
 		        ).setParameter("eventId", eventId).setParameter("now", now).setFirstResult(startIndex).setMaxResults(cont).list();
 	}
 	
-	@SuppressWarnings("unchecked")
-	public int getAllPublishedNewsItemFromEventTam(int eventId) {
+	public long getAllPublishedNewsItemFromEventTam(int eventId) {
 		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-		List<NewsItem> l = getSession().createQuery(
-	        	"SELECT n " +
+
+		return (long) getSession().createQuery(
+	        	"SELECT count(n) " +
 		        "FROM NewsItem n WHERE n.event.eventId = :eventId" 
 	        	+ " AND n.publishDate <= :now"
-	        	+ " ORDER BY n.publishDate DESC"
-		        ).setParameter("eventId", eventId).setParameter("now", now).list();
-		return l.size();
+		        ).setParameter("eventId", eventId).setParameter("now", now).uniqueResult();
 	}
 	
 }
