@@ -164,17 +164,21 @@ public class EventResource {
 	}
 
 	
-	@Path("/news/{eventId}/{startIndex}/{cont}")
+	@Path("/news/{eventId}/{page}/{pageTam}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<NewsItem> getAllNewsItem(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("startIndex") int startIndex, @PathParam("cont") int cont) throws ServiceException {
+	public List<NewsItem> getAllNewsItem(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("page") int page, @PathParam("pageTam") int pageTam) throws ServiceException {
+		int startIndex = page*pageTam - pageTam;
+		int cont = pageTam;
 		return eventService.getAllNewsItemFormEvent(sessionId,eventId,startIndex,cont);
 	}
 	
-	@Path("/news/published/{eventId}/{startIndex}/{cont}")
+	@Path("/news/published/{eventId}/{page}/{pageTam}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<NewsItem> getAllNewsPublishedItem(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("startIndex") int startIndex, @PathParam("cont") int cont) throws ServiceException {
+	public List<NewsItem> getAllNewsPublishedItem(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("page") int page, @PathParam("pageTam") int pageTam) throws ServiceException {
+		int startIndex = page*pageTam - pageTam;
+		int cont = pageTam;
 		return eventService.getAllPublishedNewsItemFormEvent(sessionId,eventId,startIndex,cont);
 	}
 	
