@@ -182,6 +182,13 @@ public class EventResource {
 		return eventService.getAllPublishedNewsItemFormEvent(sessionId,eventId,startIndex,cont);
 	}
 	
+	@Path("/news/published/size/{eventId}/")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public int getAllPublishedNewsItemFromEventTam(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
+		return eventService.getAllPublishedNewsItemFromEventTam(sessionId,eventId);
+	}
+	
 	@Path("/news/{eventId}/last/{days}")
 	@GET
 	@Consumes({MediaType.APPLICATION_JSON})
