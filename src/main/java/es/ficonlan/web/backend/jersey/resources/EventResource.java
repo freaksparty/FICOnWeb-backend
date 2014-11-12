@@ -171,14 +171,14 @@ public class EventResource {
 		return eventService.getAllNewsItemFormEvent(sessionId,  eventId);
 	}
 	
-	@Path("/news/{eventId}/last/{days}/{outstandingOnly}")
+	@Path("/news/{eventId}/last/{days}")
 	@GET
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<NewsItem> lastNews(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("days") int days, @PathParam("outstandingOnly") boolean outstandingOnly) throws ServiceException{
+	public List<NewsItem> lastNews(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("days") int days) throws ServiceException{
 		Calendar limitDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		limitDate.add(Calendar.DAY_OF_YEAR, -1*days);
-		return eventService.getLastNewsFromEvent(sessionId, eventId, limitDate, outstandingOnly);
+		return eventService.getLastNewsFromEvent(sessionId, eventId, limitDate, false);
 	}
 	
 	@Path("/emailTemplates/setPaidTemplate/{eventId}/{emailTemplateId}")
