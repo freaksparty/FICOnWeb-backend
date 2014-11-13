@@ -5,6 +5,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -59,4 +60,9 @@ public class SessionResource {
 		return SessionManager.exists(sessionId);
 	}
 	
+	@Path("/closeAllUserSession/{userId}")
+	@DELETE
+	public void closeAllUserSessions(@HeaderParam("sessionId") String sessionId, @PathParam("userId") int userId) throws ServiceException {
+		SessionManager.closeAllUserSessions(userId);
+	}
 }

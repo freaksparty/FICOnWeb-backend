@@ -200,12 +200,20 @@ public class UserServiceImpl implements UserService {
 		return session;
 	}
 	
+	public void closeAllUserSessions(String sessionId, int userId) throws ServiceException {
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "closeAllUserSessions")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		SessionManager.closeAllUserSessions(userId);
+	}
+	
 	public User getCurrenUser(String sessionId) throws ServiceException {
 		if (!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		Session session = SessionManager.getSession(sessionId);
 		if(session.getUser().getLogin().contentEquals("anonymous")) return null;
 		try {
-			return userDao.find(session.getUser().getUserId());
+			User user = userDao.find(session.getUser().getUserId());
+			SessionManager.getSession(sessionId).setUser(user);
+			return user;
 		}
 		catch (InstanceException e) {
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
@@ -218,16 +226,13 @@ public class UserServiceImpl implements UserService {
 		SessionManager.removeSession(sessionId);
 	}
 
-	/**
-	 * DNI field can't be changed by the user, only by an admin; 
-	 */
 	@Transactional
 	public void changeUserData(String sessionId, int userId, User userData) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		Session session = SessionManager.getSession(sessionId);
 		if(!SessionManager.checkPermissions(session, userId, "changeUserData")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
-			User user = userDao.find(userData.getUserId());
+			User user = userDao.find(userId);
 			if(userData.getName()!=null) user.setName(userData.getName());
 			if(session.getUser().getUserId()!=userData.getUserId()) if(userData.getDni()!=null) user.setDni(userData.getDni());
 			User u = userDao.findUserByEmail(userData.getEmail());

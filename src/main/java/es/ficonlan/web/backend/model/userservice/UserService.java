@@ -23,6 +23,8 @@ public interface UserService {
 	
 	public Session login (String sessionId, String login, String password)  throws ServiceException;
 	
+	public void closeAllUserSessions(String sessionId, int userId) throws ServiceException;
+	
 	public User getCurrenUser(String sessionId) throws ServiceException;
 	
 	public void closeSession(String sessionId)  throws ServiceException;

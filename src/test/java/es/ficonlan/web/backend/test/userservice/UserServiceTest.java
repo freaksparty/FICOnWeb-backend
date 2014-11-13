@@ -238,7 +238,7 @@ public class UserServiceTest {
     	Session anonymousSession = userService.newAnonymousSession();
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	try {
-			userService.changeUserData(s.getSessionId(), s.getUser().getUserId(), new User(NON_EXISTENT_USER_ID, "new name", "87654321Y", "newEmail@gmail.com", "666666666", "XL"));
+			userService.changeUserData(s.getSessionId(), NON_EXISTENT_USER_ID, new User(NON_EXISTENT_USER_ID, "new name", "87654321Y", "newEmail@gmail.com", "666666666", "XL"));
 		    fail("This should have thrown an exception");  
 		} catch (ServiceException e) {
 			assertTrue(e.getUseCase().contentEquals("changeUserData"));

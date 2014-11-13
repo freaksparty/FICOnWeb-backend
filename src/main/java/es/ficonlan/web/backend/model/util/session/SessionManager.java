@@ -1,7 +1,10 @@
 package es.ficonlan.web.backend.model.util.session;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -36,6 +39,19 @@ public class SessionManager {
 		for(Map.Entry<String,Session> e:openSessions.entrySet()){
 			if(e.getValue().getLastAccess().before(limitTime))
 				openSessions.remove(e.getKey());
+		}
+	}
+	
+	public static void closeAllUserSessions(int userId) {
+		List<String> keys = new ArrayList<String>();
+		for (Entry<String, Session> e : openSessions.entrySet()) {
+            String key = e.getKey();
+            Session value = e.getValue();
+            if(value.getUser().getUserId()==userId) keys.add(key);
+        }
+		
+		for(String s : keys) {
+			removeSession(s);
 		}
 	}
 	

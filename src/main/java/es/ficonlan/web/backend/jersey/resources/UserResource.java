@@ -143,4 +143,6 @@ public class UserResource {
 		userService.removeRole(sessionId, roleId, userId);
 	} 
 	
+	
+	
 }
