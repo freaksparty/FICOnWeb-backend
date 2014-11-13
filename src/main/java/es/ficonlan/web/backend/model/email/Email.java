@@ -1,8 +1,20 @@
 package es.ficonlan.web.backend.model.email;
 
 import java.util.Calendar;
+import java.util.Properties;
 import java.util.TimeZone;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -188,11 +200,66 @@ public class Email {
 	}
 
 
-	public boolean sendMail() {
+	public boolean sendMailThread() {
 
-		SendMailThread trhead = new SendMailThread(this);
-		trhead.start();
+		SendMailThread thread = new SendMailThread(this);
+		thread.start();
 		return true;
 	}
+	
+	public boolean sendMail() {
+
+		try {
+			Properties props = new Properties();
+			props.put("mail.smtp.host", "smtp.gmail.com");
+			props.setProperty("mail.smtp.starttls.enable", "true");
+			props.setProperty("mail.smtp.port", "587");
+			props.setProperty("mail.smtp.user",this.getDireccionEnvio().getUsuarioCorreo());
+			props.setProperty("mail.smtp.auth", "true");
+
+			Session session = Session.getDefaultInstance(props, null);
+			BodyPart texto = new MimeBodyPart();
+			texto.setText(this.getMensaje());
+
+			BodyPart adjunto = new MimeBodyPart();
+			if (!this.getRutaArchivo().equals("")) {
+				adjunto.setDataHandler(new DataHandler(new FileDataSource(this.getRutaArchivo())));
+				adjunto.setFileName(this.getNombreArchivo());
+			}
+
+			MimeMultipart multiParte = new MimeMultipart();
+			multiParte.addBodyPart(texto);
+			if (!this.getRutaArchivo().equals("")) {
+				multiParte.addBodyPart(adjunto);
+			}
+
+			MimeMessage message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(this.getDireccionEnvio().getUsuarioCorreo()));
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(this.getDestinatario().getEmail()));
+			message.setSubject(this.getAsunto());
+			message.setContent(multiParte);
+
+			Transport t = session.getTransport("smtp");
+			t.connect(this.getDireccionEnvio().getUsuarioCorreo(),this.getDireccionEnvio().getPassword());
+			t.sendMessage(message, message.getAllRecipients());
+			t.close();
+
+			this.setSendDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+			this.setConfirmation(true);
+
+			return true;
+		} 
+		catch (MessagingException e) 
+		{
+			e.printStackTrace();
+
+			this.setSendDate(null);
+			this.setConfirmation(false);
+
+			return false;
+		}
+
+	}
+
 
 }

@@ -28,7 +28,8 @@ public class JsonDateDeserializer extends JsonDeserializer<Calendar> {
 		try {
 			c.setTimeInMillis(format.parse(date).getTime());
 		} catch (ParseException e) {
-			throw new RuntimeException();
+			//throw new RuntimeException();
+			return null; //Ahora si nos envia una fecha en mal formato la ponemos a null
 		}
 		return c;
 	}
