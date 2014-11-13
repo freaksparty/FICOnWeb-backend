@@ -178,22 +178,19 @@ public class EventServiceImpl implements EventService {
     		Event event = eventDao.find(eventId);    		
     		if(event.getRegistrationOpenDate().compareTo(Calendar.getInstance(TimeZone.getTimeZone("UTC")))>0||event.getRegistrationCloseDate().compareTo(Calendar.getInstance(TimeZone.getTimeZone("UTC")))<0) throw new ServiceException(9,"addParticipantToEvent");
     		
-
     		Calendar agedif = user.getDob();
     		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     			
     		agedif.add(Calendar.YEAR, event.getMinimunAge());
     		if(agedif.after(now)) throw new ServiceException(ServiceException.YOUR_ARE_TOO_YOUNG);
-
     		
     		Registration registration = registrationDao.findByUserAndEvent(userId, eventId);
     		if (registration==null) registration = new Registration(user, event);
-    		else throw new  ServiceException(ServiceException.DUPLICATED_FIELD,"Event");
+    		else throw new  ServiceException(ServiceException.DUPLICATED_FIELD,"Registration");
     		
     		int currentParticipants = registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.registered) + 
     								  registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.paid);
     		int queueParticipants = currentParticipants + registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.inQueue);
-    		
     		
     		Hashtable<String,String> tabla = new Hashtable<String,String>();
     		tabla.put("#nombreusuario", user.getName());

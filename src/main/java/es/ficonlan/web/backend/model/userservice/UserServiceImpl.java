@@ -204,7 +204,15 @@ public class UserServiceImpl implements UserService {
 		if (!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		Session session = SessionManager.getSession(sessionId);
 		if(session.getUser().getLogin().contentEquals("anonymous")) return null;
-		return session.getUser();
+		try {
+			User user = userDao.find(session.getUser().getUserId());
+			return user;
+		}
+		catch (InstanceException e) 
+		{
+			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
+		}
+		
 	}
 
 	public void closeSession(String sessionId) throws ServiceException {
@@ -221,7 +229,7 @@ public class UserServiceImpl implements UserService {
 		Session session = SessionManager.getSession(sessionId);
 		if(!SessionManager.checkPermissions(session, userId, "changeUserData")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try {
-			User user = userDao.find(userData.getUserId());
+			User user = userDao.find(userId);
 			if(userData.getName()!=null) user.setName(userData.getName());
 			if(session.getUser().getUserId()!=userData.getUserId()) if(userData.getDni()!=null) user.setDni(userData.getDni());
 			User u = userDao.findUserByEmail(userData.getEmail());
