@@ -63,6 +63,6 @@ public class SessionResource {
 	@Path("/closeAllUserSession/{userId}")
 	@DELETE
 	public void closeAllUserSessions(@HeaderParam("sessionId") String sessionId, @PathParam("userId") int userId) throws ServiceException {
-		SessionManager.closeAllUserSessions(userId);
+		userService.closeAllUserSessions(sessionId,userId);
 	}
 }

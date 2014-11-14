@@ -49,8 +49,6 @@ public interface UserService {
 	
 	public void setDefaultLanguage(String sessionId, int userId, int languageId) throws ServiceException;
 	
-	public void removeOwnUser(String sessionId, int userId) throws ServiceException;
-	
 	public void removeUser(String sessionId, int userId) throws ServiceException;
 	
 	public Role createRole(String sessionId, String rolename) throws ServiceException;
