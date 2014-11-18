@@ -84,6 +84,8 @@ public interface EventService {
     
     public long getAllPublishedNewsItemFromEventTam(String sessionId, int eventId) throws ServiceException;
     
+    public long getAllNewsItemFromEventTam(String sessionId, int eventId) throws ServiceException;
+    
     public List<NewsItem> getLastNews(String sessionId, Calendar dateLimit, boolean onlyOutstandingNews) throws ServiceException;
     
     public List<NewsItem> getLastNewsFromEvent(String sessionId, int eventId, Calendar dateLimit, boolean onlyOutstandingNews) throws ServiceException;

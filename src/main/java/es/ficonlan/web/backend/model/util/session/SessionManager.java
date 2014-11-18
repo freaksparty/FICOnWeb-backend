@@ -65,11 +65,23 @@ public class SessionManager {
 	 * @throws ServiceException
 	 */
 	public static boolean  checkPermissions(Session session, int userId, String useCase) {
+		
+		session.setLastAccess(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+		
 		if (session.getUser().getUserId() == userId) return true;
-		else return checkPermissions(session, useCase);
+		else
+		for(Role r:session.getUser().getRoles()){
+		    for (UseCase uc: r.getUseCases()){
+		    	if (uc.getUseCaseName().contentEquals(useCase)) return true;
+		    }
+		}
+		return false;
 	}
 
 	public static boolean checkPermissions(Session session, String useCase) {
+		
+		session.setLastAccess(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+		
 		for(Role r:session.getUser().getRoles()){
 		    for (UseCase uc: r.getUseCases()){
 		    	if (uc.getUseCaseName().contentEquals(useCase)) return true;

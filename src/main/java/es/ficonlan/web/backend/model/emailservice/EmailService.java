@@ -33,6 +33,8 @@ public interface EmailService {
 	
 	public Email modifyEmail(String sessionId, int emailId, Email newEmail) throws ServiceException;
 	
+	public Email setSendStatusEmail(int emailId, boolean confirmation) throws ServiceException;
+	
 	public void deleteEmail(String sessionId, int emailId) throws ServiceException;
 	
 	

@@ -85,6 +85,7 @@ CREATE TABLE Event (
  
  CREATE INDEX UserIndexByUser_login ON User (User_login);
  CREATE INDEX UserIndexByUser_dni ON User (User_dni); 
+ CREATE INDEX UserIndexByUser_email ON User (User_email);
  
   -- ------------------------------ USERCase -------------------------------------
  

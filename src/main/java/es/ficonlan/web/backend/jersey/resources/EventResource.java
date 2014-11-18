@@ -168,18 +168,25 @@ public class EventResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<NewsItem> getAllNewsItem(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("page") int page, @PathParam("pageTam") int pageTam) throws ServiceException {
-		int startIndex = page*pageTam - pageTam;
-		int cont = pageTam;
-		return eventService.getAllNewsItemFormEvent(sessionId,eventId,startIndex,cont);
+		if(pageTam>0) {
+			int startIndex = page*pageTam - pageTam;
+			int cont = pageTam;
+			return eventService.getAllNewsItemFormEvent(sessionId,eventId,startIndex,cont);
+		}
+		else return eventService.getAllNewsItemFormEvent(sessionId,eventId,0,(int) eventService.getAllNewsItemFromEventTam(sessionId, eventId));
 	}
 	
 	@Path("/news/published/{eventId}/{page}/{pageTam}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<NewsItem> getAllNewsPublishedItem(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("page") int page, @PathParam("pageTam") int pageTam) throws ServiceException {
-		int startIndex = page*pageTam - pageTam;
-		int cont = pageTam;
-		return eventService.getAllPublishedNewsItemFormEvent(sessionId,eventId,startIndex,cont);
+		if(pageTam>0) {
+			int startIndex = page*pageTam - pageTam;
+			int cont = pageTam;
+			return eventService.getAllPublishedNewsItemFormEvent(sessionId,eventId,startIndex,cont);
+		}
+		else return eventService.getAllPublishedNewsItemFormEvent(sessionId,eventId,0,(int) eventService.getAllPublishedNewsItemFromEventTam(sessionId, eventId));
+		
 	}
 	
 	@Path("/news/published/size/{eventId}/")
@@ -187,6 +194,13 @@ public class EventResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public long getAllPublishedNewsItemFromEventTam(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
 		return eventService.getAllPublishedNewsItemFromEventTam(sessionId,eventId);
+	}
+	
+	@Path("/news/all/size/{eventId}/")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public long getAllNewsItemFromEventTam(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
+		return eventService.getAllNewsItemFromEventTam(sessionId,eventId);
 	}
 	
 	@Path("/news/{eventId}/last/{days}")

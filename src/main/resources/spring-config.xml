@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
-    xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
            				http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
            			    http://www.springframework.org/schema/tx
@@ -10,8 +10,9 @@
                         http://www.springframework.org/schema/context
                         http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<bean id="applicationProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-   	 	<property name="location" value="classpath:backend.properties"/>
+	<bean id="applicationProperties"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:backend.properties" />
 	</bean>
 
 	<!-- Enable usage of @Autowired. -->
@@ -21,26 +22,42 @@
 	<context:component-scan base-package="es.ficonlan.web.backend" />
 
 	<!-- Data source. -->
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="${db.driver}" />
-		<property name="url" value="${db.url}"/>
-        <property name="username" value="${db.user}"/>
-        <property name="password" value="${db.password}"/>
+		<property name="url" value="${db.url}" />
+		<property name="username" value="${db.user}" />
+		<property name="password" value="${db.password}" />
 	</bean>
+	
+	<!-- 
+	<bean id="dataSource" destroy-method="close" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${db.driver}" />
+		<property name="url" value="${db.url}" />
+		<property name="username" value="{db.user}" />
+		<property name="password" value="${db.password}" />
+		<property name="initialSize" value="3" />
+		<property name="maxActive" value="10" />
+	</bean>
+	-->
 
 	<!-- Hibernate Session Factory -->
-	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="configLocation" value="hibernate-config.xml" />
 	</bean>
 
 	<tx:annotation-driven transaction-manager="transactionManager" />
 
-	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
-	
+
 	<!-- Spring Application Context Provider to use from Jersey Resources -->
-	<bean id="applicationContextProvider" class="es.ficonlan.web.backend.jersey.util.ApplicationContextProvider"></bean>
+	<bean id="applicationContextProvider"
+		class="es.ficonlan.web.backend.jersey.util.ApplicationContextProvider"></bean>
 
 </beans>

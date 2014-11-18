@@ -138,7 +138,7 @@ public class UserServiceImpl implements UserService {
 	    	userDao.save(anonymous);
 		}
 		
-		User admin = userDao.findUserBylogin("Admin");
+		User admin = userDao.findUserBylogin(ADMIN_LOGIN);
 		if (admin == null) admin = new User("Administrador", ADMIN_LOGIN, hashPassword(INITIAL_ADMIN_PASS), "0", "adminMail", "-", "-");
 		if(!admin.getRoles().contains(adminRole)) admin.getRoles().add(adminRole);
     	userDao.save(admin);
@@ -314,7 +314,8 @@ public class UserServiceImpl implements UserService {
 			 		
     		Email e = emailTemplateDao.findByName("passwordRecover").generateEmail(user, tabla);
 
-    		if(e.sendMail()) userDao.save(user);
+    		//if(e.sendMail()) userDao.save(user);
+    		if(e.sendMailThread()) userDao.save(user);
     		
     		return true;
     		//Estos Email no los guardo en la BD porque contienen las contraseñas en plano

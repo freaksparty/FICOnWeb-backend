@@ -32,8 +32,8 @@ public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> imp
 	        	"SELECT n " +
 		        "FROM NewsItem n WHERE n.event.eventId = :eventId ORDER BY n.publishDate DESC"
 		        + "").setParameter("eventId", eventId).setFirstResult(startIndex).setMaxResults(cont).list();
-	} 
-
+	}  
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<NewsItem> getLastNews(Calendar dateLimit, boolean onlyOutstandingNews) {
@@ -104,4 +104,11 @@ public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> imp
 		        ).setParameter("eventId", eventId).setParameter("now", now).uniqueResult();
 	}
 	
+	public long getAllNewsItemFromEventTam(int eventId) {
+		return (long) getSession().createQuery(
+	        	"SELECT count(n) " +
+		        "FROM NewsItem n WHERE n.event.eventId = :eventId "  +
+		        " ORDER BY n.publishDate DESC"
+		        ).setParameter("eventId", eventId).uniqueResult();
+	}
 }

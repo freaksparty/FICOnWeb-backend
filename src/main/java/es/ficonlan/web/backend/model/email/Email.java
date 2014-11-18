@@ -104,7 +104,7 @@ public class Email {
 		return this.confirmation;
 	}
 
-	void setConfirmation(boolean confirmation) {
+	public void setConfirmation(boolean confirmation) {
 		this.confirmation = confirmation;
 	}
 
@@ -184,7 +184,7 @@ public class Email {
 		return sendDate;
 	}
 
-	void setSendDate(Calendar sendDate) {
+	public void setSendDate(Calendar sendDate) {
 		this.sendDate = sendDate;
 	}
 	
@@ -206,6 +206,8 @@ public class Email {
 		thread.start();
 		return true;
 	}
+	
+	
 	
 	public boolean sendMail() {
 

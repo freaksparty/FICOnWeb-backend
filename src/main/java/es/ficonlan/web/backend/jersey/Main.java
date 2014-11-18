@@ -62,7 +62,6 @@ public class Main {
 	private static final boolean IS_SECURE = Boolean.parseBoolean(properties.getProperty("server.isSecure"));
 
 	// Base URI the Grizzly HTTP server will listen on
-	// public static final String BASE_URI = "https://0.0.0.0:1194/ficonlan/";
 
 	/**
 	 * Starts Grizzly HTTP server exposing JAX-RS resources defined in this
@@ -76,7 +75,6 @@ public class Main {
 		// in es.ficonlan.web.prueba package
 		final ResourceConfig rc = new ResourceConfig();
 		//rc.packages("es.ficonlan.web.backend.jersey.resources");
-		
 		
 		rc.register(ActivityResource.class);
 		rc.register(EventResource.class);

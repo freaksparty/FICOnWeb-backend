@@ -202,6 +202,23 @@ public class EmailServiceImpl implements EmailService {
 			throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Adress");
 		}
 	}
+	
+	@Transactional
+	@Override
+	public Email setSendStatusEmail(int emailId, boolean confirmation) throws ServiceException {
+		Email email;
+		try {
+			email = emailDao.find(emailId);
+		}
+		catch (InstanceException e) {
+			throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Email");
+		}
+		email.setConfirmation(confirmation);
+		if(confirmation) email.setSendDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+		emailDao.save(email);
+		return email;
+	}
+	
 
 	@Transactional
 	@Override

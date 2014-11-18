@@ -22,4 +22,6 @@ public interface NewsDao extends GenericDao<NewsItem,Integer> {
 	
 	public long getAllPublishedNewsItemFromEventTam(int eventId);
 	
+	public long getAllNewsItemFromEventTam(int eventId);
+	
 }
