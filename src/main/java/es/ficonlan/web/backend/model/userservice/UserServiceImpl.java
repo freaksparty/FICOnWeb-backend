@@ -314,8 +314,8 @@ public class UserServiceImpl implements UserService {
 			 		
     		Email e = emailTemplateDao.findByName("passwordRecover").generateEmail(user, tabla);
 
-    		//if(e.sendMail()) userDao.save(user);
-    		if(e.sendMailThread()) userDao.save(user);
+    		if(e.sendMail()) userDao.save(user);
+    		//if(e.sendMailThread()) userDao.save(user);
     		
     		return true;
     		//Estos Email no los guardo en la BD porque contienen las contraseñas en plano
