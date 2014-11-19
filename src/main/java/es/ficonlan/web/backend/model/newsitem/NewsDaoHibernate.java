@@ -35,7 +35,7 @@ public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> imp
 		Query query = getSession().createQuery(
 	        	"SELECT n " +
 		        "FROM NewsItem n WHERE n.event.eventId = :eventId ORDER BY n." + orderBy +  aux 
-		        ).setParameter("orderBy", orderBy).setParameter("eventId", eventId);
+		        ).setParameter("eventId", eventId);
 		
 		if(cont<1) return query.list();
 		else return query.setFirstResult(startIndex).setMaxResults(cont).list();
