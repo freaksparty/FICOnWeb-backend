@@ -34,7 +34,7 @@ public class NewsResource {
 		this.eventService = ApplicationContextProvider.getApplicationContext().getBean(EventService.class);
 	}
 	    
-	@Path("/news/{newsItemId}")
+	@Path("/{newsItemId}")
 	@PUT
 	@Consumes({MediaType.APPLICATION_JSON})
 	public void changeNewsData(@HeaderParam("sessionId")String sessionId, @PathParam("newsItemId") int newsItemId,  @PathParam("eventId") int eventId, NewsItem newsData) throws ServiceException{
