@@ -48,7 +48,7 @@ public class UsersResource {
 		return userService.getAllUsers(sessionId, startIndex, cont, orderBy, b);
 	}
 	
-	@Path("/all/size/{statrtIndex}")
+	@Path("/all/size")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
 	public long getAllTAM(@HeaderParam("sessionId") String sessionId) throws ServiceException {
