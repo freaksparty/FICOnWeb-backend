@@ -176,6 +176,10 @@ public class EventResource {
 			@DefaultValue("publishDate") @QueryParam("orderBy") String orderBy,
 			@DefaultValue("1") @QueryParam("desc") int desc
 			) throws ServiceException {
+		System.out.println(eventId);
+		System.out.println(page);
+		System.out.println(pageTam);
+		System.out.println(orderBy);
 		
 		int startIndex = page*pageTam - pageTam;
 		int cont = pageTam;
