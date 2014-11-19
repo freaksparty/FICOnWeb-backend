@@ -21,7 +21,7 @@ import es.ficonlan.web.backend.model.util.session.Session;
  */
 @Path("/login")
 public class LoginResource {
-
+	
 	static class LoginData {
 
 		private String login;

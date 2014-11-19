@@ -6,6 +6,7 @@ import java.util.TimeZone;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -13,6 +14,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -164,16 +166,23 @@ public class EventResource {
 	}
 
 	
-	@Path("/news/{eventId}/{page}/{pageTam}")
+	@Path("/news/{eventId}/query")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<NewsItem> getAllNewsItem(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("page") int page, @PathParam("pageTam") int pageTam) throws ServiceException {
-		if(pageTam>0) {
-			int startIndex = page*pageTam - pageTam;
-			int cont = pageTam;
-			return eventService.getAllNewsItemFormEvent(sessionId,eventId,startIndex,cont);
-		}
-		else return eventService.getAllNewsItemFormEvent(sessionId,eventId,0,(int) eventService.getAllNewsItemFromEventTam(sessionId, eventId));
+	public List<NewsItem> getAllNewsItem(@HeaderParam("sessionId") String sessionId, 
+			@PathParam("eventId") int eventId,
+			@DefaultValue("1") @QueryParam("page") int page, 
+			@DefaultValue("0") @QueryParam("pageTam") int pageTam,
+			@DefaultValue("publishDate") @QueryParam("orderBy") String orderBy,
+			@DefaultValue("1") @QueryParam("desc") int desc
+			) throws ServiceException {
+		
+		int startIndex = page*pageTam - pageTam;
+		int cont = pageTam;
+		boolean b = true;
+		if(desc==0) b = false;
+		return eventService.getAllNewsItemFormEvent(sessionId,eventId,startIndex,cont,orderBy,b);
+	
 	}
 	
 	@Path("/news/published/{eventId}/{page}/{pageTam}")

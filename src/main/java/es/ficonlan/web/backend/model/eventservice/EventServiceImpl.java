@@ -724,11 +724,11 @@ public class EventServiceImpl implements EventService {
     
     @Override
     @Transactional(readOnly = true)
-    public List<NewsItem> getAllNewsItemFormEvent(String sessionId, int eventId, int startIndex, int cont) throws ServiceException {
+    public List<NewsItem> getAllNewsItemFormEvent(String sessionId, int eventId, int startIndex, int cont, String orderBy, boolean desc) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getAllNewsItemFormEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
     	
-		return newsDao.getAllNewsItemFromEvent(eventId,startIndex,cont);
+		return newsDao.getAllNewsItemFromEvent(eventId,startIndex,cont,orderBy,desc);
     }
 
     @Override

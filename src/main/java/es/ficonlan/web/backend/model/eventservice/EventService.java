@@ -78,7 +78,7 @@ public interface EventService {
     
     public List<NewsItem> getAllNewsItem(String sessionId) throws ServiceException;
     
-    public List<NewsItem> getAllNewsItemFormEvent(String sessionId, int eventId, int startIndex, int cont) throws ServiceException;
+    public List<NewsItem> getAllNewsItemFormEvent(String sessionId, int eventId, int startIndex, int cont, String orderBy, boolean desc) throws ServiceException;
     
     public List<NewsItem>getAllPublishedNewsItemFormEvent(String sessionId, int eventId, int startIndex, int cont) throws ServiceException;
     

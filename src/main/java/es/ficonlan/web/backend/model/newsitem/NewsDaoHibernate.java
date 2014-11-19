@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
+import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 import es.ficonlan.web.backend.model.util.dao.GenericDaoHibernate;
@@ -27,11 +28,17 @@ public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> imp
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<NewsItem> getAllNewsItemFromEvent(int eventId, int startIndex, int cont) {
-		return getSession().createQuery(
+	@Override
+	public List<NewsItem> getAllNewsItemFromEvent(int eventId, int startIndex, int cont, String orderBy, boolean desc) {
+		String aux = " ";
+		if(desc) aux=" DESC";
+		Query query = getSession().createQuery(
 	        	"SELECT n " +
-		        "FROM NewsItem n WHERE n.event.eventId = :eventId ORDER BY n.publishDate DESC"
-		        + "").setParameter("eventId", eventId).setFirstResult(startIndex).setMaxResults(cont).list();
+		        "FROM NewsItem n WHERE n.event.eventId = :eventId ORDER BY n." + orderBy +  aux 
+		        ).setParameter("orderBy", orderBy).setParameter("eventId", eventId);
+		
+		if(cont<1) return query.list();
+		else return query.setFirstResult(startIndex).setMaxResults(cont).list();
 	}  
 	
 	@SuppressWarnings("unchecked")
