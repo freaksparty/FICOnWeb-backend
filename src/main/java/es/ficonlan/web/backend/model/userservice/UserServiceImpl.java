@@ -324,17 +324,31 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Transactional(readOnly=true)
-	public List<User> getUsersByEvent(String sessionId, int eventId, RegistrationState state, int startindex, int maxResults) throws ServiceException {
+	public List<User> getUsersByEvent(String sessionId, int eventId, RegistrationState state, int startindex, int maxResults, String orderBy, boolean desc) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getUsersByEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-		return userDao.getUsersByEvent(eventId,state,startindex,maxResults);
+		return userDao.getUsersByEvent(eventId,state,startindex,maxResults,orderBy,desc);
 	}
 	
 	@Transactional(readOnly=true)
-	public List<User> getAllUsers(String sessionId, int startindex, int maxResults) throws ServiceException {
+	public long getUsersByEventTAM(String sessionId, int eventId, RegistrationState state) throws ServiceException {
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getUsersByEventTAM")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		return userDao.getUsersByEventTAM(eventId, state);
+	}
+	
+	@Transactional(readOnly=true)
+	public List<User> getAllUsers(String sessionId, int startindex, int maxResults, String orderBy, boolean desc) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getAllUsers")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-		return userDao.getAllUsers(startindex, maxResults);
+		return userDao.getAllUsers(startindex, maxResults,orderBy,desc);
+	}
+	
+	@Transactional(readOnly=true)
+	public long getAllUsersTAM(String sessionId) throws ServiceException {
+		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getAllUsersTAM")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		return userDao.getAllUsersTAM();
 	}
 	
 	@Transactional(readOnly=true)

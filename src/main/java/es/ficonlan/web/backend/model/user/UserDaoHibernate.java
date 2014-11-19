@@ -2,6 +2,7 @@ package es.ficonlan.web.backend.model.user;
 
 import java.util.List;
 
+import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
@@ -15,12 +16,25 @@ import es.ficonlan.web.backend.model.util.dao.GenericDaoHibernate;
 public class UserDaoHibernate extends GenericDaoHibernate<User,Integer> implements UserDao {
 	
 	@SuppressWarnings("unchecked")
-	public List<User> getAllUsers(int startindex, int maxResults){
-		return getSession().createQuery(
+	public List<User> getAllUsers(int startindex, int cont, String orderBy, boolean desc){
+		String aux = " ";
+		if(desc) aux=" DESC";
+		Query query =  getSession().createQuery(
 	        	"SELECT u " +
 		        "FROM User u " +
 		        "WHERE u.login!='anonymous' AND u.deleted=FALSE " +
-	        	"ORDER BY u.login").setFirstResult(startindex).setMaxResults(maxResults).list();
+	        	"ORDER BY u." + orderBy +  aux 
+		        );
+		if(cont<1) return query.list();
+		else return query.setFirstResult(startindex).setMaxResults(cont).list();
+	}
+	
+	public long getAllUsersTAM() {
+		return (long) getSession().createQuery(
+	        	"SELECT count(u) " +
+		        "FROM User u " +
+		        "WHERE u.login!='anonymous' AND u.deleted=FALSE " +
+	        	"ORDER BY u.login").uniqueResult();
 	}
 	
 	public User findUserBylogin(String login) {
@@ -30,7 +44,21 @@ public class UserDaoHibernate extends GenericDaoHibernate<User,Integer> implemen
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<User> getUsersByEvent(int eventId, RegistrationState state, int startindex, int maxResults) {
+	public List<User> getUsersByEvent(int eventId, RegistrationState state, int startindex, int maxResults, String orderBy, boolean desc) {
+		String aux = " ";
+		if(desc) aux=" DESC";
+		String ss = " ";
+		if(state!=null) ss = " AND r.state = " + state;
+		Query query = getSession().createQuery("SELECT u " +
+                   "FROM Registration r INNER JOIN r.user u " +
+                   "WHERE r.event.id = :eventId AND u.deleted=FALSE " + ss +
+                   " ORDER BY r." + orderBy + aux
+                  ).setParameter("eventId",eventId);
+		
+		if(maxResults<1) return query.list();
+		else return query.setFirstResult(startindex).setMaxResults(maxResults).list();
+		
+				/*
 		if (state==null) return getSession().createQuery("SELECT u " +
    			                                             "FROM Registration r INNER JOIN r.user u " +
 	                                                     "WHERE r.event.id = :eventId AND u.deleted=FALSE " +
@@ -41,6 +69,31 @@ public class UserDaoHibernate extends GenericDaoHibernate<User,Integer> implemen
                    							  "WHERE r.event.id = :eventId AND r.state = :state AND u.deleted=FALSE " +
                    							  "ORDER BY r.registrationDate" 
 				 						    ).setParameter("eventId",eventId).setParameter("state",state).setFirstResult(startindex).setMaxResults(maxResults).list(); 			
+	*/
+	}
+	
+	public long getUsersByEventTAM(int eventId, RegistrationState state) {
+		String ss = " ";
+		if(state!=null) ss = " AND r.state = " + state;
+		Query query = getSession().createQuery("SELECT count(u) " +
+                   "FROM Registration r INNER JOIN r.user u " +
+                   "WHERE r.event.id = :eventId AND u.deleted=FALSE " + ss 
+                  ).setParameter("eventId",eventId);
+
+		return (long) query.uniqueResult();
+		
+				/*
+		if (state==null) return getSession().createQuery("SELECT u " +
+   			                                             "FROM Registration r INNER JOIN r.user u " +
+	                                                     "WHERE r.event.id = :eventId AND u.deleted=FALSE " +
+                                                         "ORDER BY r.registrationDate" 
+	                                                    ).setParameter("eventId",eventId).setFirstResult(startindex).setMaxResults(maxResults).list();
+		else return getSession().createQuery( "SELECT u " +
+                   							  "FROM Registration r INNER JOIN r.user u " +
+                   							  "WHERE r.event.id = :eventId AND r.state = :state AND u.deleted=FALSE " +
+                   							  "ORDER BY r.registrationDate" 
+				 						    ).setParameter("eventId",eventId).setParameter("state",state).setFirstResult(startindex).setMaxResults(maxResults).list(); 			
+	*/
 	}
 	
 	public User findUserByEmail(String email) {

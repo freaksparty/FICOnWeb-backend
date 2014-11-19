@@ -1,10 +1,23 @@
 package es.ficonlan.web.backend.test.userservice;
 
+import static es.ficonlan.web.backend.model.util.GlobalNames.SPRING_CONFIG_FILE;
+import static es.ficonlan.web.backend.test.util.GlobalNames.SPRING_CONFIG_TEST_FILE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.ficonlan.web.backend.model.role.RoleDao;
 import es.ficonlan.web.backend.model.supportedlanguage.SupportedLanguageDao;
@@ -15,17 +28,6 @@ import es.ficonlan.web.backend.model.userservice.UserService;
 import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import es.ficonlan.web.backend.model.util.session.Session;
-import static es.ficonlan.web.backend.model.util.GlobalNames.SPRING_CONFIG_FILE;
-import static es.ficonlan.web.backend.test.util.GlobalNames.SPRING_CONFIG_TEST_FILE;
-import static org.junit.Assert.*;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Daniel Gómez Silva
@@ -282,19 +284,4 @@ public class UserServiceTest {
     	String newPassHash = hashPassword("newpass");
     	assertTrue(u.getPassword().contentEquals(newPassHash));
 	}
-	
-	@Test
-	public void testGetAllUsers() throws ServiceException {
-    	Session anonymousSession = userService.newAnonymousSession();
-    	userService.addUser(anonymousSession.getSessionId(), new User("User1", "user1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
-		userService.addUser(anonymousSession.getSessionId(), new User("User2", "user2", "pass", "22321321R", "user2@gmail.com", "690047407", "L"));
-		userService.addUser(anonymousSession.getSessionId(), new User("User3", "user3", "pass", "44343348T", "user3@gmail.com", "690047407", "L"));
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
-    	List<User> users = userService.getAllUsers(s.getSessionId(),0,10);
-    	assertTrue(users.size()==4);
-    	assertTrue(users.get(0).getLogin().contentEquals(ADMIN_LOGIN));
-    	assertTrue(users.get(1).getLogin().contentEquals("user1"));
-    	assertTrue(users.get(2).getLogin().contentEquals("user2"));
-    	assertTrue(users.get(3).getLogin().contentEquals("user3"));
-	}  
 }

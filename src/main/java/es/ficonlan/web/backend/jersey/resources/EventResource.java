@@ -142,11 +142,17 @@ public class EventResource {
 		return eventService.getSponsorsByEvent(sessionId,eventId);
 	}
 
-	@Path("/users/{eventId}/{state}/{statrtIndex}/{maxResults}")
+	@Path("/users/{eventId}/query")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<User> getByEvent(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("state") String state,  
-			                     @PathParam("startIndex") int startIndex,  @PathParam("maxResults") int maxResults) throws ServiceException {
+	public List<User> getUsersByEvent(@HeaderParam("sessionId") String sessionId,  
+			@PathParam("eventId") int eventId,
+			@DefaultValue("1") @QueryParam("page") int page, 
+			@DefaultValue("0") @QueryParam("pageTam") int pageTam,
+			@DefaultValue("publishDate") @QueryParam("orderBy") String orderBy,
+			@DefaultValue("1") @QueryParam("desc") int desc,
+			@DefaultValue("all") @QueryParam("state") String state
+			) throws ServiceException {
 		RegistrationState st;
 		if(state==null) throw new ServiceException(ServiceException.MISSING_FIELD,"state");
     	if(state.toLowerCase().contentEquals("registered"))  st=RegistrationState.registered;
@@ -154,9 +160,29 @@ public class EventResource {
     	else if(state.toLowerCase().contentEquals("paid")) st=RegistrationState.paid;
     	else if(state.toLowerCase().contentEquals("all")) st=null;
     	else throw new ServiceException(ServiceException.INCORRECT_FIELD,"state");
-		return userService.getUsersByEvent(sessionId, eventId, st, startIndex, maxResults);
+    	int startIndex = page*pageTam - pageTam;
+		int cont = pageTam;
+		boolean b = true;
+		if(desc==0) b = false;
+		return userService.getUsersByEvent(sessionId, eventId, st, startIndex,cont,orderBy,b);
 	}
 	
+
+	@Path("/users/size/{eventId}/{state}/")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public long getUsersByEventTAM(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("state") String state) throws ServiceException {
+		RegistrationState st;
+		if(state==null) throw new ServiceException(ServiceException.MISSING_FIELD,"state");
+    	if(state.toLowerCase().contentEquals("registered"))  st=RegistrationState.registered;
+    	else if(state.toLowerCase().contentEquals("inqueue")) st=RegistrationState.inQueue;
+    	else if(state.toLowerCase().contentEquals("paid")) st=RegistrationState.paid;
+    	else if(state.toLowerCase().contentEquals("all")) st=null;
+    	else throw new ServiceException(ServiceException.INCORRECT_FIELD,"state");
+		return userService.getUsersByEventTAM(sessionId, eventId, st);
+	}
+	
+			
 	@Path("/news/{eventId}")
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})

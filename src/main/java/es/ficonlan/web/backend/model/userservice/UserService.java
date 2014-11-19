@@ -35,9 +35,13 @@ public interface UserService {
 	
 	public boolean passwordRecover(String sessionId, String email) throws ServiceException;
 	
-	public List<User> getUsersByEvent(String sessionId, int eventId, RegistrationState state, int startIndex, int maxResults)  throws ServiceException;
+	public List<User> getUsersByEvent(String sessionId, int eventId, RegistrationState state, int startIndex, int maxResults, String orderBy, boolean desc)  throws ServiceException;
     
-	public List<User> getAllUsers(String sessionId, int startIndex, int maxResults)  throws ServiceException;
+	public long getUsersByEventTAM(String sessionId, int eventId, RegistrationState state) throws ServiceException;
+	
+	public List<User> getAllUsers(String sessionId, int startIndex, int maxResults, String orderBy, boolean desc) throws ServiceException;
+	
+	public long getAllUsersTAM(String sessionId) throws ServiceException;
 	
 	public List<User> findUsersByName(String sessionId, String name, int startIndex, int maxResults)  throws ServiceException;
 		
@@ -72,5 +76,7 @@ public interface UserService {
 	public Set<UseCase> getRolePermissions(String sessionId, int roleId) throws ServiceException;
 	
 	public List<UseCase> getAllUseCases(String sessionId) throws ServiceException;
+
+	
 		
 }
