@@ -104,4 +104,11 @@ public class ServiceException extends Exception {
 		return useCase;
 	}
 
+	@Override
+	public String toString() {
+		return "ServiceException [errorCode=" + errorCode + ", useCase=" + useCase + ", field=" + field + ", message=" + this.getMessage() + "]";
+	}
+	
+	
+
 }

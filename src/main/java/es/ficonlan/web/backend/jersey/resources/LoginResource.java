@@ -62,8 +62,14 @@ public class LoginResource {
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public Session login(@HeaderParam("sessionId") String sessionId, LoginData loginData) throws ServiceException {
-		return userService.login(sessionId, loginData.getLogin(), loginData.getPassword());
+	public Session login(@HeaderParam("sessionId") String sessionId, LoginData loginData) {
+		try {
+			return userService.login(sessionId, loginData.getLogin(), loginData.getPassword());
+		}
+		catch (ServiceException e) {
+			System.out.println(e);
+			return null;
+		}
 	}
 	
 	@DELETE
