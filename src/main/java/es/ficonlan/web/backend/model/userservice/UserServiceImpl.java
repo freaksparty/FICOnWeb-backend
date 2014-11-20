@@ -412,9 +412,13 @@ public class UserServiceImpl implements UserService {
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), userId, "removeOwnUser")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		try 
 		{
+			/*
 			User user = userDao.find(userId);
 			user.setDeleted(true);
 			userDao.save(user);
+			*/
+			SessionManager.closeAllUserSessions(userId);
+			userDao.remove(userId);
 		}
 		catch (InstanceException e) 
 		{
@@ -430,9 +434,13 @@ public class UserServiceImpl implements UserService {
 			removeOwnUser(sessionId,userId);
 		}
 		else try {
+			    /*
 				User user = userDao.find(userId);
 				user.setDeleted(true);
 				userDao.save(user);
+				*/
+			    SessionManager.closeAllUserSessions(userId);
+				userDao.remove(userId);
 			} catch (InstanceException e) {
 				throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
 			}

@@ -22,7 +22,8 @@ public class JsonDateDeserializer extends JsonDeserializer<Calendar> {
 	@Override
 	public Calendar deserialize(JsonParser jsonparser, DeserializationContext deserializationcontext) throws IOException, JsonProcessingException {
 
-		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy/HH:mm:ss");
+		//SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy/HH:mm:ss");
+		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		String date = jsonparser.getText();
 		Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		try {
