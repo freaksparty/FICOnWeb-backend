@@ -416,7 +416,7 @@ public class EmailServiceImpl implements EmailService {
 	@Override
 	public EmailTemplate findEmailTemplateByName(String sessionId, String name)  throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "findEmailByName")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "findEmailTemplateByName")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 
 		return emailTemplateDao.findByName(name);
 	}

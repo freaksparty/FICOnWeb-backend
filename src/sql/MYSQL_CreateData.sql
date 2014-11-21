@@ -98,7 +98,7 @@ INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE U
 INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE UserCase_name =  "removeEmailTemplate" ), ( SELECT Role_id FROM Role WHERE Role_name =  "MailController" ) );
 INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE UserCase_name =  "changeEmailTemplate" ), ( SELECT Role_id FROM Role WHERE Role_name =  "MailController" ) );
 INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE UserCase_name =  "getAllEmailTemplate" ), ( SELECT Role_id FROM Role WHERE Role_name =  "MailController" ) );
-INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE UserCase_name =  "findEmailByName" ), ( SELECT Role_id FROM Role WHERE Role_name =  "MailController" ) );
+INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE UserCase_name =  "findEmailTemplateByName" ), ( SELECT Role_id FROM Role WHERE Role_name =  "MailController" ) );
 
 
 INSERT INTO Role VALUES ( 0, "NewsController");
