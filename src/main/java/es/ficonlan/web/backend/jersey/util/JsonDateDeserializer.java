@@ -24,8 +24,10 @@ public class JsonDateDeserializer extends JsonDeserializer<Calendar> {
 
 		//SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy/HH:mm:ss");
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy/HH:mm:ss");
+		format.setTimeZone(TimeZone.getTimeZone("UTC"));
+		
 		String date = jsonparser.getText();
-		Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+		Calendar c = Calendar.getInstance();
 		try {
 			c.setTimeInMillis(format.parse(date).getTime());
 		} catch (ParseException e) {
@@ -34,5 +36,4 @@ public class JsonDateDeserializer extends JsonDeserializer<Calendar> {
 		}
 		return c;
 	}
-
 }
