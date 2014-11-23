@@ -3,7 +3,6 @@ package es.ficonlan.web.backend.jersey.util;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.TimeZone;
 
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.JsonProcessingException;
@@ -23,7 +22,7 @@ public class JsonDateSerializer extends JsonSerializer<Calendar>{
 	
     @Override
     public void serialize(Calendar date, JsonGenerator gen, SerializerProvider provider) throws IOException, JsonProcessingException {
-    	dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+    	//dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         String formattedDate = dateFormat.format(date.getTime());
         gen.writeString(formattedDate);
     }

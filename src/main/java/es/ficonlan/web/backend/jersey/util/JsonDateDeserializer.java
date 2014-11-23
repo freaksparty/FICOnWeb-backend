@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.TimeZone;
 
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonProcessingException;
@@ -24,7 +23,7 @@ public class JsonDateDeserializer extends JsonDeserializer<Calendar> {
 
 		//SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy/HH:mm:ss");
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy/HH:mm:ss");
-		format.setTimeZone(TimeZone.getTimeZone("UTC"));
+		//format.setTimeZone(TimeZone.getTimeZone("UTC"));
 		
 		String date = jsonparser.getText();
 		Calendar c = Calendar.getInstance();
