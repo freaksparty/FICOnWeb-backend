@@ -50,7 +50,7 @@ public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> imp
                                         				  "WHERE n.publishDate <= SYSUTCDATETIME() " + 
                                         				  	"AND n.publishDate >= :dateLimit " +
                                                           "ORDER BY n.publishDate DESC" 
-														).setDate("dateLimit", dateLimit.getTime()).setParameter("now", now).list();
+														).setDate("dateLimit", dateLimit.getTime()).setParameter("now", now.getTime()).list();
 
 		
 		if (onlyOutstandingNews) {
@@ -75,7 +75,7 @@ public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> imp
                                         				  	"AND n.publishDate >= :dateLimit " +
                                         				    "AND n.event.eventId = :eventId" +
                                                           "ORDER BY n.publishDate DESC" 
-														).setParameter("eventId", eventId).setParameter("now", now).setDate("dateLimit", dateLimit.getTime()).list();
+														).setParameter("eventId", eventId).setParameter("now", now.getTime()).setDate("dateLimit", dateLimit.getTime()).list();
 
 		
 		if (onlyOutstandingNews) {
@@ -98,7 +98,7 @@ public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> imp
 		        "FROM NewsItem n WHERE n.event.eventId = :eventId" 
 	        	+ " AND n.publishDate <= :now"
 	        	+ " ORDER BY n.publishDate DESC"
-		        ).setParameter("eventId", eventId).setParameter("now", now).setFirstResult(startIndex).setMaxResults(cont).list();
+		        ).setParameter("eventId", eventId).setParameter("now", now.getTime()).setFirstResult(startIndex).setMaxResults(cont).list();
 	}
 	
 	public long getAllPublishedNewsItemFromEventTam(int eventId) {
@@ -108,7 +108,7 @@ public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> imp
 	        	"SELECT count(n) " +
 		        "FROM NewsItem n WHERE n.event.eventId = :eventId" 
 	        	+ " AND n.publishDate <= :now"
-		        ).setParameter("eventId", eventId).setParameter("now", now).uniqueResult();
+		        ).setParameter("eventId", eventId).setParameter("now", now.getTime()).uniqueResult();
 	}
 	
 	public long getAllNewsItemFromEventTam(int eventId) {
