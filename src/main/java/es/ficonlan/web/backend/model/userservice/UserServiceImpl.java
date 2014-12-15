@@ -405,40 +405,12 @@ public class UserServiceImpl implements UserService {
 			else throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Language");
 		}	
 	}
-	
-	@Transactional
-	public void removeOwnUser(String sessionId, int userId) throws ServiceException {
-		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), userId, "removeOwnUser")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-		try 
-		{
-			/*
-			User user = userDao.find(userId);
-			user.setDeleted(true);
-			userDao.save(user);
-			*/
-			SessionManager.closeAllUserSessions(userId);
-			userDao.remove(userId);
-		}
-		catch (InstanceException e) 
-		{
-			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
-		}
-	}
 
 	@Transactional
 	public void removeUser(String sessionId, int userId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "removeUser"))
-		{
-			removeOwnUser(sessionId,userId);
-		}
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), userId, "removeUser")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		else try {
-			    /*
-				User user = userDao.find(userId);
-				user.setDeleted(true);
-				userDao.save(user);
-				*/
 			    SessionManager.closeAllUserSessions(userId);
 				userDao.remove(userId);
 			} catch (InstanceException e) {
