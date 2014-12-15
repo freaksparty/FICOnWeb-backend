@@ -118,6 +118,7 @@ INSERT INTO Role VALUES ( 0, "SponsorController");
 INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE UserCase_name =  "addSponsor" ), ( SELECT Role_id FROM Role WHERE Role_name =  "SponsorController" ) );
 INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE UserCase_name =  "removeSponsor" ), ( SELECT Role_id FROM Role WHERE Role_name =  "SponsorController" ) );
 INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE UserCase_name =  "getSponsors" ), ( SELECT Role_id FROM Role WHERE Role_name =  "SponsorController" ) );
+INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE UserCase_name =  "getSponsorsTAM" ), ( SELECT Role_id FROM Role WHERE Role_name =  "SponsorController" ) );
 
 
 INSERT INTO Role VALUES ( 0, "UserController");
@@ -141,7 +142,7 @@ INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE U
 
 
 
-INSERT INTO Adress VALUES (0, "patrocinio@ficonlan.es", "patrocinioficonlan");
+INSERT INTO Adress VALUES (0, "no-responder@freaksparty.org", "e3MCq5>P");
 
 INSERT INTO EmailTemplate VALUES ( 0, "passwordRecover", ( SELECT Adress_id FROM Adress WHERE Adress_user =  "patrocinio@ficonlan.es" ), "", "", "Recuperación contraseña plataforma Freak's Party webs",
  "La nueva contraseña para la cuenta #loginusuario es #nuevapas esta contraseña solo será válida durante #tiemporestante minutos, recuerda cambiarla.");

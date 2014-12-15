@@ -40,7 +40,7 @@ import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 @Path("event")
 public class EventResource {
 	
-	private String[] s1 = {"newsItemId","title","imageurl","creationDate","publishDate","publisher.userId","event"};
+	private String[] s1 = {"newsItemId","title","imageurl","creationDate","publishDate","publisher.login","event"};
 	private ArrayList<String> l1;
 	
 	private String[] s2 = {"userId","name","login","dni","email","phoneNumber","shirtSize","dob"};

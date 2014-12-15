@@ -27,7 +27,7 @@ import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 @Path("sponsor")
 public class SponsorResource {
 	
-	private String[] s = {"sponsorId","name","url","imageurl"};
+	private String[] s = {"sponsorId","name","url","imageurl","event"};
 	private ArrayList<String> l;
 	
 	@Autowired
