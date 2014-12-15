@@ -827,11 +827,19 @@ public class EventServiceImpl implements EventService {
     }
     
     @Override
-    @Transactional(readOnly = true)
-    public List<Sponsor> getSponsors(String sessionId) throws ServiceException {
+    @Transactional(readOnly = true) 
+    public List<Sponsor> getSponsors(String sessionId, int startIndex, int cont, String orderBy, boolean desc) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getSponsors")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-    	return sponsorDao.getAll();
+    	return sponsorDao.getAll(startIndex,cont,orderBy,desc);
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public long getSponsorsTAM(String sessionId) throws ServiceException {
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getSponsorsTAM")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+    	return sponsorDao.getAllTAM();
     }
     
     @Override

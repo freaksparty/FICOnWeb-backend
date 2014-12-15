@@ -2,6 +2,7 @@ package es.ficonlan.web.backend.model.sponsor;
 
 import java.util.List;
 
+import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 import es.ficonlan.web.backend.model.util.dao.GenericDaoHibernate;
@@ -15,10 +16,22 @@ public class SponsorDaoHibernate extends GenericDaoHibernate<Sponsor,Integer> im
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Sponsor> getAll() {
-		return getSession().createQuery(
+	public List<Sponsor> getAll(int startIndex, int cont, String orderBy, boolean desc) {
+		String aux = " ";
+		if(desc) aux=" DESC";
+		Query query = getSession().createQuery(
 	        	"SELECT s " +
-		        "FROM Sponsor s ").list();
+		        "FROM Sponsor s ORDER BY n." + orderBy +  aux);
+		
+		if(cont<1) return query.list();
+		else return query.setFirstResult(startIndex).setMaxResults(cont).list();
+	}
+	
+	@Override
+	public long getAllTAM() {
+		return (long) getSession().createQuery(
+				"SELECT s FROM Sponsor s"
+		        ).uniqueResult();
 	}
 
 	@SuppressWarnings("unchecked")

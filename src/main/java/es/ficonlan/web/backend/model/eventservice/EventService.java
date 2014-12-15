@@ -99,7 +99,9 @@ public interface EventService {
     
     public void removeSponsor(String sessionId, int sponsorId) throws ServiceException;
     
-    public List<Sponsor> getSponsors(String sessionId) throws ServiceException;
+    public List<Sponsor> getSponsors(String sessionId, int startIndex, int cont, String orderBy, boolean desc) throws ServiceException;
+    
+    public long getSponsorsTAM(String sessionId) throws ServiceException;
     
     public List<Sponsor> getSponsorsByEvent(String sessionId, int eventId) throws ServiceException;
     

@@ -10,7 +10,9 @@ import es.ficonlan.web.backend.model.util.dao.GenericDao;
  */
 public interface SponsorDao extends GenericDao<Sponsor,Integer> {
 	
-	public List<Sponsor> getAll();
+	public List<Sponsor> getAll(int startIndex, int cont, String orderBy, boolean desc);
+	
+	public long getAllTAM();
 	
 	public List<Sponsor> getByEvent(int eventId);
 
