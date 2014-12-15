@@ -21,7 +21,7 @@ public class SponsorDaoHibernate extends GenericDaoHibernate<Sponsor,Integer> im
 		if(desc) aux=" DESC";
 		Query query = getSession().createQuery(
 	        	"SELECT s " +
-		        "FROM Sponsor s ORDER BY n." + orderBy +  aux);
+		        "FROM Sponsor s ORDER BY s." + orderBy +  aux);
 		
 		if(cont<1) return query.list();
 		else return query.setFirstResult(startIndex).setMaxResults(cont).list();

@@ -39,6 +39,7 @@ public class SponsorResource {
 		l.add(s[0]);l.add(s[1]);l.add(s[2]);l.add(s[3]);
 	}
 
+	@Path("/query")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<Sponsor> getSponsors(@HeaderParam("sessionId") String sessionId,
