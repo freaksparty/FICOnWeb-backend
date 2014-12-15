@@ -26,7 +26,7 @@ import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
  */
 @Path("news")
 public class NewsResource {
-
+	
 	@Autowired
 	private EventService eventService;
 		

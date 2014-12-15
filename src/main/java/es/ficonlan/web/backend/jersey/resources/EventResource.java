@@ -1,5 +1,6 @@
 package es.ficonlan.web.backend.jersey.resources;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -39,6 +40,12 @@ import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 @Path("event")
 public class EventResource {
 	
+	private String[] s1 = {"newsItemId","title","imageurl","creationDate","publishDate","publisher.userId","event"};
+	private ArrayList<String> l1;
+	
+	private String[] s2 = {"userId","name","login","dni","email","phoneNumber","shirtSize","dob"};
+	private ArrayList<String> l2;
+	
 	@Autowired
 	private EventService eventService;
 	
@@ -52,6 +59,12 @@ public class EventResource {
 		this.eventService = ApplicationContextProvider.getApplicationContext().getBean(EventService.class);
 		this.emailService = ApplicationContextProvider.getApplicationContext().getBean(EmailService.class);
 		this.userService  = ApplicationContextProvider.getApplicationContext().getBean(UserService.class);
+		
+		l1 = new ArrayList<String>();
+		l1.add(s1[0]);l1.add(s1[1]);l1.add(s1[2]);l1.add(s1[3]);l1.add(s1[4]);l1.add(s1[5]);l1.add(s1[6]);
+		
+		l2 = new ArrayList<String>();
+		l2.add(s2[0]);l2.add(s2[1]);l2.add(s2[2]);l2.add(s2[3]);l2.add(s2[4]);l2.add(s2[5]);l2.add(s2[6]);l2.add(s2[7]);
 	}
 
 	@POST
@@ -153,6 +166,7 @@ public class EventResource {
 			@DefaultValue("1") @QueryParam("desc") int desc,
 			@DefaultValue("all") @QueryParam("state") String state
 			) throws ServiceException {
+		if(l2.indexOf(orderBy)<0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"orderBy");
 		RegistrationState st;
 		if(state==null) throw new ServiceException(ServiceException.MISSING_FIELD,"state");
     	if(state.toLowerCase().contentEquals("registered"))  st=RegistrationState.registered;
@@ -202,7 +216,7 @@ public class EventResource {
 			@DefaultValue("publishDate") @QueryParam("orderBy") String orderBy,
 			@DefaultValue("1") @QueryParam("desc") int desc
 			) throws ServiceException {
-		
+		if(l1.indexOf(orderBy)<0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"orderBy");
 		int startIndex = page*pageTam - pageTam;
 		int cont = pageTam;
 		boolean b = true;

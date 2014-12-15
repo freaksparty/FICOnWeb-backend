@@ -1,5 +1,6 @@
 package es.ficonlan.web.backend.jersey.resources;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.DefaultValue;
@@ -25,11 +26,16 @@ import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 @Path("users")
 public class UsersResource {
 	
+	private String[] s = {"userId","name","login","dni","email","phoneNumber","shirtSize","dob"};
+	private ArrayList<String> l;
+	
 	@Autowired
     private UserService userService;
     
 	public UsersResource(){
 		userService = ApplicationContextProvider.getApplicationContext().getBean(UserService.class);
+		l = new ArrayList<String>();
+		l.add(s[0]);l.add(s[1]);l.add(s[2]);l.add(s[3]);l.add(s[4]);l.add(s[5]);l.add(s[6]);l.add(s[7]);
 	}
 	
 	@Path("/all/query")
@@ -41,6 +47,7 @@ public class UsersResource {
 			@DefaultValue("login") @QueryParam("orderBy") String orderBy,
 			@DefaultValue("1") @QueryParam("desc") int desc
 			) throws ServiceException {
+		if(l.indexOf(orderBy)<0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"orderBy");
 		int startIndex = page*pageTam - pageTam;
 		int cont = pageTam;
 		boolean b = true;

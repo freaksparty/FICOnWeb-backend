@@ -289,7 +289,7 @@ CREATE TABLE Sponsor (
  ALTER TABLE Role_UserCase ADD CONSTRAINT fk_role_userCase_role FOREIGN KEY ( Role_UserCase_Role_id  ) REFERENCES Role( Role_id ) ON DELETE CASCADE ON UPDATE CASCADE;
  
  ALTER TABLE NewsItem ADD CONSTRAINT fk_newsItem_event FOREIGN KEY ( NewsItem_Event_id ) REFERENCES Event( Event_id ) ON DELETE CASCADE ON UPDATE CASCADE;
- ALTER TABLE NewsItem ADD CONSTRAINT fk_newsItem_user FOREIGN KEY ( NewsItem_User_id ) REFERENCES User( User_id ) ON DELETE SET NULL ON UPDATE CASCADE;
+ ALTER TABLE NewsItem ADD CONSTRAINT fk_newsItem_user FOREIGN KEY ( NewsItem_User_id ) REFERENCES User( User_id ) ON DELETE CASCADE ON UPDATE CASCADE;
  
  ALTER TABLE Registration ADD CONSTRAINT fk_registration_user FOREIGN KEY ( Registration_User_id ) REFERENCES User( User_id ) ON DELETE CASCADE ON UPDATE CASCADE;
  ALTER TABLE Registration ADD CONSTRAINT fk_registration_event FOREIGN KEY ( Registration_Event_id ) REFERENCES Event( Event_id ) ON DELETE CASCADE ON UPDATE CASCADE;
