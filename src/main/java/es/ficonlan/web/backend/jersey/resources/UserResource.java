@@ -1,6 +1,5 @@
 package es.ficonlan.web.backend.jersey.resources;
 
-import java.util.List;
 import java.util.Set;
 
 import javax.ws.rs.Consumes;
@@ -17,8 +16,6 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
-import es.ficonlan.web.backend.model.email.Email;
-import es.ficonlan.web.backend.model.emailservice.EmailService;
 import es.ficonlan.web.backend.model.role.Role;
 import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.userservice.UserService;
@@ -58,13 +55,9 @@ public class UserResource {
 
 	@Autowired
     private UserService userService;
-	
-	@Autowired
-	private EmailService emailService;
     
 	public UserResource(){
 		userService = ApplicationContextProvider.getApplicationContext().getBean(UserService.class);
-		this.emailService = ApplicationContextProvider.getApplicationContext().getBean(EmailService.class);
 	}
     
 	@POST
@@ -101,27 +94,6 @@ public class UserResource {
 	@Consumes({MediaType.APPLICATION_JSON})
 	public boolean passwordRecover(@HeaderParam("sessionId") String sessionId, direcionCorreo email) throws ServiceException {
 		return userService.passwordRecover(sessionId, email.getContenido());
-	}
-	
-	@Path("/email/{userId}")
-	@GET
-	@Produces({MediaType.APPLICATION_JSON})
-	public List<Email> getAllYorEmails(@HeaderParam("sessionId") String sessionId, @PathParam("userId") int userId) throws ServiceException {
-		return emailService.getAllUserEmails(sessionId, userId);
-	}
-	
-	@Path("/email/last/{userId}/{eventid}")
-	@GET
-	@Produces({MediaType.APPLICATION_JSON})
-	public Email getYorLasEventEmail(@HeaderParam("sessionId") String sessionId, @PathParam("userId") int userId, @PathParam("eventId") int eventId) throws ServiceException {
-		return emailService.getUserLastEventEmail(sessionId, userId, eventId);
-	}
-	
-	@Path("/email/{userId}/{emailId}")
-	@PUT
-	@Produces(MediaType.APPLICATION_JSON)
-	public Email sendYourMail(@HeaderParam("sessionId") String sessionId, @PathParam("userId") int userId, @PathParam("emailId") int emailId) throws ServiceException {
-		return emailService.sendUserMail(sessionId, userId, emailId);
 	}
 	
 	@Path("/role/{userId}/{roleId}")

@@ -15,23 +15,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-
-import es.ficonlan.web.backend.jersey.util.JsonDateDeserializer;
-import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
-import es.ficonlan.web.backend.jersey.util.JsonEntityIdSerializer;
 import es.ficonlan.web.backend.model.emailadress.Adress;
 import es.ficonlan.web.backend.model.registration.Registration;
 import es.ficonlan.web.backend.model.user.User;
@@ -87,10 +73,6 @@ public class Email {
 		this( direccionEnvio, "", "", destinatario, asunto, mensaje);
 	}
 
-	@Column(name = "Email_id")
-	@SequenceGenerator(name = "emailIdGenerator", sequenceName = "emailSeq")
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "emailIdGenerator")
 	public int getEmailId() {
 		return emailId;
 	}
@@ -99,7 +81,6 @@ public class Email {
 		this.emailId = emailId;
 	}
 
-	@Column(name = "Email_confirmation")
 	public boolean getConfirmation() {
 		return this.confirmation;
 	}
@@ -108,9 +89,6 @@ public class Email {
 		this.confirmation = confirmation;
 	}
 
-	@JsonSerialize(using = JsonEntityIdSerializer.class) 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "Email_Adress_id")
 	public Adress getDireccionEnvio() {
 		return this.direccionEnvio;
 	}
@@ -119,7 +97,6 @@ public class Email {
 		this.direccionEnvio = direccionEnvio;
 	}
 
-	@Column(name = "Email_file")
 	public String getRutaArchivo() {
 		return rutaArchivo;
 	}
@@ -128,7 +105,6 @@ public class Email {
 		this.rutaArchivo = rutaArchivo;
 	}
 
-	@Column(name = "Email_fileName")
 	public String getNombreArchivo() {
 		return nombreArchivo;
 	}
@@ -137,9 +113,6 @@ public class Email {
 		this.nombreArchivo = nombreArchivo;
 	}
 
-	@JsonSerialize(using = JsonEntityIdSerializer.class)
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "Email_User_id")
 	public User getDestinatario() {
 		return destinatario;
 	}
@@ -148,7 +121,6 @@ public class Email {
 		this.destinatario = destinatario;
 	}
 
-	@Column(name = "case")
 	public String getAsunto() {
 		return asunto;
 	}
@@ -157,7 +129,6 @@ public class Email {
 		this.asunto = asunto;
 	}
 
-	@Column(name = "Email_body")
 	public String getMensaje() {
 		return mensaje;
 	}
@@ -166,9 +137,6 @@ public class Email {
 		this.mensaje = mensaje;
 	}
 
-	@JsonDeserialize(using = JsonDateDeserializer.class)
-	@JsonSerialize(using = JsonDateSerializer.class)
-	@Column(name = "Email_date")
 	public Calendar getDate() {
 		return date;
 	}
@@ -177,9 +145,6 @@ public class Email {
 		this.date = date;
 	}
 
-	@JsonDeserialize(using = JsonDateDeserializer.class)
-	@JsonSerialize(using = JsonDateSerializer.class)
-	@Column(name = "Email_senddate")
 	public Calendar getSendDate() {
 		return sendDate;
 	}
@@ -188,9 +153,6 @@ public class Email {
 		this.sendDate = sendDate;
 	}
 	
-	@JsonSerialize(using = JsonEntityIdSerializer.class)
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "Email_registration_id")
 	public Registration getRegistration() {
 		return registration;
 	}
@@ -199,15 +161,12 @@ public class Email {
 		this.registration = registration;
 	}
 
-
 	public boolean sendMailThread() {
 
 		SendMailThread thread = new SendMailThread(this);
 		thread.start();
 		return true;
-	}
-	
-	
+	}	
 	
 	public boolean sendMail() {
 

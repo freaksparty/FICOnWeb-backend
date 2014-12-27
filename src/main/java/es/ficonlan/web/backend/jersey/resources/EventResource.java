@@ -17,6 +17,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -65,6 +66,32 @@ public class EventResource {
 		
 		l2 = new ArrayList<String>();
 		l2.add(s2[0]);l2.add(s2[1]);l2.add(s2[2]);l2.add(s2[3]);l2.add(s2[4]);l2.add(s2[5]);l2.add(s2[6]);l2.add(s2[7]);
+	}
+
+	@Path("/{eventId}/{eventData}")
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	public Response getEventData(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("eventData") String eventData) {
+		try {
+			Event e = eventService.getEvent(sessionId, eventId);
+			Object o = null;
+			
+			switch (eventData) {
+				case "name" 		: o = e.getName(); break;
+				case "minimunAge" 	: o = e.getMinimunAge(); break;
+				case "startDate" 	: o = e.getStartDate(); break;
+				case "endDate" 		: o = e.getEndDate(); break;
+				case "isopen" 		: Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+									o = (now.after(e.getStartDate()) && now.before(e.getEndDate()));
+									break;
+				case "rules" 		: o = e.getNormas(); break;
+			}
+			
+			return Response.status(200).entity(o).build();
+			
+		} catch (ServiceException e) {
+			return Response.status(400).entity(e.toString()).build();
+		}
 	}
 
 	@POST

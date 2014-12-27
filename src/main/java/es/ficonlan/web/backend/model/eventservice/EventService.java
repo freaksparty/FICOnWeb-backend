@@ -45,6 +45,8 @@ public interface EventService {
 	public void setPaid(String sessionId, int userId, int eventId) throws ServiceException;
 	
     public Registration getRegistration(String sessionId, int userId, int eventId) throws ServiceException;
+    
+    public void sendRegistrationMail(String sessionId, int userId, int eventId) throws ServiceException;
 	
 	public void changeRegistrationState(String sessionId, int userId, int eventId, RegistrationState state) throws ServiceException;
 	

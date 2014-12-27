@@ -18,11 +18,11 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import es.ficonlan.web.backend.jersey.resources.ActivityResource;
 import es.ficonlan.web.backend.jersey.resources.BlackListResource;
 import es.ficonlan.web.backend.jersey.resources.EmailAdressResource;
-import es.ficonlan.web.backend.jersey.resources.EmailResource;
 import es.ficonlan.web.backend.jersey.resources.EmailTemplateResource;
 import es.ficonlan.web.backend.jersey.resources.EventResource;
 import es.ficonlan.web.backend.jersey.resources.LoginResource;
 import es.ficonlan.web.backend.jersey.resources.NewsResource;
+import es.ficonlan.web.backend.jersey.resources.RegistrationResource;
 import es.ficonlan.web.backend.jersey.resources.RoleResource;
 import es.ficonlan.web.backend.jersey.resources.SessionResource;
 import es.ficonlan.web.backend.jersey.resources.SponsorResource;
@@ -85,12 +85,12 @@ public class Main {
 		rc.register(NewsResource.class);
 		rc.register(JacksonFeature.class);
 		rc.register(ServiceExceptionMapper.class);
-		rc.register(EmailResource.class);
 		rc.register(EmailAdressResource.class);
 		rc.register(RoleResource.class);
 		rc.register(BlackListResource.class); 
 		rc.register(SponsorResource.class);
 		rc.register(EmailTemplateResource.class);
+		rc.register(RegistrationResource.class);
 		
 		rc.register(CORSResponseFilter.class);
 		

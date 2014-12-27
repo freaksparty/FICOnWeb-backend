@@ -184,7 +184,6 @@ CREATE TABLE NewsItem (
 	Registration_date_paid            datetime    ,
 	Registration_paid                 bool DEFAULT 0  ,
 	Registration_place                int DEFAULT -1 ,
-	Registration_lastemail            bigint UNSIGNED ,
 	CONSTRAINT pk_registration PRIMARY KEY ( Registration_id )
  ) engine=InnoDB;
  
@@ -210,28 +209,6 @@ CREATE TABLE Adress (
     CONSTRAINT pk_adress PRIMARY KEY(Adress_id),
     CONSTRAINT CategoryUniqueKey UNIQUE (Adress_user)
 ) engine=InnoDB;
-
--- ------------------------------ Email -------------------------------------
-
-CREATE TABLE Email (
-    Email_id 				bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
-	Email_confirmation		bool DEFAULT 0,
-    Email_adress_id 		bigint UNSIGNED  ,
-	Email_file		 		varchar(128), 
-	Email_fileName	 		varchar(128), 
-	Email_user_id			bigint UNSIGNED   ,
-	Email_case 				varchar(128) NOT NULL,
-	Email_body		 		TEXT,
-	Email_senddate			datetime,
-	Email_date				datetime,
-	Email_registration_id   bigint UNSIGNED,
-    CONSTRAINT pk_email PRIMARY KEY(Email_id)
-) engine=InnoDB;
-
- CREATE INDEX EmailByAdressId ON Email (Email_adress_id);
- CREATE INDEX EmailByUserId ON Email (Email_user_id);
- CREATE INDEX EmailByRegistrationId ON Email (Email_registration_id);
- CREATE INDEX EmailIndexConfirmation ON Email (Email_confirmation) USING BTREE;
 
 -- ------------------------------ EmailTemplate -------------------------------------
 
@@ -273,10 +250,6 @@ CREATE TABLE Sponsor (
 
  ALTER TABLE EmailTemplate ADD CONSTRAINT fk_emailtemplate_adress FOREIGN KEY ( EmailTemplate_adress_id ) REFERENCES Adress (Adress_id) ON DELETE SET NULL ON UPDATE CASCADE;
  
- ALTER TABLE Email ADD CONSTRAINT fk_email_adress FOREIGN KEY ( Email_adress_id ) REFERENCES Adress (Adress_id) ON DELETE SET NULL ON UPDATE CASCADE;
- ALTER TABLE Email ADD CONSTRAINT fk_email_user FOREIGN KEY ( Email_user_id ) REFERENCES User (User_id) ON DELETE SET NULL ON UPDATE CASCADE;
- ALTER TABLE Email ADD CONSTRAINT fk_email_registration FOREIGN KEY ( Email_registration_id ) REFERENCES Registration (Registration_id) ON DELETE SET NULL ON UPDATE CASCADE;
- 
  ALTER TABLE Activity ADD CONSTRAINT fk_activity_event FOREIGN KEY ( Activity_Event_id ) REFERENCES Event( Event_id ) ON DELETE CASCADE ON UPDATE CASCADE;
  
  ALTER TABLE User_Activity ADD CONSTRAINT fk_user_activity_user FOREIGN KEY ( User_Activity_User_id ) REFERENCES User( User_id ) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -293,6 +266,5 @@ CREATE TABLE Sponsor (
  
  ALTER TABLE Registration ADD CONSTRAINT fk_registration_user FOREIGN KEY ( Registration_User_id ) REFERENCES User( User_id ) ON DELETE CASCADE ON UPDATE CASCADE;
  ALTER TABLE Registration ADD CONSTRAINT fk_registration_event FOREIGN KEY ( Registration_Event_id ) REFERENCES Event( Event_id ) ON DELETE CASCADE ON UPDATE CASCADE;
- ALTER TABLE Registration ADD CONSTRAINT fk_registration_email FOREIGN KEY ( Registration_lastemail ) REFERENCES Email ( Email_id ) ON DELETE SET NULL ON UPDATE CASCADE;
  
  ALTER TABLE User ADD CONSTRAINT fk_default_language FOREIGN KEY ( User_defaultLanguage ) REFERENCES Language( Language_id ) ON DELETE CASCADE ON UPDATE CASCADE;

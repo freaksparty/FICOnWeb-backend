@@ -16,9 +16,6 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import es.ficonlan.web.backend.model.emailservice.EmailService;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 
 /*
@@ -26,9 +23,6 @@ import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 * @version 2.1
 */
 public class SendMailThread extends Thread {
-	
-	@Autowired
-	EmailService emailService;
 	
 	private Email email;
 	
@@ -83,8 +77,6 @@ public class SendMailThread extends Thread {
 
 			email.setSendDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
 			email.setConfirmation(true);
-
-			emailService.setSendStatusEmail(this.getEmail().getEmailId(), true);
 			
 			return true;
 		} 
@@ -94,8 +86,6 @@ public class SendMailThread extends Thread {
 
 			email.setSendDate(null);
 			email.setConfirmation(false);
-
-			emailService.setSendStatusEmail(this.getEmail().getEmailId(), false);
 			
 			return false;
 		}

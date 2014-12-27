@@ -13,7 +13,6 @@ import es.ficonlan.web.backend.model.activity.Activity;
 import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
 import es.ficonlan.web.backend.model.activity.ActivityDao;
 import es.ficonlan.web.backend.model.email.Email;
-import es.ficonlan.web.backend.model.email.EmailDao;
 import es.ficonlan.web.backend.model.emailtemplate.EmailTemplate;
 import es.ficonlan.web.backend.model.emailtemplate.EmailTemplateDao;
 import es.ficonlan.web.backend.model.event.Event;
@@ -57,9 +56,6 @@ public class EventServiceImpl implements EventService {
 	
 	@Autowired
 	private SponsorDao sponsorDao;
-	
-	@Autowired
-	private EmailDao emailDao; 
 	
 	@Autowired
 	private EmailTemplateDao emailTemplateDao;
@@ -216,9 +212,7 @@ public class EventServiceImpl implements EventService {
     			{
     				Email email = event.getOnQueueTemplate().generateEmail(user, tabla);
     				email.setRegistration(registration);
-    				registration.setLastemail(email);
-    				//email.sendMail();
-    				emailDao.save(email);
+    				email.sendMailThread();
     			}
     			
     		}
@@ -237,9 +231,7 @@ public class EventServiceImpl implements EventService {
     			{
     				Email email = event.getOnQueueTemplate().generateEmail(user, tabla);
     				email.setRegistration(registration);
-    				registration.setLastemail(email);
-    				//email.sendMail();
-    				emailDao.save(email);
+    				email.sendMailThread();
     			}
     		}
     		else registration.setState(RegistrationState.registered); {
@@ -255,9 +247,7 @@ public class EventServiceImpl implements EventService {
     			{
     				Email email = event.getOutstandingTemplate().generateEmail(user, tabla);
     				email.setRegistration(registration);
-    				registration.setLastemail(email);
-    				//email.sendMail();
-    				emailDao.save(email);
+    				email.sendMailThread();
     			}
     		}
     		
@@ -305,9 +295,7 @@ public class EventServiceImpl implements EventService {
     			{
     				Email email = event.getOutOfDateTemplate().generateEmail(user, tabla);
     				email.setRegistration(registration);
-    				registration.setLastemail(email);
-    				//email.sendMail();
-    				emailDao.save(email);
+    				email.sendMailThread();
     			}
 
 			}
@@ -343,9 +331,8 @@ public class EventServiceImpl implements EventService {
 			{
 				Email email = event.getFromQueueToOutstanding().generateEmail(user, tabla2);
 				email.setRegistration(registration);
-				registration.setLastemail(email);
 				//email.sendMail();
-				emailDao.save(email);
+				email.sendMailThread();
 			}
 			registrationDao.save(firstInQueue);
         }
@@ -385,9 +372,7 @@ public class EventServiceImpl implements EventService {
 			
 			Email email = event.getSetPaidTemplate().generateEmail(user, tabla);
 			email.setRegistration(registration);
-			registration.setLastemail(email);
-			//email.sendMail();
-			emailDao.save(email);
+			email.sendMailThread();
 		}	
 		registrationDao.save(registration);
 	}
@@ -402,7 +387,7 @@ public class EventServiceImpl implements EventService {
 			Event event = eventDao.find(eventId);
 			
 			Registration registration =  registrationDao.findByUserAndEvent(userId, eventId);
-		
+			if(registration == null) throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Registration");
 			if(registration.getState()==RegistrationState.inQueue) {
 				int queueParticipants = event.getNumParticipants() + registrationDao.geNumRegistrationsBeforeDate(event.getEventId(),RegistrationState.inQueue,registration.getRegistrationDate());
 				registration.setPlaceOnQueue(queueParticipants + 1);
@@ -417,6 +402,64 @@ public class EventServiceImpl implements EventService {
 		}
 	}
 
+    @Override
+	@Transactional(readOnly = true)
+    public void sendRegistrationMail(String sessionId, int userId, int eventId) throws ServiceException {
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), userId, "sendRegistrationMail")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+    	try {
+			User user = userDao.find(userId);
+			Event event = eventDao.find(eventId); 
+			Registration registration =  getRegistration(sessionId,userId,userId);
+
+			Hashtable<String,String> tabla = new Hashtable<String,String>();
+			tabla.put("#nombreusuario", user.getName());
+			tabla.put("#loginusuario", user.getLogin());
+			tabla.put("#numerotelefonousuario", user.getPhoneNumber());
+			tabla.put("#tallacamisetausuario", user.getShirtSize());
+			tabla.put("#nombreevento", event.getName());
+			tabla.put("#fechainicioevento", event.getStartDate().toString());
+			tabla.put("#fechafinevento", event.getEndDate().toString());
+			tabla.put("#edadminima", Integer.toString(event.getMinimunAge()));
+			tabla.put("#precio", Integer.toString(event.getPrice()));
+			
+			tabla.put("#plazaencola", Integer.toString(registration.getPlaceOnQueue()));
+			tabla.put("#plazaenevento", Integer.toString(registration.getPlace()));
+			
+			if(registration.getState()==RegistrationState.inQueue) {
+				if(event.getOnQueueTemplate()!=null) 
+    			{
+    				Email email = event.getOnQueueTemplate().generateEmail(user, tabla);
+    				email.setRegistration(registration);
+    				email.sendMailThread();
+    			}
+			}
+			else
+			if(registration.getState()==RegistrationState.paid) {
+				if(event.getSetPaidTemplate()!=null) 
+				{
+					Email email = event.getSetPaidTemplate().generateEmail(user, tabla);
+					email.setRegistration(registration);
+					email.sendMailThread();		
+				}
+			}
+			else
+			if(registration.getState()==RegistrationState.registered) {
+				if(event.getOutstandingTemplate()!=null) 
+				{
+					Email email = event.getOutstandingTemplate().generateEmail(user, tabla);
+					email.setRegistration(registration);
+					email.sendMailThread();
+				}
+			}
+		}
+		catch (InstanceException e) {
+			if (e.getClassName().contentEquals("User")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
+			else throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
+		}
+      	
+    }
+    
 	/**
 	 * This method doesn,t check constraints. And dont send e-mails
 	 * Use only in exceptional circumstances. Otherways use "setPaid" method.
@@ -485,9 +528,7 @@ public class EventServiceImpl implements EventService {
 		    		tabla.put("#plazaenevento", Integer.toString(firstInQueue.getPlace()));
 					Email email = event.getFromQueueToOutstanding().generateEmail(user, tabla);
 					email.setRegistration(firstInQueue);
-					//email.sendMail();
-					emailDao.save(email);
-					firstInQueue.setLastemail(email);
+					email.sendMailThread();
 				}
 				registrationDao.save(firstInQueue);
 	        }

@@ -32,7 +32,7 @@ public class RegistrationResource {
 		this.eventService = ApplicationContextProvider.getApplicationContext().getBean(EventService.class);
 	}
 	
-	@Path("/registration/{eventId}/{userId}")
+	@Path("/{eventId}/{userId}")
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
@@ -40,13 +40,13 @@ public class RegistrationResource {
 		return eventService.addParticipantToEvent(sessionId, userId, eventId);
 	}
 	
-	@Path("/registration/{eventId}/{userId}")
+	@Path("/{eventId}/{userId}")
 	@DELETE
 	public void removeParticipant(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("userId") int userId) throws ServiceException {
 		eventService.removeParticipantFromEvent(sessionId, userId, eventId);
 	}
 	
-	@Path("/registration/{eventId}/{userId}/{state}")
+	@Path("/{eventId}/{userId}/{state}")
 	@PUT
 	public void changeRegistrationState(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("userId") int userId, @PathParam("state") String state) throws ServiceException {
 		RegistrationState st=null;
@@ -70,5 +70,13 @@ public class RegistrationResource {
 	public Registration getRegistration(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("userId") int userId) throws ServiceException {
 		return eventService.getRegistration(sessionId, userId, eventId);
 	}
+	
+	@Path("/sendmail/{eventId}/{userId}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public void sendRegistrationMail(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("userId") int userId) throws ServiceException {
+		eventService.getRegistration(sessionId, userId, eventId);
+	}
+	
 
 }

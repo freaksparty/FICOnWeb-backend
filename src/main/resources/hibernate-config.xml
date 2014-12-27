@@ -23,7 +23,6 @@
         <mapping class="es.ficonlan.web.backend.model.newsitem.NewsItem" />
 		<mapping class="es.ficonlan.web.backend.model.supportedlanguage.SupportedLanguage" />
 
-		<mapping class="es.ficonlan.web.backend.model.email.Email" />
 		<mapping class="es.ficonlan.web.backend.model.emailadress.Adress" /> 
 		<mapping class="es.ficonlan.web.backend.model.sponsor.Sponsor"/>
 		<mapping class="es.ficonlan.web.backend.model.emailtemplate.EmailTemplate"/>

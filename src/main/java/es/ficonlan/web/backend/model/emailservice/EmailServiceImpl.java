@@ -1,24 +1,17 @@
 package es.ficonlan.web.backend.model.emailservice;
 
-import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.ficonlan.web.backend.model.email.Email;
-import es.ficonlan.web.backend.model.email.EmailDao;
 import es.ficonlan.web.backend.model.emailadress.Adress;
 import es.ficonlan.web.backend.model.emailadress.AdressDao;
 import es.ficonlan.web.backend.model.emailtemplate.EmailTemplate;
 import es.ficonlan.web.backend.model.emailtemplate.EmailTemplateDao;
-import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.event.EventDao;
-import es.ficonlan.web.backend.model.registration.Registration;
 import es.ficonlan.web.backend.model.registration.RegistrationDao;
-import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.user.UserDao;
 import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
@@ -30,9 +23,6 @@ import es.ficonlan.web.backend.model.util.session.SessionManager;
 @Service("EmailService")
 @Transactional
 public class EmailServiceImpl implements EmailService {
-
-	@Autowired
-	private EmailDao emailDao;
 	
 	@Autowired
 	private AdressDao adressDao;
@@ -119,210 +109,7 @@ public class EmailServiceImpl implements EmailService {
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Adress");
 		}
 	}
-	
-	@Transactional(readOnly = true)
-	@Override
-	public List<Email> getAllMails(String sessionId) throws ServiceException {
-		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getAllMails")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 
-		return emailDao.getAllEmails();
-	}
-
-	@Transactional(readOnly = true)
-	@Override
-	public List<Email> getConfirmedMails(String sessionId) throws ServiceException {
-		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getConfirmedMails")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-
-		return emailDao.getConfirmedEmails();
-	}
-	
-	@Transactional(readOnly = true)
-	@Override
-	public List<Email> getNoConfirmedMails(String sessionId) throws ServiceException {
-		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getNoConfirmedMails")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-
-		return emailDao.getNoConfirmedEmails();
-	}
-
-	@Transactional(readOnly = true)
-	@Override
-	public Email getEmail(String sessionId, int emailId) throws ServiceException {
-		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getEmail")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-
-		try 
-		{
-			return emailDao.find(emailId);
-		} catch (InstanceException e) 
-		{
-			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Email");
-		}
-	}
-
-	@Transactional
-	@Override
-	public Email addEmail(String sessionId, Email email) throws ServiceException {
-		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "addEmail")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-
-		emailDao.save(email);
-		return email;
-	}
-
-	@Transactional
-	@Override
-	public Email modifyEmail(String sessionId, int emailId, Email newEmail) throws ServiceException {
-		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "modifyEmail")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-		
-		try 
-		{
-			Email e = emailDao.find(emailId);
-			if(e.getConfirmation()==false)
-			{
-				if(newEmail.getAsunto()!=null) e.setAsunto(newEmail.getAsunto());
-				if(newEmail.getDate()!=null) e.setDate(newEmail.getDate());
-				if(newEmail.getDestinatario()!=null) e.setDestinatario(newEmail.getDestinatario());
-				if(newEmail.getDireccionEnvio()!=null) e.setDireccionEnvio(newEmail.getDireccionEnvio());
-				if(newEmail.getMensaje()!=null) e.setMensaje(newEmail.getMensaje());
-				if(newEmail.getNombreArchivo()!=null) e.setNombreArchivo(newEmail.getNombreArchivo());
-				if(newEmail.getRutaArchivo()!=null) e.setRutaArchivo(newEmail.getRutaArchivo());
-				
-				emailDao.save(e);
-				return e;
-			}
-			else throw new ServiceException(ServiceException.CANT_BE_MODIFIED,"Email");
-			
-		} 
-		catch (InstanceException e) 
-		{
-			throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Adress");
-		}
-	}
-	
-	@Transactional
-	@Override
-	public Email setSendStatusEmail(int emailId, boolean confirmation) throws ServiceException {
-		Email email;
-		try {
-			email = emailDao.find(emailId);
-		}
-		catch (InstanceException e) {
-			throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Email");
-		}
-		email.setConfirmation(confirmation);
-		if(confirmation) email.setSendDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
-		emailDao.save(email);
-		return email;
-	}
-	
-
-	@Transactional
-	@Override
-	public void deleteEmail(String sessionId, int emailId) throws ServiceException {
-		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "deleteEmail")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-		
-		try 
-		{
-			emailDao.remove(emailId);
-		} 
-		catch (InstanceException e) 
-		{
-			throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Email");
-		}
-	}
-
-	@Transactional
-	@Override
-	public Email sendEmail(String sessionId, int emailId) throws ServiceException {
-		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "sendEmail")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-
-		try 
-		{
-			Email e = emailDao.find(emailId);
-			e.sendMail();
-			emailDao.save(e);
-			return e;
-		} 
-		catch (InstanceException e) 
-		{
-			throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Email");
-		}
-		
-	}
-
-	@Transactional(readOnly = true)
-	@Override
-	public List<Email> getAllUserEmails(String sessionId, int userId) throws ServiceException {
-		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), userId,"getAllUserEmails")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-
-		User user;
-		
-		try 
-		{
-			user = userDao.find(userId);
-		} 
-		catch (InstanceException e) 
-		{
-			throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"user");
-		}
-		return emailDao.getEmailByDestination(user.getUserId());
-	}
-
-	@Transactional(readOnly = true)
-	@Override
-	public Email getUserLastEventEmail(String sessionId, int userId, int eventId) throws ServiceException {
-		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), userId, "getUserLastEventEmail")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-	
-		try 
-		{
-			@SuppressWarnings("unused")
-			User user = userDao.find(userId);
-			@SuppressWarnings("unused")
-			Event event = eventDao.find(eventId);
-			
-			Registration registration = registrationDao.findByUserAndEvent(userId, eventId);
-			
-			return registration.getLastemail();
-		} 
-		catch (InstanceException e) 
-		{
-			if (e.getClassName().contentEquals("User")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
-			else throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
-		}
-	}
-
-	@Transactional
-	@Override
-	public Email sendUserMail(String sessionId, int userId, int emailId) throws ServiceException {
-		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-
-		try 
-		{
-			@SuppressWarnings("unused")
-			User user = userDao.find(userId);
-			Email email = emailDao.find(emailId);
-			if(email.getDestinatario().getUserId()!=userId) if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), userId, "getUserLastEventEmail")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-			if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), email.getDestinatario().getUserId(), "sendUserMail")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-			Calendar time = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-			time.add(Calendar.MINUTE, 1);
-			if(!email.getSendDate().before(time)) throw new ServiceException(ServiceException.WAIT_FOR_SEND);
-			email.sendMail();
-			emailDao.save(email);
-			return email;
-		} 
-		catch (InstanceException e) 
-		{
-			throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Email");
-		}
-	}
 	
 	@Transactional
 	@Override

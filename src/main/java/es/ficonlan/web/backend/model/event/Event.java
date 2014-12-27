@@ -236,6 +236,4 @@ public class Event {
 		this.normas = normas;
 	}
 	
-	
-
 }
