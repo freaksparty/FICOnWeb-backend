@@ -496,6 +496,8 @@ public class EventServiceImpl implements EventService {
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
 		}
 		
+        if (!eventIsOpen(sessionId,eventId)) return;
+
 		int currentParticipants = registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.registered) + 
 				  registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.paid);
 		int queueParticipants = currentParticipants + registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.inQueue);
@@ -569,8 +571,8 @@ public class EventServiceImpl implements EventService {
 				if(activity.getStartDate().compareTo(activity.getEvent().getStartDate())<0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"startDate");
 				if(activity.getEndDate()==null) activity.setStartDate(activity.getEvent().getEndDate());
 				if(activity.getEndDate().compareTo(activity.getEvent().getEndDate())>0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"endDate");
-				if(activity.getRegDateOpen()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"regDateOpen");
-				if(activity.getRegDateClose()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"regDateClose");
+				//if(activity.getRegDateOpen()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"regDateOpen");
+				//if(activity.getRegDateClose()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"regDateClose");
 				activityDao.save(activity);
 				return activity;
 		} catch (InstanceException e) {
