@@ -46,6 +46,7 @@ public class Activity {
 	private Event event;
 	private String name;
 	private String description;
+	private String imageurl;
 	private int numParticipants;
 	private ActivityType type;
 	private boolean oficial;
@@ -112,6 +113,15 @@ public class Activity {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	@Column(name = "Activity_imageurl")
+	public String getImageurl() {
+		return imageurl;
+	}
+
+	public void setImageurl(String imageurl) {
+		this.imageurl = imageurl;
 	}
 
 	@Column(name = "Activity_num_participants")

@@ -72,7 +72,7 @@ public class RegistrationResource {
 	}
 	
 	@Path("/sendmail/{eventId}/{userId}")
-	@GET
+	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public void sendRegistrationMail(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("userId") int userId) throws ServiceException {
 		eventService.getRegistration(sessionId, userId, eventId);
