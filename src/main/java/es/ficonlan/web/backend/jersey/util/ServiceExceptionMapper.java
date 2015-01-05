@@ -66,7 +66,8 @@ public class ServiceExceptionMapper implements ExceptionMapper<Exception> {
 	public Response toResponse(final Exception exception) {
 		
 		if (exception instanceof ServiceException) 
-			return Response.status(Status.BAD_REQUEST).entity(new ErrorMessage((ServiceException) exception)).type(MediaType.APPLICATION_JSON).build();
+			//return Response.status(Status.BAD_REQUEST).entity(new ErrorMessage((ServiceException) exception)).type(MediaType.APPLICATION_JSON).build();
+			return Response.status(Status.BAD_REQUEST).entity(exception.toString()).type("text/plain").build();
 		else if (exception instanceof WebApplicationException) 
 		{
 			WebApplicationException webEx = (WebApplicationException)exception;
