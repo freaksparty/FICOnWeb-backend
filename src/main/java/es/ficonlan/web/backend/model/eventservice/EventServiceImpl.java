@@ -128,7 +128,7 @@ public class EventServiceImpl implements EventService {
     	try{
     		Event event = eventDao.find(eventId);
     		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-    		if(now.after(event.getStartDate()) && now.before(event.getEndDate())) return true;
+    		if(now.after(event.getRegistrationOpenDate()) && now.before(event.getRegistrationCloseDate())) return true;
     		else return false;
     	} catch (InstanceException e) {
 		throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
@@ -171,11 +171,11 @@ public class EventServiceImpl implements EventService {
 		try{ 
     		User user = userDao.find(userId);
   	
-    		Event event = eventDao.find(eventId);    		
-    		if(event.getRegistrationOpenDate().compareTo(Calendar.getInstance(TimeZone.getTimeZone("UTC")))>0||event.getRegistrationCloseDate().compareTo(Calendar.getInstance(TimeZone.getTimeZone("UTC")))<0) throw new ServiceException(9,"addParticipantToEvent");
+    		Event event = eventDao.find(eventId); 
+    		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    		if(!(now.after(event.getRegistrationOpenDate()) && now.before(event.getRegistrationCloseDate()))) throw new ServiceException(9,"addParticipantToEvent");
     		
     		Calendar agedif = user.getDob();
-    		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     			
     		agedif.add(Calendar.YEAR, event.getMinimunAge());
     		if(agedif.after(now)) throw new ServiceException(ServiceException.YOUR_ARE_TOO_YOUNG);
@@ -234,7 +234,8 @@ public class EventServiceImpl implements EventService {
     				email.sendMailThread();
     			}
     		}
-    		else registration.setState(RegistrationState.registered); {
+    		else {
+    			registration.setState(RegistrationState.registered);
     			registration.setPlace(currentParticipants + 1); //FIXME SIN TESTEAR
 
             	//FIXME: Mandar correo electrónico
@@ -283,7 +284,6 @@ public class EventServiceImpl implements EventService {
 		tabla.put("#edadminima", Integer.toString(event.getMinimunAge()));
 		tabla.put("#precio", Integer.toString(event.getPrice()));
     	
-    	int place = 0;
         try {
 			//FIXME: MAndar correo elecrónico if registration.getState()==registered Mandar correo electrónico registration.User()
 			if (registration.getState()==RegistrationState.registered) {
@@ -297,45 +297,45 @@ public class EventServiceImpl implements EventService {
     				email.setRegistration(registration);
     				email.sendMailThread();
     			}
-
+    			
+    			Registration firstInQueue = registrationDao.getFirstInQueue(eventId);
+    			 
+    		    if(firstInQueue!=null) {	
+    		        firstInQueue.setState(RegistrationState.registered);
+    		        firstInQueue.setPlace(registration.getPlace());
+    		        	
+    		        //FIXME: Mandar correo electrónico
+    		        	
+    		        Hashtable<String,String> tabla2 = new Hashtable<String,String>();
+    		    	tabla2.put("#nombreusuario", firstInQueue.getUser().getName());
+    		    	tabla2.put("#loginusuario", firstInQueue.getUser().getLogin());
+    		    	tabla2.put("#numerotelefonousuario", firstInQueue.getUser().getPhoneNumber());
+    		    	tabla2.put("#tallacamisetausuario", firstInQueue.getUser().getShirtSize());
+    		    	tabla2.put("#nombreevento", event.getName());
+    		    	tabla2.put("#fechainicioevento", event.getStartDate().toString());
+    		    	tabla2.put("#fechafinevento", event.getEndDate().toString());
+    		    	tabla2.put("#edadminima", Integer.toString(event.getMinimunAge()));
+    		    	tabla2.put("#precio", Integer.toString(event.getPrice()));
+    		        	
+    		        tabla2.put("#plazaencola", "");
+    				tabla2.put("#plazaenevento", Integer.toString(registration.getPlace()));
+    					
+    				if(event.getFromQueueToOutstanding()!=null) 
+    				{
+    					Email email = event.getFromQueueToOutstanding().generateEmail(user, tabla2);
+    					email.setRegistration(registration);
+    					//email.sendMail();
+    					email.sendMailThread();
+    				}
+    				registrationDao.save(firstInQueue);
+    		       }			
 			}
-			place = registration.getPlace();
+			
 			registrationDao.remove(registration.getRegistrationId());
 			
 		} catch (InstanceException e) {
 			 throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Registration");
 		}
-        Registration firstInQueue = registrationDao.getFirstInQueue(eventId);
-        if(firstInQueue!=null)
-        {	
-        	firstInQueue.setState(RegistrationState.registered);
-        	firstInQueue.setPlace(place);
-        	
-        	//FIXME: Mandar correo electrónico
-        	
-        	Hashtable<String,String> tabla2 = new Hashtable<String,String>();
-    		tabla2.put("#nombreusuario", firstInQueue.getUser().getName());
-    		tabla2.put("#loginusuario", firstInQueue.getUser().getLogin());
-    		tabla2.put("#numerotelefonousuario", firstInQueue.getUser().getPhoneNumber());
-    		tabla2.put("#tallacamisetausuario", firstInQueue.getUser().getShirtSize());
-    		tabla2.put("#nombreevento", event.getName());
-    		tabla2.put("#fechainicioevento", event.getStartDate().toString());
-    		tabla2.put("#fechafinevento", event.getEndDate().toString());
-    		tabla2.put("#edadminima", Integer.toString(event.getMinimunAge()));
-    		tabla2.put("#precio", Integer.toString(event.getPrice()));
-        	
-        	tabla2.put("#plazaencola", "");
-			tabla2.put("#plazaenevento", Integer.toString(registration.getPlace()));
-			
-			if(event.getFromQueueToOutstanding()!=null) 
-			{
-				Email email = event.getFromQueueToOutstanding().generateEmail(user, tabla2);
-				email.setRegistration(registration);
-				//email.sendMail();
-				email.sendMailThread();
-			}
-			registrationDao.save(firstInQueue);
-        }
 	}
 	
     @Override
@@ -500,7 +500,7 @@ public class EventServiceImpl implements EventService {
 
 		int currentParticipants = registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.registered) + 
 				  registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.paid);
-		int queueParticipants = currentParticipants + registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.inQueue);
+		int queueParticipants = registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.inQueue);
 
 		int bucle = Math.min(event.getNumParticipants() - currentParticipants,queueParticipants);
 		

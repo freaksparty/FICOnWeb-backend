@@ -78,7 +78,8 @@ public class EventResource {
 			
 			switch (eventData) {
 				case "name" 		: o = e.getName(); break;
-				case "minimunAge" 	: o = e.getMinimunAge(); break;
+				case "minimunAge" 	: o = e.getMinimunAge(); break; 
+				case "description"	: o = e.getDescription(); break;
 				case "startDate" 	: o = e.getStartDate(); break;
 				case "endDate" 		: o = e.getEndDate(); break;
 				case "isopen" 		: Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
