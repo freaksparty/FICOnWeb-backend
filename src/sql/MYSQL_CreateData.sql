@@ -70,7 +70,8 @@ INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE U
 INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE UserCase_name =  "getRegistration" ), ( SELECT Role_id FROM Role WHERE Role_name =  "RegistrationController" ) );
 INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE UserCase_name =  "changeRegistrationState" ), ( SELECT Role_id FROM Role WHERE Role_name =  "RegistrationController" ) );
 INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE UserCase_name =  "eventNumParticipantsChanged" ), ( SELECT Role_id FROM Role WHERE Role_name =  "RegistrationController" ) );
-
+INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE UserCase_name =  "getShirtSizes" ), ( SELECT Role_id FROM Role WHERE Role_name =  "RegistrationController" ) );
+INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE UserCase_name =  "getRegistrationByEvent" ), ( SELECT Role_id FROM Role WHERE Role_name =  "RegistrationController" ) );
 
 INSERT INTO Role VALUES ( 0, "MailController");
 
@@ -135,9 +136,55 @@ INSERT INTO Adress VALUES (0, "no-responder@freaksparty.org", "e3MCq5>P2");
 INSERT INTO EmailTemplate VALUES ( 0, "passwordRecover", ( SELECT Adress_id FROM Adress WHERE Adress_user =  "no-responder@freaksparty.org" ), "", "", "Recuperación contraseña plataforma Freak's Party webs",
  "La nueva contraseña para la cuenta #loginusuario es #nuevapas esta contraseña solo será válida durante #tiemporestante minutos, recuerda cambiarla.");
  
- INSERT INTO Event (Event_id,Event_name,Event_description,Event_num_participants,Event_minimunAge,Event_date_start,Event_date_end,Event_reg_date_open,Event_reg_date_close,Event_rules)
-  VALUES (0, "NOMBRE Evento TEST", "DESCRIPCION Evento TEST", 5, 0, '2014-11-20 12:11:03', '2014-11-30 12:11:03', '2014-11-10 12:11:03', '2014-11-20 12:11:03',"REGALS REGLAS");
-  
-  
-  INSERT INTO NewsItem (NewsItem_Event_id,NewsItem_User_id,NewsItem_title,NewsItem_date_created,NewsItem_date_publish,NewsItem_content) 
-  VALUES ((SELECT Event_id FROM Event WHERE Event_Name = "NOMBRE Evento TEST"),1,"Titulo de noticia TEST",NOW(),NOW(),"CONTENIDO DE LA NOTICIA TEST EN TEXTO PLANO");
+ 
+ INSERT INTO EmailTemplate VALUES ( 0, "OnQueueTemplate", ( SELECT Adress_id FROM Adress WHERE Adress_user =  "no-responder@freaksparty.org" ), "", "", "Estado del registro FicOnLan",
+ "El estado actual de tu registro es En cola.
+
+Tu puesto en la cola de espera es #plazaencola.");
+ 
+ 
+ INSERT INTO EmailTemplate VALUES ( 0, "OutstandingTemplate", ( SELECT Adress_id FROM Adress WHERE Adress_user =  "no-responder@freaksparty.org" ), "", "", "Estado del registro FicOnLan",
+ "Felicidades #nombreusuario , has conseguido la plaza número #plazaenevento en #nombreevento . 
+
+El estado actual de tu registro es Pendiente de pago, así que para confirmar tu inscripción deberás realizar un ingreso de #precio€  poniendo como concepto tu DNI en la cuenta @CUENTA del banco Santander en un plazo de tres días. Si pasado ese tiempo no hemos recibido ese ingreso la organización entenderá que renuncias a a tu plaza y tu registro será borrado.
+
+Recordamos que para acceder al evento hay que ser mayor de 16 años y que los menores de 18 años tienen que traer una autorización firmada por sus padres o tutores a la entrada, o no se les dejará entrar.
+
+La autorización se puede descargar de este enlace @ENLACE");
+
+
+ INSERT INTO EmailTemplate VALUES ( 0, "FromQueueToOutstanding", ( SELECT Adress_id FROM Adress WHERE Adress_user =  "no-responder@freaksparty.org" ), "", "", "Estado del registro FicOnLan",
+ "Felicidades #nombreusuario , has conseguido la plaza número #plazaenevento en #nombreevento . 
+
+El estado actual de tu registro es Pendiente de pago, así que para confirmar tu inscripción deberás realizar un ingreso de #precio€  poniendo como concepto tu DNI en la cuenta @CUENTA del banco Santander en un plazo de tres días. Si pasado ese tiempo no hemos recibido ese ingreso la organización entenderá que renuncias a a tu plaza y tu registro será borrado.
+
+Recordamos que para acceder al evento hay que ser mayor de 16 años y que los menores de 18 años tienen que traer una autorización firmada por sus padres o tutores a la entrada, o no se les dejará entrar.
+
+La autorización se puede descargar de este enlace @ENLACE");
+
+
+INSERT INTO EmailTemplate VALUES ( 0, "SetPaidTemplate", ( SELECT Adress_id FROM Adress WHERE Adress_user =  "no-responder@freaksparty.org" ), "", "", "Estado del registro FicOnLan",
+ "Felicidades #nombreusuario, el pago de la entrada de #nombreevento ha sido confirmado.
+
+Recordamos que para acceder al evento hay que ser mayor de 16 años y que los menores de 18 años tienen que traer una autorización firmada por sus padres o tutores a la entrada, o no se les dejará entrar.
+
+La autorización se puede descargar de este enlace @ENLACE");
+
+ INSERT INTO EmailTemplate VALUES ( 0, "OutOfDateTemplate", ( SELECT Adress_id FROM Adress WHERE Adress_user =  "no-responder@freaksparty.org" ), "", "", "Estado del registro FicOnLan",
+ "No has realizado el pago de la entrada a tiempo, por ello tu estado ha pasado de Pendiente de pago a No registrado. 
+ Si tienes algún problema ponte en contacto con  nosotros a través de la web.");
+ 
+ 
+ 
+ 
+ 
+ INSERT INTO Event (Event_id,Event_name,Event_description,Event_num_participants,Event_minimunAge,Event_date_start,Event_date_end,Event_reg_date_open,Event_reg_date_close,Event_rules,
+ Event_setPaidTemplate_id,Event_onQueueTemplate_id,Event_outstandingTemplate_id,Event_outOfDateTemplate_id,Event_fromQueueToOutstanding_id)
+  VALUES (0, "Fic OnLan VI", "La FicOnLan VI es un evento informático que se celebra durante los carnavales 2015 en la Facultad de Informática de A Coruña
+La fecha de apertura es el día 13 de febrero a las 20:00 y la de clausura el 17 de febrero a las 17:00", 142, 16, '2015-02-13 20:00:00', '2015-02-17 17:00:00', '2015-01-26 20:00:00', '2015-02-12 00:00:00',
+"REGALS REGLAS",
+  (SELECT EmailTemplate_id FROM EmailTemplate WHERE EmailTemplate_name =  "SetPaidTemplate"),
+  (SELECT EmailTemplate_id FROM EmailTemplate WHERE EmailTemplate_name =  "OnQueueTemplate"),
+  (SELECT EmailTemplate_id FROM EmailTemplate WHERE EmailTemplate_name =  "OutstandingTemplate"),
+  (SELECT EmailTemplate_id FROM EmailTemplate WHERE EmailTemplate_name =  "OutOfDateTemplate"),
+  (SELECT EmailTemplate_id FROM EmailTemplate WHERE EmailTemplate_name =  "FromQueueToOutstanding"));

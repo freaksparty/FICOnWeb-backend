@@ -33,6 +33,7 @@ import es.ficonlan.web.backend.model.sponsor.Sponsor;
 import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.userservice.UserService;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
+import es.ficonlan.web.backend.util.ShirtData;
 
 /**
  * @author Daniel Gómez Silva
@@ -46,6 +47,9 @@ public class EventResource {
 	
 	private String[] s2 = {"userId","name","login","dni","email","phoneNumber","shirtSize","dob"};
 	private ArrayList<String> l2;
+	
+	private String[] s3 = {"registrationId","state","registrationDate","paidDate","place","dni","name","login","dob"};
+	private ArrayList<String> l3;
 	
 	@Autowired
 	private EventService eventService;
@@ -66,6 +70,9 @@ public class EventResource {
 		
 		l2 = new ArrayList<String>();
 		l2.add(s2[0]);l2.add(s2[1]);l2.add(s2[2]);l2.add(s2[3]);l2.add(s2[4]);l2.add(s2[5]);l2.add(s2[6]);l2.add(s2[7]);
+		
+		l3 = new ArrayList<String>();
+		l3.add(s3[0]);l3.add(s3[1]);l3.add(s3[2]);l3.add(s3[3]);l3.add(s3[4]);l3.add(s3[5]);l3.add(s3[6]);l3.add(s3[7]);l3.add(s3[8]);
 	}
 
 	@Path("/{eventId}/{eventData}")
@@ -183,6 +190,13 @@ public class EventResource {
 		return eventService.getSponsorsByEvent(sessionId,eventId);
 	}
 
+	@Path("/getShirtSizes/{eventId}")
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	public List<ShirtData> getShirtSizes(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
+		return eventService.getShirtSizes(sessionId, eventId);
+	}
+	
 	@Path("/users/{eventId}/query")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})

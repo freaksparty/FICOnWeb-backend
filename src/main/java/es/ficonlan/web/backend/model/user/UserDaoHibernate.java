@@ -48,13 +48,21 @@ public class UserDaoHibernate extends GenericDaoHibernate<User,Integer> implemen
 		String aux = " ";
 		if(desc) aux=" DESC";
 		String ss = " ";
-		if(state!=null) ss = " AND r.state = " + state;
-		Query query = getSession().createQuery("SELECT u " +
+		Query query = null;
+		if(state==null) {
+			query = getSession().createQuery("SELECT u " +
                    "FROM Registration r INNER JOIN r.user u " +
                    "WHERE r.event.id = :eventId AND u.deleted=FALSE " + ss +
                    " ORDER BY r." + orderBy + aux
                   ).setParameter("eventId",eventId);
-		
+		}
+		else {
+			query = getSession().createQuery("SELECT u " +
+	                   "FROM Registration r INNER JOIN r.user u " +
+	                   "WHERE r.event.id = :eventId AND u.deleted=FALSE AND r.state = :state " +
+	                   " ORDER BY r." + orderBy + aux
+	                  ).setParameter("eventId",eventId).setParameter("state",state);
+		}
 		if(maxResults<1) return query.list();
 		else return query.setFirstResult(startindex).setMaxResults(maxResults).list();
 		
