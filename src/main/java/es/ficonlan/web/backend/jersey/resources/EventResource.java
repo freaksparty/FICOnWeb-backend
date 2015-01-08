@@ -28,6 +28,7 @@ import es.ficonlan.web.backend.model.emailservice.EmailService;
 import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.eventservice.EventService;
 import es.ficonlan.web.backend.model.newsitem.NewsItem;
+import es.ficonlan.web.backend.model.registration.Registration;
 import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
 import es.ficonlan.web.backend.model.sponsor.Sponsor;
 import es.ficonlan.web.backend.model.user.User;
@@ -204,7 +205,7 @@ public class EventResource {
 			@PathParam("eventId") int eventId,
 			@DefaultValue("1") @QueryParam("page") int page, 
 			@DefaultValue("0") @QueryParam("pageTam") int pageTam,
-			@DefaultValue("publishDate") @QueryParam("orderBy") String orderBy,
+			@DefaultValue("userId") @QueryParam("orderBy") String orderBy,
 			@DefaultValue("1") @QueryParam("desc") int desc,
 			@DefaultValue("all") @QueryParam("state") String state
 			) throws ServiceException {
@@ -223,7 +224,33 @@ public class EventResource {
 		return userService.getUsersByEvent(sessionId, eventId, st, startIndex,cont,orderBy,b);
 	}
 	
-
+	@Path("/registrations/{eventId}/query")
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	public List<Registration> getRegistrationByEvent(@HeaderParam("sessionId") String sessionId,  
+			@PathParam("eventId") int eventId,
+			@DefaultValue("1") @QueryParam("page") int page, 
+			@DefaultValue("0") @QueryParam("pageTam") int pageTam,
+			@DefaultValue("registrationDate") @QueryParam("orderBy") String orderBy,
+			@DefaultValue("1") @QueryParam("desc") int desc,
+			@DefaultValue("all") @QueryParam("state") String state
+			) throws ServiceException {
+		if(l3.indexOf(orderBy)<0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"orderBy");
+		RegistrationState st;
+		if(state==null) throw new ServiceException(ServiceException.MISSING_FIELD,"state");
+    	if(state.toLowerCase().contentEquals("registered"))  st=RegistrationState.registered;
+    	else if(state.toLowerCase().contentEquals("inqueue")) st=RegistrationState.inQueue;
+    	else if(state.toLowerCase().contentEquals("paid")) st=RegistrationState.paid;
+    	else if(state.toLowerCase().contentEquals("all")) st=null;
+    	else throw new ServiceException(ServiceException.INCORRECT_FIELD,"state");
+    	int startIndex = page*pageTam - pageTam;
+		int cont = pageTam;
+		boolean b = true;
+		if(desc==0) b = false;
+		return eventService.getRegistrationByEvent(sessionId, eventId, st, startIndex, cont, orderBy, b);
+	}
+	
+	
 	@Path("/users/size/{eventId}/{state}/")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
