@@ -297,13 +297,13 @@ public class EventResource {
 	@Path("/news/published/{eventId}/{page}/{pageTam}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<NewsItem> getAllNewsPublishedItem(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("page") int page, @PathParam("pageTam") int pageTam) throws ServiceException {
+	public Response getAllNewsPublishedItem(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("page") int page, @PathParam("pageTam") int pageTam) throws ServiceException {
 		if(pageTam>0) {
 			int startIndex = page*pageTam - pageTam;
 			int cont = pageTam;
-			return eventService.getAllPublishedNewsItemFormEvent(sessionId,eventId,startIndex,cont);
+			return Response.status(200).entity(eventService.getAllPublishedNewsItemFormEvent(sessionId,eventId,startIndex,cont)).build();
 		}
-		else return eventService.getAllPublishedNewsItemFormEvent(sessionId,eventId,0,(int) eventService.getAllPublishedNewsItemFromEventTam(sessionId, eventId));
+		else return Response.status(200).entity(eventService.getAllPublishedNewsItemFormEvent(sessionId,eventId,0,(int) eventService.getAllPublishedNewsItemFromEventTam(sessionId, eventId))).build();
 		
 	}
 	
