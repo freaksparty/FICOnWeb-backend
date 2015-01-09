@@ -139,8 +139,8 @@
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-server</artifactId>
-			<!-- <version>1.18.1</version>  -->
-			<version>1.16</version>
+			<version>1.18.1</version>  
+			<!-- <version>1.16</version> -->
 		</dependency>
 
 		<dependency>
@@ -200,8 +200,8 @@
 				<version>2.5.1</version>
 				<inherited>true</inherited>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 
