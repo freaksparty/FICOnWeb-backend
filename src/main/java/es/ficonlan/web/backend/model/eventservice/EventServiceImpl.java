@@ -174,8 +174,8 @@ public class EventServiceImpl implements EventService {
   	
     		Event event = eventDao.find(eventId); 
     		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-    		if(!(now.after(event.getRegistrationOpenDate()) && now.before(event.getRegistrationCloseDate()))) throw new ServiceException(9,"addParticipantToEvent");
-    		
+    		if(!((now.after(event.getRegistrationOpenDate()) && now.before(event.getRegistrationCloseDate())))) throw new ServiceException(9,"addParticipantToEvent");
+    		//System.out.println(now.getTime()); System.out.println(event.getRegistrationOpenDate().getTime()); System.out.println(event.getRegistrationCloseDate().getTime());
     		Calendar agedif = user.getDob();
     			
     		agedif.add(Calendar.YEAR, event.getMinimunAge());

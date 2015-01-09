@@ -249,6 +249,7 @@ public class EventServiceTest {
     	Session anonymousSession = userService.newAnonymousSession();
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	Calendar dateStart = Calendar.getInstance();
+    	dateStart.add(Calendar.DAY_OF_YEAR, -1);
     	Calendar dateEnd = Calendar.getInstance();
     	EmailTemplate et1 = new EmailTemplate();
     	et1.setAsunto(""); et1.setContenido(""); et1.setFilename(""); et1.setFilepath(""); et1.setName("");
@@ -274,6 +275,7 @@ public class EventServiceTest {
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	Calendar dateStart = Calendar.getInstance();
+    	dateStart.add(Calendar.DAY_OF_YEAR, -1);
     	Calendar dateEnd = Calendar.getInstance();
     	dateEnd.add(Calendar.DAY_OF_YEAR, 1);
     	
@@ -290,6 +292,7 @@ public class EventServiceTest {
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	Calendar dateStart = Calendar.getInstance();
+    	dateStart.add(Calendar.DAY_OF_YEAR, -1);
     	Calendar dateEnd = Calendar.getInstance();
     	dateEnd.add(Calendar.DAY_OF_YEAR, 1);
 
@@ -309,6 +312,7 @@ public class EventServiceTest {
     	User user1 = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	User user2 = userService.addUser(anonymousSession.getSessionId(), new User("User2", "login2", "pass", "12332218R", "user2@gmail.com", "690047407", "L"));
     	Calendar dateStart = Calendar.getInstance();
+    	dateStart.add(Calendar.DAY_OF_YEAR, -1);
     	Calendar dateEnd = Calendar.getInstance();
     	dateEnd.add(Calendar.DAY_OF_YEAR, 1);
     	
