@@ -51,7 +51,7 @@ public class Main {
 			throw new RuntimeException("Could not read config file: " + e.getMessage());
 		}
 	}
-
+	
 	private static final int SESSION_TIMEOUT = Math.abs(Integer.parseInt(properties.getProperty("session.timeout")));
 	private static final int SESSION_CLEAN_FREQUENCY = Math.abs(Integer.parseInt(properties.getProperty("session.cleanFrequency")));
 	private static final URI SERVER_URI = URI.create(properties.getProperty("server.baseUri"));
