@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -34,6 +35,7 @@ import es.ficonlan.web.backend.model.sponsor.Sponsor;
 import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.userservice.UserService;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
+import es.ficonlan.web.backend.util.ActivityHeader;
 import es.ficonlan.web.backend.util.ShirtData;
 
 /**
@@ -174,6 +176,19 @@ public class EventResource {
     		if(type.toLowerCase().contentEquals("conference")) t=ActivityType.Conference;
 		}
 		return eventService.getActivitiesByEvent(sessionId, eventId, t);
+	}
+	
+	@Path("/activityHeaders/{eventId}/{type}")
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	public List<ActivityHeader> getActivityHeaderByEvent(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("type") String type) throws ServiceException {
+		ActivityType t = null;
+		if(type!=null){
+    		if(type.toLowerCase().contentEquals("tournament")) t=ActivityType.Tournament;
+    		if(type.toLowerCase().contentEquals("production")) t=ActivityType.Production;
+    		if(type.toLowerCase().contentEquals("conference")) t=ActivityType.Conference;
+		}
+		return (List<ActivityHeader>) eventService.getActivitiesByEvent(sessionId, eventId, t).stream().map(Activity::generateActivityHeader).collect(Collectors.toList());
 	}
 	
 	@Path("/sponsor/{eventId}")

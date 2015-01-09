@@ -30,6 +30,7 @@ import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
 import es.ficonlan.web.backend.jersey.util.JsonEntityIdSerializer;
 import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.user.User;
+import es.ficonlan.web.backend.util.ActivityHeader;
 
 /**
  * @author Miguel Ángel Castillo Bellagona
@@ -223,4 +224,9 @@ public class Activity {
 	public void setParticipants(List<User> participants) {
 		this.participants = participants;
 	}
+
+	public ActivityHeader generateActivityHeader() {
+		return new ActivityHeader(activityId,event.getEventId(),name,type,startDate, endDate);
+	}
+
 }
