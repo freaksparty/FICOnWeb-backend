@@ -589,7 +589,7 @@ public class EventServiceImpl implements EventService {
 				if(activity.getNumParticipants()<1) throw new ServiceException(ServiceException.INCORRECT_FIELD,"numParticipants");
 				if(activity.getStartDate()==null) activity.setStartDate(activity.getEvent().getStartDate());
 				if(activity.getStartDate().compareTo(activity.getEvent().getStartDate())<0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"startDate");
-				if(activity.getEndDate()==null) activity.setStartDate(activity.getEvent().getEndDate());
+				if(activity.getEndDate()==null) activity.setEndDate(activity.getEvent().getEndDate());
 				if(activity.getEndDate().compareTo(activity.getEvent().getEndDate())>0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"endDate");
 				//if(activity.getRegDateOpen()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"regDateOpen");
 				//if(activity.getRegDateClose()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"regDateClose");
