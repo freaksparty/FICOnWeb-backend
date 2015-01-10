@@ -34,14 +34,14 @@ public class ActivityDaoHibernate extends
 		if (type == null)
 			query = getSession().createQuery("SELECT a " + "FROM Activity a "
 									+ "WHERE a.event.eventId = :eventId "
-									+ " ORDER BY n." + orderBy +  aux )
+									+ " ORDER BY a." + orderBy +  aux )
 					.setParameter("eventId", eventId);
 		else
 			query = getSession().createQuery(
 							"SELECT a "
 									+ "FROM Activity a "
 									+ "WHERE a.event.eventId = :eventId AND a.type = :type "
-									+ " ORDER BY n." + orderBy +  aux )
+									+ " ORDER BY a." + orderBy +  aux )
 					.setParameter("eventId", eventId)
 					.setParameter("type", type);
 		
