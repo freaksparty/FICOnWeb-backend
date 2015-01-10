@@ -69,7 +69,7 @@ public class ServiceExceptionMapper implements ExceptionMapper<Exception> {
 		{
 			//return Response.status(Status.BAD_REQUEST).entity(new ErrorMessage((ServiceException) exception)).type(MediaType.APPLICATION_JSON).build();
 			System.out.println(exception.toString());
-			return Response.status(Status.BAD_REQUEST).entity(exception.toString()).type("text/plain").build();
+			return Response.status(Status.BAD_REQUEST).entity(exception).type("text/plain").build();
 		}
 		else if (exception instanceof WebApplicationException) 
 		{
