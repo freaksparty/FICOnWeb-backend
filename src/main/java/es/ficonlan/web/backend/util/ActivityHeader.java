@@ -7,6 +7,8 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import es.ficonlan.web.backend.jersey.util.JsonActivityTypeDeserializer;
 import es.ficonlan.web.backend.jersey.util.JsonActivityTypeSerializer;
+import es.ficonlan.web.backend.jersey.util.JsonDateDeserializer;
+import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
 import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
 
 public class ActivityHeader {
@@ -51,6 +53,8 @@ public class ActivityHeader {
 		this.name = name;
 	}
 
+	@JsonDeserialize(using = JsonActivityTypeDeserializer.class)
+	@JsonSerialize(using = JsonActivityTypeSerializer.class)
 	public ActivityType getType() {
 		return type;
 	}
@@ -59,8 +63,8 @@ public class ActivityHeader {
 		this.type = type;
 	}
 
-	@JsonDeserialize(using = JsonActivityTypeDeserializer.class)
-	@JsonSerialize(using = JsonActivityTypeSerializer.class)
+	@JsonDeserialize(using = JsonDateDeserializer.class)
+	@JsonSerialize(using=JsonDateSerializer.class)
 	public Calendar getStartDate() {
 		return startDate;
 	}
@@ -69,8 +73,8 @@ public class ActivityHeader {
 		this.startDate = startDate;
 	}
 
-	@JsonDeserialize(using = JsonActivityTypeDeserializer.class)
-	@JsonSerialize(using = JsonActivityTypeSerializer.class)
+	@JsonDeserialize(using = JsonDateDeserializer.class)
+	@JsonSerialize(using=JsonDateSerializer.class)
 	public Calendar getEndDate() {
 		return endDate;
 	}
