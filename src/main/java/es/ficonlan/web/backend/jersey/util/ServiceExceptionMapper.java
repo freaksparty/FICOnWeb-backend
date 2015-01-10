@@ -1,6 +1,7 @@
 package es.ficonlan.web.backend.jersey.util;
 
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -67,9 +68,8 @@ public class ServiceExceptionMapper implements ExceptionMapper<Exception> {
 		
 		if (exception instanceof ServiceException) 
 		{
-			//return Response.status(Status.BAD_REQUEST).entity(new ErrorMessage((ServiceException) exception)).type(MediaType.APPLICATION_JSON).build();
 			System.out.println(exception.toString());
-			return Response.status(Status.BAD_REQUEST).entity(exception).type("text/plain").build();
+			return Response.status(Status.BAD_REQUEST).entity(new ErrorMessage((ServiceException) exception)).type(MediaType.APPLICATION_JSON).build();
 		}
 		else if (exception instanceof WebApplicationException) 
 		{
