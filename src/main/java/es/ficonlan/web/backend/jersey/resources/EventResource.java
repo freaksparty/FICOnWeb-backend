@@ -54,6 +54,9 @@ public class EventResource {
 	private String[] s3 = {"registrationId","state","registrationDate","paidDate","place","dni","name","login","dob"};
 	private ArrayList<String> l3;
 	
+	private String[] s4 = {"activityId","event","name","type","startDate","endDate"};
+	private ArrayList<String> l4;
+	
 	@Autowired
 	private EventService eventService;
 	
@@ -76,6 +79,9 @@ public class EventResource {
 		
 		l3 = new ArrayList<String>();
 		l3.add(s3[0]);l3.add(s3[1]);l3.add(s3[2]);l3.add(s3[3]);l3.add(s3[4]);l3.add(s3[5]);l3.add(s3[6]);l3.add(s3[7]);l3.add(s3[8]);
+		
+		l4 = new ArrayList<String>();
+		l4.add(s4[0]);l4.add(s4[1]);l4.add(s4[2]);l4.add(s4[3]);l4.add(s4[4]);l4.add(s4[5]);
 	}
 
 	@Path("/{eventId}/{eventData}")
@@ -165,30 +171,67 @@ public class EventResource {
 		return eventService.addActivity(sessionId, eventId, activity);
 	}
 	
-	@Path("/activity/{eventId}/{type}")
+	@Path("/activity/query")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<Activity> getByEvent(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("type") String type) throws ServiceException {
+	public List<Activity> getByEvent(@HeaderParam("sessionId") String sessionId, 
+			@PathParam("eventId") int eventId,
+			@DefaultValue("1") @QueryParam("page") int page, 
+			@DefaultValue("0") @QueryParam("pageTam") int pageTam,
+			@DefaultValue("publishDate") @QueryParam("orderBy") String orderBy,
+			@DefaultValue("1") @QueryParam("desc") int desc,
+			@DefaultValue("") @QueryParam("desc") String type
+			) throws ServiceException {
+		if(l4.indexOf(orderBy)<0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"orderBy");
+		int startIndex = page*pageTam - pageTam;
+		int cont = pageTam;
+		boolean b = true;
+		if(desc==0) b = false;
 		ActivityType t = null;
 		if(type!=null){
     		if(type.toLowerCase().contentEquals("tournament")) t=ActivityType.Tournament;
     		if(type.toLowerCase().contentEquals("production")) t=ActivityType.Production;
     		if(type.toLowerCase().contentEquals("conference")) t=ActivityType.Conference;
 		}
-		return eventService.getActivitiesByEvent(sessionId, eventId, t);
+		return eventService.getActivitiesByEvent(sessionId, eventId, startIndex, cont, orderBy, b, t);
 	}
 	
-	@Path("/activityHeaders/{eventId}/{type}")
+	@Path("/activityHeaders/query")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<ActivityHeader> getActivityHeaderByEvent(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("type") String type) throws ServiceException {
+	public List<ActivityHeader> getActivityHeaderByEvent(@HeaderParam("sessionId") String sessionId, 
+			@PathParam("eventId") int eventId,
+			@DefaultValue("1") @QueryParam("page") int page, 
+			@DefaultValue("0") @QueryParam("pageTam") int pageTam,
+			@DefaultValue("publishDate") @QueryParam("orderBy") String orderBy,
+			@DefaultValue("1") @QueryParam("desc") int desc,
+			@DefaultValue("") @QueryParam("desc") String type
+			) throws ServiceException {
+		if(l4.indexOf(orderBy)<0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"orderBy");
+		int startIndex = page*pageTam - pageTam;
+		int cont = pageTam;
+		boolean b = true;
+		if(desc==0) b = false;
 		ActivityType t = null;
 		if(type!=null){
     		if(type.toLowerCase().contentEquals("tournament")) t=ActivityType.Tournament;
     		if(type.toLowerCase().contentEquals("production")) t=ActivityType.Production;
     		if(type.toLowerCase().contentEquals("conference")) t=ActivityType.Conference;
 		}
-		return (List<ActivityHeader>) eventService.getActivitiesByEvent(sessionId, eventId, t).stream().map(Activity::generateActivityHeader).collect(Collectors.toList());
+		return (List<ActivityHeader>) eventService.getActivitiesByEvent(sessionId, eventId, startIndex, cont, orderBy, b, t).stream().map(Activity::generateActivityHeader).collect(Collectors.toList());
+	}
+	
+	@Path("/activityTAM/{eventId}/{type}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public long getActivityByEventTAM(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("type") String type) throws ServiceException {
+		ActivityType t = null;
+		if(type!=null){
+    		if(type.toLowerCase().contentEquals("tournament")) t=ActivityType.Tournament;
+    		if(type.toLowerCase().contentEquals("production")) t=ActivityType.Production;
+    		if(type.toLowerCase().contentEquals("conference")) t=ActivityType.Conference;
+		}
+		return eventService.getActivitiesByEventTAM(sessionId, eventId, t);
 	}
 	
 	@Path("/sponsor/{eventId}")

@@ -245,31 +245,6 @@ public class EventServiceTest {
     }
     
     @Test
-    public void testGetActivitiesByEvent() throws ServiceException{
-    	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
-    	Calendar dateStart = Calendar.getInstance();
-    	dateStart.add(Calendar.DAY_OF_YEAR, -1);
-    	Calendar dateEnd = Calendar.getInstance();
-    	EmailTemplate et1 = new EmailTemplate();
-    	et1.setAsunto(""); et1.setContenido(""); et1.setFilename(""); et1.setFilepath(""); et1.setName("");
-    	emailTemplateDao.save(et1);
-    	Event event = eventService.createEvent(s.getSessionId(), new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd,et1, et1, et1, et1, et1));
-    	Activity activity1 = eventService.addActivity(s.getSessionId(), event.getEventId(), new Activity(event, "Torneo de Lol", "Torneo de Lol", 10, ActivityType.Tournament, true, dateStart,dateEnd,dateStart,dateEnd));
-    	Activity activity2 = eventService.addActivity(s.getSessionId(), event.getEventId(), new Activity(event, "Concurso de hacking", "Concurso de hacking", 20, ActivityType.Production, false, dateStart,dateEnd,dateStart,dateEnd));
-    	List<Activity> result = eventService.getActivitiesByEvent(s.getSessionId(), event.getEventId(), null);
-    	assertTrue(result.size()==2);
-    	assertTrue(result.get(0).getActivityId()==activity1.getActivityId());
-    	assertTrue(result.get(1).getActivityId()==activity2.getActivityId());
-    	result = eventService.getActivitiesByEvent(s.getSessionId(), event.getEventId(), ActivityType.Tournament);
-    	assertTrue(result.size()==1);
-    	assertTrue(result.get(0).getActivityId()==activity1.getActivityId());
-    	result = eventService.getActivitiesByEvent(s.getSessionId(), event.getEventId(), ActivityType.Production);
-    	assertTrue(result.size()==1);
-    	assertTrue(result.get(0).getActivityId()==activity2.getActivityId());
-    }
-    
-    @Test
     public void testAddParticipantToActivity() throws ServiceException{
     	Session anonymousSession = userService.newAnonymousSession();
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);

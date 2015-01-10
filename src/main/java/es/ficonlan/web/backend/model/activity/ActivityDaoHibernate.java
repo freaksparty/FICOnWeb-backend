@@ -2,6 +2,7 @@ package es.ficonlan.web.backend.model.activity;
 
 import java.util.List;
 
+import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
@@ -24,24 +25,50 @@ public class ActivityDaoHibernate extends
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Activity> findActivitiesByEvent(int eventId, ActivityType type) {
+	public List<Activity> findActivitiesByEvent(int eventId, ActivityType type, int startIndex, int cont, String orderBy, boolean desc) {
 
+		String aux = " ";
+		if(desc) aux=" DESC";
+		Query query = null;
+		
 		if (type == null)
-			return getSession()
-					.createQuery(
-							"SELECT a " + "FROM Activity a "
+			query = getSession().createQuery("SELECT a " + "FROM Activity a "
 									+ "WHERE a.event.eventId = :eventId "
-									+ "ORDER BY a.startDate")
-					.setParameter("eventId", eventId).list();
+									+ " ORDER BY n." + orderBy +  aux )
+					.setParameter("eventId", eventId);
 		else
-			return getSession()
-					.createQuery(
+			query = getSession().createQuery(
 							"SELECT a "
 									+ "FROM Activity a "
 									+ "WHERE a.event.eventId = :eventId AND a.type = :type "
-									+ "ORDER BY a.startDate")
+									+ " ORDER BY n." + orderBy +  aux )
 					.setParameter("eventId", eventId)
-					.setParameter("type", type).list();
+					.setParameter("type", type);
+		
+		if(cont<1) return query.list();
+		else return query.setFirstResult(startIndex).setMaxResults(cont).list();
+	}
+	
+	@Override
+	public long findActivitiesByEventTAM(int eventId, ActivityType type) {
+		
+		Query query = null;
+		
+		if (type == null)
+			query = getSession().createQuery("SELECT count(a) "
+									+ "FROM Activity a "
+									+ "WHERE a.event.eventId = :eventId ")
+					.setParameter("eventId", eventId);
+		else
+			query = getSession().createQuery(
+							"SELECT count(a) "
+							+ "FROM Activity a "
+							+ "WHERE a.event.eventId = :eventId AND a.type = :type ")
+					.setParameter("eventId", eventId)
+					.setParameter("type", type);
+		
+		return (long) query.uniqueResult();
+		
 	}
 
 	@SuppressWarnings("unchecked")
