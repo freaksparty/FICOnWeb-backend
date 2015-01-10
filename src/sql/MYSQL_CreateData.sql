@@ -150,7 +150,7 @@ El estado actual de tu registro es Pendiente de pago, así que para confirmar tu
 
 Recordamos que para acceder al evento hay que ser mayor de 16 años y que los menores de 18 años tienen que traer una autorización firmada por sus padres o tutores a la entrada, o no se les dejará entrar.
 
-La autorización se puede descargar de este enlace @ENLACE");
+La autorización se puede descargar de este enlace http://ficonlan.es/download/autorizacion.pdf");
 
 
  INSERT INTO EmailTemplate VALUES ( 0, "FromQueueToOutstanding", ( SELECT Adress_id FROM Adress WHERE Adress_user =  "no-responder@freaksparty.org" ), "", "", "Estado del registro FicOnLan",
@@ -160,7 +160,7 @@ El estado actual de tu registro es Pendiente de pago, así que para confirmar tu
 
 Recordamos que para acceder al evento hay que ser mayor de 16 años y que los menores de 18 años tienen que traer una autorización firmada por sus padres o tutores a la entrada, o no se les dejará entrar.
 
-La autorización se puede descargar de este enlace @ENLACE");
+La autorización se puede descargar de este enlace http://ficonlan.es/download/autorizacion.pdf");
 
 
 INSERT INTO EmailTemplate VALUES ( 0, "SetPaidTemplate", ( SELECT Adress_id FROM Adress WHERE Adress_user =  "no-responder@freaksparty.org" ), "", "", "Estado del registro FicOnLan",
@@ -168,7 +168,7 @@ INSERT INTO EmailTemplate VALUES ( 0, "SetPaidTemplate", ( SELECT Adress_id FROM
 
 Recordamos que para acceder al evento hay que ser mayor de 16 años y que los menores de 18 años tienen que traer una autorización firmada por sus padres o tutores a la entrada, o no se les dejará entrar.
 
-La autorización se puede descargar de este enlace @ENLACE");
+La autorización se puede descargar de este enlace http://ficonlan.es/download/autorizacion.pdf");
 
  INSERT INTO EmailTemplate VALUES ( 0, "OutOfDateTemplate", ( SELECT Adress_id FROM Adress WHERE Adress_user =  "no-responder@freaksparty.org" ), "", "", "Estado del registro FicOnLan",
  "No has realizado el pago de la entrada a tiempo, por ello tu estado ha pasado de Pendiente de pago a No registrado. 
