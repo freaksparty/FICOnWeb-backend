@@ -178,9 +178,9 @@ public class EventResource {
 			@PathParam("eventId") int eventId,
 			@DefaultValue("1") @QueryParam("page") int page, 
 			@DefaultValue("0") @QueryParam("pageTam") int pageTam,
-			@DefaultValue("publishDate") @QueryParam("orderBy") String orderBy,
+			@DefaultValue("activityId") @QueryParam("orderBy") String orderBy,
 			@DefaultValue("1") @QueryParam("desc") int desc,
-			@DefaultValue("") @QueryParam("desc") String type
+			@DefaultValue(" ") @QueryParam("type") String type
 			) throws ServiceException {
 		if(l4.indexOf(orderBy)<0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"orderBy");
 		int startIndex = page*pageTam - pageTam;
@@ -203,9 +203,9 @@ public class EventResource {
 			@PathParam("eventId") int eventId,
 			@DefaultValue("1") @QueryParam("page") int page, 
 			@DefaultValue("0") @QueryParam("pageTam") int pageTam,
-			@DefaultValue("publishDate") @QueryParam("orderBy") String orderBy,
+			@DefaultValue("activityId") @QueryParam("orderBy") String orderBy,
 			@DefaultValue("1") @QueryParam("desc") int desc,
-			@DefaultValue("") @QueryParam("desc") String type
+			@DefaultValue(" ") @QueryParam("type") String type
 			) throws ServiceException {
 		if(l4.indexOf(orderBy)<0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"orderBy");
 		int startIndex = page*pageTam - pageTam;
