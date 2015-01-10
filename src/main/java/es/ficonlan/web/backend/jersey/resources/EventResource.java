@@ -171,7 +171,7 @@ public class EventResource {
 		return eventService.addActivity(sessionId, eventId, activity);
 	}
 	
-	@Path("/activity/query")
+	@Path("/activity{eventId}/query")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<Activity> getByEvent(@HeaderParam("sessionId") String sessionId, 
@@ -196,7 +196,7 @@ public class EventResource {
 		return eventService.getActivitiesByEvent(sessionId, eventId, startIndex, cont, orderBy, b, t);
 	}
 	
-	@Path("/activityHeaders/query")
+	@Path("/activityHeaders/{eventId}/query")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<ActivityHeader> getActivityHeaderByEvent(@HeaderParam("sessionId") String sessionId, 
