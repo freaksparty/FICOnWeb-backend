@@ -29,6 +29,7 @@ import es.ficonlan.web.backend.model.user.UserDao;
 import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import es.ficonlan.web.backend.model.util.session.SessionManager;
+import es.ficonlan.web.backend.util.EventRegistrationState;
 import es.ficonlan.web.backend.util.ShirtData;
 
 /**
@@ -555,6 +556,15 @@ public class EventServiceImpl implements EventService {
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getShirtSizes")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		
 		return registrationDao.getShirtSizesPaid(eventId);
+    }
+    
+    @Override
+	@Transactional(readOnly = true)
+	public EventRegistrationState getEventRegistrationState(String sessionId, int eventId, int userId) throws ServiceException {
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getEventRegistrationState")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		return new EventRegistrationState(eventIsOpen(sessionId,eventId),registrationDao.findByUserAndEvent(userId, eventId).getState());
+    	
     }
     
     @Override

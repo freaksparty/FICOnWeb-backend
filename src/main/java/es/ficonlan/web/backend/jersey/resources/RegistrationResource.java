@@ -18,6 +18,7 @@ import es.ficonlan.web.backend.model.eventservice.EventService;
 import es.ficonlan.web.backend.model.registration.Registration;
 import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
+import es.ficonlan.web.backend.util.EventRegistrationState;
 
 /**
  * @author Miguel Ángel Castillo Bellagona
@@ -69,6 +70,13 @@ public class RegistrationResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Registration getRegistration(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("userId") int userId) throws ServiceException {
 		return eventService.getRegistration(sessionId, userId, eventId);
+	}
+	
+	@Path("/state/{eventId}/{userId}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public EventRegistrationState getEventRegistrationState(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("userId") int userId) throws ServiceException {
+		return eventService.getEventRegistrationState(sessionId, eventId, userId);
 	}
 	
 	@Path("/sendmail/{eventId}/{userId}")
