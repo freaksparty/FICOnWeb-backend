@@ -8,6 +8,8 @@ package es.ficonlan.web.backend.test.eventservice;
 import es.ficonlan.web.backend.model.activity.Activity;
 import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
 import es.ficonlan.web.backend.model.activity.ActivityDao;
+import es.ficonlan.web.backend.model.emailadress.Adress;
+import es.ficonlan.web.backend.model.emailadress.AdressDao;
 import es.ficonlan.web.backend.model.emailtemplate.EmailTemplate;
 import es.ficonlan.web.backend.model.emailtemplate.EmailTemplateDao;
 import es.ficonlan.web.backend.model.event.Event;
@@ -83,6 +85,9 @@ public class EventServiceTest {
 	
 	@Autowired
 	private EmailTemplateDao emailTemplateDao;
+	
+	@Autowired
+	private AdressDao adressDao;
 	 
 	@Before 
 	public void initialize() {
@@ -127,7 +132,12 @@ public class EventServiceTest {
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	Calendar regCloseDate = Calendar.getInstance();
     	regCloseDate.add(Calendar.DAY_OF_YEAR, 1);
-    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),regCloseDate, null, null, null, null, null);
+    	Calendar dateStart = Calendar.getInstance();
+    	dateStart.add(Calendar.DAY_OF_YEAR, -1);
+    	Calendar dateEnd = Calendar.getInstance();
+    	dateEnd.add(Calendar.DAY_OF_YEAR, 1);
+    	
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd, null, null, null, null, null);
     	eventDao.save(event);
     	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	Registration r = eventService.addParticipantToEvent(s.getSessionId(), user.getUserId(), event.getEventId());
@@ -407,7 +417,12 @@ public class EventServiceTest {
     	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	Calendar regCloseDate = Calendar.getInstance();
     	regCloseDate.add(Calendar.DAY_OF_YEAR, 1);
-    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),regCloseDate, null, null, null, null, null);
+    	Calendar dateStart = Calendar.getInstance();
+    	dateStart.add(Calendar.DAY_OF_YEAR, -1);
+    	Calendar dateEnd = Calendar.getInstance();
+    	dateEnd.add(Calendar.DAY_OF_YEAR, 1);
+    	
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd, null, null, null, null, null);
     	eventDao.save(event);
     	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	Registration r1 = eventService.addParticipantToEvent(s.getSessionId(), user.getUserId(), event.getEventId());
@@ -416,4 +431,343 @@ public class EventServiceTest {
     	
     	
     }
+    
+    
+    @Test
+    public void RegistrationTest1() throws ServiceException {
+    	Calendar dateStart = Calendar.getInstance();
+    	dateStart.add(Calendar.DAY_OF_YEAR, -1);
+    	Calendar dateEnd = Calendar.getInstance();
+    	dateEnd.add(Calendar.DAY_OF_YEAR, 1);
+    	
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",2,dateStart,dateEnd,dateStart,dateEnd, null, null, null, null, null);
+    	eventDao.save(event);
+    	
+    	Session anonymousSession = userService.newAnonymousSession(); 
+    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	
+    	User user1 = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "123456781", "user1@gmail.com"	  , "690047407", "L"));
+    	User user2 = userService.addUser(anonymousSession.getSessionId(), new User("User2", "login2", "pass", "123456782", "user2@gmail.com"	  , "690047407", "L"));
+    	User user3 = userService.addUser(anonymousSession.getSessionId(), new User("User3", "login3", "pass", "123456783", "user3@gmail.com"	  , "690047407", "L"));
+    	User user4 = userService.addUser(anonymousSession.getSessionId(), new User("User4", "login4", "pass", "123456784", "surah.harus@gmail.com", "690047407", "L"));
+    	User user5 = userService.addUser(anonymousSession.getSessionId(), new User("User5", "login5", "pass", "123456785", "user5@gmail.com"	  , "690047407", "L"));
+    	User user6 = userService.addUser(anonymousSession.getSessionId(), new User("User6", "login6", "pass", "123456786", "user6@gmail.com"	  , "690047407", "L"));
+    	User user7 = userService.addUser(anonymousSession.getSessionId(), new User("User7", "login7", "pass", "123456787", "user7@gmail.com"	  , "690047407", "L"));
+
+    	
+    	
+    	
+    	Registration r1 = eventService.addParticipantToEvent(s.getSessionId(), user1.getUserId(), event.getEventId());
+    	Registration r2 = eventService.addParticipantToEvent(s.getSessionId(), user2.getUserId(), event.getEventId());
+    	Registration r3 = eventService.addParticipantToEvent(s.getSessionId(), user3.getUserId(), event.getEventId());
+    	Registration r4 = eventService.addParticipantToEvent(s.getSessionId(), user4.getUserId(), event.getEventId());
+    	Registration r5 = eventService.addParticipantToEvent(s.getSessionId(), user5.getUserId(), event.getEventId());
+    	System.out.println(r1.getState().toString());
+    	System.out.println(r2.getState().toString());
+    	System.out.println(r3.getState().toString());
+    	System.out.println(r4.getState().toString());
+    	System.out.println(r5.getState().toString());
+    	System.out.println();
+    	
+    	eventService.setPaid(s.getSessionId(), user1.getUserId(), event.getEventId());
+    	
+    	r1 = eventService.getRegistration(s.getSessionId(), user1.getUserId(), event.getEventId());
+    	r2 = eventService.getRegistration(s.getSessionId(), user2.getUserId(), event.getEventId());
+    	r3 = eventService.getRegistration(s.getSessionId(), user3.getUserId(), event.getEventId());
+    	r4 = eventService.getRegistration(s.getSessionId(), user4.getUserId(), event.getEventId());
+    	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
+    	
+    	System.out.println(r1.getState().toString());
+    	System.out.println(r2.getState().toString());
+    	System.out.println(r3.getState().toString());
+    	System.out.println(r4.getState().toString());
+    	System.out.println(r5.getState().toString());
+    	System.out.println();
+    	
+    	eventService.removeParticipantFromEvent(s.getSessionId(), user2.getUserId(), event.getEventId());
+    	
+    	r1 = eventService.getRegistration(s.getSessionId(), user1.getUserId(), event.getEventId());
+    	//r2 = eventService.getRegistration(s.getSessionId(), user2.getUserId(), event.getEventId());
+    	r3 = eventService.getRegistration(s.getSessionId(), user3.getUserId(), event.getEventId());
+    	r4 = eventService.getRegistration(s.getSessionId(), user4.getUserId(), event.getEventId());
+    	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
+    	
+    	System.out.println(r1.getState().toString());
+    	System.out.println();
+    	System.out.println(r3.getState().toString());
+    	System.out.println(r4.getState().toString());
+    	System.out.println(r5.getState().toString());
+    	System.out.println();
+    	
+    	Registration r6 = eventService.addParticipantToEvent(s.getSessionId(), user6.getUserId(), event.getEventId());
+    	
+    	r1 = eventService.getRegistration(s.getSessionId(), user1.getUserId(), event.getEventId());
+    	//r2 = eventService.getRegistration(s.getSessionId(), user2.getUserId(), event.getEventId());
+    	r3 = eventService.getRegistration(s.getSessionId(), user3.getUserId(), event.getEventId());
+    	r4 = eventService.getRegistration(s.getSessionId(), user4.getUserId(), event.getEventId());
+    	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
+    	r6 = eventService.getRegistration(s.getSessionId(), user6.getUserId(), event.getEventId());
+    	
+    	System.out.println(r1.getState().toString());
+    	System.out.println();
+    	System.out.println(r3.getState().toString());
+    	System.out.println(r4.getState().toString());
+    	System.out.println(r5.getState().toString());
+    	System.out.println(r6.getState().toString());
+    	System.out.println();
+    	
+    	eventService.setPaid(s.getSessionId(), user3.getUserId(), event.getEventId());
+    	
+    	r1 = eventService.getRegistration(s.getSessionId(), user1.getUserId(), event.getEventId());
+    	//r2 = eventService.getRegistration(s.getSessionId(), user2.getUserId(), event.getEventId());
+    	r3 = eventService.getRegistration(s.getSessionId(), user3.getUserId(), event.getEventId());
+    	r4 = eventService.getRegistration(s.getSessionId(), user4.getUserId(), event.getEventId());
+    	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
+    	r6 = eventService.getRegistration(s.getSessionId(), user6.getUserId(), event.getEventId());
+    	
+    	System.out.println(r1.getState().toString());
+    	System.out.println();
+    	System.out.println(r3.getState().toString());
+    	System.out.println(r4.getState().toString());
+    	System.out.println(r5.getState().toString());
+    	System.out.println(r6.getState().toString());
+    	System.out.println();
+    	
+    	eventService.setPaid(s.getSessionId(), user5.getUserId(), event.getEventId());
+    	
+    	r1 = eventService.getRegistration(s.getSessionId(), user1.getUserId(), event.getEventId());
+    	//r2 = eventService.getRegistration(s.getSessionId(), user2.getUserId(), event.getEventId());
+    	r3 = eventService.getRegistration(s.getSessionId(), user3.getUserId(), event.getEventId());
+    	r4 = eventService.getRegistration(s.getSessionId(), user4.getUserId(), event.getEventId());
+    	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
+    	r6 = eventService.getRegistration(s.getSessionId(), user6.getUserId(), event.getEventId());
+    	
+    	System.out.println(r1.getState().toString());
+    	System.out.println();
+    	System.out.println(r3.getState().toString());
+    	System.out.println(r4.getState().toString());
+    	System.out.println(r5.getState().toString());
+    	System.out.println(r6.getState().toString());
+    	System.out.println();
+    	
+    	event.setNumParticipants(4);
+    	eventService.eventNumParticipantsChanged(s.getSessionId(), event.getEventId());
+
+    	r1 = eventService.getRegistration(s.getSessionId(), user1.getUserId(), event.getEventId());
+    	//r2 = eventService.getRegistration(s.getSessionId(), user2.getUserId(), event.getEventId());
+    	r3 = eventService.getRegistration(s.getSessionId(), user3.getUserId(), event.getEventId());
+    	r4 = eventService.getRegistration(s.getSessionId(), user4.getUserId(), event.getEventId());
+    	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
+    	r6 = eventService.getRegistration(s.getSessionId(), user6.getUserId(), event.getEventId());
+    	
+    	System.out.println(r1.getState().toString());
+    	System.out.println();
+    	System.out.println(r3.getState().toString());
+    	System.out.println(r4.getState().toString());
+    	System.out.println(r5.getState().toString());
+    	System.out.println(r6.getState().toString());
+    	System.out.println();
+    	
+    	Registration r7 = eventService.addParticipantToEvent(s.getSessionId(), user7.getUserId(), event.getEventId());
+    	
+    	r1 = eventService.getRegistration(s.getSessionId(), user1.getUserId(), event.getEventId());
+    	//r2 = eventService.getRegistration(s.getSessionId(), user2.getUserId(), event.getEventId());
+    	r3 = eventService.getRegistration(s.getSessionId(), user3.getUserId(), event.getEventId());
+    	r4 = eventService.getRegistration(s.getSessionId(), user4.getUserId(), event.getEventId());
+    	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
+    	r6 = eventService.getRegistration(s.getSessionId(), user6.getUserId(), event.getEventId());
+    	
+    	System.out.println(r1.getState().toString());
+    	System.out.println();
+    	System.out.println(r3.getState().toString());
+    	System.out.println(r4.getState().toString());
+    	System.out.println(r5.getState().toString());
+    	System.out.println(r6.getState().toString());
+    	System.out.println(r7.getState().toString());
+    	System.out.println();
+    	/*
+    	System.out.println(eventService.getShirtSizes(s.getSessionId(),event.getEventId()).get(0).getSize() + "  " +
+    			eventService.getShirtSizes(s.getSessionId(),event.getEventId()).get(0).getNumber());
+    	System.out.println(eventService.getShirtSizes(s.getSessionId(),event.getEventId()).get(1).getSize() + "  " +
+    			eventService.getShirtSizes(s.getSessionId(),event.getEventId()).get(1).getNumber());
+    	System.out.println(eventService.getShirtSizes(s.getSessionId(),event.getEventId()).get(2).getSize() + "  " +
+    			eventService.getShirtSizes(s.getSessionId(),event.getEventId()).get(2).getNumber());
+    	System.out.println(eventService.getShirtSizes(s.getSessionId(),event.getEventId()).get(3).getSize() + "  " +
+    			eventService.getShirtSizes(s.getSessionId(),event.getEventId()).get(3).getNumber());
+    	System.out.println(eventService.getShirtSizes(s.getSessionId(),event.getEventId()).get(4).getSize() + "  " +
+    			eventService.getShirtSizes(s.getSessionId(),event.getEventId()).get(4).getNumber());
+    	System.out.println(eventService.getShirtSizes(s.getSessionId(),event.getEventId()).get(5).getSize() + "  " +
+    			eventService.getShirtSizes(s.getSessionId(),event.getEventId()).get(5).getNumber());
+    	*/
+    }
+    
+    @Test
+    public void RegistrationTest2() throws ServiceException {
+    	Calendar dateStart = Calendar.getInstance();
+    	dateStart.add(Calendar.DAY_OF_YEAR, -1);
+    	Calendar dateEnd = Calendar.getInstance();
+    	dateEnd.add(Calendar.DAY_OF_YEAR, 1);
+    	
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",2,dateStart,dateEnd,dateStart,dateEnd, null, null, null, null, null);
+
+    	eventDao.save(event);
+    	
+    	Session anonymousSession = userService.newAnonymousSession(); 
+    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	
+    	User user1 = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "123456781", "user1@gmail.com"	  , "690047407", "L"));
+    	User user2 = userService.addUser(anonymousSession.getSessionId(), new User("User2", "login2", "pass", "123456782", "user2@gmail.com"	  , "690047407", "L"));
+    	User user3 = userService.addUser(anonymousSession.getSessionId(), new User("User3", "login3", "pass", "123456783", "user3@gmail.com"	  , "690047407", "L"));
+    	User user4 = userService.addUser(anonymousSession.getSessionId(), new User("User4", "login4", "pass", "123456784", "surah.harus@gmail.com", "690047407", "L"));
+    	User user5 = userService.addUser(anonymousSession.getSessionId(), new User("User5", "login5", "pass", "123456785", "user5@gmail.com"	  , "690047407", "L"));
+    	User user6 = userService.addUser(anonymousSession.getSessionId(), new User("User6", "login6", "pass", "123456786", "user6@gmail.com"	  , "690047407", "L"));
+    	User user7 = userService.addUser(anonymousSession.getSessionId(), new User("User7", "login7", "pass", "123456787", "user7@gmail.com"	  , "690047407", "L"));
+
+    	Registration r1 = eventService.addParticipantToEvent(s.getSessionId(), user1.getUserId(), event.getEventId());
+    	Registration r2 = eventService.addParticipantToEvent(s.getSessionId(), user2.getUserId(), event.getEventId());
+    	Registration r3 = eventService.addParticipantToEvent(s.getSessionId(), user3.getUserId(), event.getEventId());
+    	Registration r4 = eventService.addParticipantToEvent(s.getSessionId(), user4.getUserId(), event.getEventId());
+    	Registration r5 = eventService.addParticipantToEvent(s.getSessionId(), user5.getUserId(), event.getEventId());
+    	System.out.println(r1.getState().toString());
+    	System.out.println(r2.getState().toString());
+    	System.out.println(r3.getState().toString());
+    	System.out.println(r4.getState().toString());
+    	System.out.println(r5.getState().toString());
+    	System.out.println();
+    	
+    	eventService.setPaid(s.getSessionId(), user1.getUserId(), event.getEventId());
+    	
+    	r1 = eventService.getRegistration(s.getSessionId(), user1.getUserId(), event.getEventId());
+    	r2 = eventService.getRegistration(s.getSessionId(), user2.getUserId(), event.getEventId());
+    	r3 = eventService.getRegistration(s.getSessionId(), user3.getUserId(), event.getEventId());
+    	r4 = eventService.getRegistration(s.getSessionId(), user4.getUserId(), event.getEventId());
+    	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
+    	
+    	System.out.println(r1.getState().toString());
+    	System.out.println(r2.getState().toString());
+    	System.out.println(r3.getState().toString());
+    	System.out.println(r4.getState().toString());
+    	System.out.println(r5.getState().toString());
+    	System.out.println();
+    	
+    	eventService.removeParticipantFromEvent(s.getSessionId(), user2.getUserId(), event.getEventId());
+    	
+    	r1 = eventService.getRegistration(s.getSessionId(), user1.getUserId(), event.getEventId());
+    	//r2 = eventService.getRegistration(s.getSessionId(), user2.getUserId(), event.getEventId());
+    	r3 = eventService.getRegistration(s.getSessionId(), user3.getUserId(), event.getEventId());
+    	r4 = eventService.getRegistration(s.getSessionId(), user4.getUserId(), event.getEventId());
+    	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
+    	
+    	System.out.println(r1.getState().toString());
+    	System.out.println();
+    	System.out.println(r3.getState().toString());
+    	System.out.println(r4.getState().toString());
+    	System.out.println(r5.getState().toString());
+    	System.out.println();
+    	
+    	Registration r6 = eventService.addParticipantToEvent(s.getSessionId(), user6.getUserId(), event.getEventId());
+    	
+    	r1 = eventService.getRegistration(s.getSessionId(), user1.getUserId(), event.getEventId());
+    	//r2 = eventService.getRegistration(s.getSessionId(), user2.getUserId(), event.getEventId());
+    	r3 = eventService.getRegistration(s.getSessionId(), user3.getUserId(), event.getEventId());
+    	r4 = eventService.getRegistration(s.getSessionId(), user4.getUserId(), event.getEventId());
+    	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
+    	r6 = eventService.getRegistration(s.getSessionId(), user6.getUserId(), event.getEventId());
+    	
+    	System.out.println(r1.getState().toString());
+    	System.out.println();
+    	System.out.println(r3.getState().toString());
+    	System.out.println(r4.getState().toString());
+    	System.out.println(r5.getState().toString());
+    	System.out.println(r6.getState().toString());
+    	System.out.println();
+    	
+    	eventService.setPaid(s.getSessionId(), user3.getUserId(), event.getEventId());
+    	
+    	r1 = eventService.getRegistration(s.getSessionId(), user1.getUserId(), event.getEventId());
+    	//r2 = eventService.getRegistration(s.getSessionId(), user2.getUserId(), event.getEventId());
+    	r3 = eventService.getRegistration(s.getSessionId(), user3.getUserId(), event.getEventId());
+    	r4 = eventService.getRegistration(s.getSessionId(), user4.getUserId(), event.getEventId());
+    	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
+    	r6 = eventService.getRegistration(s.getSessionId(), user6.getUserId(), event.getEventId());
+    	
+    	System.out.println(r1.getState().toString());
+    	System.out.println();
+    	System.out.println(r3.getState().toString());
+    	System.out.println(r4.getState().toString());
+    	System.out.println(r5.getState().toString());
+    	System.out.println(r6.getState().toString());
+    	System.out.println();
+    	
+    	eventService.setPaid(s.getSessionId(), user5.getUserId(), event.getEventId());
+    	
+    	r1 = eventService.getRegistration(s.getSessionId(), user1.getUserId(), event.getEventId());
+    	//r2 = eventService.getRegistration(s.getSessionId(), user2.getUserId(), event.getEventId());
+    	r3 = eventService.getRegistration(s.getSessionId(), user3.getUserId(), event.getEventId());
+    	r4 = eventService.getRegistration(s.getSessionId(), user4.getUserId(), event.getEventId());
+    	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
+    	r6 = eventService.getRegistration(s.getSessionId(), user6.getUserId(), event.getEventId());
+    	
+    	System.out.println(r1.getState().toString());
+    	System.out.println();
+    	System.out.println(r3.getState().toString());
+    	System.out.println(r4.getState().toString());
+    	System.out.println(r5.getState().toString());
+    	System.out.println(r6.getState().toString());
+    	System.out.println();
+    	
+    	eventService.removeParticipantFromEvent(s.getSessionId(), user5.getUserId(), event.getEventId());
+    	
+    	r1 = eventService.getRegistration(s.getSessionId(), user1.getUserId(), event.getEventId());
+    	//r2 = eventService.getRegistration(s.getSessionId(), user2.getUserId(), event.getEventId());
+    	r3 = eventService.getRegistration(s.getSessionId(), user3.getUserId(), event.getEventId());
+    	r4 = eventService.getRegistration(s.getSessionId(), user4.getUserId(), event.getEventId());
+    	//r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
+    	r6 = eventService.getRegistration(s.getSessionId(), user6.getUserId(), event.getEventId());
+    	
+    	System.out.println(r1.getState().toString());
+    	System.out.println();
+    	System.out.println(r3.getState().toString());
+    	System.out.println(r4.getState().toString());
+    	System.out.println();
+    	System.out.println(r6.getState().toString());
+    	System.out.println();
+    }
+    
+    @Test
+    public void RegistrationTest3() throws ServiceException {
+    	Calendar dateStart = Calendar.getInstance();
+    	dateStart.add(Calendar.DAY_OF_YEAR, -1);
+    	Calendar dateEnd = Calendar.getInstance();
+    	dateEnd.add(Calendar.DAY_OF_YEAR, 1);
+    	
+    	Adress adress = new Adress();
+    	adress.setUsuarioCorreo("no-responder@freaksparty.org");
+    	adress.setPassword("e3MCq5>P2");
+    	adressDao.save(adress);
+    
+    	EmailTemplate outstandingTemplate = new EmailTemplate();
+    	outstandingTemplate.setAdress(adress);
+    	outstandingTemplate.setAsunto("ASUNTO");
+    	outstandingTemplate.setName("NOMBRE");
+    	outstandingTemplate.setFilename("");
+    	outstandingTemplate.setFilepath("");
+    	outstandingTemplate.setContenido("Felicidades #nombreusuario , has conseguido la plaza número #plazaenevento en #nombreevento .\n El estado actual de tu registro es Pendiente de pago, así que para confirmar tu inscripción deberás realizar un ingreso de #precio€  poniendo como concepto tu DNI en la cuenta @CUENTA del banco Santander en un plazo de tres días. Si pasado ese tiempo no hemos recibido ese ingreso la organización entenderá que renuncias a a tu plaza y tu registro será borrado. \n Recordamos que para acceder al evento hay que ser mayor de 16 años y que los menores de 18 años tienen que traer una autorización firmada por sus padres o tutores a la entrada, o no se les dejará entrar. \n La autorización se puede descargar de este enlace http://ficonlan.es/download/autorizacion.pdf");
+    	
+    	emailTemplateDao.save(outstandingTemplate);
+    	
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",2,dateStart,dateEnd,dateStart,dateEnd, null, null, null, null, null);
+    	event.setOutstandingTemplate(outstandingTemplate);
+    	eventDao.save(event);
+    	
+    	Session anonymousSession = userService.newAnonymousSession(); 
+    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	
+    	User user1 = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "123456781", "surah.harus@gmail.com"	  , "690047407", "L"));
+    	
+    	Registration r1 = eventService.addParticipantToEvent(s.getSessionId(), user1.getUserId(), event.getEventId());
+    	
+    	System.out.println(r1.getState().toString());
+    }
+    
 }

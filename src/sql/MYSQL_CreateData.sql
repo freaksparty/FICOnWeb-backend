@@ -151,7 +151,7 @@ Tu puesto en la cola de espera es #plazaencola.");
  INSERT INTO EmailTemplate VALUES ( 0, "OutstandingTemplate", ( SELECT Adress_id FROM Adress WHERE Adress_user =  "no-responder@freaksparty.org" ), "", "", "Estado del registro FicOnLan",
  "Felicidades #nombreusuario , has conseguido la plaza número #plazaenevento en #nombreevento . 
 
-El estado actual de tu registro es Pendiente de pago, así que para confirmar tu inscripción deberás realizar un ingreso de #precio€  poniendo como concepto tu DNI en la cuenta @CUENTA del banco Santander en un plazo de tres días. Si pasado ese tiempo no hemos recibido ese ingreso la organización entenderá que renuncias a a tu plaza y tu registro será borrado.
+El estado actual de tu registro es Pendiente de pago, así que para confirmar tu inscripción deberás realizar un ingreso de #precio€  poniendo como concepto tu DNI en la cuenta Nº CUENTA: 0049 6795 53 2395124147 del banco Santander con titular ASOCIACION CULTURAL FREAKS PARTY, en un plazo de tres días. Si pasado ese tiempo no hemos recibido ese ingreso la organización entenderá que renuncias a a tu plaza y tu registro será borrado.
 
 Recordamos que para acceder al evento hay que ser mayor de 16 años y que los menores de 18 años tienen que traer una autorización firmada por sus padres o tutores a la entrada, o no se les dejará entrar.
 
@@ -161,7 +161,7 @@ La autorización se puede descargar de este enlace http://ficonlan.es/download/a
  INSERT INTO EmailTemplate VALUES ( 0, "FromQueueToOutstanding", ( SELECT Adress_id FROM Adress WHERE Adress_user =  "no-responder@freaksparty.org" ), "", "", "Estado del registro FicOnLan",
  "Felicidades #nombreusuario , has conseguido la plaza número #plazaenevento en #nombreevento . 
 
-El estado actual de tu registro es Pendiente de pago, así que para confirmar tu inscripción deberás realizar un ingreso de #precio€  poniendo como concepto tu DNI en la cuenta @CUENTA del banco Santander en un plazo de tres días. Si pasado ese tiempo no hemos recibido ese ingreso la organización entenderá que renuncias a a tu plaza y tu registro será borrado.
+El estado actual de tu registro es Pendiente de pago, así que para confirmar tu inscripción deberás realizar un ingreso de #precio€  poniendo como concepto tu DNI en la cuenta Nº CUENTA: 0049 6795 53 2395124147 del banco Santander con titular ASOCIACION CULTURAL FREAKS PARTY, en un plazo de tres días. Si pasado ese tiempo no hemos recibido ese ingreso la organización entenderá que renuncias a a tu plaza y tu registro será borrado.
 
 Recordamos que para acceder al evento hay que ser mayor de 16 años y que los menores de 18 años tienen que traer una autorización firmada por sus padres o tutores a la entrada, o no se les dejará entrar.
 

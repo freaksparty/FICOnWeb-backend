@@ -4,9 +4,9 @@ public class ShirtData {
 	
 	private String size;
 	
-	private int number;
+	private long number;
 	
-	public ShirtData(String size, int number) {
+	public ShirtData(String size, long number) {
 		this.size = size;
 		this.number = number;
 	}
@@ -19,7 +19,7 @@ public class ShirtData {
 		this.size = size;
 	}
 
-	public int getNumber() {
+	public long getNumber() {
 		return number;
 	}
 

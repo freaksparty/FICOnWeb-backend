@@ -2,7 +2,6 @@ package es.ficonlan.web.backend.model.registration;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -52,7 +51,7 @@ public class RegistrationDaoHibernate extends GenericDaoHibernate<Registration,I
 		return ((Long) getSession().createQuery(
 	        	"SELECT COUNT(r) " +
 		        "FROM Registration r " +
-		        "WHERE r.event.eventId=:eventId AND r.state=:state AND r.Registration_date_created < :date"
+		        "WHERE r.event.eventId=:eventId AND r.state=:state AND r.registrationDate < :date"
 		       ).setParameter("state", state).setInteger("eventId", eventId).setCalendar("date", date).uniqueResult()).intValue();
 	}
 	
@@ -96,23 +95,31 @@ public class RegistrationDaoHibernate extends GenericDaoHibernate<Registration,I
 	
 	@Override
 	public List<ShirtData> getShirtSizesPaid(int eventId) {
-		Query query = getSession().createQuery("SELECT count(User_id) as number,User_shirtSize as size " +
-		"FROM User JOIN Registration ON User_id = Registration_user_id " +
-		"WHERE Registration_event_id = :eventId AND Registration_state = 3 " +
-		"GROUP BY user_shirtSize ").setInteger("eventId", eventId);
+		
+		Query query = getSession().createQuery(
+				"SELECT count(r) " +
+                "FROM Registration r INNER JOIN r.user u " +
+                "WHERE r.event.id = :eventId AND Registration_state = 2 AND u.shirtSize = :size"
+                ).setInteger("eventId", eventId);
+		
+		long sizeXS  = (long) query.setParameter("size", "XS" ).uniqueResult();
+		long sizeS   = (long) query.setParameter("size", "S"  ).uniqueResult();
+		long sizeM   = (long) query.setParameter("size", "M"  ).uniqueResult();
+		long sizeL   = (long) query.setParameter("size", "L"  ).uniqueResult();
+		long sizeXL  = (long) query.setParameter("size", "XL" ).uniqueResult();
+		long sizeXXL = (long) query.setParameter("size", "XXL").uniqueResult();
 		
 		List<ShirtData> list = new ArrayList<ShirtData>();
 		
-		@SuppressWarnings("rawtypes")
-		Iterator it = query.iterate();
-		
-		while(it.hasNext()) 
-		  {  
-		   Object[] row = (Object[]) it.next();  
-		   list.add(new ShirtData((String) row[1], (int) row[0]));  
-		  }  
+		list.add(new ShirtData("XS" ,sizeXS ));
+		list.add(new ShirtData("S"  ,sizeS  ));
+		list.add(new ShirtData("M"  ,sizeM  ));
+		list.add(new ShirtData("L"  ,sizeL  ));
+		list.add(new ShirtData("XL" ,sizeXL ));
+		list.add(new ShirtData("XXL",sizeXXL));
 		
 		return list;
+		
 	}
 	
 	
