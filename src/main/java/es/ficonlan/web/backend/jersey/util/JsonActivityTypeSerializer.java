@@ -22,7 +22,7 @@ public class JsonActivityTypeSerializer extends JsonSerializer<ActivityType> {
 		String activitytype = "";
 		if(at == ActivityType.Conference) activitytype = "Conference";
 		if(at == ActivityType.Production) activitytype = "Production";
-		if(at == ActivityType.Tournament) activitytype = "Production";
+		if(at == ActivityType.Tournament) activitytype = "Tournament";
 		gen.writeString(activitytype);		
 	}
 }
