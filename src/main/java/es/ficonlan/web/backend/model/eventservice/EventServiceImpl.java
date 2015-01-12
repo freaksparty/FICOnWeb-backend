@@ -214,7 +214,8 @@ public class EventServiceImpl implements EventService {
     			{
     				Email email = event.getOnQueueTemplate().generateEmail(user, tabla);
     				email.setRegistration(registration);
-    				email.sendMailThread();
+    				//email.sendMailThread();
+    				email.sendMail();
     			}
     			
     		}
@@ -233,7 +234,8 @@ public class EventServiceImpl implements EventService {
     			{
     				Email email = event.getOnQueueTemplate().generateEmail(user, tabla);
     				email.setRegistration(registration);
-    				email.sendMailThread();
+    				//email.sendMailThread();
+    				email.sendMail();
     			}
     		}
     		else {
@@ -250,7 +252,8 @@ public class EventServiceImpl implements EventService {
     			{
     				Email email = event.getOutstandingTemplate().generateEmail(user, tabla);
     				email.setRegistration(registration);
-    				email.sendMailThread();
+    				//email.sendMailThread();
+    				email.sendMail();
     			}
     		}
     		
@@ -297,7 +300,8 @@ public class EventServiceImpl implements EventService {
     			{
     				Email email = event.getOutOfDateTemplate().generateEmail(user, tabla);
     				email.setRegistration(registration);
-    				email.sendMailThread();
+    				//email.sendMailThread();
+    				email.sendMail();
     			}
     			
     			Registration firstInQueue = registrationDao.getFirstInQueue(eventId);
@@ -326,8 +330,8 @@ public class EventServiceImpl implements EventService {
     				{
     					Email email = event.getFromQueueToOutstanding().generateEmail(user, tabla2);
     					email.setRegistration(registration);
-    					//email.sendMail();
-    					email.sendMailThread();
+    					email.sendMail();
+    					//email.sendMailThread();
     				}
     				registrationDao.save(firstInQueue);
     		       }			
@@ -374,7 +378,8 @@ public class EventServiceImpl implements EventService {
 			
 			Email email = event.getSetPaidTemplate().generateEmail(user, tabla);
 			email.setRegistration(registration);
-			email.sendMailThread();
+			//email.sendMailThread();
+			email.sendMail();
 		}	
 		registrationDao.save(registration);
 	}
@@ -433,7 +438,8 @@ public class EventServiceImpl implements EventService {
     			{
     				Email email = event.getOnQueueTemplate().generateEmail(user, tabla);
     				email.setRegistration(registration);
-    				email.sendMailThread();
+    				//email.sendMailThread();
+    				email.sendMail();
     			}
 			}
 			else
@@ -442,7 +448,8 @@ public class EventServiceImpl implements EventService {
 				{
 					Email email = event.getSetPaidTemplate().generateEmail(user, tabla);
 					email.setRegistration(registration);
-					email.sendMailThread();		
+					//email.sendMailThread();		
+					email.sendMail();
 				}
 			}
 			else
@@ -451,7 +458,8 @@ public class EventServiceImpl implements EventService {
 				{
 					Email email = event.getOutstandingTemplate().generateEmail(user, tabla);
 					email.setRegistration(registration);
-					email.sendMailThread();
+					//email.sendMailThread();
+					email.sendMail();
 				}
 			}
 		}
