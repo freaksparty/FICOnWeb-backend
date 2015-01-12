@@ -315,7 +315,7 @@ public class UserServiceImpl implements UserService {
     		Email e = emailTemplateDao.findByName("passwordRecover").generateEmail(user, tabla);
 
     		//if(e.sendMail()) userDao.save(user);
-    		e.sendMailThread();
+    		e.sendMail();
     		userDao.save(user);
     		
     		return true;
