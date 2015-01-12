@@ -183,14 +183,14 @@ public class Email {
 			texto.setText(this.getMensaje());
 
 			BodyPart adjunto = new MimeBodyPart();
-			if (!this.getRutaArchivo().equals("")) {
+			if(this.getRutaArchivo()!=null) if (!this.getRutaArchivo().equals("")) {
 				adjunto.setDataHandler(new DataHandler(new FileDataSource(this.getRutaArchivo())));
 				adjunto.setFileName(this.getNombreArchivo());
 			}
 
 			MimeMultipart multiParte = new MimeMultipart();
 			multiParte.addBodyPart(texto);
-			if (!this.getRutaArchivo().equals("")) {
+			if(this.getRutaArchivo()!=null) if (!this.getRutaArchivo().equals("")) {
 				multiParte.addBodyPart(adjunto);
 			}
 

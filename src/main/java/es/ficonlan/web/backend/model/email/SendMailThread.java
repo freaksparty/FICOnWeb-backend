@@ -53,14 +53,14 @@ public class SendMailThread extends Thread {
 			texto.setText(email.getMensaje());
 
 			BodyPart adjunto = new MimeBodyPart();
-			if (!email.getRutaArchivo().equals("")) {
+			if(email.getRutaArchivo()!=null) if (!email.getRutaArchivo().equals("")) {
 				adjunto.setDataHandler(new DataHandler(new FileDataSource(email.getRutaArchivo())));
 				adjunto.setFileName(email.getNombreArchivo());
 			}
 
 			MimeMultipart multiParte = new MimeMultipart();
 			multiParte.addBodyPart(texto);
-			if (!email.getRutaArchivo().equals("")) {
+			if(email.getRutaArchivo()!=null) if (!email.getRutaArchivo().equals("")) {
 				multiParte.addBodyPart(adjunto);
 			}
 

@@ -585,7 +585,7 @@ public class EventServiceTest {
     	System.out.println(r6.getState().toString());
     	System.out.println(r7.getState().toString());
     	System.out.println();
-    	/*
+    	
     	System.out.println(eventService.getShirtSizes(s.getSessionId(),event.getEventId()).get(0).getSize() + "  " +
     			eventService.getShirtSizes(s.getSessionId(),event.getEventId()).get(0).getNumber());
     	System.out.println(eventService.getShirtSizes(s.getSessionId(),event.getEventId()).get(1).getSize() + "  " +
@@ -598,10 +598,11 @@ public class EventServiceTest {
     			eventService.getShirtSizes(s.getSessionId(),event.getEventId()).get(4).getNumber());
     	System.out.println(eventService.getShirtSizes(s.getSessionId(),event.getEventId()).get(5).getSize() + "  " +
     			eventService.getShirtSizes(s.getSessionId(),event.getEventId()).get(5).getNumber());
-    	*/
+    	
     }
     
-    @Test
+    @SuppressWarnings("unused")
+	@Test
     public void RegistrationTest2() throws ServiceException {
     	Calendar dateStart = Calendar.getInstance();
     	dateStart.add(Calendar.DAY_OF_YEAR, -1);
