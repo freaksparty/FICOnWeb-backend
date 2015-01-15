@@ -434,7 +434,8 @@ public class EventServiceTest {
     
     
     @Test
-    public void RegistrationTest1() throws ServiceException {
+    @SuppressWarnings("unused")
+    public void RegistrationTest1() throws ServiceException, InterruptedException {
     	Calendar dateStart = Calendar.getInstance();
     	dateStart.add(Calendar.DAY_OF_YEAR, -1);
     	Calendar dateEnd = Calendar.getInstance();
@@ -455,18 +456,20 @@ public class EventServiceTest {
     	User user7 = userService.addUser(anonymousSession.getSessionId(), new User("User7", "login7", "pass", "123456787", "user7@gmail.com"	  , "690047407", "L"));
 
     	
-    	
-    	
-    	Registration r1 = eventService.addParticipantToEvent(s.getSessionId(), user1.getUserId(), event.getEventId());
+		Registration r1 = eventService.addParticipantToEvent(s.getSessionId(), user1.getUserId(), event.getEventId());
+    	Thread.sleep(1000);
     	Registration r2 = eventService.addParticipantToEvent(s.getSessionId(), user2.getUserId(), event.getEventId());
+    	Thread.sleep(1000);
     	Registration r3 = eventService.addParticipantToEvent(s.getSessionId(), user3.getUserId(), event.getEventId());
+    	Thread.sleep(1000);
     	Registration r4 = eventService.addParticipantToEvent(s.getSessionId(), user4.getUserId(), event.getEventId());
+    	Thread.sleep(1000);
     	Registration r5 = eventService.addParticipantToEvent(s.getSessionId(), user5.getUserId(), event.getEventId());
-    	System.out.println(r1.getState().toString());
-    	System.out.println(r2.getState().toString());
-    	System.out.println(r3.getState().toString());
-    	System.out.println(r4.getState().toString());
-    	System.out.println(r5.getState().toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user1.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user2.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user3.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user4.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user5.getUserId() ).toString());
     	System.out.println();
     	
     	eventService.setPaid(s.getSessionId(), user1.getUserId(), event.getEventId());
@@ -477,11 +480,12 @@ public class EventServiceTest {
     	r4 = eventService.getRegistration(s.getSessionId(), user4.getUserId(), event.getEventId());
     	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
     	
-    	System.out.println(r1.getState().toString());
-    	System.out.println(r2.getState().toString());
-    	System.out.println(r3.getState().toString());
-    	System.out.println(r4.getState().toString());
-    	System.out.println(r5.getState().toString());
+    	
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user1.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user2.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user3.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user4.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user5.getUserId() ).toString());
     	System.out.println();
     	
     	eventService.removeParticipantFromEvent(s.getSessionId(), user2.getUserId(), event.getEventId());
@@ -492,11 +496,11 @@ public class EventServiceTest {
     	r4 = eventService.getRegistration(s.getSessionId(), user4.getUserId(), event.getEventId());
     	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
     	
-    	System.out.println(r1.getState().toString());
-    	System.out.println();
-    	System.out.println(r3.getState().toString());
-    	System.out.println(r4.getState().toString());
-    	System.out.println(r5.getState().toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user1.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user2.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user3.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user4.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user5.getUserId() ).toString());
     	System.out.println();
     	
     	Registration r6 = eventService.addParticipantToEvent(s.getSessionId(), user6.getUserId(), event.getEventId());
@@ -508,13 +512,15 @@ public class EventServiceTest {
     	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
     	r6 = eventService.getRegistration(s.getSessionId(), user6.getUserId(), event.getEventId());
     	
-    	System.out.println(r1.getState().toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user1.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user2.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user3.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user4.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user5.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user6.getUserId() ).toString());
     	System.out.println();
-    	System.out.println(r3.getState().toString());
-    	System.out.println(r4.getState().toString());
-    	System.out.println(r5.getState().toString());
-    	System.out.println(r6.getState().toString());
-    	System.out.println();
+    	
+    	Thread.sleep(1000);
     	
     	eventService.setPaid(s.getSessionId(), user3.getUserId(), event.getEventId());
     	
@@ -525,12 +531,12 @@ public class EventServiceTest {
     	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
     	r6 = eventService.getRegistration(s.getSessionId(), user6.getUserId(), event.getEventId());
     	
-    	System.out.println(r1.getState().toString());
-    	System.out.println();
-    	System.out.println(r3.getState().toString());
-    	System.out.println(r4.getState().toString());
-    	System.out.println(r5.getState().toString());
-    	System.out.println(r6.getState().toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user1.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user2.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user3.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user4.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user5.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user6.getUserId() ).toString());
     	System.out.println();
     	
     	eventService.setPaid(s.getSessionId(), user5.getUserId(), event.getEventId());
@@ -542,12 +548,12 @@ public class EventServiceTest {
     	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
     	r6 = eventService.getRegistration(s.getSessionId(), user6.getUserId(), event.getEventId());
     	
-    	System.out.println(r1.getState().toString());
-    	System.out.println();
-    	System.out.println(r3.getState().toString());
-    	System.out.println(r4.getState().toString());
-    	System.out.println(r5.getState().toString());
-    	System.out.println(r6.getState().toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user1.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user2.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user3.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user4.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user5.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user6.getUserId() ).toString());
     	System.out.println();
     	
     	event.setNumParticipants(4);
@@ -560,13 +566,15 @@ public class EventServiceTest {
     	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
     	r6 = eventService.getRegistration(s.getSessionId(), user6.getUserId(), event.getEventId());
     	
-    	System.out.println(r1.getState().toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user1.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user2.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user3.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user4.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user5.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user6.getUserId() ).toString());
     	System.out.println();
-    	System.out.println(r3.getState().toString());
-    	System.out.println(r4.getState().toString());
-    	System.out.println(r5.getState().toString());
-    	System.out.println(r6.getState().toString());
-    	System.out.println();
+    	
+    	Thread.sleep(1000);
     	
     	Registration r7 = eventService.addParticipantToEvent(s.getSessionId(), user7.getUserId(), event.getEventId());
     	
@@ -577,13 +585,13 @@ public class EventServiceTest {
     	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
     	r6 = eventService.getRegistration(s.getSessionId(), user6.getUserId(), event.getEventId());
     	
-    	System.out.println(r1.getState().toString());
-    	System.out.println();
-    	System.out.println(r3.getState().toString());
-    	System.out.println(r4.getState().toString());
-    	System.out.println(r5.getState().toString());
-    	System.out.println(r6.getState().toString());
-    	System.out.println(r7.getState().toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user1.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user2.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user3.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user4.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user5.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user6.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user7.getUserId() ).toString());
     	System.out.println();
     	
     	System.out.println(eventService.getShirtSizes(s.getSessionId(),event.getEventId()).get(0).getSize() + "  " +
@@ -629,11 +637,13 @@ public class EventServiceTest {
     	Registration r3 = eventService.addParticipantToEvent(s.getSessionId(), user3.getUserId(), event.getEventId());
     	Registration r4 = eventService.addParticipantToEvent(s.getSessionId(), user4.getUserId(), event.getEventId());
     	Registration r5 = eventService.addParticipantToEvent(s.getSessionId(), user5.getUserId(), event.getEventId());
-    	System.out.println(r1.getState().toString());
-    	System.out.println(r2.getState().toString());
-    	System.out.println(r3.getState().toString());
-    	System.out.println(r4.getState().toString());
-    	System.out.println(r5.getState().toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user1.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user2.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user3.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user4.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user5.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user6.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user7.getUserId() ).toString());
     	System.out.println();
     	
     	eventService.setPaid(s.getSessionId(), user1.getUserId(), event.getEventId());
@@ -644,11 +654,13 @@ public class EventServiceTest {
     	r4 = eventService.getRegistration(s.getSessionId(), user4.getUserId(), event.getEventId());
     	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
     	
-    	System.out.println(r1.getState().toString());
-    	System.out.println(r2.getState().toString());
-    	System.out.println(r3.getState().toString());
-    	System.out.println(r4.getState().toString());
-    	System.out.println(r5.getState().toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user1.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user2.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user3.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user4.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user5.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user6.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user7.getUserId() ).toString());
     	System.out.println();
     	
     	eventService.removeParticipantFromEvent(s.getSessionId(), user2.getUserId(), event.getEventId());
@@ -659,11 +671,13 @@ public class EventServiceTest {
     	r4 = eventService.getRegistration(s.getSessionId(), user4.getUserId(), event.getEventId());
     	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
     	
-    	System.out.println(r1.getState().toString());
-    	System.out.println();
-    	System.out.println(r3.getState().toString());
-    	System.out.println(r4.getState().toString());
-    	System.out.println(r5.getState().toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user1.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user2.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user3.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user4.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user5.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user6.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user7.getUserId() ).toString());
     	System.out.println();
     	
     	Registration r6 = eventService.addParticipantToEvent(s.getSessionId(), user6.getUserId(), event.getEventId());
@@ -675,12 +689,13 @@ public class EventServiceTest {
     	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
     	r6 = eventService.getRegistration(s.getSessionId(), user6.getUserId(), event.getEventId());
     	
-    	System.out.println(r1.getState().toString());
-    	System.out.println();
-    	System.out.println(r3.getState().toString());
-    	System.out.println(r4.getState().toString());
-    	System.out.println(r5.getState().toString());
-    	System.out.println(r6.getState().toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user1.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user2.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user3.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user4.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user5.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user6.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user7.getUserId() ).toString());
     	System.out.println();
     	
     	eventService.setPaid(s.getSessionId(), user3.getUserId(), event.getEventId());
@@ -692,12 +707,13 @@ public class EventServiceTest {
     	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
     	r6 = eventService.getRegistration(s.getSessionId(), user6.getUserId(), event.getEventId());
     	
-    	System.out.println(r1.getState().toString());
-    	System.out.println();
-    	System.out.println(r3.getState().toString());
-    	System.out.println(r4.getState().toString());
-    	System.out.println(r5.getState().toString());
-    	System.out.println(r6.getState().toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user1.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user2.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user3.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user4.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user5.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user6.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user7.getUserId() ).toString());
     	System.out.println();
     	
     	eventService.setPaid(s.getSessionId(), user5.getUserId(), event.getEventId());
@@ -709,12 +725,13 @@ public class EventServiceTest {
     	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
     	r6 = eventService.getRegistration(s.getSessionId(), user6.getUserId(), event.getEventId());
     	
-    	System.out.println(r1.getState().toString());
-    	System.out.println();
-    	System.out.println(r3.getState().toString());
-    	System.out.println(r4.getState().toString());
-    	System.out.println(r5.getState().toString());
-    	System.out.println(r6.getState().toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user1.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user2.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user3.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user4.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user5.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user6.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user7.getUserId() ).toString());
     	System.out.println();
     	
     	eventService.removeParticipantFromEvent(s.getSessionId(), user5.getUserId(), event.getEventId());
@@ -726,12 +743,13 @@ public class EventServiceTest {
     	//r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
     	r6 = eventService.getRegistration(s.getSessionId(), user6.getUserId(), event.getEventId());
     	
-    	System.out.println(r1.getState().toString());
-    	System.out.println();
-    	System.out.println(r3.getState().toString());
-    	System.out.println(r4.getState().toString());
-    	System.out.println();
-    	System.out.println(r6.getState().toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user1.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user2.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user3.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user4.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user5.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user6.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user7.getUserId() ).toString());
     	System.out.println();
     }
     
@@ -771,4 +789,64 @@ public class EventServiceTest {
     	System.out.println(r1.getState().toString());
     }
     
+    @SuppressWarnings("unused")
+	@Test
+    public void RegistrationTest4() throws ServiceException, InterruptedException {
+    	Calendar dateStart = Calendar.getInstance();
+    	dateStart.add(Calendar.DAY_OF_YEAR, -2);
+    	Calendar dateEnd = Calendar.getInstance();
+    	dateEnd.add(Calendar.DAY_OF_YEAR, 2);
+    	
+    	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",3,dateStart,dateEnd,dateStart,dateEnd, null, null, null, null, null);
+    	event.setMinimunAge(16);
+    	
+    	eventDao.save(event);
+    	
+    	Session anonymousSession = userService.newAnonymousSession(); 
+    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	
+    	User user1 = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "123456781", "user1@gmail.com"	  , "690047407", "L"));
+    	Calendar age = Calendar.getInstance();
+    	age.add(Calendar.YEAR, -16);
+    	user1.setDob(age);
+    	System.out.println(user1.getDob().get(Calendar.YEAR));
+    	
+    	User user2 = userService.addUser(anonymousSession.getSessionId(), new User("User2", "login2", "pass", "123456782", "user2@gmail.com"	  , "690047407", "L"));
+    	User user3 = userService.addUser(anonymousSession.getSessionId(), new User("User3", "login3", "pass", "123456783", "user3@gmail.com"	  , "690047407", "L"));
+    	User user4 = userService.addUser(anonymousSession.getSessionId(), new User("User4", "login4", "pass", "123456784", "surah.harus@gmail.com", "690047407", "L"));
+    	User user5 = userService.addUser(anonymousSession.getSessionId(), new User("User5", "login5", "pass", "123456785", "user5@gmail.com"	  , "690047407", "L"));
+    	User user6 = userService.addUser(anonymousSession.getSessionId(), new User("User6", "login6", "pass", "123456786", "user6@gmail.com"	  , "690047407", "L"));
+    	User user7 = userService.addUser(anonymousSession.getSessionId(), new User("User7", "login7", "pass", "123456787", "user7@gmail.com"	  , "690047407", "L"));
+
+    	user2.setDob(age);
+    	System.out.println(user2.getDob().get(Calendar.YEAR));
+    	user3.setDob(age);
+    	System.out.println(user3.getDob().get(Calendar.YEAR));
+    	user4.setDob(age);
+    	System.out.println(user4.getDob().get(Calendar.YEAR));
+    	user5.setDob(age);
+    	System.out.println(user5.getDob().get(Calendar.YEAR));
+    	user6.setDob(age);
+    	System.out.println(user6.getDob().get(Calendar.YEAR));
+    	user7.setDob(age);
+    	System.out.println(user7.getDob().get(Calendar.YEAR));
+    	
+    	Registration r1 = eventService.addParticipantToEvent(s.getSessionId(), user1.getUserId(), event.getEventId());
+    	Thread.sleep(1000);
+    	Registration r2 = eventService.addParticipantToEvent(s.getSessionId(), user2.getUserId(), event.getEventId());
+    	Thread.sleep(1000);
+    	Registration r3 = eventService.addParticipantToEvent(s.getSessionId(), user3.getUserId(), event.getEventId());
+    	Thread.sleep(1000);
+    	Registration r4 = eventService.addParticipantToEvent(s.getSessionId(), user4.getUserId(), event.getEventId());
+    	Thread.sleep(1000);
+    	Registration r5 = eventService.addParticipantToEvent(s.getSessionId(), user5.getUserId(), event.getEventId());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user1.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user2.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user3.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user4.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user5.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user6.getUserId() ).toString());
+    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user7.getUserId() ).toString());
+    	System.out.println();
+    }
 }

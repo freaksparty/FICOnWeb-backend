@@ -18,9 +18,7 @@ import javax.mail.internet.MimeMultipart;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import es.ficonlan.web.backend.model.emailadress.Adress;
 import es.ficonlan.web.backend.model.registration.Registration;
-import es.ficonlan.web.backend.model.user.User;
 
 /**
  * @author Miguel Ángel Castillo Bellagona
@@ -31,15 +29,17 @@ import es.ficonlan.web.backend.model.user.User;
 public class Email {
 
 	protected int emailId;
-
-	protected Adress direccionEnvio;
+	
+	protected String userSend;
+	
+	protected String passSend;
 
 	protected boolean confirmation;
 
 	protected String rutaArchivo;
 	protected String nombreArchivo;
-
-	protected User destinatario;
+	
+	protected String destinatario;
 	protected String asunto;
 	protected String mensaje;
 
@@ -52,8 +52,9 @@ public class Email {
 		
 	}
 
-	public Email( Adress direccionEnvio, String rutaArchivo,String nombreArchivo, User destinatario, String asunto,String mensaje) {
-		this.direccionEnvio = direccionEnvio;
+	public Email( String userSend, String passSend, String rutaArchivo,String nombreArchivo, String destinatario, String asunto,String mensaje) {
+		this.userSend = userSend;
+		this.passSend = passSend;
 		this.rutaArchivo = rutaArchivo;
 		this.nombreArchivo = nombreArchivo;
 		this.destinatario = destinatario;
@@ -64,13 +65,13 @@ public class Email {
 		this.confirmation = false;
 	}
 
-	public Email(Adress direccionEnvio, User destinatario, String mensaje) {
-		this( direccionEnvio, "", "", destinatario, "", mensaje);
+	public Email(String userSend, String passSend, String destinatario, String mensaje) {
+		this( userSend, passSend, "", "", destinatario, "", mensaje);
 	}
 
-	public Email(Adress direccionEnvio, User destinatario, String asunto,
+	public Email(String userSend, String passSend, String destinatario, String asunto,
 			String mensaje) {
-		this( direccionEnvio, "", "", destinatario, asunto, mensaje);
+		this( userSend, passSend, "", "", destinatario, asunto, mensaje);
 	}
 
 	public int getEmailId() {
@@ -89,14 +90,6 @@ public class Email {
 		this.confirmation = confirmation;
 	}
 
-	public Adress getDireccionEnvio() {
-		return this.direccionEnvio;
-	}
-
-	public void setDireccionEnvio(Adress direccionEnvio) {
-		this.direccionEnvio = direccionEnvio;
-	}
-
 	public String getRutaArchivo() {
 		return rutaArchivo;
 	}
@@ -113,11 +106,11 @@ public class Email {
 		this.nombreArchivo = nombreArchivo;
 	}
 
-	public User getDestinatario() {
+	public String getDestinatario() {
 		return destinatario;
 	}
 
-	public void setDestinatario(User destinatario) {
+	public void setDestinatario(String destinatario) {
 		this.destinatario = destinatario;
 	}
 
@@ -175,7 +168,7 @@ public class Email {
 			props.put("mail.smtp.host", "smtp.gmail.com");
 			props.setProperty("mail.smtp.starttls.enable", "true");
 			props.setProperty("mail.smtp.port", "587");
-			props.setProperty("mail.smtp.user",this.getDireccionEnvio().getUsuarioCorreo());
+			props.setProperty("mail.smtp.user",this.userSend);
 			props.setProperty("mail.smtp.auth", "true");
 
 			Session session = Session.getDefaultInstance(props, null);
@@ -195,13 +188,13 @@ public class Email {
 			}
 
 			MimeMessage message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(this.getDireccionEnvio().getUsuarioCorreo()));
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(this.getDestinatario().getEmail()));
+			message.setFrom(new InternetAddress(this.userSend));
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(this.destinatario));
 			message.setSubject(this.getAsunto());
 			message.setContent(multiParte);
 
 			Transport t = session.getTransport("smtp");
-			t.connect(this.getDireccionEnvio().getUsuarioCorreo(),this.getDireccionEnvio().getPassword());
+			t.connect(this.userSend,this.passSend);
 			t.sendMessage(message, message.getAllRecipients());
 			t.close();
 

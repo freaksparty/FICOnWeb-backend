@@ -12,11 +12,13 @@ public class EventRegistrationState {
 	private boolean open;
 	
 	private RegistrationState state;
+	
+	private int place;
 
-	public EventRegistrationState(boolean open, RegistrationState state) {
-		super();
+	public EventRegistrationState(boolean open, RegistrationState state, int place) {
 		this.open = open;
 		this.state = state;
+		this.place = place;
 	}
 
 	public boolean isOpen() {
@@ -36,5 +38,19 @@ public class EventRegistrationState {
 	public void setState(RegistrationState state) {
 		this.state = state;
 	}
+
+	public int getPlace() {
+		return place;
+	}
+
+	public void setPlace(int place) {
+		this.place = place;
+	}
 	
+	@Override
+	public String toString() {
+		String o = "Closed";
+		if(this.open) o = "Open";
+		return o + " - " + Integer.toString(this.place) + " - " + this.state;
+	}
 }

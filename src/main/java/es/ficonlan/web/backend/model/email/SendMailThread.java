@@ -45,7 +45,7 @@ public class SendMailThread extends Thread {
 			props.put("mail.smtp.host", "smtp.gmail.com");
 			props.setProperty("mail.smtp.starttls.enable", "true");
 			props.setProperty("mail.smtp.port", "587");
-			props.setProperty("mail.smtp.user",email.getDireccionEnvio().getUsuarioCorreo());
+			props.setProperty("mail.smtp.user",email.userSend);
 			props.setProperty("mail.smtp.auth", "true");
 
 			Session session = Session.getDefaultInstance(props, null);
@@ -65,13 +65,13 @@ public class SendMailThread extends Thread {
 			}
 
 			MimeMessage message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(email.getDireccionEnvio().getUsuarioCorreo()));
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(email.getDestinatario().getEmail()));
+			message.setFrom(new InternetAddress(email.userSend));
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(email.destinatario));
 			message.setSubject(email.getAsunto());
 			message.setContent(multiParte);
 
 			Transport t = session.getTransport("smtp");
-			t.connect(email.getDireccionEnvio().getUsuarioCorreo(),email.getDireccionEnvio().getPassword());
+			t.connect(email.userSend,email.passSend);
 			t.sendMessage(message, message.getAllRecipients());
 			t.close();
 

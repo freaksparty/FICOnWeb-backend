@@ -169,7 +169,6 @@ public class EventServiceImpl implements EventService {
 	public Registration addParticipantToEvent(String sessionId, int userId, int eventId) throws ServiceException {
 		if (!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), userId, "addParticipantToEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);		
-		
 		try{ 
     		User user = userDao.find(userId);
   	
@@ -177,9 +176,10 @@ public class EventServiceImpl implements EventService {
     		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     		if(!((now.after(event.getRegistrationOpenDate()) && now.before(event.getRegistrationCloseDate())))) throw new ServiceException(9,"addParticipantToEvent");
     		//System.out.println(now.getTime()); System.out.println(event.getRegistrationOpenDate().getTime()); System.out.println(event.getRegistrationCloseDate().getTime());
-    		Calendar agedif = user.getDob();
+    		Calendar agedif = (Calendar) user.getDob().clone();
     			
     		agedif.add(Calendar.YEAR, event.getMinimunAge());
+    		
     		if(agedif.after(now)) throw new ServiceException(ServiceException.YOUR_ARE_TOO_YOUNG);
     		
     		Registration registration = registrationDao.findByUserAndEvent(userId, eventId);
@@ -234,8 +234,8 @@ public class EventServiceImpl implements EventService {
     			{
     				Email email = event.getOnQueueTemplate().generateEmail(user, tabla);
     				email.setRegistration(registration);
-    				//email.sendMailThread();
-    				email.sendMail();
+    				email.sendMailThread();
+    				//email.sendMail();
     			}
     		}
     		else {
@@ -252,8 +252,8 @@ public class EventServiceImpl implements EventService {
     			{
     				Email email = event.getOutstandingTemplate().generateEmail(user, tabla);
     				email.setRegistration(registration);
-    				//email.sendMailThread();
-    				email.sendMail();
+    				email.sendMailThread();
+    				//email.sendMail();
     			}
     		}
     		
@@ -300,8 +300,8 @@ public class EventServiceImpl implements EventService {
     			{
     				Email email = event.getOutOfDateTemplate().generateEmail(user, tabla);
     				email.setRegistration(registration);
-    				//email.sendMailThread();
-    				email.sendMail();
+    				email.sendMailThread();
+    				//email.sendMail();
     			}
     			
     			Registration firstInQueue = registrationDao.getFirstInQueue(eventId);
@@ -330,8 +330,8 @@ public class EventServiceImpl implements EventService {
     				{
     					Email email = event.getFromQueueToOutstanding().generateEmail(user, tabla2);
     					email.setRegistration(registration);
-    					email.sendMail();
-    					//email.sendMailThread();
+    					//email.sendMail();
+    					email.sendMailThread();
     				}
     				registrationDao.save(firstInQueue);
     		       }			
@@ -378,8 +378,8 @@ public class EventServiceImpl implements EventService {
 			
 			Email email = event.getSetPaidTemplate().generateEmail(user, tabla);
 			email.setRegistration(registration);
-			//email.sendMailThread();
-			email.sendMail();
+			email.sendMailThread();
+			//email.sendMail();
 		}	
 		registrationDao.save(registration);
 	}
@@ -396,7 +396,7 @@ public class EventServiceImpl implements EventService {
 			Registration registration =  registrationDao.findByUserAndEvent(userId, eventId);
 			if(registration == null) throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Registration");
 			if(registration.getState()==RegistrationState.inQueue) {
-				int queueParticipants = event.getNumParticipants() + registrationDao.geNumRegistrationsBeforeDate(event.getEventId(),RegistrationState.inQueue,registration.getRegistrationDate());
+				int queueParticipants = registrationDao.geNumRegistrationsBeforeDate(event.getEventId(),RegistrationState.inQueue,registration.getRegistrationDate());
 				registration.setPlaceOnQueue(queueParticipants + 1);
 			}
 			else registration.setPlaceOnQueue(0);
@@ -438,8 +438,8 @@ public class EventServiceImpl implements EventService {
     			{
     				Email email = event.getOnQueueTemplate().generateEmail(user, tabla);
     				email.setRegistration(registration);
-    				//email.sendMailThread();
-    				email.sendMail();
+    				email.sendMailThread();
+    				//email.sendMail();
     			}
 			}
 			else
@@ -448,8 +448,8 @@ public class EventServiceImpl implements EventService {
 				{
 					Email email = event.getSetPaidTemplate().generateEmail(user, tabla);
 					email.setRegistration(registration);
-					//email.sendMailThread();		
-					email.sendMail();
+					email.sendMailThread();		
+					//email.sendMail();
 				}
 			}
 			else
@@ -458,8 +458,8 @@ public class EventServiceImpl implements EventService {
 				{
 					Email email = event.getOutstandingTemplate().generateEmail(user, tabla);
 					email.setRegistration(registration);
-					//email.sendMailThread();
-					email.sendMail();
+					email.sendMailThread();
+					//email.sendMail();
 				}
 			}
 		}
@@ -571,7 +571,32 @@ public class EventServiceImpl implements EventService {
 	public EventRegistrationState getEventRegistrationState(String sessionId, int eventId, int userId) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getEventRegistrationState")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-		return new EventRegistrationState(eventIsOpen(sessionId,eventId),registrationDao.findByUserAndEvent(userId, eventId).getState());
+		
+		try {
+			Event event = eventDao.find(eventId);
+		
+			Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+			boolean open = (now.after(event.getRegistrationOpenDate()) && now.before(event.getRegistrationCloseDate()));
+
+			Registration r = null;
+			try {
+				r = getRegistration(sessionId,userId,eventId);
+			}
+			catch (ServiceException e) {}
+			if(r!=null) {
+				RegistrationState state = r.getState();
+				int place = 0;
+				if(state==RegistrationState.paid) 		place = r.getPlace();
+				if(state==RegistrationState.registered) place = r.getPlace();
+				if(state==RegistrationState.inQueue) 	place = registrationDao.geNumRegistrationsBeforeDate(event.getEventId(),RegistrationState.inQueue,r.getRegistrationDate()) + 1;
+				return new EventRegistrationState(open,state,place);
+			}
+			else return new EventRegistrationState(open,null,0);
+
+		}
+		catch (InstanceException e) {
+			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
+		}
     	
     }
     

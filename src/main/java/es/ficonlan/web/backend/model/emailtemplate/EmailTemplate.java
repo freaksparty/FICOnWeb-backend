@@ -122,7 +122,7 @@ public class EmailTemplate {
 		  contenido = contenido.replace(clave, valor);
 		}
 		
-		return new Email(this.getAdress(),this.getFilepath(),this.getFilename(),destinatario,this.getAsunto(),contenido);
+		return new Email(this.getAdress().getUsuarioCorreo(),this.getAdress().getPassword(),this.getFilepath(),this.getFilename(),destinatario.getEmail(),this.getAsunto(),contenido);
 
 	}
 	
