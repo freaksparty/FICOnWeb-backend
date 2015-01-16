@@ -1,7 +1,9 @@
 package es.ficonlan.web.backend.model.eventservice;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -30,6 +32,7 @@ import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import es.ficonlan.web.backend.model.util.session.SessionManager;
 import es.ficonlan.web.backend.util.EventRegistrationState;
+import es.ficonlan.web.backend.util.RegistrationData;
 import es.ficonlan.web.backend.util.ShirtData;
 
 /**
@@ -549,11 +552,20 @@ public class EventServiceImpl implements EventService {
     
     @Override
    	@Transactional(readOnly = true)
-	public List<Registration> getRegistrationByEvent(String sessionId, int eventId, RegistrationState state, int startindex, int maxResults, String orderBy, boolean desc) throws ServiceException {
+	public List<RegistrationData> getRegistrationByEvent(String sessionId, int eventId, RegistrationState state, int startindex, int maxResults, String orderBy, boolean desc) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getRegistrationByEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-		
-		return registrationDao.getRegistrationByEvent(eventId, state, startindex, maxResults, orderBy, desc);
+		List<Registration> list = registrationDao.getRegistrationByEvent(eventId, state, startindex, maxResults, orderBy, desc);
+		List<RegistrationData> rd = new ArrayList<RegistrationData>();
+		Iterator<Registration> i = list.iterator();
+		while(i.hasNext()) {
+			Registration r = i.next();
+			int placeQ = 0;
+			if(r.getState()==RegistrationState.inQueue) placeQ = registrationDao.geNumRegistrationsBeforeDate(r.getEvent().getEventId(),RegistrationState.inQueue,r.getRegistrationDate()) + 1;
+			rd.add(new RegistrationData(r.getUser().getLogin(),r.getUser().getDni(),r.getRegistrationId(),r.getUser().getUserId(),r.getEvent().getEventId(),r.getState(),r.getRegistrationDate(),r.getPaidDate(),r.isPaid(),r.getPlace(),placeQ));
+			
+		}
+		return rd;
     }
 
 	

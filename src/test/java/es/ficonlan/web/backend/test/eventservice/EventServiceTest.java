@@ -28,6 +28,7 @@ import es.ficonlan.web.backend.model.userservice.UserService;
 import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import es.ficonlan.web.backend.model.util.session.Session;
+import es.ficonlan.web.backend.util.RegistrationData;
 import static es.ficonlan.web.backend.model.util.GlobalNames.SPRING_CONFIG_FILE;
 import static es.ficonlan.web.backend.test.util.GlobalNames.SPRING_CONFIG_TEST_FILE;
 import static org.junit.Assert.*;
@@ -716,23 +717,6 @@ public class EventServiceTest {
     	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user7.getUserId() ).toString());
     	System.out.println();
     	
-    	eventService.setPaid(s.getSessionId(), user5.getUserId(), event.getEventId());
-    	
-    	r1 = eventService.getRegistration(s.getSessionId(), user1.getUserId(), event.getEventId());
-    	//r2 = eventService.getRegistration(s.getSessionId(), user2.getUserId(), event.getEventId());
-    	r3 = eventService.getRegistration(s.getSessionId(), user3.getUserId(), event.getEventId());
-    	r4 = eventService.getRegistration(s.getSessionId(), user4.getUserId(), event.getEventId());
-    	r5 = eventService.getRegistration(s.getSessionId(), user5.getUserId(), event.getEventId());
-    	r6 = eventService.getRegistration(s.getSessionId(), user6.getUserId(), event.getEventId());
-    	
-    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user1.getUserId() ).toString());
-    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user2.getUserId() ).toString());
-    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user3.getUserId() ).toString());
-    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user4.getUserId() ).toString());
-    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user5.getUserId() ).toString());
-    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user6.getUserId() ).toString());
-    	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user7.getUserId() ).toString());
-    	System.out.println();
     	
     	eventService.removeParticipantFromEvent(s.getSessionId(), user5.getUserId(), event.getEventId());
     	
@@ -751,6 +735,10 @@ public class EventServiceTest {
     	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user6.getUserId() ).toString());
     	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user7.getUserId() ).toString());
     	System.out.println();
+    	
+    	List<RegistrationData> lista = eventService.getRegistrationByEvent(s.getSessionId(), event.getEventId(), null, 0, 0, "registrationId", false);
+    	lista.stream().forEach(System.out::println);
+    	//System.out.println(lista.get(0).toString());
     }
     
     @Test

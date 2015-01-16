@@ -47,14 +47,6 @@ public class Registration {
 	private int place;
 	@Transient
 	private int placeOnQueue;
-	@Transient
-	private String dni;
-	@Transient
-	private String name;
-	@Transient
-	private String login;
-	@Transient
-	private Calendar dob;
 
 	public Registration() { }
 	
@@ -80,7 +72,7 @@ public class Registration {
 	}
 
 	@JsonSerialize(using=JsonEntityIdSerializer.class)
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="Registration_User_id")
 	public User getUser() {
 		return user;
@@ -88,11 +80,6 @@ public class Registration {
 	
 	public void setUser(User user) {
 		this.user = user;
-		
-		this.dni = user.getDni();
-		this.name = user.getName();
-		this.login = user.getLogin();
-		this.dob = user.getDob();
 	}
 	
 	@JsonSerialize(using = JsonEntityIdSerializer.class)
@@ -169,45 +156,5 @@ public class Registration {
 	@Transient
 	public void setPlaceOnQueue(int placeOnQueue) {
 		this.placeOnQueue = placeOnQueue;
-	}
-
-	@Transient
-	public String getDni() {
-		return dni;
-	}
-
-	@Transient
-	public void setDni(String dni) {
-		this.dni = dni;
-	}
-
-	@Transient
-	public String getName() {
-		return name;
-	}
-
-	@Transient
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	@Transient
-	public String getLogin() {
-		return login;
-	}
-
-	@Transient
-	public void setLogin(String login) {
-		this.login = login;
-	}
-
-	@Transient
-	public Calendar getDob() {
-		return dob;
-	}
-
-	@Transient
-	public void setDob(Calendar dob) {
-		this.dob = dob;
 	}
 }

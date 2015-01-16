@@ -29,13 +29,13 @@ import es.ficonlan.web.backend.model.emailservice.EmailService;
 import es.ficonlan.web.backend.model.event.Event;
 import es.ficonlan.web.backend.model.eventservice.EventService;
 import es.ficonlan.web.backend.model.newsitem.NewsItem;
-import es.ficonlan.web.backend.model.registration.Registration;
 import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
 import es.ficonlan.web.backend.model.sponsor.Sponsor;
 import es.ficonlan.web.backend.model.user.User;
 import es.ficonlan.web.backend.model.userservice.UserService;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import es.ficonlan.web.backend.util.ActivityHeader;
+import es.ficonlan.web.backend.util.RegistrationData;
 import es.ficonlan.web.backend.util.ShirtData;
 
 /**
@@ -51,7 +51,7 @@ public class EventResource {
 	private String[] s2 = {"userId","name","login","dni","email","phoneNumber","shirtSize","dob"};
 	private ArrayList<String> l2;
 	
-	private String[] s3 = {"registrationId","state","registrationDate","paidDate","place","dni","name","login","dob"};
+	private String[] s3 = {"login","dni","registrationId","userID","eventID","state","registrationDate","paidDate","paid","place"};
 	private ArrayList<String> l3;
 	
 	private String[] s4 = {"activityId","event","name","type","startDate","endDate"};
@@ -78,7 +78,7 @@ public class EventResource {
 		l2.add(s2[0]);l2.add(s2[1]);l2.add(s2[2]);l2.add(s2[3]);l2.add(s2[4]);l2.add(s2[5]);l2.add(s2[6]);l2.add(s2[7]);
 		
 		l3 = new ArrayList<String>();
-		l3.add(s3[0]);l3.add(s3[1]);l3.add(s3[2]);l3.add(s3[3]);l3.add(s3[4]);l3.add(s3[5]);l3.add(s3[6]);l3.add(s3[7]);l3.add(s3[8]);
+		l3.add(s3[0]);l3.add(s3[1]);l3.add(s3[2]);l3.add(s3[3]);l3.add(s3[4]);l3.add(s3[5]);l3.add(s3[6]);l3.add(s3[7]);l3.add(s3[8]);l3.add(s3[9]);
 		
 		l4 = new ArrayList<String>();
 		l4.add(s4[0]);l4.add(s4[1]);l4.add(s4[2]);l4.add(s4[3]);l4.add(s4[4]);l4.add(s4[5]);
@@ -285,7 +285,7 @@ public class EventResource {
 	@Path("/registrations/{eventId}/query")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<Registration> getRegistrationByEvent(@HeaderParam("sessionId") String sessionId,  
+	public List<RegistrationData> getRegistrationByEvent(@HeaderParam("sessionId") String sessionId,  
 			@PathParam("eventId") int eventId,
 			@DefaultValue("1") @QueryParam("page") int page, 
 			@DefaultValue("0") @QueryParam("pageTam") int pageTam,
@@ -305,7 +305,13 @@ public class EventResource {
 		int cont = pageTam;
 		boolean b = true;
 		if(desc==0) b = false;
-		return eventService.getRegistrationByEvent(sessionId, eventId, st, startIndex, cont, orderBy, b);
+		String ord = orderBy;
+		switch(orderBy) {
+			case "login" 			: ord = "user.login";	break;
+			case "dni"				: ord = "user.dni";		break;
+		}
+		
+		return eventService.getRegistrationByEvent(sessionId, eventId, st, startIndex, cont, ord, b);
 	}
 	
 	
