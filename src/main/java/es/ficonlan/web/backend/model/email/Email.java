@@ -18,8 +18,6 @@ import javax.mail.internet.MimeMultipart;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import es.ficonlan.web.backend.model.registration.Registration;
-
 /**
  * @author Miguel Ángel Castillo Bellagona
  * @version 2.1
@@ -45,8 +43,6 @@ public class Email {
 
 	protected Calendar sendDate;
 	protected Calendar date;
-	
-	protected Registration registration;
 
 	public Email() {
 		
@@ -146,14 +142,6 @@ public class Email {
 		this.sendDate = sendDate;
 	}
 	
-	public Registration getRegistration() {
-		return registration;
-	}
-
-	public void setRegistration(Registration registration) {
-		this.registration = registration;
-	}
-
 	public boolean sendMailThread() {
 
 		SendMailThread thread = new SendMailThread(this);

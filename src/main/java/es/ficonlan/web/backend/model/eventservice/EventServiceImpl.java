@@ -15,6 +15,7 @@ import es.ficonlan.web.backend.model.activity.Activity;
 import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
 import es.ficonlan.web.backend.model.activity.ActivityDao;
 import es.ficonlan.web.backend.model.email.Email;
+import es.ficonlan.web.backend.model.email.EmailFIFO;
 import es.ficonlan.web.backend.model.emailtemplate.EmailTemplate;
 import es.ficonlan.web.backend.model.emailtemplate.EmailTemplateDao;
 import es.ficonlan.web.backend.model.event.Event;
@@ -216,9 +217,9 @@ public class EventServiceImpl implements EventService {
     			if(event.getOnQueueTemplate()!=null) 
     			{
     				Email email = event.getOnQueueTemplate().generateEmail(user, tabla);
-    				email.setRegistration(registration);
     				//email.sendMailThread();
-    				email.sendMail();
+    				//email.sendMail();
+    				EmailFIFO.adEmailToQueue(email);
     			}
     			
     		}
@@ -236,9 +237,9 @@ public class EventServiceImpl implements EventService {
     			if(event.getOnQueueTemplate()!=null) 
     			{
     				Email email = event.getOnQueueTemplate().generateEmail(user, tabla);
-    				email.setRegistration(registration);
-    				email.sendMailThread();
+    				//email.sendMailThread();
     				//email.sendMail();
+    				EmailFIFO.adEmailToQueue(email);
     			}
     		}
     		else {
@@ -254,9 +255,9 @@ public class EventServiceImpl implements EventService {
     			if(event.getOutstandingTemplate()!=null) 
     			{
     				Email email = event.getOutstandingTemplate().generateEmail(user, tabla);
-    				email.setRegistration(registration);
-    				email.sendMailThread();
+    				//email.sendMailThread();
     				//email.sendMail();
+    				EmailFIFO.adEmailToQueue(email);
     			}
     		}
     		
@@ -302,9 +303,9 @@ public class EventServiceImpl implements EventService {
     			if(event.getOutOfDateTemplate()!=null) 
     			{
     				Email email = event.getOutOfDateTemplate().generateEmail(user, tabla);
-    				email.setRegistration(registration);
-    				email.sendMailThread();
+    				//email.sendMailThread();
     				//email.sendMail();
+    				EmailFIFO.adEmailToQueue(email);
     			}
     			
     			Registration firstInQueue = registrationDao.getFirstInQueue(eventId);
@@ -331,10 +332,10 @@ public class EventServiceImpl implements EventService {
     					
     				if(event.getFromQueueToOutstanding()!=null) 
     				{
-    					Email email = event.getFromQueueToOutstanding().generateEmail(user, tabla2);
-    					email.setRegistration(registration);
+    					Email email = event.getFromQueueToOutstanding().generateEmail(firstInQueue.getUser(), tabla2);
     					//email.sendMail();
-    					email.sendMailThread();
+    					//email.sendMailThread();
+    					EmailFIFO.adEmailToQueue(email);
     				}
     				registrationDao.save(firstInQueue);
     		       }			
@@ -380,9 +381,9 @@ public class EventServiceImpl implements EventService {
 			tabla.put("#edadminima", Integer.toString(event.getMinimunAge()));
 			
 			Email email = event.getSetPaidTemplate().generateEmail(user, tabla);
-			email.setRegistration(registration);
-			email.sendMailThread();
+			//email.sendMailThread();
 			//email.sendMail();
+			EmailFIFO.adEmailToQueue(email);
 		}	
 		registrationDao.save(registration);
 	}
@@ -440,9 +441,9 @@ public class EventServiceImpl implements EventService {
 				if(event.getOnQueueTemplate()!=null) 
     			{
     				Email email = event.getOnQueueTemplate().generateEmail(user, tabla);
-    				email.setRegistration(registration);
-    				email.sendMailThread();
+    				//email.sendMailThread();
     				//email.sendMail();
+    				EmailFIFO.adEmailToQueue(email);
     			}
 			}
 			else
@@ -450,9 +451,9 @@ public class EventServiceImpl implements EventService {
 				if(event.getSetPaidTemplate()!=null) 
 				{
 					Email email = event.getSetPaidTemplate().generateEmail(user, tabla);
-					email.setRegistration(registration);
-					email.sendMailThread();		
+					//email.sendMailThread();		
 					//email.sendMail();
+					EmailFIFO.adEmailToQueue(email);
 				}
 			}
 			else
@@ -460,9 +461,9 @@ public class EventServiceImpl implements EventService {
 				if(event.getOutstandingTemplate()!=null) 
 				{
 					Email email = event.getOutstandingTemplate().generateEmail(user, tabla);
-					email.setRegistration(registration);
-					email.sendMailThread();
+					//email.sendMailThread();
 					//email.sendMail();
+					EmailFIFO.adEmailToQueue(email);
 				}
 			}
 		}
@@ -542,8 +543,8 @@ public class EventServiceImpl implements EventService {
 		    		tabla.put("#plazaencola", "");
 		    		tabla.put("#plazaenevento", Integer.toString(firstInQueue.getPlace()));
 					Email email = event.getFromQueueToOutstanding().generateEmail(user, tabla);
-					email.setRegistration(firstInQueue);
-					email.sendMailThread();
+					//email.sendMailThread();
+					EmailFIFO.adEmailToQueue(email);
 				}
 				registrationDao.save(firstInQueue);
 	        }
@@ -567,8 +568,15 @@ public class EventServiceImpl implements EventService {
 		}
 		return rd;
     }
+    
+    @Override
+	@Transactional(readOnly = true)
+    public long getRegistrationByEventTAM(String sessionId, int eventId, RegistrationState state) throws ServiceException {
+    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getRegistrationByEventTAM")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		return registrationDao.getRegistrationByEventTAM(eventId, state);
+    }
 
-	
     @Override
 	@Transactional(readOnly = true)
     public List<ShirtData> getShirtSizes(String sessionId, int eventId) throws ServiceException {

@@ -314,6 +314,20 @@ public class EventResource {
 		return eventService.getRegistrationByEvent(sessionId, eventId, st, startIndex, cont, ord, b);
 	}
 	
+	@Path("/registrations/size/{eventId}/{state}")
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	public long getRegistrationByEventTAM(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("state") String state) throws ServiceException {
+		
+		RegistrationState st = null;
+		if(state==null) throw new ServiceException(ServiceException.MISSING_FIELD,"state");
+    	if(state.toLowerCase().contentEquals("registered"))  st=RegistrationState.registered;
+    	else if(state.toLowerCase().contentEquals("inqueue")) st=RegistrationState.inQueue;
+    	else if(state.toLowerCase().contentEquals("paid")) st=RegistrationState.paid;
+    	else if(state.toLowerCase().contentEquals("all")) st=null;
+    	
+		return eventService.getRegistrationByEventTAM(sessionId, eventId, st);
+	}
 	
 	@Path("/users/size/{eventId}/{state}/")
 	@GET

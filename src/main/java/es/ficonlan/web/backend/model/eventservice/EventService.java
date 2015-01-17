@@ -57,6 +57,8 @@ public interface EventService {
 	
 	public List<RegistrationData> getRegistrationByEvent(String sessionId, int eventId, RegistrationState state, int startindex, int maxResults, String orderBy, boolean desc) throws ServiceException;
 	
+	public long getRegistrationByEventTAM(String sessionId, int eventId, RegistrationState state) throws ServiceException;
+	
 	public List<ShirtData> getShirtSizes(String sessionId, int eventId) throws ServiceException;
 	
 	public EventRegistrationState getEventRegistrationState(String sessionId, int eventId, int userId) throws ServiceException;

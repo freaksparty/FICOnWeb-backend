@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
+import es.ficonlan.web.backend.model.email.EmailFIFO;
 import es.ficonlan.web.backend.model.emailservice.EmailService;
 import es.ficonlan.web.backend.model.emailtemplate.EmailTemplate;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
@@ -31,6 +32,13 @@ public class EmailTemplateResource {
 	
 	public EmailTemplateResource(){
 		this.emailService = ApplicationContextProvider.getApplicationContext().getBean(EmailService.class);
+	}
+	
+	@Path("/size")
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	public int getEmailQueueSize() {
+		return EmailFIFO.mailQueueSize();
 	}
 	
 	@Path("/{adressId}")

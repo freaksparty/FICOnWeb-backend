@@ -22,6 +22,8 @@ public interface RegistrationDao extends GenericDao<Registration, Integer> {
 	
 	public List<Registration> getRegistrationByEvent(int eventId, RegistrationState state, int startindex, int maxResults, String orderBy, boolean desc);
 	
+	public long getRegistrationByEventTAM(int eventId, RegistrationState state);
+	
 	public List<ShirtData> getShirtSizesPaid(int eventId);
 	
 }

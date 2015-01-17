@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.ficonlan.web.backend.model.email.Email;
+import es.ficonlan.web.backend.model.email.EmailFIFO;
 import es.ficonlan.web.backend.model.emailservice.EmailService;
 import es.ficonlan.web.backend.model.emailtemplate.EmailTemplate;
 import es.ficonlan.web.backend.model.emailtemplate.EmailTemplateDao;
@@ -315,7 +316,9 @@ public class UserServiceImpl implements UserService {
     		Email e = emailTemplateDao.findByName("passwordRecover").generateEmail(user, tabla);
 
     		//if(e.sendMail()) userDao.save(user);
-    		e.sendMail();
+    		//e.sendMail();
+    		EmailFIFO.adEmailToQueue(e);
+    		
     		userDao.save(user);
     		
     		return true;

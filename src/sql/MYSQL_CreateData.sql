@@ -77,6 +77,7 @@ INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE U
 INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE UserCase_name =  "eventNumParticipantsChanged" ), ( SELECT Role_id FROM Role WHERE Role_name =  "RegistrationController" ) );
 INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE UserCase_name =  "getShirtSizes" ), ( SELECT Role_id FROM Role WHERE Role_name =  "RegistrationController" ) );
 INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE UserCase_name =  "getRegistrationByEvent" ), ( SELECT Role_id FROM Role WHERE Role_name =  "RegistrationController" ) );
+INSERT INTO Role_UserCase VALUES ( 0, ( SELECT UserCase_id FROM UserCase WHERE UserCase_name =  "getRegistrationByEventTAM" ), ( SELECT Role_id FROM Role WHERE Role_name =  "RegistrationController" ) );
 
 INSERT INTO Role VALUES ( 0, "MailController");
 

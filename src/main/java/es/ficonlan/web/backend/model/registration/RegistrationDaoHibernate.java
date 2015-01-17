@@ -94,6 +94,26 @@ public class RegistrationDaoHibernate extends GenericDaoHibernate<Registration,I
 	}
 	
 	@Override
+	public long getRegistrationByEventTAM(int eventId, RegistrationState state) {
+		
+		Query query = null;
+		if(state==null) {
+			query = getSession().createQuery("SELECT count(r) " +
+                   "FROM Registration r INNER JOIN r.user u " +
+                   "WHERE r.event.id = :eventId AND u.deleted=FALSE "
+                  ).setParameter("eventId",eventId);
+		}
+		else {
+			query = getSession().createQuery("SELECT count(r) " +
+	                   "FROM Registration r INNER JOIN r.user u " +
+	                   "WHERE r.event.id = :eventId AND u.deleted=FALSE AND r.state = :state "
+	                  ).setParameter("eventId",eventId).setParameter("state",state);
+		}
+		
+		return (long) query.uniqueResult();
+	}
+	
+	@Override
 	public List<ShirtData> getShirtSizesPaid(int eventId) {
 		
 		Query query = getSession().createQuery(

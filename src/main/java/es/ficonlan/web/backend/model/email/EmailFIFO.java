@@ -7,27 +7,47 @@ public class EmailFIFO {
 
 	public static Queue<Email>	emails	= new LinkedList<Email>();
 
-	public static Thread emailThread() {
+	public static void startEmailQueueThread() {
 		Thread mailFIFO = new Thread() {
 			@Override
 			public void run() {
 				super.run();
 				try {
 					while (true) {
+						System.out.println("DENTRO EMAIL THREAD");
 						Email email = emails.poll();
-						try { email.sendMail(); }
-						catch (Exception e1) {
-							emails.add(email);
-							Thread.sleep(300000);
+						if (email != null) {
+							try {
+								email.sendMail();
+								System.out.println("Email Enviado");
+							}
+							catch (Exception e1) {
+								emails.add(email);
+								System.out.println("Error al enviar el Email");
+								Thread.sleep(300000);
+							}
+							Thread.sleep(100);
+						}
+						else {
+							System.out.println("No hay Emails");
+							Thread.sleep(3000);
 						}
 					}
 				}
 				catch (Exception e2) {
+					System.out.println("Error en el sistema de Emvío de Email");
 					throw new RuntimeException("EmailFIFO thread error: " + e2.getMessage());
 				}
 			}
 		};
-		return mailFIFO;
+		mailFIFO.start();
 	}
 
+	public static int mailQueueSize() {
+		return emails.size();
+	}
+	
+	public static void adEmailToQueue(Email email) {
+		emails.add(email);
+	}
 }

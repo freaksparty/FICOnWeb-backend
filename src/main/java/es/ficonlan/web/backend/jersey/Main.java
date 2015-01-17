@@ -30,6 +30,7 @@ import es.ficonlan.web.backend.jersey.resources.UserResource;
 import es.ficonlan.web.backend.jersey.resources.UsersResource;
 import es.ficonlan.web.backend.jersey.util.CORSResponseFilter;
 import es.ficonlan.web.backend.jersey.util.ServiceExceptionMapper;
+import es.ficonlan.web.backend.model.email.EmailFIFO;
 import es.ficonlan.web.backend.model.userservice.UserService;
 import es.ficonlan.web.backend.model.util.session.SessionManager;
 
@@ -138,6 +139,8 @@ public class Main {
 		};
 		scth.start();
 
+		EmailFIFO.startEmailQueueThread();
+		
 		// Server Start
 		final HttpServer server = startServer();   
 		//Añadir parte estatica en la siguente linea
