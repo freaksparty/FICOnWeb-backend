@@ -14,22 +14,22 @@ public class EmailFIFO {
 				super.run();
 				try {
 					while (true) {
-						System.out.println("DENTRO EMAIL THREAD");
+						//System.out.println("DENTRO EMAIL THREAD");
 						Email email = emails.poll();
 						if (email != null) {
 							try {
 								email.sendMail();
-								System.out.println("Email Enviado");
+								//System.out.println("Email Enviado " + email.getAsunto());
 							}
 							catch (Exception e1) {
 								emails.add(email);
-								System.out.println("Error al enviar el Email");
-								Thread.sleep(300000);
+								//System.out.println("Error al enviar el Email " + email.getAsunto());
+								Thread.sleep(30000);
 							}
 							Thread.sleep(100);
 						}
 						else {
-							System.out.println("No hay Emails");
+							//System.out.println("No hay Emails");
 							Thread.sleep(3000);
 						}
 					}

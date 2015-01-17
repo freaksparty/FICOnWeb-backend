@@ -732,7 +732,7 @@ public class EventServiceTest {
     	System.out.println(eventService.getEventRegistrationState(s.getSessionId(), event.getEventId(), user7.getUserId() ).toString());
     	System.out.println();
     	
-    	List<RegistrationData> lista = eventService.getRegistrationByEvent(s.getSessionId(), event.getEventId(), null, 0, 0, "registrationId", false);
+    	List<RegistrationData> lista = eventService.getRegistrationByEvent(s.getSessionId(), event.getEventId(), null, 0, 0, "placeOnQueue", true);
     	lista.stream().forEach(System.out::println);
     	System.out.println(eventService.getRegistrationByEventTAM(s.getSessionId(), event.getEventId(), null));
     }
@@ -941,7 +941,7 @@ public class EventServiceTest {
     	EmailFIFO.startEmailQueueThread();
     	
     	Email email; 
-    	for(int i = 1;i<100;i++) {
+    	for(int i = 1;i<10;i++) {
     		email = new Email("no-responder@freaksparty.org","e3MCq5>P2","","","userfol1@yopmail.com","asunto " + Integer.toString(i),"Cuerpo" + Integer.toString(i));
         	EmailFIFO.adEmailToQueue(email);
     	}

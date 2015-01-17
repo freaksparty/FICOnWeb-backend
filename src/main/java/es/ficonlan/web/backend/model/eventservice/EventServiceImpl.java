@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -557,6 +558,12 @@ public class EventServiceImpl implements EventService {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getRegistrationByEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		List<Registration> list = registrationDao.getRegistrationByEvent(eventId, state, startindex, maxResults, orderBy, desc);
+		
+		if(orderBy=="placeOnQueue") {
+			if(desc==false) list = (List<Registration>)list.stream().sorted((e1, e2) -> Integer.compare(e1.getPlaceOnQueue(),e2.getPlaceOnQueue())).collect(Collectors.toList());
+			else list = (List<Registration>)list.stream().sorted((e1, e2) -> Integer.compare(e2.getPlaceOnQueue(),e1.getPlaceOnQueue())).collect(Collectors.toList());
+		}
+		
 		List<RegistrationData> rd = new ArrayList<RegistrationData>();
 		Iterator<Registration> i = list.iterator();
 		while(i.hasNext()) {
