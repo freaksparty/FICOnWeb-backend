@@ -226,12 +226,12 @@ public class EventServiceImpl implements EventService {
     		}
     		else if(user.isInBlackList()) 
     		{
-    			registration.setPlaceOnQueue(event.getNumParticipants() + 50); //FIXME SIN TESTEAR
+    			registration.setPlaceOnQueue(event.getNumParticipants() + 200); //FIXME SIN TESTEAR
     			registration.setState(RegistrationState.inQueue);
     			
     			//FIXME: Mandar correo electrónico
     			
-    			tabla.put("#plazaencola", "52");
+    			tabla.put("#plazaencola", "200");
     			tabla.put("#plazaenevento", "");
     			
     			//FIXME: Mandar correo electrónico
@@ -296,12 +296,12 @@ public class EventServiceImpl implements EventService {
     	
         try {
 			//FIXME: MAndar correo elecrónico if registration.getState()==registered Mandar correo electrónico registration.User()
-			if (registration.getState()==RegistrationState.registered) {
+			if ((registration.getState()==RegistrationState.registered) || (registration.getState()==RegistrationState.paid)) {
 				
 				tabla.put("#plazaencola", "");
     			tabla.put("#plazaenevento", "");
     			
-    			if(event.getOutOfDateTemplate()!=null) 
+    			if((event.getOutOfDateTemplate()!=null) && (registration.getState()==RegistrationState.registered))
     			{
     				Email email = event.getOutOfDateTemplate().generateEmail(user, tabla);
     				//email.sendMailThread();
@@ -355,7 +355,8 @@ public class EventServiceImpl implements EventService {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "setPaid")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		Registration registration = registrationDao.findByUserAndEvent(userId, eventId);
-    	if (registration==null) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Registration");
+    	if (registration==null) throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Registration");
+    	if (registration.getState()!=RegistrationState.registered) throw new ServiceException(ServiceException.OTHER,"Only registered");
     	registration.setPaidDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
     	registration.setPaid(true);
     	registration.setState(RegistrationState.paid);
