@@ -193,7 +193,7 @@ public class EventServiceImpl implements EventService {
     		
     		int currentParticipants = registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.registered) + 
     								  registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.paid);
-    		int queueParticipants = currentParticipants + registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.inQueue);
+    		int queueParticipants =   registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.inQueue);
     		
     		Hashtable<String,String> tabla = new Hashtable<String,String>();
     		tabla.put("#nombreusuario", user.getName());
