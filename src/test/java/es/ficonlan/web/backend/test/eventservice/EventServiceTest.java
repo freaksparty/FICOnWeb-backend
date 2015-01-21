@@ -435,7 +435,7 @@ public class EventServiceTest {
     	
     }
     
-    /*
+    
     @Test
     @SuppressWarnings("unused")
     public void RegistrationTest1() throws ServiceException, InterruptedException {
@@ -948,5 +948,4 @@ public class EventServiceTest {
     	//Thread.sleep(200000000);
     
     }
-    */
 }
