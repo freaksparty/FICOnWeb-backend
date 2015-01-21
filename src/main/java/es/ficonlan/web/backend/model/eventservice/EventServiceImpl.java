@@ -198,6 +198,7 @@ public class EventServiceImpl implements EventService {
     		Hashtable<String,String> tabla = new Hashtable<String,String>();
     		tabla.put("#nombreusuario", user.getName());
     		tabla.put("#loginusuario", user.getLogin());
+    		tabla.put("#dniusuario", user.getDni());
     		tabla.put("#numerotelefonousuario", user.getPhoneNumber());
     		tabla.put("#tallacamisetausuario", user.getShirtSize());
     		tabla.put("#nombreevento", event.getName());
@@ -286,6 +287,7 @@ public class EventServiceImpl implements EventService {
 		Hashtable<String,String> tabla = new Hashtable<String,String>();
 		tabla.put("#nombreusuario", user.getName());
 		tabla.put("#loginusuario", user.getLogin());
+		tabla.put("#dniusuario", user.getDni());
 		tabla.put("#numerotelefonousuario", user.getPhoneNumber());
 		tabla.put("#tallacamisetausuario", user.getShirtSize());
 		tabla.put("#nombreevento", event.getName());
@@ -320,6 +322,7 @@ public class EventServiceImpl implements EventService {
     		        Hashtable<String,String> tabla2 = new Hashtable<String,String>();
     		    	tabla2.put("#nombreusuario", firstInQueue.getUser().getName());
     		    	tabla2.put("#loginusuario", firstInQueue.getUser().getLogin());
+    		    	tabla.put("#dniusuario", firstInQueue.getUser().getDni());
     		    	tabla2.put("#numerotelefonousuario", firstInQueue.getUser().getPhoneNumber());
     		    	tabla2.put("#tallacamisetausuario", firstInQueue.getUser().getShirtSize());
     		    	tabla2.put("#nombreevento", event.getName());
@@ -371,6 +374,7 @@ public class EventServiceImpl implements EventService {
 			Hashtable<String,String> tabla = new Hashtable<String,String>();
 			tabla.put("#nombreusuario", user.getName());
 			tabla.put("#loginusuario", user.getLogin());
+			tabla.put("#dniusuario", user.getDni());
 			tabla.put("#numerotelefonousuario", user.getPhoneNumber());
 			tabla.put("#tallacamisetausuario", user.getShirtSize());
 			tabla.put("#nombreevento", event.getName());
@@ -428,6 +432,7 @@ public class EventServiceImpl implements EventService {
 			Hashtable<String,String> tabla = new Hashtable<String,String>();
 			tabla.put("#nombreusuario", user.getName());
 			tabla.put("#loginusuario", user.getLogin());
+			tabla.put("#dniusuario", user.getDni());
 			tabla.put("#numerotelefonousuario", user.getPhoneNumber());
 			tabla.put("#tallacamisetausuario", user.getShirtSize());
 			tabla.put("#nombreevento", event.getName());
@@ -536,6 +541,7 @@ public class EventServiceImpl implements EventService {
 					Hashtable<String,String> tabla = new Hashtable<String,String>();
 		    		tabla.put("#nombreusuario", user.getName());
 		    		tabla.put("#loginusuario", user.getLogin());
+		    		tabla.put("#dniusuario", user.getDni());
 		    		tabla.put("#numerotelefonousuario", user.getPhoneNumber());
 		    		tabla.put("#tallacamisetausuario", user.getShirtSize());
 		    		tabla.put("#nombreevento", event.getName());
