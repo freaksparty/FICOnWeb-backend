@@ -22,7 +22,7 @@
 	<context:component-scan base-package="es.ficonlan.web.backend" />
 
 	<!-- Data source. -->
-	
+	<!--  
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="${db.driver}" />
@@ -30,22 +30,18 @@
 		<property name="username" value="${db.user}" />
 		<property name="password" value="${db.password}" />
 	</bean>
-	
-	<!-- 
-	<bean id="dataSource" destroy-method="close" class="org.apache.commons.dbcp.BasicDataSource">
-		<property name="driverClassName" value="${db.driver}" />
-		<property name="url" value="${db.url}" />
-		<property name="username" value="{db.user}" />
-		<property name="password" value="${db.password}" />
-		<property name="initialSize" value="3" />
-		<property name="maxActive" value="10" />
-	</bean>
 	-->
+	<!-- <bean id="dataSource" destroy-method="close" class="org.apache.commons.dbcp.BasicDataSource"> 
+		<property name="driverClassName" value="${db.driver}" /> <property name="url" 
+		value="${db.url}" /> <property name="username" value="{db.user}" /> <property 
+		name="password" value="${db.password}" /> <property name="initialSize" value="20" 
+		/> <property name="maxActive" value="100" /> </bean> -->
+
 
 	<!-- Hibernate Session Factory -->
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
+		<!-- <property name="dataSource" ref="dataSource" /> -->
 		<property name="configLocation" value="hibernate-config.xml" />
 	</bean>
 

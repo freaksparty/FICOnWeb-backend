@@ -6,26 +6,43 @@
 
 	<session-factory>
 
-		<!-- Show and print SQL on stdout -->
-		<property name="hibernate.show_sql" />
-		<property name="hibernate.format_sql" />
-		<property name="hibernate.use_sql_comments" />
+		<!-- 
+		<property name="hibernate.show_sql" /> <property name="hibernate.format_sql" /> 
+		<property name="hibernate.use_sql_comments" /> 
 		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
-		
+		 -->
+
+
+		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/backend</property>
+		<property name="hibernate.connection.username">fpbackend</property>
+		<property name="hibernate.connection.password">fpbackendtestps</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+		<property name="show_sql">false</property>
+
+		<property name="hibernate.c3p0.min_size">10</property>
+		<property name="hibernate.c3p0.max_size">75</property>
+		<property name="hibernate.c3p0.timeout">300</property>
+		<property name="hibernate.c3p0.max_statements">50</property>
+		<property name="hibernate.c3p0.idle_test_period">3000</property>
+
+
+
 
 		<!-- List of persistent classes -->
 		<mapping class="es.ficonlan.web.backend.model.user.User" />
 		<mapping class="es.ficonlan.web.backend.model.role.Role" />
-	    <mapping class="es.ficonlan.web.backend.model.usecase.UseCase" />
-        <mapping class="es.ficonlan.web.backend.model.event.Event" />
-        <mapping class="es.ficonlan.web.backend.model.registration.Registration" />
-        <mapping class="es.ficonlan.web.backend.model.activity.Activity" />
-        <mapping class="es.ficonlan.web.backend.model.newsitem.NewsItem" />
-		<mapping class="es.ficonlan.web.backend.model.supportedlanguage.SupportedLanguage" />
+		<mapping class="es.ficonlan.web.backend.model.usecase.UseCase" />
+		<mapping class="es.ficonlan.web.backend.model.event.Event" />
+		<mapping class="es.ficonlan.web.backend.model.registration.Registration" />
+		<mapping class="es.ficonlan.web.backend.model.activity.Activity" />
+		<mapping class="es.ficonlan.web.backend.model.newsitem.NewsItem" />
+		<mapping
+			class="es.ficonlan.web.backend.model.supportedlanguage.SupportedLanguage" />
 
-		<mapping class="es.ficonlan.web.backend.model.emailadress.Adress" /> 
-		<mapping class="es.ficonlan.web.backend.model.sponsor.Sponsor"/>
-		<mapping class="es.ficonlan.web.backend.model.emailtemplate.EmailTemplate"/>
+		<mapping class="es.ficonlan.web.backend.model.emailadress.Adress" />
+		<mapping class="es.ficonlan.web.backend.model.sponsor.Sponsor" />
+		<mapping class="es.ficonlan.web.backend.model.emailtemplate.EmailTemplate" />
 	</session-factory>
 
 </hibernate-configuration>
