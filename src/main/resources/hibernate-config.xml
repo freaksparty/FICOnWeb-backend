@@ -6,13 +6,13 @@
 
 	<session-factory>
 
-		<!-- 
+		 
 		<property name="hibernate.show_sql" /> <property name="hibernate.format_sql" /> 
 		<property name="hibernate.use_sql_comments" /> 
 		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
-		 -->
+		 
 
-
+<!--
 		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
 		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/backend</property>
 		<property name="hibernate.connection.username">fpbackend</property>
@@ -26,7 +26,7 @@
 		<property name="hibernate.c3p0.max_statements">50</property>
 		<property name="hibernate.c3p0.idle_test_period">3000</property>
 
-
+-->
 
 
 		<!-- List of persistent classes -->

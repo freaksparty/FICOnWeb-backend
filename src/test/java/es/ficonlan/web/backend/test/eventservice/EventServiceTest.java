@@ -5,12 +5,26 @@
  */
 package es.ficonlan.web.backend.test.eventservice;
 
+import static es.ficonlan.web.backend.model.util.GlobalNames.SPRING_CONFIG_FILE;
+import static es.ficonlan.web.backend.test.util.GlobalNames.SPRING_CONFIG_TEST_FILE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.util.Calendar;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
+
 import es.ficonlan.web.backend.model.activity.Activity;
 import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
 import es.ficonlan.web.backend.model.activity.ActivityDao;
-import es.ficonlan.web.backend.model.email.Email;
-import es.ficonlan.web.backend.model.email.EmailFIFO;
-import es.ficonlan.web.backend.model.emailadress.Adress;
 import es.ficonlan.web.backend.model.emailadress.AdressDao;
 import es.ficonlan.web.backend.model.emailtemplate.EmailTemplate;
 import es.ficonlan.web.backend.model.emailtemplate.EmailTemplateDao;
@@ -30,21 +44,6 @@ import es.ficonlan.web.backend.model.userservice.UserService;
 import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import es.ficonlan.web.backend.model.util.session.Session;
-import es.ficonlan.web.backend.util.RegistrationData;
-import static es.ficonlan.web.backend.model.util.GlobalNames.SPRING_CONFIG_FILE;
-import static es.ficonlan.web.backend.test.util.GlobalNames.SPRING_CONFIG_TEST_FILE;
-import static org.junit.Assert.*;
-
-import java.util.Calendar;
-import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -435,7 +434,7 @@ public class EventServiceTest {
     	
     }
     
-    
+    /*
     @Test
     @SuppressWarnings("unused")
     public void RegistrationTest1() throws ServiceException, InterruptedException {
@@ -948,4 +947,5 @@ public class EventServiceTest {
     	//Thread.sleep(200000000);
     
     }
+    */
 }
