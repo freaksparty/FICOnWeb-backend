@@ -75,6 +75,13 @@
 			<version>5.1.26</version>
 		</dependency>
 		
+		<!-- Hibernate c3p0 connection pool -->
+<dependency>
+	<groupId>org.hibernate</groupId>
+	<artifactId>hibernate-c3p0</artifactId>
+	<version>4.3.8.Final</version>
+</dependency>
+		
 
 		<!-- Spring --> <!--  
 		<dependency>

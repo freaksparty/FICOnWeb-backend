@@ -22,7 +22,7 @@
 	<context:component-scan base-package="es.ficonlan.web.backend" />
 
 	<!-- Data source. -->
-	  
+	<!-- 
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="${db.driver}" />
@@ -30,11 +30,24 @@
 		<property name="username" value="${db.user}" />
 		<property name="password" value="${db.password}" />
 	</bean>
+	-->
+	
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close" >
+		<property name="driverClass" value="com.mysql.jdbc.Driver"/>
+		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/backend"/>
+		<property name="user" value="fpbackend"></property>
+		<property name="password" value="fpbackendtestps"></property>
+		<property name="initialPoolSize" value="5"></property>
+		<property name="minPoolSize" value="5"></property>
+		<property name="maxPoolSize" value="75"></property>
+		<property name="acquireIncrement" value="1"></property>
+	</bean>
+	
 	
 	<!-- Hibernate Session Factory -->
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
+		<property name="dataSource" ref="dataSource" /> 
 		<property name="configLocation" value="hibernate-config.xml" />
 	</bean>
 
