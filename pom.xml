@@ -28,8 +28,8 @@
 				<jdbcDriver.className>com.mysql.jdbc.Driver</jdbcDriver.className>
 
 				<!-- Data source properties -->
-				<dataSource.url>jdbc:mysql://localhost/backendtest</dataSource.url>
-				<testDataSource.url>jdbc:mysql://localhost/backendtest</testDataSource.url>
+				<dataSource.url>jdbc:mysql://localhost/backend</dataSource.url>
+				<testDataSource.url>jdbc:mysql://localhost/backend</testDataSource.url>
 				<dataSource.createTablesScript>MYSQL_CreateTables.sql</dataSource.createTablesScript>
 
 				<!-- Hibernate properties -->
@@ -43,7 +43,7 @@
 			<dependency>
 				<groupId>org.glassfish.jersey</groupId>
 				<artifactId>jersey-bom</artifactId>
-				<version>2.3</version>
+				<version>2.22.1</version>
 				<!-- <version>2.4.1</version> -->
 				<type>pom</type>
 				<scope>import</scope>
@@ -57,78 +57,69 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>4.2.6.Final</version>
+			<version>4.3.11.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate.common</groupId>
 			<artifactId>hibernate-commons-annotations</artifactId>
-			<version>4.0.4.Final</version>
-		</dependency>
+			<version>4.0.5.Final</version>
+		</dependency> 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.5</version>
+			<version>1.7.12</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.26</version>
+			<version>5.1.37</version>
 		</dependency>
-		
-		<!-- Hibernate c3p0 connection pool -->
-<dependency>
-	<groupId>org.hibernate</groupId>
-	<artifactId>hibernate-c3p0</artifactId>
-	<version>4.3.8.Final</version>
-</dependency>
-		
 
-		<!-- Spring --> <!--  
+		<!-- Hibernate c3p0 connection pool -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-c3p0</artifactId>
+			<version>4.3.11.Final</version>
+		</dependency>
+
+		<!-- Just for checking dependencies that are updated -->
+		<!-- <dependency>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>versions-maven-plugin</artifactId>
+			<version>2.2</version>
+		</dependency> -->
+
+
+		<!-- Spring --> <!-- <dependency> <groupId>org.springframework</groupId> <artifactId>spring-core</artifactId> 
+			<version>3.2.5.RELEASE</version> </dependency> <dependency> <groupId>org.springframework</groupId> 
+			<artifactId>spring-context</artifactId> <version>3.2.5.RELEASE</version> 
+			</dependency> <dependency> <groupId>org.springframework</groupId> <artifactId>spring-orm</artifactId> 
+			<version>3.2.5.RELEASE</version> </dependency> <dependency> <groupId>org.springframework</groupId> 
+			<artifactId>spring-test</artifactId> <version>3.2.5.RELEASE</version> <scope>test</scope> 
+			</dependency> -->
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<version>3.2.5.RELEASE</version>
+			<version>4.2.2.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>3.2.5.RELEASE</version>
+			<version>4.2.2.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
-			<version>3.2.5.RELEASE</version>
+			<version>4.2.2.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>3.2.5.RELEASE</version>
+			<version>4.2.2.RELEASE</version>
 			<scope>test</scope>
 		</dependency>
-		-->
-		
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>4.1.1.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>4.1.1.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-orm</artifactId>
-			<version>4.1.1.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>4.1.1.RELEASE</version>
-			<scope>test</scope>
-		</dependency>
-		
+
 		<!-- Dependencias de Jersey -->
 
 		<dependency>
@@ -139,24 +130,19 @@
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-json-jackson</artifactId>
 		</dependency>
-<!-- 
-		<dependency>
-			<groupId>org.glassfish.grizzly</groupId>
-			<artifactId>connection-pool</artifactId>
-			  <version>2.3.14</version> 
-		</dependency>
-		 -->
+		<!-- <dependency> <groupId>org.glassfish.grizzly</groupId> <artifactId>connection-pool</artifactId> 
+			<version>2.3.14</version> </dependency> -->
 
 		<dependency>
 			<groupId>com.thetransactioncompany</groupId>
 			<artifactId>cors-filter</artifactId>
-			<version>2.2.1</version>
+			<version>2.4</version>
 		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.9</version>
+			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -170,24 +156,31 @@
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-server</artifactId>
-			<version>1.18.3</version>  
+			<version>1.19</version>
 			<!-- <version>1.16</version> -->
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-jdbc</artifactId>
-			<version>7.0.35</version>
+			<version>8.0.28</version>
 		</dependency>
 
 		<dependency>
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
-			<version>1.2.2</version>
+			<version>1.4</version>
 		</dependency>
 
 
 	</dependencies>
+
+	<!-- <repositories>
+		<repository>
+			<id>codehaus</id>
+			<url>http://repository.codehaus.org/org/codehaus</url>
+		</repository>
+	</repositories> -->
 
 	<build>
 		<plugins>

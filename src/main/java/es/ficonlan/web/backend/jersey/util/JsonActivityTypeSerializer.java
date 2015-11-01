@@ -2,11 +2,13 @@ package es.ficonlan.web.backend.jersey.util;
 
 import java.io.IOException;
 
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.JsonProcessingException;
-import org.codehaus.jackson.map.JsonSerializer;
-import org.codehaus.jackson.map.SerializerProvider;
+
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
 
 import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
 
@@ -18,7 +20,8 @@ import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
 public class JsonActivityTypeSerializer extends JsonSerializer<ActivityType> {
 
 	@Override
-	public void serialize(ActivityType at, JsonGenerator gen, SerializerProvider provider) throws IOException, JsonProcessingException {
+	public void serialize(ActivityType at, JsonGenerator gen, SerializerProvider provider)
+			throws IOException, JsonProcessingException {
 		String activitytype = "";
 		if(at == ActivityType.Conference) activitytype = "Conference";
 		if(at == ActivityType.Production) activitytype = "Production";

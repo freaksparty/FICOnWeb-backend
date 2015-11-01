@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import es.ficonlan.web.backend.jersey.util.JsonEntityIdSerializer;
 import es.ficonlan.web.backend.model.event.Event;

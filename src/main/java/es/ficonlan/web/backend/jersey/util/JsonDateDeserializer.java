@@ -5,11 +5,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.JsonProcessingException;
-import org.codehaus.jackson.map.DeserializationContext;
-import org.codehaus.jackson.map.JsonDeserializer;
+
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 
 /**
  * @author Daniel Gómez Silva
@@ -19,7 +21,8 @@ import org.springframework.stereotype.Component;
 public class JsonDateDeserializer extends JsonDeserializer<Calendar> {
 
 	@Override
-	public Calendar deserialize(JsonParser jsonparser, DeserializationContext deserializationcontext) throws IOException, JsonProcessingException {
+	public Calendar deserialize(JsonParser jsonparser, DeserializationContext deserializationcontext) 
+			throws IOException, JsonProcessingException {
 
 		//SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy/HH:mm:ss");
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy/HH:mm:ss");

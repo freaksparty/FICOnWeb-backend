@@ -1,7 +1,7 @@
 package es.ficonlan.web.backend.util;
 
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import es.ficonlan.web.backend.jersey.util.JsonRegistrationStateDeserializer;
 import es.ficonlan.web.backend.jersey.util.JsonRegistrationStateSerializer;

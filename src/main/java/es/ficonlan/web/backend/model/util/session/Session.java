@@ -5,8 +5,8 @@ import java.util.Calendar;
 import java.util.Set;
 import java.util.TimeZone;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import es.ficonlan.web.backend.jersey.util.JsonEntityIdSerializer;
 import es.ficonlan.web.backend.model.role.Role;

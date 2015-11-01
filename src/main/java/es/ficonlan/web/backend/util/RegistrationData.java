@@ -2,8 +2,8 @@ package es.ficonlan.web.backend.util;
 
 import java.util.Calendar;
 
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import es.ficonlan.web.backend.jersey.util.JsonDateDeserializer;
 import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;

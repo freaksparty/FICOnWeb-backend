@@ -2,10 +2,10 @@ package es.ficonlan.web.backend.jersey.util;
 
 import java.io.IOException;
 
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.JsonProcessingException;
-import org.codehaus.jackson.map.DeserializationContext;
-import org.codehaus.jackson.map.JsonDeserializer;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 
 import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
 
@@ -15,7 +15,8 @@ import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
 public class JsonActivityTypeDeserializer extends JsonDeserializer<ActivityType> {
 	
 	@Override
-	public ActivityType deserialize(JsonParser jsonparser, DeserializationContext deserializationcontext) throws IOException, JsonProcessingException {
+	public ActivityType deserialize(JsonParser jsonparser, DeserializationContext deserializationcontext) 
+			throws IOException, JsonProcessingException {
 		String type = jsonparser.getText();
 		if(type.toLowerCase().contentEquals("tournament")) return ActivityType.Tournament;
 		if(type.toLowerCase().contentEquals("production")) return ActivityType.Production;
