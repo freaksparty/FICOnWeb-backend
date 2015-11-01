@@ -142,7 +142,7 @@ public class Main {
 		EmailFIFO.startEmailQueueThread();
 		
 		// Server Start
-		final HttpServer server = startServer();   
+		final HttpServer server = startServer(); 
 		//Añadir parte estatica en la siguente linea
 		server.getServerConfiguration().addHttpHandler(new StaticHttpHandler("//web//frontend"),"/");
 		System.out.println(String.format("Jersey app started with WADL available at " + "%sapplication.wadl\nHit enter to stop it...", properties.getProperty("server.baseUri")));

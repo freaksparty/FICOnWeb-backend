@@ -25,9 +25,9 @@
 		<property name="hibernate.c3p0.timeout">300</property>
 		<property name="hibernate.c3p0.max_statements">50</property>
 		<property name="hibernate.c3p0.idle_test_period">3000</property>
-
-
-
+		
+		<property name="hibernate.cache.use_second_level_cache">true</property>
+		<property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</property>
 
 		<!-- List of persistent classes -->
 		<mapping class="es.ficonlan.web.backend.model.user.User" />
@@ -37,9 +37,7 @@
 		<mapping class="es.ficonlan.web.backend.model.registration.Registration" />
 		<mapping class="es.ficonlan.web.backend.model.activity.Activity" />
 		<mapping class="es.ficonlan.web.backend.model.newsitem.NewsItem" />
-		<mapping
-			class="es.ficonlan.web.backend.model.supportedlanguage.SupportedLanguage" />
-
+		<mapping class="es.ficonlan.web.backend.model.supportedlanguage.SupportedLanguage" />
 		<mapping class="es.ficonlan.web.backend.model.emailadress.Adress" />
 		<mapping class="es.ficonlan.web.backend.model.sponsor.Sponsor" />
 		<mapping class="es.ficonlan.web.backend.model.emailtemplate.EmailTemplate" />

@@ -124,7 +124,7 @@ public class UserServiceTest {
     	Session anonymousSession = userService.newAnonymousSession();
     	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	Session s = userService.login(anonymousSession.getSessionId(),"login1", "pass");
-    	assertEquals(s.getUser(), user);
+    	assertEquals(s.getUserId(), user.getLogin());
     }
     
     @Test

@@ -1,11 +1,9 @@
 package es.ficonlan.web.backend.model.util.session;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 
 import es.ficonlan.web.backend.model.role.Role;
@@ -25,7 +23,7 @@ public class SessionManager {
 	
 	public static Session getSession(String sessionId){
 		Session s = openSessions.get(sessionId);
-		s.setLastAccess(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+		//s.setLastAccess(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
 		return s;
 	}
 	
@@ -33,11 +31,16 @@ public class SessionManager {
 		openSessions.remove(sessionId);
 	}
 	
+	/**
+	 * @param timeout In seconds
+	 */
 	public static void cleanOldSessions(int timeout){
-		Calendar limitTime = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-		limitTime.add(Calendar.SECOND, -timeout);
+		//Calendar limitTime = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+		long limitTime = System.currentTimeMillis() - (timeout*1000);
+		//limitTime.add(Calendar.SECOND, -timeout);
 		for(Map.Entry<String,Session> e:openSessions.entrySet()){
-			if(e.getValue().getLastAccess().before(limitTime))
+			if(e.getValue().getLastAccess() < limitTime)
+			//if(e.getValue().getLastAccess().before(limitTime))
 				openSessions.remove(e.getKey());
 		}
 	}
@@ -47,7 +50,7 @@ public class SessionManager {
 		for (Entry<String, Session> e : openSessions.entrySet()) {
             String key = e.getKey();
             Session value = e.getValue();
-            if(value.getUser().getUserId()==userId) keys.add(key);
+            if(value.getUserId()==userId) keys.add(key);
         }
 		
 		for(String s : keys) {
@@ -66,11 +69,11 @@ public class SessionManager {
 	 */
 	public static boolean  checkPermissions(Session session, int userId, String useCase) {
 		
-		session.setLastAccess(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+		session.touch();
 		
-		if (session.getUser().getUserId() == userId) return true;
+		if (session.getUserId() == userId) return true;
 		else
-		for(Role r:session.getUser().getRoles()){
+		for(Role r:session.getRoles()){
 		    for (UseCase uc: r.getUseCases()){
 		    	if (uc.getUseCaseName().contentEquals(useCase)) return true;
 		    }
@@ -80,9 +83,9 @@ public class SessionManager {
 
 	public static boolean checkPermissions(Session session, String useCase) {
 		
-		session.setLastAccess(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+		session.touch();
 		
-		for(Role r:session.getUser().getRoles()){
+		for(Role r:session.getRoles()){
 		    for (UseCase uc: r.getUseCases()){
 		    	if (uc.getUseCaseName().contentEquals(useCase)) return true;
 		    }

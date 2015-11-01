@@ -823,7 +823,7 @@ public class EventServiceImpl implements EventService {
 			if(newsItem.getTitle()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"title");
 			if(newsItem.getContent()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"Content");
 
-			newsItem.setPublisher(SessionManager.getSession(sessionId).getUser());
+			newsItem.setPublisher(userDao.find(SessionManager.getSession(sessionId).getUserId()));
 			newsItem.setCreationDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
 			if(newsItem.getPublishDate()==null) newsItem.setPublishDate(newsItem.getCreationDate());
 			newsDao.save(newsItem);

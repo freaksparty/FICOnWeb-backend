@@ -74,6 +74,11 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.37</version>
 		</dependency>
+		<!-- <dependency>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+			<version>1.2.3</version>
+		</dependency> -->
 
 		<!-- Hibernate c3p0 connection pool -->
 		<dependency>
@@ -172,15 +177,26 @@
 			<version>1.4</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-ehcache</artifactId>
+			<version>4.3.11.Final</version>
+		</dependency>
 
 	</dependencies>
 
-	<!-- <repositories>
-		<repository>
+	<repositories>
+		<!-- <repository>
 			<id>codehaus</id>
 			<url>http://repository.codehaus.org/org/codehaus</url>
+		</repository> -->
+		<repository>
+			<id>terracotta-releases</id>
+			<url>http://www.terracotta.org/download/reflector/releases</url>
+			<releases><enabled>true</enabled></releases>
+			<snapshots><enabled>false</enabled></snapshots>
 		</repository>
-	</repositories> -->
+	</repositories>
 
 	<build>
 		<plugins>

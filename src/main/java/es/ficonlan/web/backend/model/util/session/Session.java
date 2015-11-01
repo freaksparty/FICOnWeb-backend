@@ -15,32 +15,37 @@ import es.ficonlan.web.backend.model.user.User;
 /**
  * @author Daniel Gómez Silva
  * @author Miguel Ángel Castillo Bellagona
+ * @author Siro González Rodríguez
  */
 public class Session {
 	
 	private String sessionId;
-	private User user;
-	private boolean secondpass;
+	private int userId;
 	private String loginName;
-	private Set<Role> role;
-	private Calendar lastAccess;
+	//private User user;
+	private boolean secondpass;
+	private String userName;
+	private Set<Role> roles;
+	private long lastAccess;
 	
-	private Session(String sessionId, User user){
+	private Session(String sessionId, Session base){
 		this.sessionId = sessionId;
-		this.user = user;
+		this.userId = base.getUserId();
 		this.secondpass = false;
-		this.loginName = user.getLogin();
-		this.role=user.getRoles();
-		this.lastAccess = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+		this.userName = base.getUserName();
+		this.loginName = base.getLoginName();
+		this.roles = base.getRoles();
+		this.lastAccess = System.currentTimeMillis();
 	}
 	
 	public Session(User user) {
 		this.sessionId = generateSessionId(user);
-		this.user = user;
 		this.secondpass = false;
 		this.loginName = user.getLogin();
-		this.role=user.getRoles();
-		this.lastAccess = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+		this.userName = user.getName();
+		this.roles = user.getRoles();
+		this.userId = user.getUserId();
+		this.lastAccess = System.currentTimeMillis();
 	}
 	
 	private String hexEncode(byte[] barray) {
@@ -73,17 +78,32 @@ public class Session {
 		this.sessionId = sessionId;
 	}
 
-	@JsonSerialize(using=JsonEntityIdSerializer.class)
+	/*@JsonSerialize(using=JsonEntityIdSerializer.class)
 	public User getUser() {
 		return user;
 	}
 
 	public void setUser(User user) {
 		this.user = user;
-	}
+	}*/
 	
 	public Session clone(){
-		return new Session(this.getSessionId(), this.getUser());
+		return new Session(this.getSessionId(), this);
+	}
+	
+	/**
+	 * Set session params to fit user
+	 */
+	public void setUser(User u) {
+		if(u == null) {
+			this.userId = -1;
+			this.roles = null;
+		} else {
+			this.userName = u.getName();
+			this.loginName = u.getLogin();
+			this.userId = u.getUserId();
+			this.roles = u.getRoles();
+		}
 	}
 
 	public boolean isSecondpass() {
@@ -94,6 +114,14 @@ public class Session {
 		this.secondpass = secondpass;
 	}
 	
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String loginName) {
+		this.userName = loginName;
+	}
+
 	public String getLoginName() {
 		return loginName;
 	}
@@ -102,20 +130,34 @@ public class Session {
 		this.loginName = loginName;
 	}
 
-	public Set<Role> getRole() {
-		return role;
+	public Set<Role> getRoles() {
+		return roles;
 	}
 
-	public void setRole(Set<Role> role) {
-		this.role = role;
+	public void setRole(Set<Role> roles) {
+		this.roles = roles;
 	}
 
 	@JsonIgnore
-	public Calendar getLastAccess() {
+	public long getLastAccess() {
 		return lastAccess;
 	}
 
-	public void setLastAccess(Calendar lastAccess) {
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+	/*public void setLastAccess(Calendar lastAccess) {
 		this.lastAccess = lastAccess;
+	}*/
+	/**
+	 * Sets last access to current time
+	 */
+	public void touch() {
+		this.lastAccess = System.currentTimeMillis();
 	}
 }

@@ -15,6 +15,10 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.util.StringUtils;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -29,6 +33,7 @@ import es.ficonlan.web.backend.model.user.User;
  * @version 1.0
  */
 @Entity
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class NewsItem {
 	
 	private int newsItemId;
@@ -81,7 +86,10 @@ public class NewsItem {
 	}
 
 	public void setImageurl(String imageurl) {
-		this.imageurl = imageurl;
+		if(StringUtils.isEmpty(imageurl))
+			this.imageurl = null;
+		else
+			this.imageurl = imageurl;
 	}
 
 	@JsonDeserialize(using = JsonDateDeserializer.class)

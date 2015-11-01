@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	/**
-	 * Crea los usuarios, roles y casos de uso por defecto, en caso de que no estean crados aún.
+	 * Crea los usuarios, roles y casos de uso por defecto, en caso de que no estén creados aún.
 	 */
 	@Transactional
 	public void initialize(){
@@ -182,7 +182,7 @@ public class UserServiceImpl implements UserService {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		Session session = SessionManager.getSession(sessionId);
 		if(login.contentEquals("anonymous")) return session;
-		if(!session.getUser().getLogin().contentEquals("anonymous")) throw new ServiceException(ServiceException.SESSION_ALREADY_EXISTS);
+		if(!session.getLoginName().contentEquals("anonymous")) throw new ServiceException(ServiceException.SESSION_ALREADY_EXISTS);
 		User user = userDao.findUserBylogin(login);
 		
 		boolean secondPass = false;
@@ -210,10 +210,10 @@ public class UserServiceImpl implements UserService {
 	public User getCurrenUser(String sessionId) throws ServiceException {
 		if (!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		Session session = SessionManager.getSession(sessionId);
-		if(session.getUser().getLogin().contentEquals("anonymous")) return null;
+		if(session.getLoginName().contentEquals("anonymous")) return null;
 		try {
-			User user = userDao.find(session.getUser().getUserId());
-			SessionManager.getSession(sessionId).setUser(user);
+			User user = userDao.find(session.getUserId());
+			SessionManager.getSession(sessionId).setUserId(user.getUserId());;
 			return user;
 		}
 		catch (InstanceException e) {
@@ -232,10 +232,11 @@ public class UserServiceImpl implements UserService {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		Session session = SessionManager.getSession(sessionId);
 		if(!SessionManager.checkPermissions(session, userId, "changeUserData")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		
 		try {
 			User user = userDao.find(userId);
 			if(userData.getName()!=null) user.setName(userData.getName());
-			if(session.getUser().getUserId()!=userData.getUserId()) if(userData.getDni()!=null) user.setDni(userData.getDni());
+			if(session.getUserId()!=userData.getUserId()) if(userData.getDni()!=null) user.setDni(userData.getDni());
 			User u = userDao.findUserByEmail(userData.getEmail());
 			if(u!=null) 
 				if(!(u.getUserId()==user.getUserId())) 
@@ -243,7 +244,7 @@ public class UserServiceImpl implements UserService {
 			if(userData.getEmail()!=null) user.setEmail(userData.getEmail());
 			if(userData.getPhoneNumber()!=null )user.setPhoneNumber(userData.getPhoneNumber());
 			if(userData.getShirtSize()!=null) user.setShirtSize(userData.getShirtSize());
-			if(session.getUser().getDob()!=userData.getDob()) if(userData.getDob()!=null) user.setDob(userData.getDob());
+			if(userData.getDob()!=null) user.setDob(userData.getDob());
 			userDao.save(user);
 			session.setUser(user);
 		} catch (InstanceException e) {
@@ -263,7 +264,7 @@ public class UserServiceImpl implements UserService {
 		
 		try {
 			User user = userDao.find(userId);
-			if(session.getUser().getUserId() == userId)
+			if(session.getUserId() == userId)
 			{
 				if(!hashPassword(oldPassword).contentEquals(user.getPassword())) 
 						if ((user.getSecondPasswordExpDate()==null) || (user.getSecondPasswordExpDate().before(Calendar.getInstance(TimeZone.getTimeZone("UTC")))) || (!user.getSecondPassword().contentEquals(hashPassword(oldPassword)))) 
