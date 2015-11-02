@@ -14,6 +14,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import es.ficonlan.web.backend.model.usecase.UseCase;
@@ -23,6 +26,7 @@ import es.ficonlan.web.backend.model.usecase.UseCase;
  * @version 1.0
  */
 @Entity
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Role {
 	
 	private int roleId;

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ehcache>
-	<!-- <diskStore path="java.io.tmpdir" /> -->
+	<diskStore path="java.io.tmpdir" />
 	<defaultCache maxElementsInMemory="500" eternal="false"
 		timeToIdleSeconds="120" timeToLiveSeconds="120" overflowToDisk="true" />
 
-	<cache name="es.ficonlan.web.backend.model.event.Event"
+	<!-- <cache name="es.ficonlan.web.backend.model.event.Event"
 		maxElementsInMemory="2" eternal="false" timeToIdleSeconds="60"
 		timeToLiveSeconds="60" />
 	<cache name="es.ficonlan.web.backend.model.newsitem.NewsItem"
 		maxElementsInMemory="10" eternal="false" timeToIdleSeconds="20"
-		timeToLiveSeconds="60" />
+		timeToLiveSeconds="60" /> -->
 </ehcache>

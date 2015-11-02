@@ -297,7 +297,7 @@ public class EventServiceImpl implements EventService {
 		tabla.put("#precio", Integer.toString(event.getPrice()));
     	
         try {
-			//FIXME: MAndar correo elecrónico if registration.getState()==registered Mandar correo electrónico registration.User()
+			//FIXME: Mandar correo elecrónico if registration.getState()==registered Mandar correo electrónico registration.User()
 			if ((registration.getState()==RegistrationState.registered) || (registration.getState()==RegistrationState.paid)) {
 				
 				tabla.put("#plazaencola", "");
