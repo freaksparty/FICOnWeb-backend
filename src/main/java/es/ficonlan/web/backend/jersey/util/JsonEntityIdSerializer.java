@@ -7,10 +7,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
-import es.ficonlan.web.backend.model.emailadress.Adress;
-import es.ficonlan.web.backend.model.event.Event;
-import es.ficonlan.web.backend.model.user.User;
-import es.ficonlan.web.backend.model.registration.Registration;;
+import es.ficonlan.web.backend.entities.Adress;
+import es.ficonlan.web.backend.entities.Event;
+import es.ficonlan.web.backend.entities.Registration;
+import es.ficonlan.web.backend.entities.User;;
 
 /**
  * @author Daniel Gómez Silva

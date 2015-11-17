@@ -15,11 +15,11 @@ import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import es.ficonlan.web.backend.entities.EmailTemplate;
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
 import es.ficonlan.web.backend.model.email.EmailFIFO;
-import es.ficonlan.web.backend.model.emailservice.EmailService;
-import es.ficonlan.web.backend.model.emailtemplate.EmailTemplate;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
+import es.ficonlan.web.backend.services.emailservice.EmailService;
 
 /**
  * @author Miguel Ángel Castillo Bellagona

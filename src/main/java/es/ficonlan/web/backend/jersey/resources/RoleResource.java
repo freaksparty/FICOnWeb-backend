@@ -16,11 +16,11 @@ import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import es.ficonlan.web.backend.entities.Role;
+import es.ficonlan.web.backend.entities.UseCase;
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
-import es.ficonlan.web.backend.model.role.Role;
-import es.ficonlan.web.backend.model.usecase.UseCase;
-import es.ficonlan.web.backend.model.userservice.UserService;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
+import es.ficonlan.web.backend.services.userservice.UserService;
 
 /**
  * @author Miguel Ángel Castillo Bellagona

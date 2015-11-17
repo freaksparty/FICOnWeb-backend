@@ -22,18 +22,18 @@ import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import es.ficonlan.web.backend.entities.Activity;
+import es.ficonlan.web.backend.entities.Event;
+import es.ficonlan.web.backend.entities.NewsItem;
+import es.ficonlan.web.backend.entities.Sponsor;
+import es.ficonlan.web.backend.entities.User;
+import es.ficonlan.web.backend.entities.Activity.ActivityType;
+import es.ficonlan.web.backend.entities.Registration.RegistrationState;
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
-import es.ficonlan.web.backend.model.activity.Activity;
-import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
-import es.ficonlan.web.backend.model.emailservice.EmailService;
-import es.ficonlan.web.backend.model.event.Event;
-import es.ficonlan.web.backend.model.eventservice.EventService;
-import es.ficonlan.web.backend.model.newsitem.NewsItem;
-import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
-import es.ficonlan.web.backend.model.sponsor.Sponsor;
-import es.ficonlan.web.backend.model.user.User;
-import es.ficonlan.web.backend.model.userservice.UserService;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
+import es.ficonlan.web.backend.services.emailservice.EmailService;
+import es.ficonlan.web.backend.services.eventservice.EventService;
+import es.ficonlan.web.backend.services.userservice.UserService;
 import es.ficonlan.web.backend.util.ActivityHeader;
 import es.ficonlan.web.backend.util.RegistrationData;
 import es.ficonlan.web.backend.util.ShirtData;

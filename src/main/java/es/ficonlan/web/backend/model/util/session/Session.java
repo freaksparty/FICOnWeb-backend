@@ -8,9 +8,9 @@ import java.util.TimeZone;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import es.ficonlan.web.backend.entities.Role;
+import es.ficonlan.web.backend.entities.User;
 import es.ficonlan.web.backend.jersey.util.JsonEntityIdSerializer;
-import es.ficonlan.web.backend.model.role.Role;
-import es.ficonlan.web.backend.model.user.User;
 
 /**
  * @author Daniel Gómez Silva

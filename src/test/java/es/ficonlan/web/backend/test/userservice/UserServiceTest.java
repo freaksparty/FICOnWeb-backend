@@ -19,15 +19,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.ficonlan.web.backend.model.role.RoleDao;
-import es.ficonlan.web.backend.model.supportedlanguage.SupportedLanguageDao;
-import es.ficonlan.web.backend.model.usecase.UseCaseDao;
-import es.ficonlan.web.backend.model.user.User;
-import es.ficonlan.web.backend.model.user.UserDao;
-import es.ficonlan.web.backend.model.userservice.UserService;
+import es.ficonlan.web.backend.dao.RoleDao;
+import es.ficonlan.web.backend.dao.SupportedLanguageDao;
+import es.ficonlan.web.backend.dao.UseCaseDao;
+import es.ficonlan.web.backend.dao.UserDao;
+import es.ficonlan.web.backend.entities.User;
 import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import es.ficonlan.web.backend.model.util.session.Session;
+import es.ficonlan.web.backend.services.userservice.UserService;
 
 /**
  * @author Daniel Gómez Silva

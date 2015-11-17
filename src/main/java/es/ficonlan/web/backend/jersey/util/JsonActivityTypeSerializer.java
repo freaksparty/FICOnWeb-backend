@@ -10,7 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
-import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
+import es.ficonlan.web.backend.entities.Activity.ActivityType;
 
 
 /**

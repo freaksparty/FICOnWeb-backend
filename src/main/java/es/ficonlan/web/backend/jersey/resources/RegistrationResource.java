@@ -13,11 +13,11 @@ import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import es.ficonlan.web.backend.entities.Registration;
+import es.ficonlan.web.backend.entities.Registration.RegistrationState;
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
-import es.ficonlan.web.backend.model.eventservice.EventService;
-import es.ficonlan.web.backend.model.registration.Registration;
-import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
+import es.ficonlan.web.backend.services.eventservice.EventService;
 import es.ficonlan.web.backend.util.EventRegistrationState;
 
 /**

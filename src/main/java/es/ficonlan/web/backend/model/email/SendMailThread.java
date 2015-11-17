@@ -16,6 +16,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import es.ficonlan.web.backend.entities.Email;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 
 /*
@@ -45,7 +46,7 @@ public class SendMailThread extends Thread {
 			props.put("mail.smtp.host", "smtp.gmail.com");
 			props.setProperty("mail.smtp.starttls.enable", "true");
 			props.setProperty("mail.smtp.port", "587");
-			props.setProperty("mail.smtp.user",email.userSend);
+			props.setProperty("mail.smtp.user", email.userSend);
 			props.setProperty("mail.smtp.auth", "true");
 
 			Session session = Session.getDefaultInstance(props, null);
@@ -66,7 +67,7 @@ public class SendMailThread extends Thread {
 
 			MimeMessage message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(email.userSend));
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(email.destinatario));
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(email.getDestinatario()));
 			message.setSubject(email.getAsunto());
 			message.setContent(multiParte);
 

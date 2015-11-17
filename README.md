@@ -8,7 +8,7 @@ After cloning the project create one database in your MySQL/MariaDB instance. fo
 ```
 $ mysql -u root -p
 > create database backend;
-> grant all privileges on backend.* to fpbackend@* identified by 'fpbackendtestps'; --this will only allow local connections
+> grant all privileges on backend.* to fpbackend@'localhost' identified by 'fpbackendtestps'; --this will only allow local connections
 ```
 
 Now, lets create skeleton for the DB:

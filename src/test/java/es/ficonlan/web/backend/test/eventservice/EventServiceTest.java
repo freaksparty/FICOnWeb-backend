@@ -22,28 +22,28 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.ficonlan.web.backend.model.activity.Activity;
-import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
-import es.ficonlan.web.backend.model.activity.ActivityDao;
-import es.ficonlan.web.backend.model.emailadress.AdressDao;
-import es.ficonlan.web.backend.model.emailtemplate.EmailTemplate;
-import es.ficonlan.web.backend.model.emailtemplate.EmailTemplateDao;
-import es.ficonlan.web.backend.model.event.Event;
-import es.ficonlan.web.backend.model.event.EventDao;
-import es.ficonlan.web.backend.model.eventservice.EventService;
-import es.ficonlan.web.backend.model.newsitem.NewsDao;
-import es.ficonlan.web.backend.model.newsitem.NewsItem;
-import es.ficonlan.web.backend.model.registration.Registration;
-import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
-import es.ficonlan.web.backend.model.registration.RegistrationDao;
-import es.ficonlan.web.backend.model.role.RoleDao;
-import es.ficonlan.web.backend.model.usecase.UseCaseDao;
-import es.ficonlan.web.backend.model.user.User;
-import es.ficonlan.web.backend.model.user.UserDao;
-import es.ficonlan.web.backend.model.userservice.UserService;
+import es.ficonlan.web.backend.dao.ActivityDao;
+import es.ficonlan.web.backend.dao.AdressDao;
+import es.ficonlan.web.backend.dao.EmailTemplateDao;
+import es.ficonlan.web.backend.dao.EventDao;
+import es.ficonlan.web.backend.dao.NewsDao;
+import es.ficonlan.web.backend.dao.RegistrationDao;
+import es.ficonlan.web.backend.dao.RoleDao;
+import es.ficonlan.web.backend.dao.UseCaseDao;
+import es.ficonlan.web.backend.dao.UserDao;
+import es.ficonlan.web.backend.entities.Activity;
+import es.ficonlan.web.backend.entities.EmailTemplate;
+import es.ficonlan.web.backend.entities.Event;
+import es.ficonlan.web.backend.entities.NewsItem;
+import es.ficonlan.web.backend.entities.Registration;
+import es.ficonlan.web.backend.entities.User;
+import es.ficonlan.web.backend.entities.Activity.ActivityType;
+import es.ficonlan.web.backend.entities.Registration.RegistrationState;
 import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import es.ficonlan.web.backend.model.util.session.Session;
+import es.ficonlan.web.backend.services.eventservice.EventService;
+import es.ficonlan.web.backend.services.userservice.UserService;
 
 /**
  *

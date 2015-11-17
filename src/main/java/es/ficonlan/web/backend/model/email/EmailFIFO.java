@@ -3,6 +3,8 @@ package es.ficonlan.web.backend.model.email;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import es.ficonlan.web.backend.entities.Email;
+
 public class EmailFIFO {
 
 	public static Queue<Email>	emails	= new LinkedList<Email>();

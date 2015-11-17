@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-import es.ficonlan.web.backend.model.role.Role;
-import es.ficonlan.web.backend.model.usecase.UseCase;
+import es.ficonlan.web.backend.entities.Role;
+import es.ficonlan.web.backend.entities.UseCase;
 
 public class SessionManager {
 	

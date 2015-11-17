@@ -7,7 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 
-import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
+import es.ficonlan.web.backend.entities.Activity.ActivityType;
 
 /**
  * @author Daniel Gómez Silva

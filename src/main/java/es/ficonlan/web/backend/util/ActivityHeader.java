@@ -5,11 +5,11 @@ import java.util.Calendar;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import es.ficonlan.web.backend.entities.Activity.ActivityType;
 import es.ficonlan.web.backend.jersey.util.JsonActivityTypeDeserializer;
 import es.ficonlan.web.backend.jersey.util.JsonActivityTypeSerializer;
 import es.ficonlan.web.backend.jersey.util.JsonDateDeserializer;
 import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
-import es.ficonlan.web.backend.model.activity.Activity.ActivityType;
 
 public class ActivityHeader {
 	

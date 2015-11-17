@@ -11,12 +11,12 @@ import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import es.ficonlan.web.backend.entities.User;
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
-import es.ficonlan.web.backend.model.user.User;
-import es.ficonlan.web.backend.model.userservice.UserService;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import es.ficonlan.web.backend.model.util.session.Session;
 import es.ficonlan.web.backend.model.util.session.SessionManager;
+import es.ficonlan.web.backend.services.userservice.UserService;
 
 /**
  * @author Daniel Gómez Silva

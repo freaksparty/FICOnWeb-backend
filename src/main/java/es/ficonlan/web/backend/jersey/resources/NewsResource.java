@@ -15,10 +15,10 @@ import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import es.ficonlan.web.backend.entities.NewsItem;
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
-import es.ficonlan.web.backend.model.eventservice.EventService;
-import es.ficonlan.web.backend.model.newsitem.NewsItem;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
+import es.ficonlan.web.backend.services.eventservice.EventService;
 
 /**
  * @author Daniel Gómez Silva

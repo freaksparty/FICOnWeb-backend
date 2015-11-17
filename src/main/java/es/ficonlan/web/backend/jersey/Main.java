@@ -31,8 +31,8 @@ import es.ficonlan.web.backend.jersey.resources.UsersResource;
 import es.ficonlan.web.backend.jersey.util.CORSResponseFilter;
 import es.ficonlan.web.backend.jersey.util.ServiceExceptionMapper;
 import es.ficonlan.web.backend.model.email.EmailFIFO;
-import es.ficonlan.web.backend.model.userservice.UserService;
 import es.ficonlan.web.backend.model.util.session.SessionManager;
+import es.ficonlan.web.backend.services.userservice.UserService;
 
 /**
  * Main class.

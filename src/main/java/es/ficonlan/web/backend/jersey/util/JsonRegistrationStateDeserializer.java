@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
-import es.ficonlan.web.backend.model.registration.Registration.RegistrationState;
+import es.ficonlan.web.backend.entities.Registration.RegistrationState;
 
 /**
  * @author Miguel Ángel Castillo Bellagona
