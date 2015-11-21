@@ -17,8 +17,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -31,6 +35,7 @@ import es.ficonlan.web.backend.entities.Activity.ActivityType;
 import es.ficonlan.web.backend.entities.Registration.RegistrationState;
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
+import es.ficonlan.web.backend.output.EventData;
 import es.ficonlan.web.backend.services.emailservice.EmailService;
 import es.ficonlan.web.backend.services.eventservice.EventService;
 import es.ficonlan.web.backend.services.userservice.UserService;
@@ -41,6 +46,7 @@ import es.ficonlan.web.backend.util.ShirtData;
 /**
  * @author Daniel Gómez Silva
  * @author Miguel Ángel Castillo Bellagona
+ * @author Siro González <xiromoreira>
  */
 @Path("event")
 public class EventResource {
@@ -57,6 +63,10 @@ public class EventResource {
 	private String[] s4 = {"activityId","event","name","type","startDate","endDate"};
 	private ArrayList<String> l4;
 	
+	ArrayList<EventData> eventCache;
+	
+	CacheControl sharedCacheControl;
+	
 	@Autowired
 	private EventService eventService;
 	
@@ -67,6 +77,11 @@ public class EventResource {
 	private UserService userService;
 	
 	public EventResource(){
+		eventCache = new ArrayList<EventData>(3);
+		
+		sharedCacheControl = new CacheControl();
+	    sharedCacheControl.setMaxAge(300);
+		
 		this.eventService = ApplicationContextProvider.getApplicationContext().getBean(EventService.class);
 		this.emailService = ApplicationContextProvider.getApplicationContext().getBean(EmailService.class);
 		this.userService  = ApplicationContextProvider.getApplicationContext().getBean(UserService.class);
@@ -84,7 +99,50 @@ public class EventResource {
 		l4.add(s4[0]);l4.add(s4[1]);l4.add(s4[2]);l4.add(s4[3]);l4.add(s4[4]);l4.add(s4[5]);
 	}
 
-	@Path("/{eventId}/{eventData}")
+	@GET
+	@Path("/{eventId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getEvent(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @Context Request request) {
+		
+		for(EventData cache : eventCache) {
+			if(cache.eventId == eventId) {
+				cache.updateIsOpen();
+				ResponseBuilder builder = request.evaluatePreconditions(cache.getTag());
+				if(builder != null) {
+					CacheControl cc;
+					if(cache.timeToOpen < sharedCacheControl.getMaxAge() && cache.timeToOpen > 0){
+						cc = new CacheControl();
+						cc.setMaxAge((int)cache.timeToOpen);
+					} else {
+						cc = sharedCacheControl;
+					}
+					 builder.cacheControl(sharedCacheControl);
+					 return builder.build();
+				}
+			}
+		}
+		
+		try {
+			//Cache miss
+			Event event = eventService.getEvent(sessionId, eventId);
+			EventData result = new EventData(event);
+			eventCache.add(result);
+			CacheControl cc;
+			if(result.timeToOpen < sharedCacheControl.getMaxAge() && result.timeToOpen > 0){
+				cc = new CacheControl();
+				cc.setMaxAge((int)result.timeToOpen);
+			} else {
+				cc = sharedCacheControl;
+			}
+			return Response.status(200).entity(result)
+					.cacheControl(cc).tag(result.getTag())
+					.build();
+		} catch (ServiceException e) {
+			return Response.status(500).build();
+		}
+	}
+	
+	/*@Path("/{eventId}/{eventData}")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
 	public Response getEventData(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("eventData") String eventData) {
@@ -109,7 +167,7 @@ public class EventResource {
 		} catch (ServiceException e) {
 			return Response.status(400).entity(e.toString()).build();
 		}
-	}
+	}*/
 
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
@@ -123,6 +181,8 @@ public class EventResource {
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
 	public Event changeData(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, Event eventData) throws ServiceException {
+		//Delete cache
+		eventCache = new ArrayList<EventData>(3);
 		return eventService.changeEventData(sessionId, eventId, eventData);
 	}
 	
@@ -132,11 +192,11 @@ public class EventResource {
 		return eventService.getAllEvents(sessionId);
 	}
 	
-	@Path("/{eventId}")
+	/*@Path("/{eventId}")
 	@GET
 	public Event getEvent(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
 		return eventService.getEvent(sessionId, eventId);
-	}
+	}*/
 
 	@Path("/byName/{name}") 
 	@GET
@@ -148,14 +208,16 @@ public class EventResource {
 	@Path("/{eventId}")
 	@DELETE
 	public void removeEvent(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
+		//Delete cache
+		eventCache = new ArrayList<EventData>(3);
 		eventService.removeEvent(sessionId, eventId);
 	}
 	
-	@Path("/rules/{eventId}")
+	/*@Path("/rules/{eventId}")
 	@GET
 	public String getEventRules(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
 		return eventService.getEventRules(sessionId, eventId);
-	}
+	}*/
 	
 	@Path("/resgistrationIsOpen/{eventId}")
 	@GET

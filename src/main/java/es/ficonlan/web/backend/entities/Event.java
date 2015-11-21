@@ -13,9 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -34,7 +32,7 @@ public class Event {
     private String description;
     private int numParticipants;
     private int minimunAge;
-    private int price; 
+    private int price;
     private Calendar startDate;
     private Calendar endDate;
     private Calendar registrationOpenDate;
