@@ -91,7 +91,7 @@ public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> imp
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<NewsItem> getAllPublishedNewsItemFromEvent(int eventId, int startIndex, int cont) {
+	public List<NewsItem> getPublishedNewsFromEvent(int eventId, int startIndex, int cont) {
 		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		Query q = getSession().createQuery(
 	        	"SELECT n " +
@@ -121,5 +121,12 @@ public class NewsDaoHibernate extends GenericDaoHibernate<NewsItem, Integer> imp
 		        "FROM NewsItem n WHERE n.event.eventId = :eventId "  +
 		        " ORDER BY n.publishDate DESC"
 		        ).setParameter("eventId", eventId).uniqueResult();
+	}
+	
+	public Calendar getNextPublicationTime(int eventId) {
+		return (Calendar) getSession().createQuery(
+				"SELECT min(n.publishDate) FROM NewsItem n " +
+				"WHERE n.event.eventId = :eventId AND n.publishDate > current_date"
+				).setParameter("eventId", eventId).uniqueResult();
 	}
 }

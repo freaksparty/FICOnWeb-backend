@@ -11,7 +11,7 @@ import es.ficonlan.web.backend.entities.Activity.ActivityType;
 
 /**
  * @author Miguel Ángel Castillo Bellagona
- * @version 1.0
+ * @author Siro González <xiromoreira>
  */
 @Repository("activityDao")
 public class ActivityDaoHibernate extends
@@ -68,6 +68,29 @@ public class ActivityDaoHibernate extends
 					.setParameter("type", type);
 		
 		return (long) query.uniqueResult();
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Activity> findActivitiesByEvent(int eventId, ActivityType type) {
+		
+		Query query = null;
+		
+		if (type == null)
+			query = getSession().createQuery("SELECT a "
+									+ "FROM Activity a "
+									+ "WHERE a.event.eventId = :eventId ")
+					.setParameter("eventId", eventId);
+		else
+			query = getSession().createQuery(
+							"SELECT a "
+							+ "FROM Activity a "
+							+ "WHERE a.event.eventId = :eventId AND a.type = :type ")
+					.setParameter("eventId", eventId)
+					.setParameter("type", type);
+		
+		return (List<Activity>) query.list();
 		
 	}
 

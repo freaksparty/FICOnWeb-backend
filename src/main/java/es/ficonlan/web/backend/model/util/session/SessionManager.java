@@ -12,6 +12,7 @@ import es.ficonlan.web.backend.entities.UseCase;
 public class SessionManager {
 	
 	private static ConcurrentHashMap<String, Session> openSessions = new ConcurrentHashMap<String, Session>();
+	private static Session defaultSession;
 	
 	public static boolean exists(String sessionId){
 		return openSessions.containsKey(sessionId);
@@ -91,5 +92,13 @@ public class SessionManager {
 		    }
 		}
 		return false;
+	}
+
+	public static Session getDefaultSession() {
+		return defaultSession;
+	}
+
+	public static void setDefaultSession(Session defaultSession) {
+		SessionManager.defaultSession = defaultSession;
 	}
 }

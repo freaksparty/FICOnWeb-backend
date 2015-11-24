@@ -41,6 +41,7 @@ import es.ficonlan.web.backend.util.ShirtData;
  * @author David Pereiro
  * @author Daniel Gómez Silva
  * @author Miguel Ángel Castillo Bellagona
+ * @author Siro González <xiromoreira>
  */
 @Service("EventService")
 @Transactional
@@ -100,10 +101,7 @@ public class EventServiceImpl implements EventService {
     
     @Override
     @Transactional(readOnly = true)
-    public Event getEvent(String sessionId, int eventId) throws ServiceException {
-    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-		
+    public Event getEvent(int eventId) throws ServiceException {
     	try 
 		{
 			return eventDao.find(eventId);
@@ -114,7 +112,7 @@ public class EventServiceImpl implements EventService {
 		}
     }
     
-    @Override
+    /*@Override
     @Transactional(readOnly = true)
     public String getEventRules(String sessionId, int eventId) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -125,7 +123,7 @@ public class EventServiceImpl implements EventService {
     	} catch (InstanceException e) {
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
 		}	
-    }
+    }*/
     
     @Override
     @Transactional(readOnly = true)
@@ -886,19 +884,20 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<NewsItem>getAllPublishedNewsItemFormEvent(String sessionId, int eventId, int startIndex, int cont) throws ServiceException {
-    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getAllPublishedNewsItemFormEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-    	
-		return newsDao.getAllPublishedNewsItemFromEvent(eventId,startIndex,cont);
+    public List<NewsItem>getPublishedNewsForEvent(int eventId, int startIndex, int cont) throws ServiceException {
+		return newsDao.getPublishedNewsFromEvent(eventId,startIndex,cont);
     }
     
     @Override
     @Transactional(readOnly = true)
-    public long getAllPublishedNewsItemFromEventTam(String sessionId, int eventId) throws ServiceException {
-    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getAllPublishedNewsItemFromEventTam")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+    public long countPublishedNewsFromEvent(int eventId) throws ServiceException {
     	return newsDao.getAllPublishedNewsItemFromEventTam(eventId);
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Calendar nextNewsUpdate(int eventId) throws ServiceException {
+    	return newsDao.getNextPublicationTime(eventId);
     }
     
     @Override
@@ -1086,6 +1085,17 @@ public class EventServiceImpl implements EventService {
 			if (e.getClassName().contentEquals("Event")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
 			else throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"EmailTemplate");
 		}
+	}
+
+	/*@Override
+	public String getEventRules(String sessionId, int eventId) throws ServiceException {
+		// TODO Apéndice de método generado automáticamente
+		return null;
+	}*/
+
+	@Override
+	public List<Activity> getActivitiesByEvent(int eventId, ActivityType type) {
+		return activityDao.findActivitiesByEvent(eventId, type);
 	}
 
 }

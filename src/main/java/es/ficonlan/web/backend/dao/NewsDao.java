@@ -7,6 +7,7 @@ import es.ficonlan.web.backend.entities.NewsItem;
 
 /**
  * @author Daniel Gómez Silva
+ * @author Siro González <xiromoreira>
  */
 public interface NewsDao extends GenericDao<NewsItem,Integer> {
 	
@@ -18,10 +19,12 @@ public interface NewsDao extends GenericDao<NewsItem,Integer> {
 	
 	public List<NewsItem> getLastNewsFormEvent(int eventId, Calendar dateLimit, boolean onlyOutstandingNews); 
 	
-	public List<NewsItem> getAllPublishedNewsItemFromEvent(int eventId, int startIndex, int cont);
+	public List<NewsItem> getPublishedNewsFromEvent(int eventId, int startIndex, int cont);
 	
 	public long getAllPublishedNewsItemFromEventTam(int eventId);
 	
 	public long getAllNewsItemFromEventTam(int eventId);
+	
+	public Calendar getNextPublicationTime(int eventId);
 	
 }

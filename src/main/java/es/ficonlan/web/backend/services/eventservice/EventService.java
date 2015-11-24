@@ -27,7 +27,7 @@ public interface EventService {
 	
 	public void removeEvent(String sessionId, int eventId) throws ServiceException;
 	
-	public Event getEvent(String sessionId, int eventId) throws ServiceException;
+	public Event getEvent(int eventId) throws ServiceException;
 	
 	public Event changeEventData(String sessionId, int eventId, Event eventData) throws ServiceException;
 	
@@ -36,7 +36,7 @@ public interface EventService {
     public List<Event> findEventByName(String sessionId, String name) throws ServiceException;
     
     
-    public String getEventRules(String sessionId, int eventId) throws ServiceException;
+    //public String getEventRules(String sessionId, int eventId) throws ServiceException;
     
     public boolean eventIsOpen(String sessionId, int eventId) throws ServiceException;
     
@@ -74,6 +74,8 @@ public interface EventService {
     
     public List<Activity> getAllActivities(String sessionId) throws ServiceException;
     
+    public List<Activity> getActivitiesByEvent(int eventId, ActivityType type);
+    
     public List<Activity> getActivitiesByEvent(String sessionId, int eventId, int startIndex, int cont, String orderBy, boolean desc, ActivityType type) throws ServiceException;
     
     public long getActivitiesByEventTAM(String sessionId, int eventId, ActivityType type) throws ServiceException;
@@ -95,9 +97,14 @@ public interface EventService {
     
     public List<NewsItem> getAllNewsItemFormEvent(String sessionId, int eventId, int startIndex, int cont, String orderBy, boolean desc) throws ServiceException;
     
-    public List<NewsItem>getAllPublishedNewsItemFormEvent(String sessionId, int eventId, int startIndex, int cont) throws ServiceException;
+    public List<NewsItem> getPublishedNewsForEvent(int eventId, int startIndex, int cont) throws ServiceException;
     
-    public long getAllPublishedNewsItemFromEventTam(String sessionId, int eventId) throws ServiceException;
+    public long countPublishedNewsFromEvent(int eventId) throws ServiceException;
+    
+    /*
+     * Returns the publishion time of the next non-published NewsItem
+     */
+    public Calendar nextNewsUpdate(int eventId) throws ServiceException;
     
     public long getAllNewsItemFromEventTam(String sessionId, int eventId) throws ServiceException;
     

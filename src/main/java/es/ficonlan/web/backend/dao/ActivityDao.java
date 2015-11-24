@@ -17,6 +17,8 @@ public interface ActivityDao extends GenericDao<Activity, Integer> {
 	public List<Activity> findActivitiesByEvent(int eventId, ActivityType type, int startIndex, int cont, String orderBy, boolean desc);
 	
 	public long findActivitiesByEventTAM(int eventId, ActivityType type);
+	
+	public List<Activity> findActivitiesByEvent(int eventId, ActivityType type);
 
 	public List<User> getParticipants(int activityId);
 

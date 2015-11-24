@@ -37,7 +37,7 @@ public class UserDaoHibernate extends GenericDaoHibernate<User,Integer> implemen
 	        	"ORDER BY u.login").uniqueResult();
 	}
 	
-	public User findUserBylogin(String login) {
+	public User findUserByLogin(String login) {
 		return (User) getSession()
 				.createQuery("SELECT u FROM User u WHERE User_login = :login AND u.deleted=FALSE ")
 				.setParameter("login", login).uniqueResult();

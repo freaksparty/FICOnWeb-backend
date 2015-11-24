@@ -9,6 +9,6 @@ import java.lang.annotation.ElementType;
 @Target(ElementType.METHOD)
 public @interface UseCasePermission {
 
-	String allowed() default "none";
+	String value() default "none";
 	
 }

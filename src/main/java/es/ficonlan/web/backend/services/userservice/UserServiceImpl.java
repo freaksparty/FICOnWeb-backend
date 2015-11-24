@@ -37,6 +37,7 @@ import es.ficonlan.web.backend.services.eventservice.EventService;
 /**
  * @author Daniel Gómez Silva
  * @author Miguel Ángel Castillo Bellagona
+ * @author Siro González <xiromoreira>
  */
 @Service("UserService")
 @Transactional
@@ -86,6 +87,8 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public void initialize(){
 		
+		SessionManager.setDefaultSession(new Session(userDao.findUserByLogin("anonymous")));
+		
 		for(Method m:UserService.class.getMethods()){
 			UseCase uc = useCaseDao.findByName(m.getName());
 			if (uc==null && !m.getName().contentEquals("initialize") && 
@@ -132,14 +135,14 @@ public class UserServiceImpl implements UserService {
 			roleDao.save(anonymousRole);
 		}
 		
-		User anonymous = userDao.findUserBylogin("anonymous");
+		User anonymous = userDao.findUserByLogin("anonymous");
 		if (anonymous == null){
 			anonymous = new User("-", "anonymous", "anonymous", "-", "-", "-", "-");
 			anonymous.getRoles().add(anonymousRole);
 	    	userDao.save(anonymous);
 		}
 		
-		User admin = userDao.findUserBylogin(ADMIN_LOGIN);
+		User admin = userDao.findUserByLogin(ADMIN_LOGIN);
 		if (admin == null) admin = new User("Administrador", ADMIN_LOGIN, hashPassword(INITIAL_ADMIN_PASS), "0", "adminMail", "-", "-");
 		if(!admin.getRoles().contains(adminRole)) admin.getRoles().add(adminRole);
     	userDao.save(admin);
@@ -147,7 +150,7 @@ public class UserServiceImpl implements UserService {
 	
 	@Transactional
 	public Session newAnonymousSession() {
-		User user = userDao.findUserBylogin("anonymous");
+		User user = userDao.findUserByLogin("anonymous");
 		Session s = new Session(user);
 		SessionManager.addSession(s);
 		return s;
@@ -157,7 +160,7 @@ public class UserServiceImpl implements UserService {
 	public User addUser(String sessionId, User user) throws ServiceException{
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "addUser")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-		User u = userDao.findUserBylogin(user.getLogin());
+		User u = userDao.findUserByLogin(user.getLogin());
 		if (u != null) throw new ServiceException(ServiceException.DUPLICATED_FIELD,"login");
 		u = userDao.findUserByDni(user.getDni());
 		if (u != null) throw new ServiceException(ServiceException.DUPLICATED_FIELD,"dni");
@@ -183,7 +186,7 @@ public class UserServiceImpl implements UserService {
 		Session session = SessionManager.getSession(sessionId);
 		if(login.contentEquals("anonymous")) return session;
 		if(!session.getLoginName().contentEquals("anonymous")) throw new ServiceException(ServiceException.SESSION_ALREADY_EXISTS);
-		User user = userDao.findUserBylogin(login);
+		User user = userDao.findUserByLogin(login);
 		
 		boolean secondPass = false;
 		

@@ -30,6 +30,7 @@ import es.ficonlan.web.backend.jersey.resources.UserResource;
 import es.ficonlan.web.backend.jersey.resources.UsersResource;
 import es.ficonlan.web.backend.jersey.util.CORSResponseFilter;
 import es.ficonlan.web.backend.jersey.util.ServiceExceptionMapper;
+import es.ficonlan.web.backend.jersey.util.SessionControlDynamicFeature;
 import es.ficonlan.web.backend.model.email.EmailFIFO;
 import es.ficonlan.web.backend.model.util.session.SessionManager;
 import es.ficonlan.web.backend.services.userservice.UserService;
@@ -76,6 +77,8 @@ public class Main {
 		// in es.ficonlan.web.prueba package
 		final ResourceConfig rc = new ResourceConfig();
 		//rc.packages("es.ficonlan.web.backend.jersey.resources");
+		
+		rc.register(SessionControlDynamicFeature.class);
 		
 		rc.register(ActivityResource.class);
 		rc.register(EventResource.class);

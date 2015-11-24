@@ -15,7 +15,7 @@ public interface UserDao extends GenericDao<User,Integer> {
 	
 	public long getAllUsersTAM();
 	
-	public User findUserBylogin(String login);
+	public User findUserByLogin(String login);
 	
 	public User findUserByDni(String dni);
 	
