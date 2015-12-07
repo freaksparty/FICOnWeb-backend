@@ -32,6 +32,8 @@ import es.ficonlan.web.backend.jersey.util.CORSResponseFilter;
 import es.ficonlan.web.backend.jersey.util.ServiceExceptionMapper;
 import es.ficonlan.web.backend.jersey.util.SessionControlDynamicFeature;
 import es.ficonlan.web.backend.model.email.EmailFIFO;
+import es.ficonlan.web.backend.model.util.SaveImages;
+import es.ficonlan.web.backend.model.util.exceptions.InvalidImageFormatException;
 import es.ficonlan.web.backend.model.util.session.SessionManager;
 import es.ficonlan.web.backend.services.userservice.UserService;
 
@@ -116,7 +118,12 @@ public class Main {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-
+		try {
+			SaveImages.saveImage("http://koiora.net/wp-content/uploads/2012/05/xgn.pn", "/home/manu","prueba3");
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		// Spring context initialization.
 		@SuppressWarnings("resource")
 		ApplicationContext ctx = new ClassPathXmlApplicationContext("spring-config.xml");
