@@ -118,12 +118,12 @@ public class Main {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		try {
+		/*try {
 			SaveImages.saveImage("http://koiora.net/wp-content/uploads/2012/05/xgn.pn", "/home/manu","prueba3");
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		}
+		}*/
 		// Spring context initialization.
 		@SuppressWarnings("resource")
 		ApplicationContext ctx = new ClassPathXmlApplicationContext("spring-config.xml");

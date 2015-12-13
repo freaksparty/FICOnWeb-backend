@@ -478,7 +478,7 @@ public class EventResource {
 	}
 
 	
-	@Path("/news/{eventId}/query")
+	@Path("/{eventId}/news/query")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<NewsItem> getAllNewsItem(@HeaderParam("sessionId") String sessionId, 
@@ -494,7 +494,6 @@ public class EventResource {
 		boolean b = true;
 		if(desc==0) b = false;
 		return eventService.getAllNewsItemFormEvent(sessionId,eventId,startIndex,cont,orderBy,b);
-	
 	}
 	
 	/*@Path("/news/published/{eventId}/{page}/{pageTam}")
