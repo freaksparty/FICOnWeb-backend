@@ -286,7 +286,7 @@ public class EventResource {
 		return eventService.eventIsOpen(sessionId, eventId);
 	}
 	
-	@Path("/activity/{eventId}")
+	@Path("/{eventId}/activity")
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
@@ -321,7 +321,7 @@ public class EventResource {
 		return eventService.getActivitiesByEvent(sessionId, eventId, startIndex, cont, orderBy, b, t);
 	}*/
 	
-	/*@Path("/activityHeaders/{eventId}/query")
+	@Path("/{eventId}/activityHeaders/query")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<ActivityHeader> getActivityHeaderByEvent(@HeaderParam("sessionId") String sessionId, 
@@ -346,7 +346,7 @@ public class EventResource {
 		return (List<ActivityHeader>) eventService.getActivitiesByEvent(sessionId, eventId, startIndex, cont, orderBy, b, t).stream().map(Activity::generateActivityHeader).collect(Collectors.toList());
 	}
 	
-	@Path("/activityTAM/{eventId}/{type}")
+	@Path("/{eventId}/activityTAM/{type}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public long getActivityByEventTAM(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("type") String type) throws ServiceException {
@@ -357,7 +357,7 @@ public class EventResource {
     		if(type.toLowerCase().contentEquals("conference")) t=ActivityType.Conference;
 		}
 		return eventService.getActivitiesByEventTAM(sessionId, eventId, t);
-	}*/
+	}
 	
 	@Path("/sponsor/{eventId}")
 	@POST
