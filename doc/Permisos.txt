@@ -45,3 +45,5 @@ USERremoveParticipantFromEvent
 Los premisos van a ser reescritos, de modo que sea el recurso y no el servicio quien los vigile. La nueva anotacion @UserCasePermission("useCase") automatiza la tarea en cada método del recurso ahorrando redundancia de código.
 Nuevos permisos (@UseCasePermission)
 getEvent (getEvent(), getEventSponsors(), getActivity()...)
+createEvent
+changeEventData

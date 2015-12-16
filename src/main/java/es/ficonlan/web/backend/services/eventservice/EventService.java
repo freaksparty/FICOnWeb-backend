@@ -23,13 +23,13 @@ import es.ficonlan.web.backend.util.ShirtData;
  */
 public interface EventService {   
 
-	public Event createEvent(String sessionId, Event event) throws ServiceException;
+	public Event createEvent(Event event) throws ServiceException;
 	
 	public void removeEvent(String sessionId, int eventId) throws ServiceException;
 	
 	public Event getEvent(int eventId) throws ServiceException;
 	
-	public Event changeEventData(String sessionId, int eventId, Event eventData) throws ServiceException;
+	public Event changeEventData(int eventId, Event eventData) throws ServiceException;
 	
 	public List<Event> getAllEvents(String sessionId) throws ServiceException;
 
@@ -38,7 +38,7 @@ public interface EventService {
     
     //public String getEventRules(String sessionId, int eventId) throws ServiceException;
     
-    public boolean eventIsOpen(String sessionId, int eventId) throws ServiceException;
+    public boolean eventIsOpen(int eventId) throws ServiceException;
     
 		
 	public Registration addParticipantToEvent(String sessionId, int userId, int eventId) throws ServiceException;
@@ -53,7 +53,7 @@ public interface EventService {
 	
 	public void changeRegistrationState(String sessionId, int userId, int eventId, RegistrationState state) throws ServiceException;
 	
-	public void eventNumParticipantsChanged(String sessionId, int eventId) throws ServiceException;
+	public void eventNumParticipantsChanged(int eventId) throws ServiceException;
 	
 	public List<RegistrationData> getRegistrationByEvent(String sessionId, int eventId, RegistrationState state, int startindex, int maxResults, String orderBy, boolean desc) throws ServiceException;
 	

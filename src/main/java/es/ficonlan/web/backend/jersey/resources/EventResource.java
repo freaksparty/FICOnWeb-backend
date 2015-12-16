@@ -164,6 +164,26 @@ public class EventResource {
 		}
 	}
 	
+	@POST
+	@Consumes({MediaType.APPLICATION_JSON})
+	@Produces(MediaType.APPLICATION_JSON)
+	@UseCasePermission("createEvent")
+	public Event createEvent(@HeaderParam("sessionId") String sessionId, Event event) throws ServiceException {
+		return eventService.createEvent(event);
+	}
+	
+	@Path("/{eventId}")
+	@PUT
+	@Consumes({MediaType.APPLICATION_JSON})
+	@Produces(MediaType.APPLICATION_JSON)
+	@UseCasePermission("changeEventData")
+	public Event changeData(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, Event eventData) throws ServiceException {
+		//Delete cache
+		eventCache = new ArrayList<EventData>(3);
+		newsCache.clear();
+		return eventService.changeEventData(eventId, eventData);
+	}
+
 	@Path("/{eventId}/news/published/{page}/{pageTam}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -229,24 +249,6 @@ public class EventResource {
 			return Response.status(400).entity(e.toString()).build();
 		}
 	}*/
-
-	@POST
-	@Consumes({MediaType.APPLICATION_JSON})
-	@Produces(MediaType.APPLICATION_JSON)
-	public Event createEvent(@HeaderParam("sessionId") String sessionId, Event event) throws ServiceException {
-		return eventService.createEvent(sessionId, event);
-	}
-	
-	@Path("/{eventId}")
-	@PUT
-	@Consumes({MediaType.APPLICATION_JSON})
-	@Produces(MediaType.APPLICATION_JSON)
-	public Event changeData(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, Event eventData) throws ServiceException {
-		//Delete cache
-		eventCache = new ArrayList<EventData>(3);
-		newsCache.clear();
-		return eventService.changeEventData(sessionId, eventId, eventData);
-	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -284,8 +286,9 @@ public class EventResource {
 	
 	@Path("/resgistrationIsOpen/{eventId}")
 	@GET
-	public boolean eventIsOpen(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
-		return eventService.eventIsOpen(sessionId, eventId);
+	@UseCasePermission("getEvent")
+	public boolean eventIsOpen(@PathParam("eventId") int eventId) throws ServiceException {
+		return eventService.eventIsOpen(eventId);
 	}
 	
 	@Path("/{eventId}/activity")

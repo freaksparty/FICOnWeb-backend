@@ -70,9 +70,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-	public Event createEvent(String sessionId, Event event) throws ServiceException {
-    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "createEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+	public Event createEvent(Event event) throws ServiceException {
 		if(event.getName()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"name");
 		if(event.getStartDate()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"startDate");
 		if(event.getEndDate()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"endDate");
@@ -127,24 +125,20 @@ public class EventServiceImpl implements EventService {
     
     @Override
     @Transactional(readOnly = true)
-    public boolean eventIsOpen(String sessionId, int eventId) throws ServiceException {
-    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "eventIsOpen")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+    public boolean eventIsOpen(int eventId) throws ServiceException {
     	try{
     		Event event = eventDao.find(eventId);
     		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     		if(now.after(event.getRegistrationOpenDate()) && now.before(event.getRegistrationCloseDate())) return true;
     		else return false;
     	} catch (InstanceException e) {
-		throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
+    		throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
     	}	
     }
 
     @Override
     @Transactional
-	public Event changeEventData(String sessionId, int eventId, Event eventData) throws ServiceException {
-    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "changeEventData")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+	public Event changeEventData(int eventId, Event eventData) throws ServiceException {
     	try{
     		Event event = eventDao.find(eventId);
     		int oldNumParticipants = event.getNumParticipants();
@@ -159,7 +153,7 @@ public class EventServiceImpl implements EventService {
     		if(eventData.getRegistrationOpenDate()!=null) event.setRegistrationOpenDate(eventData.getRegistrationOpenDate());
     		if(eventData.getRegistrationCloseDate()!=null) event.setRegistrationCloseDate(eventData.getRegistrationCloseDate());
         	eventDao.save(event);
-        	if(eventData.getNumParticipants()>oldNumParticipants) eventNumParticipantsChanged(sessionId,eventId);
+        	if(eventData.getNumParticipants()>oldNumParticipants) eventNumParticipantsChanged(eventId);
         	if(eventData.getNormas()!=null) event.setNormas(eventData.getNormas());
         	return event;
     	} catch (InstanceException e) {
@@ -501,10 +495,8 @@ public class EventServiceImpl implements EventService {
     
     @Override
 	@Transactional
-    public void eventNumParticipantsChanged(String sessionId, int eventId) throws ServiceException {
-    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "eventNumParticipantsChanged")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-		
+    public void eventNumParticipantsChanged(int eventId) throws ServiceException {
+    	
 		Event event = null;
 		try 
 		{
@@ -515,7 +507,7 @@ public class EventServiceImpl implements EventService {
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
 		}
 		
-        if (!eventIsOpen(sessionId,eventId)) return;
+        if (!eventIsOpen(eventId)) return;
 
 		int currentParticipants = registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.registered) + 
 				  registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.paid);
