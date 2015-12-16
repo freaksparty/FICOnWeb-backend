@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 
+import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
@@ -54,6 +55,7 @@ import es.ficonlan.web.backend.util.cache.SimpleMemCache;
  * @author Siro González <xiromoreira>
  */
 @Path("event")
+@Singleton
 public class EventResource {
 	
 	private String[] s1 = {"newsItemId","title","imageurl","creationDate","publishDate","publisher.login","event"};

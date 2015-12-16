@@ -721,13 +721,11 @@ public class EventServiceImpl implements EventService {
     
     @Override
     @Transactional(readOnly = true)
-    public Activity getActivity(String sessionId, int activityId) throws ServiceException {
-    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getActivity")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+    public Activity getActivity(int activityId) throws ServiceException {
 		try {
 			return activityDao.find(activityId);
 		} catch (InstanceException e) {
-			throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Activity");
+			throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND, "Activity");
 		}
     }
     

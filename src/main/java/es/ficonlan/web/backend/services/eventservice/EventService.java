@@ -70,7 +70,7 @@ public interface EventService {
     
     public Activity changeActivityData(String sessionId, int activityId, Activity activityData) throws ServiceException;
     
-    public Activity getActivity(String sessionId, int activityId) throws ServiceException;
+    public Activity getActivity(int activityId) throws ServiceException;
     
     public List<Activity> getAllActivities(String sessionId) throws ServiceException;
     
