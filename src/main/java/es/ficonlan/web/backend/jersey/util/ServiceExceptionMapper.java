@@ -77,6 +77,9 @@ public class ServiceExceptionMapper implements ExceptionMapper<Exception> {
 		    System.out.println(webEx.toString());
 		        
 		    return webEx.getResponse();
-		} else return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Internal error").type("text/plain").build();		    
+		} else {
+			exception.printStackTrace();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Internal error").type("text/plain").build();		    
+		}
 	}
 }
