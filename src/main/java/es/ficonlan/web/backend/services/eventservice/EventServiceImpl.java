@@ -142,7 +142,6 @@ public class EventServiceImpl implements EventService {
     	try{
     		Event event = eventDao.find(eventId);
     		int oldNumParticipants = event.getNumParticipants();
-    		event.setEventId(eventId);
     		if(eventData.getName()!=null) event.setName(eventData.getName());
     		if(eventData.getDescription()!=null) event.setDescription(eventData.getDescription());
     	    if(eventData.getNumParticipants()>0) event.setNumParticipants(eventData.getNumParticipants());
@@ -152,13 +151,14 @@ public class EventServiceImpl implements EventService {
     		if(eventData.getEndDate()!=null) event.setEndDate(eventData.getEndDate()); 
     		if(eventData.getRegistrationOpenDate()!=null) event.setRegistrationOpenDate(eventData.getRegistrationOpenDate());
     		if(eventData.getRegistrationCloseDate()!=null) event.setRegistrationCloseDate(eventData.getRegistrationCloseDate());
+    		if(eventData.getNormas()!=null) event.setNormas(eventData.getNormas());
         	eventDao.save(event);
         	if(eventData.getNumParticipants()>oldNumParticipants) eventNumParticipantsChanged(eventId);
-        	if(eventData.getNormas()!=null) event.setNormas(eventData.getNormas());
+        	
         	return event;
     	} catch (InstanceException e) {
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
-		}	
+		}
 	}
 
     @Override
@@ -986,9 +986,7 @@ public class EventServiceImpl implements EventService {
     
     @Override
     @Transactional(readOnly = true)
-    public List<Sponsor> getSponsorsByEvent(String sessionId, int eventId) throws ServiceException {
-    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getSponsors")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+    public List<Sponsor> getSponsorsByEvent(int eventId) throws ServiceException {
     	return sponsorDao.getByEvent(eventId);
     }
 

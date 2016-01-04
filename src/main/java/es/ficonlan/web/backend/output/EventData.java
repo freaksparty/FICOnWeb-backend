@@ -2,6 +2,7 @@ package es.ficonlan.web.backend.output;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -13,6 +14,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import es.ficonlan.web.backend.entities.Activity;
 import es.ficonlan.web.backend.entities.EmailTemplate;
 import es.ficonlan.web.backend.entities.Event;
+import es.ficonlan.web.backend.entities.Sponsor;
 import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
 import es.ficonlan.web.backend.util.cache.Cacheable;
 
@@ -30,6 +32,20 @@ public class EventData implements Cacheable {
 		}
 	}
 	
+	public static class SponsorDataShort {
+		public int sponsorId;
+		public String name;
+		public String url;
+		public String imageurl;
+		
+		public SponsorDataShort(Sponsor s) {
+			sponsorId = s.getSponsorId();
+			name = s.getName();
+			url = s.getUrl();
+			imageurl = s.getImageurl();
+		}
+	}
+	
 	
     public int eventId;
     public String name;
@@ -43,9 +59,10 @@ public class EventData implements Cacheable {
     @JsonSerialize(using = JsonDateSerializer.class)
     public Calendar openInscriptionDate;
     public String rules;
-    public ArrayList<ActivityDataShort> tournaments = new ArrayList<ActivityDataShort>();
-    public ArrayList<ActivityDataShort> conferences = new ArrayList<ActivityDataShort>();
-    public ArrayList<ActivityDataShort> productions = new ArrayList<ActivityDataShort>();
+    public List<ActivityDataShort> tournaments = new ArrayList<ActivityDataShort>();
+    public List<ActivityDataShort> conferences = new ArrayList<ActivityDataShort>();
+    public List<ActivityDataShort> productions = new ArrayList<ActivityDataShort>();
+    public List<SponsorDataShort> sponsors = new ArrayList<SponsorDataShort>();
     @JsonIgnore
     private Calendar closeInscriptionDate;
     @JsonIgnore
@@ -82,7 +99,7 @@ public class EventData implements Cacheable {
     	}
     }
     
-    public void addActivities(List<Activity> tl) {
+    public void addActivities(Collection<Activity> tl) {
     	for(Activity a : tl) {
     		switch(a.getType()) {
     			case Conference:
@@ -95,6 +112,12 @@ public class EventData implements Cacheable {
     				tournaments.add(new ActivityDataShort(a));
     				break;
     		}
+    	}
+    }
+    
+    public void addSponsors(Collection<Sponsor> sponsors) {
+    	for(Sponsor s : sponsors) {
+    		this.sponsors.add(new SponsorDataShort(s));
     	}
     }
     

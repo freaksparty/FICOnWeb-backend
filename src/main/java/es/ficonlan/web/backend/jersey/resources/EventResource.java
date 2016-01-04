@@ -146,6 +146,7 @@ public class EventResource {
 				Event event = eventService.getEvent(eventId);
 				result = new EventData(event);
 				result.addActivities(eventService.getActivitiesByEvent(eventId, null));
+				result.addSponsors(eventService.getSponsorsByEvent(eventId));
 				eventCache.add(result);
 			}
 			CacheControl cc;
@@ -369,14 +370,16 @@ public class EventResource {
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
 	public Sponsor addSponsor(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, Sponsor sponsor) throws ServiceException {
+		eventCache.clear();
 		return eventService.addSponsor(sessionId,eventId,sponsor);
 	}
 	
-	@Path("/sponsor/{eventId}")
+	@Path("/{eventId}/sponsors")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
+	@UseCasePermission("getEvent")
 	public List<Sponsor> getSponsorsByEvent(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
-		return eventService.getSponsorsByEvent(sessionId,eventId);
+		return eventService.getSponsorsByEvent(eventId);
 	}
 
 	@Path("/getShirtSizes/{eventId}")

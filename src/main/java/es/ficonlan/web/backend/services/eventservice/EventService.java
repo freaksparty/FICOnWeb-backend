@@ -114,7 +114,6 @@ public interface EventService {
     
     public void removeNews(String sessionId, int newsItemId) throws ServiceException;
     
-    
     public Sponsor addSponsor(String sessionId, Sponsor sponsor) throws ServiceException;
     
     public Sponsor addSponsor(String sessionId, int eventId, Sponsor sponsor) throws ServiceException;
@@ -125,8 +124,7 @@ public interface EventService {
     
     public long getSponsorsTAM(String sessionId) throws ServiceException;
     
-    public List<Sponsor> getSponsorsByEvent(String sessionId, int eventId) throws ServiceException;
-    
+    public List<Sponsor> getSponsorsByEvent(int eventId) throws ServiceException;
     
 
 	public void setPaidTemplate (String sessionId, int eventId, int emailTemplateId) throws ServiceException;
