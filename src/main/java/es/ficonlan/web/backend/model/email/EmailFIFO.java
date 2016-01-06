@@ -26,22 +26,26 @@ public class EmailFIFO {
 							catch (Exception e1) {
 								emails.add(email);
 								//System.out.println("Error al enviar el Email " + email.getAsunto());
-								Thread.sleep(30000);
+								System.err.println("Could not send email.");
+								e1.printStackTrace();
+								Thread.sleep(15*60*1000);
 							}
-							Thread.sleep(100);
+							Thread.sleep(10*1000);
 						}
 						else {
 							//System.out.println("No hay Emails");
-							Thread.sleep(3000);
+							Thread.sleep(60*1000);
 						}
 					}
 				}
 				catch (Exception e2) {
-					System.out.println("Error en el sistema de Emvío de Email");
+					System.out.println("Error en el sistema de Envío de Email");
+					e2.printStackTrace();
 					throw new RuntimeException("EmailFIFO thread error: " + e2.getMessage());
 				}
 			}
 		};
+		System.out.println("INFO: starting email thread");
 		mailFIFO.start();
 	}
 

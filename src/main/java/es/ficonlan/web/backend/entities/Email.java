@@ -6,9 +6,11 @@ import java.util.TimeZone;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
+import javax.mail.Authenticator;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -30,7 +32,7 @@ public class Email {
 
 	protected int		emailId;
 
-	//TODO: make private userSend, passSend. Maybe those should not be there?
+	//TODO: make private userSend, passSend. Maybe those should not be here?
 	public String	userSend;
 	public String	passSend;
 	
@@ -142,13 +144,25 @@ public class Email {
 	public boolean sendMail() throws MessagingException {
 
 		Properties props = new Properties();
-		props.put("mail.smtp.host", "smtp.gmail.com");
-		props.setProperty("mail.smtp.starttls.enable", "true");
-		props.setProperty("mail.smtp.port", "587");
+		props.setProperty("mail.smtp.host", "smtp.gmail.com");
 		props.setProperty("mail.smtp.user", this.userSend);
 		props.setProperty("mail.smtp.auth", "true");
+		//TLS
+//		props.setProperty("mail.smtp.starttls.enable", "true");
+//		props.setProperty("mail.smtp.port", "587");
+		//SSL
+		props.setProperty("mail.smtp.ssl.enable", "true");
+		props.setProperty("mail.smtp.port", "465");
+		props.setProperty("mail.smtp.socketFactory.port", "465");
+		props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 
-		Session session = Session.getDefaultInstance(props, null);
+		Authenticator auth = new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(userSend, passSend);
+			}
+		};
+		
+		Session session = Session.getDefaultInstance(props, auth);
 		BodyPart texto = new MimeBodyPart();
 		texto.setText(this.getMensaje());
 
@@ -170,10 +184,11 @@ public class Email {
 		message.setSubject(this.getAsunto());
 		message.setContent(multiParte);
 
-		Transport t = session.getTransport("smtp");
-		t.connect(this.userSend, this.passSend);
-		t.sendMessage(message, message.getAllRecipients());
-		t.close();
+		//Transport t = session.getTransport("smtp");
+		//t.connect(userSend, passSend);
+		//t.sendMessage(message, message.getAllRecipients());
+		//t.close();
+		Transport.send(message);
 
 		this.setSendDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
 

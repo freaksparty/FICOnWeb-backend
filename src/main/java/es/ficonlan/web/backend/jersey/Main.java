@@ -74,8 +74,7 @@ public class Main {
 	 * @return Grizzly HTTP server.
 	 */
 	public static HttpServer startServer() {
-		// create a resource config that scans for JAX-RS resources and
-		// providers
+		// create a resource config that scans for JAX-RS resources and providers
 		// in es.ficonlan.web.prueba package
 		final ResourceConfig rc = new ResourceConfig();
 		//rc.packages("es.ficonlan.web.backend.jersey.resources");
@@ -108,7 +107,8 @@ public class Main {
 
 		// create and start a new instance of grizzly http server
 		// exposing the Jersey application at BASE_URI
-		return GrizzlyHttpServerFactory.createHttpServer(SERVER_URI, rc, IS_SECURE, new SSLEngineConfigurator(sslContext).setClientMode(false).setNeedClientAuth(true));
+		return GrizzlyHttpServerFactory.createHttpServer(SERVER_URI, rc, IS_SECURE, 
+				new SSLEngineConfigurator(sslContext).setClientMode(false).setNeedClientAuth(true));
 	}
 
 	/**

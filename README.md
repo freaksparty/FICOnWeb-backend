@@ -23,7 +23,7 @@ First run the app, some data will be created (UserCase, i.e):
 $ mvn exec:java
 ```
 
-Now you can create the Event, edit src/sql/MYSQL_CreateData.sql as your needs and run it:
+Now you can create the Event, edit src/sql/MYSQL_CreateData.sql as your needs (First line is the smtp account credentials), then and run it:
 
 ```
 $ mysql -u fpbackend -pfpbackendtestps backend < src/sql/MYSQL_CreateData.sql
