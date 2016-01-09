@@ -24,7 +24,7 @@ public interface EmailService {
 	
 	public void removeEmailTemplate(String sessionId, int emailTemplateId) throws ServiceException;
 	
-	public EmailTemplate changeEmailTemplate(String sessionId, int adressId, int emailTemplateId, EmailTemplate emailTemplateData) throws ServiceException;
+//	public EmailTemplate changeEmailTemplate(String sessionId, int adressId, int emailTemplateId, EmailTemplate emailTemplateData) throws ServiceException;
     
     public List<EmailTemplate> getAllEmailTemplate(String sessionId) throws ServiceException;
     
@@ -34,6 +34,8 @@ public interface EmailService {
     public EmailTemplate findEmailTemplateByName(String sessionId, String name) throws ServiceException;
     
     public EmailTemplate findEmailTemplateForEvent(final int eventId, final TypeEmail type) throws NoSuchFieldException;
+
+	public EmailTemplate changeEmailTemplate(final int emailTemplateId, final EmailTemplate emailTemplateData) throws ServiceException;
 	
 
 }

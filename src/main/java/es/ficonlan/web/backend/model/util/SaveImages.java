@@ -1,14 +1,11 @@
 package es.ficonlan.web.backend.model.util;
 
-import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import javax.xml.ws.http.HTTPException;
 
 import es.ficonlan.web.backend.model.util.exceptions.InvalidImageFormatException;
 import es.ficonlan.web.backend.util.ImageValidator;
@@ -37,7 +34,9 @@ public class SaveImages {
 			while ( (n = input.read(buffer)) != -1){
 			    output.write(buffer, 0, n);
 			}
+			os.close();
 			output.close();
+			
 		} catch (InvalidImageFormatException e) {
 			throw e;
 		}

@@ -133,7 +133,6 @@ public class EventResource {
 				cache.updateIsOpen();
 				ResponseBuilder builder = request.evaluatePreconditions(cache.getTag());
 				if(builder != null) {
-					CacheControl cc;
 					builder.cacheControl(getCacheControl(cache));
 					return builder.build();
 				} else {

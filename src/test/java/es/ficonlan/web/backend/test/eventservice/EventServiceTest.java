@@ -23,22 +23,18 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.ficonlan.web.backend.dao.ActivityDao;
-import es.ficonlan.web.backend.dao.AdressDao;
 import es.ficonlan.web.backend.dao.EmailTemplateDao;
 import es.ficonlan.web.backend.dao.EventDao;
 import es.ficonlan.web.backend.dao.NewsDao;
 import es.ficonlan.web.backend.dao.RegistrationDao;
-import es.ficonlan.web.backend.dao.RoleDao;
-import es.ficonlan.web.backend.dao.UseCaseDao;
-import es.ficonlan.web.backend.dao.UserDao;
 import es.ficonlan.web.backend.entities.Activity;
+import es.ficonlan.web.backend.entities.Activity.ActivityType;
 import es.ficonlan.web.backend.entities.EmailTemplate;
 import es.ficonlan.web.backend.entities.Event;
 import es.ficonlan.web.backend.entities.NewsItem;
 import es.ficonlan.web.backend.entities.Registration;
-import es.ficonlan.web.backend.entities.User;
-import es.ficonlan.web.backend.entities.Activity.ActivityType;
 import es.ficonlan.web.backend.entities.Registration.RegistrationState;
+import es.ficonlan.web.backend.entities.User;
 import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import es.ficonlan.web.backend.model.util.session.Session;
@@ -76,20 +72,20 @@ public class EventServiceTest {
     @Autowired
     private UserService userService;
 	
-    @Autowired
-	private UserDao userDao;
-	
-	@Autowired
-	private RoleDao roleDao;
-	
-	@Autowired
-	private UseCaseDao useCaseDao;
+//    @Autowired
+//	private UserDao userDao;
+//	
+//	@Autowired
+//	private RoleDao roleDao;
+//	
+//	@Autowired
+//	private UseCaseDao useCaseDao;
 	
 	@Autowired
 	private EmailTemplateDao emailTemplateDao;
 	
-	@Autowired
-	private AdressDao adressDao;
+//	@Autowired
+//	private AdressDao adressDao;
 	 
 	@Before 
 	public void initialize() {
@@ -99,7 +95,7 @@ public class EventServiceTest {
     @Test
     public void testCreateEvent() throws ServiceException, InstanceException{
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	/*Session s = */userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(), null, null, null, null, null);
     	eventService.createEvent(event);
     	assertTrue(eventDao.find(event.getEventId()).getEventId()==event.getEventId());
@@ -109,7 +105,7 @@ public class EventServiceTest {
     @Test
     public void testChangeEventData() throws ServiceException{
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	/*Session s = */userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
     	EmailTemplate et1 = new EmailTemplate();
     	et1.setAsunto(""); et1.setContenido(""); et1.setFilename(""); et1.setFilepath(""); et1.setName("");
     	emailTemplateDao.save(et1);

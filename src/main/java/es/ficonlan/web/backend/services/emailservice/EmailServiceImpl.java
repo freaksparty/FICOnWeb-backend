@@ -9,9 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import es.ficonlan.web.backend.dao.AdressDao;
 import es.ficonlan.web.backend.dao.EmailTemplateDao;
 import es.ficonlan.web.backend.dao.EmailTemplateDao.TypeEmail;
-import es.ficonlan.web.backend.dao.EventDao;
-import es.ficonlan.web.backend.dao.RegistrationDao;
-import es.ficonlan.web.backend.dao.UserDao;
 import es.ficonlan.web.backend.entities.Adress;
 import es.ficonlan.web.backend.entities.EmailTemplate;
 import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
@@ -28,17 +25,17 @@ public class EmailServiceImpl implements EmailService {
 	@Autowired
 	private AdressDao adressDao;
 	
-	@Autowired
-	private EventDao eventDao;
+//	@Autowired
+//	private EventDao eventDao;
 	
-	@Autowired
-	private RegistrationDao registrationDao;
+//	@Autowired
+//	private RegistrationDao registrationDao;
 	
 	@Autowired
 	private EmailTemplateDao emailTemplateDao;
 	
-	@Autowired
-	private UserDao userDao;
+//	@Autowired
+//	private UserDao userDao;
 	
 	@Transactional(readOnly = true)
 	@Override
@@ -150,18 +147,13 @@ public class EmailServiceImpl implements EmailService {
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"EmailTemplate");
 		}
 	}
-
+	
 	@Transactional
 	@Override
-	public EmailTemplate changeEmailTemplate(String sessionId, int adressId, int emailTemplateId, EmailTemplate emailTemplateData) throws ServiceException {
-		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "changeEmailTemplate")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-		
+	public EmailTemplate changeEmailTemplate(int emailTemplateId, EmailTemplate emailTemplateData) throws ServiceException {
 		try
 		{
 			EmailTemplate e = emailTemplateDao.find(emailTemplateId);
-			
-			e.setAdress(adressDao.find(adressId));
 
 			if(emailTemplateData.getName()!=null) e.setName(emailTemplateData.getName());
 			if(emailTemplateData.getFilepath()!=null) e.setFilepath(emailTemplateData.getFilepath());
@@ -169,17 +161,45 @@ public class EmailServiceImpl implements EmailService {
 
 			if(emailTemplateData.getContenido()!=null) e.setContenido(emailTemplateData.getContenido());
 			if(emailTemplateData.getAsunto()!=null) e.setAsunto(emailTemplateData.getAsunto());
-			else throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Adress");
 				
 			emailTemplateDao.save(e);
 			return e;
 		}
 		catch (InstanceException e)
 		{
-			if (e.getClassName().contentEquals("EmailTemplate")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"EmailTemplate");
-			else throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Adress");
+			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"EmailTemplate");
 		}
 	}
+
+//	@Transactional
+//	@Override
+//	public EmailTemplate changeEmailTemplate(String sessionId, int adressId, int emailTemplateId, EmailTemplate emailTemplateData) throws ServiceException {
+//		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+//		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "changeEmailTemplate")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+//		
+//		try
+//		{
+//			EmailTemplate e = emailTemplateDao.find(emailTemplateId);
+//			
+//			e.setAdress(adressDao.find(adressId));
+//
+//			if(emailTemplateData.getName()!=null) e.setName(emailTemplateData.getName());
+//			if(emailTemplateData.getFilepath()!=null) e.setFilepath(emailTemplateData.getFilepath());
+//			if(emailTemplateData.getFilename()!=null) e.setFilename(emailTemplateData.getFilename());
+//
+//			if(emailTemplateData.getContenido()!=null) e.setContenido(emailTemplateData.getContenido());
+//			if(emailTemplateData.getAsunto()!=null) e.setAsunto(emailTemplateData.getAsunto());
+//			else throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Adress");
+//				
+//			emailTemplateDao.save(e);
+//			return e;
+//		}
+//		catch (InstanceException e)
+//		{
+//			if (e.getClassName().contentEquals("EmailTemplate")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"EmailTemplate");
+//			else throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Adress");
+//		}
+//	}
 
 	@Transactional(readOnly = true)
 	@Override

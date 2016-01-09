@@ -1,6 +1,5 @@
 package es.ficonlan.web.backend.util.cache;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;

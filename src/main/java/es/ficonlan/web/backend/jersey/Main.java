@@ -32,8 +32,6 @@ import es.ficonlan.web.backend.jersey.util.CORSResponseFilter;
 import es.ficonlan.web.backend.jersey.util.ServiceExceptionMapper;
 import es.ficonlan.web.backend.jersey.util.SessionControlDynamicFeature;
 import es.ficonlan.web.backend.model.email.EmailFIFO;
-import es.ficonlan.web.backend.model.util.SaveImages;
-import es.ficonlan.web.backend.model.util.exceptions.InvalidImageFormatException;
 import es.ficonlan.web.backend.model.util.session.SessionManager;
 import es.ficonlan.web.backend.services.userservice.UserService;
 

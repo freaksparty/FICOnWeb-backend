@@ -22,7 +22,6 @@ import es.ficonlan.web.backend.entities.User;
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import es.ficonlan.web.backend.services.eventservice.EventService;
-import es.ficonlan.web.backend.util.cache.Cacheable;
 import es.ficonlan.web.backend.util.cache.SimpleMemCache;
 
 
@@ -36,15 +35,15 @@ import es.ficonlan.web.backend.util.cache.SimpleMemCache;
 public class ActivityResource {
 	
 	CacheControl sharedCacheControl;
-	private CacheControl getCacheControl(Cacheable obj) {
-		if(obj.timeToExpire() > 0 && obj.timeToExpire() < sharedCacheControl.getMaxAge()) {
-			CacheControl cc = new CacheControl();
-			cc.setMaxAge((int)obj.timeToExpire());
-			return cc;
-		} else {
-			return sharedCacheControl;
-		}
-	}
+//	private CacheControl getCacheControl(Cacheable obj) {
+//		if(obj.timeToExpire() > 0 && obj.timeToExpire() < sharedCacheControl.getMaxAge()) {
+//			CacheControl cc = new CacheControl();
+//			cc.setMaxAge((int)obj.timeToExpire());
+//			return cc;
+//		} else {
+//			return sharedCacheControl;
+//		}
+//	}
 	SimpleMemCache<Integer, Activity> activityCache;
 	
 	@Autowired

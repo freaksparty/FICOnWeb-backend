@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import es.ficonlan.web.backend.annotations.UseCasePermission;
 import es.ficonlan.web.backend.entities.EmailTemplate;
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
 import es.ficonlan.web.backend.model.email.EmailFIFO;
@@ -49,12 +50,21 @@ public class EmailTemplateResource {
 		return emailService.createEmailTemplate(sessionId, adressId, emailTemplate);
 	}
 	
-	@Path("/{adressId}/{emailTemplateId}")
+//	@Path("/{adressId}/{emailTemplateId}")
+//	@PUT
+//	@Consumes({MediaType.APPLICATION_JSON})
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public EmailTemplate changeEmailTemplate(@HeaderParam("sessionId") String sessionId, @PathParam("adressId") int adressId, @PathParam("emailTemplateId") int emailTemplateId, EmailTemplate emailTemplate) throws ServiceException {
+//		return emailService.changeEmailTemplate(sessionId, adressId, emailTemplateId, emailTemplate);
+//	}
+	
 	@PUT
+	@Path("/{emailTemplateId}")
+	@UseCasePermission("changeEventData")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
-	public EmailTemplate changeEmailTemplate(@HeaderParam("sessionId") String sessionId, @PathParam("adressId") int adressId, @PathParam("emailTemplateId") int emailTemplateId, EmailTemplate emailTemplate) throws ServiceException {
-		return emailService.changeEmailTemplate(sessionId, adressId, emailTemplateId, emailTemplate);
+	public EmailTemplate changeEmailTemplate(@PathParam("emailTemplateId") int emailTemplateId, EmailTemplate emailTemplate) throws ServiceException {
+		return emailService.changeEmailTemplate(emailTemplateId, emailTemplate);
 	}
 	
 	@GET
