@@ -2,6 +2,7 @@ package es.ficonlan.web.backend.services.emailservice;
 
 import java.util.List;
 
+import es.ficonlan.web.backend.dao.EmailTemplateDao.TypeEmail;
 import es.ficonlan.web.backend.entities.Adress;
 import es.ficonlan.web.backend.entities.EmailTemplate;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
@@ -31,6 +32,8 @@ public interface EmailService {
     public List<EmailTemplate> searchEmailTemplatesByEvent(String sessionId, int eventId) throws ServiceException;
     
     public EmailTemplate findEmailTemplateByName(String sessionId, String name) throws ServiceException;
+    
+    public EmailTemplate findEmailTemplateForEvent(final int eventId, final TypeEmail type) throws NoSuchFieldException;
 	
 
 }

@@ -53,7 +53,7 @@ public class EmailFIFO {
 		return emails.size();
 	}
 	
-	public static void adEmailToQueue(Email email) {
+	public static void addEmailToQueue(Email email) {
 		emails.add(email);
 	}
 }

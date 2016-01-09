@@ -26,7 +26,7 @@ public class ActivityHeader {
 		this.name = name;
 		this.type = type;
 		this.startDate = startDate;
-		this.endDate  = endDate;	
+		this.endDate  = endDate;
 	}
 
 	public int getActivityId() {

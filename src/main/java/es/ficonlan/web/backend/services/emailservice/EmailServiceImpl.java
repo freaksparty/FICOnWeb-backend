@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.ficonlan.web.backend.dao.AdressDao;
 import es.ficonlan.web.backend.dao.EmailTemplateDao;
+import es.ficonlan.web.backend.dao.EmailTemplateDao.TypeEmail;
 import es.ficonlan.web.backend.dao.EventDao;
 import es.ficonlan.web.backend.dao.RegistrationDao;
 import es.ficonlan.web.backend.dao.UserDao;
@@ -64,11 +65,11 @@ public class EmailServiceImpl implements EmailService {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getAdress")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		
-		try 
+		try
 		{
 			return adressDao.find(adressId);
-		} 
-		catch (InstanceException e) 
+		}
+		catch (InstanceException e)
 		{
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Adress");
 		}
@@ -80,15 +81,15 @@ public class EmailServiceImpl implements EmailService {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "modifyAdress")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		
-		try 
+		try
 		{
 			Adress a = adressDao.find(adressId);
 			if(newAdress.getUsuarioCorreo()!=null) a.setUsuarioCorreo(newAdress.getUsuarioCorreo());
 			if(newAdress.getPassword()!=null) a.setPassword(newAdress.getPassword());
 			adressDao.save(a);
 			return a;
-		} 
-		catch (InstanceException e) 
+		}
+		catch (InstanceException e)
 		{
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Adress");
 		}
@@ -100,11 +101,11 @@ public class EmailServiceImpl implements EmailService {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "deleteAdress")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		
-		try 
-		{ 
+		try
+		{
 			adressDao.remove(adressId);
-		} 
-		catch (InstanceException e) 
+		}
+		catch (InstanceException e)
 		{
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Adress");
 		}
@@ -140,11 +141,11 @@ public class EmailServiceImpl implements EmailService {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "removeEmailTemplate")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		
-		try 
-		{ 
+		try
+		{
 			emailTemplateDao.remove(emailTemplateId);
-		} 
-		catch (InstanceException e) 
+		}
+		catch (InstanceException e)
 		{
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"EmailTemplate");
 		}
@@ -156,7 +157,7 @@ public class EmailServiceImpl implements EmailService {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "changeEmailTemplate")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		
-		try 
+		try
 		{
 			EmailTemplate e = emailTemplateDao.find(emailTemplateId);
 			
@@ -173,7 +174,7 @@ public class EmailServiceImpl implements EmailService {
 			emailTemplateDao.save(e);
 			return e;
 		}
-		catch (InstanceException e) 
+		catch (InstanceException e)
 		{
 			if (e.getClassName().contentEquals("EmailTemplate")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"EmailTemplate");
 			else throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Adress");
@@ -206,5 +207,10 @@ public class EmailServiceImpl implements EmailService {
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "findEmailTemplateByName")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 
 		return emailTemplateDao.findByName(name);
+	}
+
+	@Override
+	public EmailTemplate findEmailTemplateForEvent(final int eventId, final TypeEmail type) throws NoSuchFieldException {
+		return emailTemplateDao.findByEvent(eventId, type);
 	}
 }

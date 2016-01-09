@@ -321,7 +321,7 @@ public class UserServiceImpl implements UserService {
 
     		//if(e.sendMail()) userDao.save(user);
     		//e.sendMail();
-    		EmailFIFO.adEmailToQueue(e);
+    		EmailFIFO.addEmailToQueue(e);
     		
     		userDao.save(user);
     		

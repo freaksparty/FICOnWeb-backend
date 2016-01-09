@@ -13,7 +13,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -45,13 +44,12 @@ public class Event {
     private String normas;
     
 
-    public Event() {
-    }
+    public Event() {}
 
     public Event(int eventId, String name, String description, int numParticipants,
             Calendar startDate, Calendar endDate, Calendar registrationOpenDate,
-            Calendar registrationCloseDate, EmailTemplate setPaidTemplate, 
-            EmailTemplate onQueueTemplate, EmailTemplate outstandingTemplate, 
+            Calendar registrationCloseDate, EmailTemplate setPaidTemplate,
+            EmailTemplate onQueueTemplate, EmailTemplate outstandingTemplate,
             EmailTemplate outOfDateTemplate, EmailTemplate fromQueueToOutstanding) {
         this.eventId = eventId;
         this.name = name;
@@ -64,7 +62,7 @@ public class Event {
         this.registrationCloseDate = registrationCloseDate;
         this.setPaidTemplate = setPaidTemplate;
         this.onQueueTemplate = onQueueTemplate;
-        this.outstandingTemplate = outstandingTemplate; 
+        this.outstandingTemplate = outstandingTemplate;
     }
 
     @Column(name = "Event_id")
@@ -80,7 +78,7 @@ public class Event {
     }
 
     @Column(name = "Event_name")
-    public String getName() { 
+    public String getName() {
         return name;
     }
 
@@ -115,7 +113,7 @@ public class Event {
 		this.minimunAge = minimunAge;
 	}
 	
-	@Column(name = "Event_price") 
+	@Column(name = "Event_price")
 	public int getPrice() {
 		return price;
 	}

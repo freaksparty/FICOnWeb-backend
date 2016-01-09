@@ -30,13 +30,11 @@ public class EmailTemplate {
 	private String name;
 	private Adress adress;
 	private String filepath;
-	private String filename; 
+	private String filename;
 	private String asunto;
 	private String contenido;
 	
-	public EmailTemplate() {
-		
-	}
+	public EmailTemplate() {}
 
 	@Column(name = "EmailTemplate_id ")
 	@SequenceGenerator(name = "EmailTemplateIdGenerator", sequenceName = "EmailTemplateSeq")
@@ -59,7 +57,7 @@ public class EmailTemplate {
 		this.name = name;
 	}
 
-	@JsonSerialize(using = JsonEntityIdSerializer.class) 
+	@JsonSerialize(using = JsonEntityIdSerializer.class)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "EmailTemplate_adress_id")
 	public Adress getAdress() {
@@ -114,7 +112,7 @@ public class EmailTemplate {
 		String clave;
 		String valor;
 		while( e.hasMoreElements() ){
-		  clave = (String) e.nextElement();
+		  clave = e.nextElement();
 		  valor = datos.get(clave);
 		  contenido = contenido.replace(clave, valor);
 		}
@@ -136,7 +134,7 @@ public class EmailTemplate {
 		String clave;
 		String valor;
 		while( e.hasMoreElements() ){
-		  clave = (String) e.nextElement();
+		  clave = e.nextElement();
 		  valor = tabla.get(clave);
 		  dos = dos.replace(clave, valor);
 		}

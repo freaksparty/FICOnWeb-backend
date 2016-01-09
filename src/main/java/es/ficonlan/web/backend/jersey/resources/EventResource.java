@@ -29,15 +29,18 @@ import javax.ws.rs.core.UriInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import es.ficonlan.web.backend.annotations.UseCasePermission;
+import es.ficonlan.web.backend.dao.EmailTemplateDao.TypeEmail;
 import es.ficonlan.web.backend.entities.Activity;
+import es.ficonlan.web.backend.entities.Activity.ActivityType;
+import es.ficonlan.web.backend.entities.EmailTemplate;
 import es.ficonlan.web.backend.entities.Event;
 import es.ficonlan.web.backend.entities.NewsItem;
+import es.ficonlan.web.backend.entities.Registration.RegistrationState;
 import es.ficonlan.web.backend.entities.Sponsor;
 import es.ficonlan.web.backend.entities.User;
-import es.ficonlan.web.backend.entities.Activity.ActivityType;
-import es.ficonlan.web.backend.entities.Registration.RegistrationState;
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
+import es.ficonlan.web.backend.output.EmailTemplatesForEvent;
 import es.ficonlan.web.backend.output.EventData;
 import es.ficonlan.web.backend.output.NewsList;
 import es.ficonlan.web.backend.services.emailservice.EmailService;
@@ -58,17 +61,17 @@ import es.ficonlan.web.backend.util.cache.SimpleMemCache;
 @Singleton
 public class EventResource {
 	
-	private String[] s1 = {"newsItemId","title","imageurl","creationDate","publishDate","publisher.login","event"};
-	private ArrayList<String> l1;
+	private final String[] s1 = {"newsItemId","title","imageurl","creationDate","publishDate","publisher.login","event"};
+	private final ArrayList<String> l1;
 	
-	private String[] s2 = {"userId","name","login","dni","email","phoneNumber","shirtSize","dob"};
-	private ArrayList<String> l2;
+	private final String[] s2 = {"userId","name","login","dni","email","phoneNumber","shirtSize","dob"};
+	private final ArrayList<String> l2;
 	
-	private String[] s3 = {"login","dni","registrationId","userID","eventID","state","registrationDate","paidDate","paid","place","placeOnQueue"};
-	private ArrayList<String> l3;
+	private final String[] s3 = {"login","dni","registrationId","userID","eventID","state","registrationDate","paidDate","paid","place","placeOnQueue"};
+	private final ArrayList<String> l3;
 	
-	private String[] s4 = {"activityId","event","name","type","startDate","endDate"};
-	private ArrayList<String> l4;
+	private final String[] s4 = {"activityId","event","name","type","startDate","endDate"};
+	private final ArrayList<String> l4;
 	
 	ArrayList<EventData> eventCache;
 	SimpleMemCache<String, NewsList> newsCache;
@@ -85,13 +88,13 @@ public class EventResource {
 	}
 	
 	@Autowired
-	private EventService eventService;
+	private final EventService eventService;
 	
 	@Autowired
-	private EmailService emailService;
+	private final EmailService emailService;
 	
 	@Autowired
-	private UserService userService;
+	private final UserService userService;
 	
 	public EventResource(){
 		eventCache = new ArrayList<EventData>(3);
@@ -190,9 +193,9 @@ public class EventResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@UseCasePermission("getEvent")
 	public Response getNewsPublished(
-			@PathParam("eventId") int eventId, 
-			@PathParam("page") int page, 
-			@PathParam("pageTam") int pageTam, 
+			@PathParam("eventId") int eventId,
+			@PathParam("page") int page,
+			@PathParam("pageTam") int pageTam,
 			@Context Request request, @Context UriInfo uriInfo) throws ServiceException {
 		
 		if(pageTam > 0) {
@@ -204,7 +207,7 @@ public class EventResource {
 					builder.cacheControl(getCacheControl(result));
 					return builder.build();
 				}
-			} else {			
+			} else {
 				//cache miss
 				int startIndex = page * pageTam - pageTam;
 				int cont = pageTam;
@@ -223,53 +226,13 @@ public class EventResource {
 		else return Response.status(200).build();
 		
 	}
-	
-	/*@Path("/{eventId}/{eventData}")
-	@GET
-	@Produces({MediaType.APPLICATION_JSON})
-	public Response getEventData(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("eventData") String eventData) {
-		try {
-			Event e = eventService.getEvent(sessionId, eventId);
-			Object o = null;
-			
-			switch (eventData) {
-				case "name" 		: o = e.getName(); break;
-				case "minimunAge" 	: o = e.getMinimunAge(); break; 
-				case "description"	: o = e.getDescription(); break;
-				case "startDate" 	: o = e.getStartDate(); break;
-				case "endDate" 		: o = e.getEndDate(); break;
-				case "isopen" 		: Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-									o = (now.after(e.getStartDate()) && now.before(e.getEndDate()));
-									break;
-				case "rules" 		: o = e.getNormas(); break;
-			}
-			
-			return Response.status(200).entity(o).build();
-			
-		} catch (ServiceException e) {
-			return Response.status(400).entity(e.toString()).build();
-		}
-	}*/
-	
+		
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Event> getAllEvents(@HeaderParam("sessionId") String sessionId) throws ServiceException {
 		return eventService.getAllEvents(sessionId);
 	}
-	
-	/*@Path("/{eventId}")
-	@GET
-	public Event getEvent(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
-		return eventService.getEvent(sessionId, eventId);
-	}*/
-
-	/*@Path("/byName/{name}") 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<Event> findByName(@HeaderParam("sessionId") String sessionId, @PathParam("name") String name) throws ServiceException {
-		return eventService.findEventByName(sessionId, name);
-	}*/  
-	
+		
 	@Path("/{eventId}")
 	@DELETE
 	public void removeEvent(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
@@ -278,13 +241,7 @@ public class EventResource {
 		newsCache.clear();
 		eventService.removeEvent(sessionId, eventId);
 	}
-	
-	/*@Path("/rules/{eventId}")
-	@GET
-	public String getEventRules(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
-		return eventService.getEventRules(sessionId, eventId);
-	}*/
-	
+		
 	@Path("/resgistrationIsOpen/{eventId}")
 	@GET
 	@UseCasePermission("getEvent")
@@ -305,9 +262,9 @@ public class EventResource {
 	/*@Path("/activity{eventId}/query")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<Activity> getByEvent(@HeaderParam("sessionId") String sessionId, 
+	public List<Activity> getByEvent(@HeaderParam("sessionId") String sessionId,
 			@PathParam("eventId") int eventId,
-			@DefaultValue("1") @QueryParam("page") int page, 
+			@DefaultValue("1") @QueryParam("page") int page,
 			@DefaultValue("0") @QueryParam("pageTam") int pageTam,
 			@DefaultValue("activityId") @QueryParam("orderBy") String orderBy,
 			@DefaultValue("1") @QueryParam("desc") int desc,
@@ -330,9 +287,9 @@ public class EventResource {
 	@Path("/{eventId}/activityHeaders/query")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<ActivityHeader> getActivityHeaderByEvent(@HeaderParam("sessionId") String sessionId, 
+	public List<ActivityHeader> getActivityHeaderByEvent(@HeaderParam("sessionId") String sessionId,
 			@PathParam("eventId") int eventId,
-			@DefaultValue("1") @QueryParam("page") int page, 
+			@DefaultValue("1") @QueryParam("page") int page,
 			@DefaultValue("0") @QueryParam("pageTam") int pageTam,
 			@DefaultValue("activityId") @QueryParam("orderBy") String orderBy,
 			@DefaultValue("1") @QueryParam("desc") int desc,
@@ -349,7 +306,7 @@ public class EventResource {
     		if(type.toLowerCase().contentEquals("production")) t=ActivityType.Production;
     		if(type.toLowerCase().contentEquals("conference")) t=ActivityType.Conference;
 		}
-		return (List<ActivityHeader>) eventService.getActivitiesByEvent(sessionId, eventId, startIndex, cont, orderBy, b, t).stream().map(Activity::generateActivityHeader).collect(Collectors.toList());
+		return eventService.getActivitiesByEvent(sessionId, eventId, startIndex, cont, orderBy, b, t).stream().map(Activity::generateActivityHeader).collect(Collectors.toList());
 	}
 	
 	@Path("/{eventId}/activityTAM/{type}")
@@ -392,9 +349,9 @@ public class EventResource {
 	@Path("/users/{eventId}/query")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<User> getUsersByEvent(@HeaderParam("sessionId") String sessionId,  
+	public List<User> getUsersByEvent(@HeaderParam("sessionId") String sessionId,
 			@PathParam("eventId") int eventId,
-			@DefaultValue("1") @QueryParam("page") int page, 
+			@DefaultValue("1") @QueryParam("page") int page,
 			@DefaultValue("0") @QueryParam("pageTam") int pageTam,
 			@DefaultValue("userId") @QueryParam("orderBy") String orderBy,
 			@DefaultValue("1") @QueryParam("desc") int desc,
@@ -418,9 +375,9 @@ public class EventResource {
 	@Path("/registrations/{eventId}/query")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<RegistrationData> getRegistrationByEvent(@HeaderParam("sessionId") String sessionId,  
+	public List<RegistrationData> getRegistrationByEvent(@HeaderParam("sessionId") String sessionId,
 			@PathParam("eventId") int eventId,
-			@DefaultValue("1") @QueryParam("page") int page, 
+			@DefaultValue("1") @QueryParam("page") int page,
 			@DefaultValue("0") @QueryParam("pageTam") int pageTam,
 			@DefaultValue("registrationDate") @QueryParam("orderBy") String orderBy,
 			@DefaultValue("1") @QueryParam("desc") int desc,
@@ -489,9 +446,9 @@ public class EventResource {
 	@Path("/{eventId}/news/query")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<NewsItem> getAllNewsItem(@HeaderParam("sessionId") String sessionId, 
+	public List<NewsItem> getAllNewsItem(@HeaderParam("sessionId") String sessionId,
 			@PathParam("eventId") int eventId,
-			@DefaultValue("1") @QueryParam("page") int page, 
+			@DefaultValue("1") @QueryParam("page") int page,
 			@DefaultValue("0") @QueryParam("pageTam") int pageTam,
 			@DefaultValue("publishDate") @QueryParam("orderBy") String orderBy,
 			@DefaultValue("1") @QueryParam("desc") int desc
@@ -503,27 +460,7 @@ public class EventResource {
 		if(desc==0) b = false;
 		return eventService.getAllNewsItemFormEvent(sessionId,eventId,startIndex,cont,orderBy,b);
 	}
-	
-	/*@Path("/news/published/{eventId}/{page}/{pageTam}")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllNewsPublishedItem(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("page") int page, @PathParam("pageTam") int pageTam) throws ServiceException {
-		if(pageTam>0) {
-			int startIndex = page*pageTam - pageTam;
-			int cont = pageTam;
-			return Response.status(200).entity(eventService.getAllPublishedNewsItemFormEvent(sessionId,eventId,startIndex,cont)).build();
-		}
-		else return Response.status(200).entity(eventService.getAllPublishedNewsItemFormEvent(sessionId,eventId,0,(int) eventService.getAllPublishedNewsItemFromEventTam(sessionId, eventId))).build();
 		
-	}
-	
-	@Path("/news/published/size/{eventId}/")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public long getAllPublishedNewsItemFromEventTam(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
-		return eventService.getAllPublishedNewsItemFromEventTam(sessionId,eventId);
-	}*/
-	
 	@Path("/news/all/size/{eventId}/")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -541,7 +478,49 @@ public class EventResource {
 		return eventService.getLastNewsFromEvent(sessionId, eventId, limitDate, false);
 	}
 	
-	@Path("/emailTemplates/setPaidTemplate/{eventId}/{emailTemplateId}")
+	@Path("/{eventId}/getEmailTemplates")
+	@Produces(MediaType.APPLICATION_JSON)
+	@GET
+	@UseCasePermission("changeEventData")
+	public EmailTemplatesForEvent getEmailTemplates(@PathParam("eventId") int eventId) throws ServiceException {
+		EmailTemplatesForEvent result = new EmailTemplatesForEvent();
+		//Event ev = eventService.getEvent(eventId);
+		
+		EmailTemplate template;
+		try {
+			template = emailService.findEmailTemplateForEvent(eventId, TypeEmail.ON_QUEUE);
+			result.contentOnQueue = template.getContenido();
+			result.subjectOnQueue = template.getAsunto();
+			result.idOnQueue = template.getEmailtemplateid();
+		
+			template = emailService.findEmailTemplateForEvent(eventId, TypeEmail.PENDING_CONFIRMATION_FROM_QUEUE);
+			result.contentPendingConfirmationFromQueue = template.getContenido();
+			result.subjectPendingConfirmationFromQueue = template.getAsunto();
+			result.idPendingConfirmationFromQueue = template.getEmailtemplateid();
+	
+			template = emailService.findEmailTemplateForEvent(eventId, TypeEmail.PENDING_CONFIRMATION_DIRECT);
+			result.contentPendingConfirmationDirect = template.getContenido();
+			result.subjectPendingConfirmationDirect = template.getAsunto();
+			result.idPendingConfirmationDirect = template.getEmailtemplateid();
+	
+			template = emailService.findEmailTemplateForEvent(eventId, TypeEmail.CONFIRMATION_TIME_EXPIRED);
+			result.contentConfirmationPeriodExpired = template.getContenido();
+			result.subjectConfirmationPeriodExpired = template.getAsunto();
+			result.idConfirmationPeriodExpired = template.getEmailtemplateid();
+	
+			template = emailService.findEmailTemplateForEvent(eventId, TypeEmail.SPOT_IS_CONFIRMED);
+			result.contentSpotConfirmed = template.getContenido();
+			result.subjectSpotConfirmed = template.getAsunto();
+			result.idSpotConfirmed = template.getEmailtemplateid();
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		return result;
+	}
+	
+	/*@Path("/emailTemplates/setPaidTemplate/{eventId}/{emailTemplateId}")
 	@PUT
 	public void setPaidTemplate (@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("emailTemplateId") int emailTemplateId) throws ServiceException {
 		eventService.setPaidTemplate(sessionId, eventId, emailTemplateId);
@@ -569,5 +548,5 @@ public class EventResource {
 	@PUT
 	public void fromQueueToOutstanding (@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("emailTemplateId") int emailTemplateId) throws ServiceException {
 		eventService.fromQueueToOutstanding(sessionId, eventId, emailTemplateId);
-	}
+	}*/
 }
