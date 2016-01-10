@@ -1,15 +1,19 @@
 package es.ficonlan.web.backend.jersey.resources;
 
+import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import es.ficonlan.web.backend.annotations.UseCasePermission;
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import es.ficonlan.web.backend.model.util.session.Session;
@@ -20,6 +24,7 @@ import es.ficonlan.web.backend.services.userservice.UserService;
  * @author Daniel Gómez Silva
  */
 @Path("/login")
+@Singleton
 public class LoginResource {
 	
 	static class LoginData {
@@ -60,11 +65,11 @@ public class LoginResource {
 	}
 
 	@POST
+	@UseCasePermission("login")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public Session login(@HeaderParam("sessionId") String sessionId, LoginData loginData) throws ServiceException {
-		return userService.login(sessionId, loginData.getLogin(), loginData.getPassword());
-
+	public Session login(@Context ContainerRequestContext context, LoginData loginData) throws ServiceException {		
+		return userService.login(loginData.getLogin(), loginData.getPassword());
 	}
 	
 	@DELETE

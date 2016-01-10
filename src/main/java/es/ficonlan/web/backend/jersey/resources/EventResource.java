@@ -187,10 +187,10 @@ public class EventResource {
 		return eventService.changeEventData(eventId, eventData);
 	}
 
-	@Path("/{eventId}/news/published/{page}/{pageTam}")
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/{eventId}/news/published/{page}/{pageTam}")
 	@UseCasePermission("getEvent")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response getNewsPublished(
 			@PathParam("eventId") int eventId,
 			@PathParam("page") int page,

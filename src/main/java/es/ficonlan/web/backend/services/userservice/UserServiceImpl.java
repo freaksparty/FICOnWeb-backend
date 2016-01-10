@@ -1,6 +1,5 @@
 package es.ficonlan.web.backend.services.userservice;
 
-import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -21,18 +20,16 @@ import es.ficonlan.web.backend.dao.UseCaseDao;
 import es.ficonlan.web.backend.dao.UserDao;
 import es.ficonlan.web.backend.entities.Email;
 import es.ficonlan.web.backend.entities.EmailTemplate;
+import es.ficonlan.web.backend.entities.Registration.RegistrationState;
 import es.ficonlan.web.backend.entities.Role;
 import es.ficonlan.web.backend.entities.SupportedLanguage;
 import es.ficonlan.web.backend.entities.UseCase;
 import es.ficonlan.web.backend.entities.User;
-import es.ficonlan.web.backend.entities.Registration.RegistrationState;
 import es.ficonlan.web.backend.model.email.EmailFIFO;
 import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import es.ficonlan.web.backend.model.util.session.Session;
 import es.ficonlan.web.backend.model.util.session.SessionManager;
-import es.ficonlan.web.backend.services.emailservice.EmailService;
-import es.ficonlan.web.backend.services.eventservice.EventService;
 
 /**
  * @author Daniel Gómez Silva
@@ -89,51 +86,50 @@ public class UserServiceImpl implements UserService {
 		
 		SessionManager.setDefaultSession(new Session(userDao.findUserByLogin("anonymous")));
 		
-		for(Method m:UserService.class.getMethods()){
-			UseCase uc = useCaseDao.findByName(m.getName());
-			if (uc==null && !m.getName().contentEquals("initialize") && 
-				!m.getName().contentEquals("login") && !m.getName().contentEquals("getCurrenUser")){
-				uc=new UseCase(m.getName());
-				useCaseDao.save(uc);
-			}
-		}
-		
-		for(Method m:EventService.class.getMethods()){
-			UseCase uc = useCaseDao.findByName(m.getName());
-			if (uc==null){
-				uc=new UseCase(m.getName());
-				useCaseDao.save(uc);
-			}
-		}
-		
-		for(Method m:EmailService.class.getMethods()){
-			UseCase uc = useCaseDao.findByName(m.getName());
-			if (uc==null){
-				uc=new UseCase(m.getName());
-				useCaseDao.save(uc);
-			}
-		}
+//		for(Method m:UserService.class.getMethods()){
+//			UseCase uc = useCaseDao.findByName(m.getName());
+//			if (uc==null && !m.getName().contentEquals("initialize") && 
+//				!m.getName().contentEquals("login") && !m.getName().contentEquals("getCurrenUser")){
+//				uc=new UseCase(m.getName());
+//				useCaseDao.save(uc);
+//			}
+//		}
+//		
+//		for(Method m:EventService.class.getMethods()){
+//			UseCase uc = useCaseDao.findByName(m.getName());
+//			if (uc==null){
+//				uc=new UseCase(m.getName());
+//				useCaseDao.save(uc);
+//			}
+//		}
+//		
+//		for(Method m:EmailService.class.getMethods()){
+//			UseCase uc = useCaseDao.findByName(m.getName());
+//			if (uc==null){
+//				uc=new UseCase(m.getName());
+//				useCaseDao.save(uc);
+//			}
+//		}
 		
 		Role userRole  = roleDao.findByName("User");
-		if (userRole==null){
-			userRole = new Role("User");
-			roleDao.save(userRole);
-		}
+//		if (userRole==null){
+//			userRole = new Role("User");
+//			roleDao.save(userRole);
+//		}
 		
 		Role adminRole  = roleDao.findByName("Admin");
-		if (adminRole==null)adminRole = new Role("Admin");
-		for(UseCase uc:useCaseDao.getAll()){
-			if(!adminRole.getUseCases().contains(uc)) adminRole.getUseCases().add(uc);
-		}
-		roleDao.save(adminRole);
-		
+//		if (adminRole==null)adminRole = new Role("Admin");
+//		for(UseCase uc:useCaseDao.getAll()){
+//			if(!adminRole.getUseCases().contains(uc)) adminRole.getUseCases().add(uc);
+//		}
+//		roleDao.save(adminRole);
 		
 		Role anonymousRole = roleDao.findByName("Anonymous");
-		if (anonymousRole==null){
-			anonymousRole = new Role("Anonymous");
-			anonymousRole.getUseCases().add(useCaseDao.findByName("addUser"));
-			roleDao.save(anonymousRole);
-		}
+//		if (anonymousRole==null){
+//			anonymousRole = new Role("Anonymous");
+//			anonymousRole.getUseCases().add(useCaseDao.findByName("addUser"));
+//			roleDao.save(anonymousRole);
+//		}
 		
 		User anonymous = userDao.findUserByLogin("anonymous");
 		if (anonymous == null){
@@ -145,6 +141,7 @@ public class UserServiceImpl implements UserService {
 		User admin = userDao.findUserByLogin(ADMIN_LOGIN);
 		if (admin == null) admin = new User("Administrador", ADMIN_LOGIN, hashPassword(INITIAL_ADMIN_PASS), "0", "adminMail", "-", "-");
 		if(!admin.getRoles().contains(adminRole)) admin.getRoles().add(adminRole);
+		if(!admin.getRoles().contains(userRole)) admin.getRoles().add(userRole);
     	userDao.save(admin);
 	}
 	
@@ -181,11 +178,11 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Transactional(readOnly=true)
-	public Session login(String sessionId, String login, String password) throws ServiceException {
-		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		Session session = SessionManager.getSession(sessionId);
-		if(login.contentEquals("anonymous")) return session;
-		if(!session.getLoginName().contentEquals("anonymous")) throw new ServiceException(ServiceException.SESSION_ALREADY_EXISTS);
+	public Session login(String login, String password) throws ServiceException {
+//		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
+//		Session session = SessionManager.getSession(sessionId);
+//		if(login.contentEquals("anonymous")) return session;
+//		if(!session.getLoginName().contentEquals("anonymous")) throw new ServiceException(ServiceException.SESSION_ALREADY_EXISTS);
 		User user = userDao.findUserByLogin(login);
 		
 		boolean secondPass = false;
@@ -198,7 +195,7 @@ public class UserServiceImpl implements UserService {
 			else secondPass = true;
 		}
 		
-		session = new Session(user);
+		Session session = new Session(user);
 		session.setSecondpass(secondPass);
 		SessionManager.addSession(session);
 		return session;

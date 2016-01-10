@@ -20,7 +20,6 @@ public class SessionControlFilter implements ContainerRequestFilter {
 	@Override
 	public void filter(ContainerRequestContext requestContext)
 			throws IOException {
-		// TODO Apéndice de método generado automáticamente
         String sessionId = requestContext.getHeaderString("sessionId");
         Session s = null;
         if(sessionId != null) {

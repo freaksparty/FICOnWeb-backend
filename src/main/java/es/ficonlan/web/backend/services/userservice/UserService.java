@@ -3,10 +3,10 @@ package es.ficonlan.web.backend.services.userservice;
 import java.util.List;
 import java.util.Set;
 
+import es.ficonlan.web.backend.entities.Registration.RegistrationState;
 import es.ficonlan.web.backend.entities.Role;
 import es.ficonlan.web.backend.entities.UseCase;
 import es.ficonlan.web.backend.entities.User;
-import es.ficonlan.web.backend.entities.Registration.RegistrationState;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import es.ficonlan.web.backend.model.util.session.Session;
 
@@ -21,7 +21,7 @@ public interface UserService {
 
 	public User addUser(String sessionId, User user) throws ServiceException;
 	
-	public Session login (String sessionId, String login, String password)  throws ServiceException;
+	public Session login (String login, String password)  throws ServiceException;
 	
 	public void closeAllUserSessions(String sessionId, int userId) throws ServiceException;
 	

@@ -95,7 +95,7 @@ public class EventServiceTest {
     @Test
     public void testCreateEvent() throws ServiceException, InstanceException{
     	Session anonymousSession = userService.newAnonymousSession();
-    	/*Session s = */userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	/*Session s = */userService.login(ADMIN_LOGIN, ADMIN_PASS);
     	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(), null, null, null, null, null);
     	eventService.createEvent(event);
     	assertTrue(eventDao.find(event.getEventId()).getEventId()==event.getEventId());
@@ -105,7 +105,7 @@ public class EventServiceTest {
     @Test
     public void testChangeEventData() throws ServiceException{
     	Session anonymousSession = userService.newAnonymousSession();
-    	/*Session s = */userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	/*Session s = */userService.login(ADMIN_LOGIN, ADMIN_PASS);
     	EmailTemplate et1 = new EmailTemplate();
     	et1.setAsunto(""); et1.setContenido(""); et1.setFilename(""); et1.setFilepath(""); et1.setName("");
     	emailTemplateDao.save(et1);
@@ -127,7 +127,7 @@ public class EventServiceTest {
     @Test
     public void testAddParticipantToEvent() throws ServiceException{
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	Session s = userService.login(ADMIN_LOGIN, ADMIN_PASS);
     	Calendar regCloseDate = Calendar.getInstance();
     	regCloseDate.add(Calendar.DAY_OF_YEAR, 1);
     	Calendar dateStart = Calendar.getInstance();
@@ -148,7 +148,7 @@ public class EventServiceTest {
     @Test
     public void testRemoveParticipantFromEvent() throws ServiceException{
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	Session s = userService.login(ADMIN_LOGIN, ADMIN_PASS);
     	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(),Calendar.getInstance(), null, null, null, null, null);
     	eventDao.save(event);
     	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
@@ -162,7 +162,7 @@ public class EventServiceTest {
     @Test
     public void testChangeRegistrationState() throws ServiceException{
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	Session s = userService.login(ADMIN_LOGIN, ADMIN_PASS);
     	EmailTemplate et1 = new EmailTemplate();
     	et1.setAsunto(""); et1.setContenido(""); et1.setFilename(""); et1.setFilepath(""); et1.setName("");
     	emailTemplateDao.save(et1);
@@ -181,7 +181,7 @@ public class EventServiceTest {
     @Test
     public void testFindEventByName() throws ServiceException {
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	Session s = userService.login(ADMIN_LOGIN, ADMIN_PASS);
         Event event = new Event(0, "Awesome event!", "Curling world cup.", 10, Calendar.getInstance(), Calendar.getInstance(),Calendar.getInstance(), Calendar.getInstance(), null, null, null, null, null);
         eventDao.save(event);
         List<Event> result = eventService.findEventByName(s.getSessionId(), "awesome");
@@ -192,7 +192,7 @@ public class EventServiceTest {
     @Test
     public void testFindEventByUnexistingName() throws ServiceException {
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	Session s = userService.login(ADMIN_LOGIN, ADMIN_PASS);
     	List<Event> result = eventService.findEventByName(s.getSessionId(), NON_EXISTENT_EVENT_NAME);
     	assertTrue(result.size()==0);
     }
@@ -200,7 +200,7 @@ public class EventServiceTest {
     @Test
     public void testAddActivity() throws ServiceException, InstanceException{
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	Session s = userService.login(ADMIN_LOGIN, ADMIN_PASS);
     	Calendar dateStart = Calendar.getInstance();
     	Calendar dateEnd = Calendar.getInstance();
     	dateEnd.add(Calendar.DAY_OF_YEAR, 1);
@@ -214,7 +214,7 @@ public class EventServiceTest {
     @Test
     public void testRemoveActivity() throws ServiceException{
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	Session s = userService.login(ADMIN_LOGIN, ADMIN_PASS);
     	Calendar dateStart = Calendar.getInstance();
     	Calendar dateEnd = Calendar.getInstance();
     	dateEnd.add(Calendar.DAY_OF_YEAR, 1);
@@ -231,7 +231,7 @@ public class EventServiceTest {
     @Test
     public void testChangeActivityData() throws ServiceException{
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	Session s = userService.login(ADMIN_LOGIN, ADMIN_PASS);
     	Calendar dateStart = Calendar.getInstance();
     	Calendar dateEnd = Calendar.getInstance();
     	dateEnd.add(Calendar.DAY_OF_YEAR, 1);
@@ -255,7 +255,7 @@ public class EventServiceTest {
     @Test
     public void testAddParticipantToActivity() throws ServiceException{
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	Session s = userService.login(ADMIN_LOGIN, ADMIN_PASS);
     	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	Calendar dateStart = Calendar.getInstance();
     	dateStart.add(Calendar.DAY_OF_YEAR, -1);
@@ -272,7 +272,7 @@ public class EventServiceTest {
     @Test
     public void testRemoveParticipantFromActivity() throws ServiceException{
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	Session s = userService.login(ADMIN_LOGIN, ADMIN_PASS);
     	User user = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	Calendar dateStart = Calendar.getInstance();
     	dateStart.add(Calendar.DAY_OF_YEAR, -1);
@@ -291,7 +291,7 @@ public class EventServiceTest {
     @Test
     public void testGetActivityParticipants() throws ServiceException{
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	Session s = userService.login(ADMIN_LOGIN, ADMIN_PASS);
     	User user1 = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "12345678R", "user1@gmail.com", "690047407", "L"));
     	User user2 = userService.addUser(anonymousSession.getSessionId(), new User("User2", "login2", "pass", "12332218R", "user2@gmail.com", "690047407", "L"));
     	Calendar dateStart = Calendar.getInstance();
@@ -315,7 +315,7 @@ public class EventServiceTest {
     @Test
     public void addNewsTest() throws ServiceException, InstanceException{
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	Session s = userService.login(ADMIN_LOGIN, ADMIN_PASS);
     	NewsItem news = new NewsItem("Nueva noticia", Calendar.getInstance(), "http://ficonlan/nuevaNoticia", 2);
     	Calendar dateStart = Calendar.getInstance();
     	Calendar dateEnd = Calendar.getInstance();
@@ -329,7 +329,7 @@ public class EventServiceTest {
     @Test
     public void changeNewsDataTest() throws ServiceException {
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	Session s = userService.login(ADMIN_LOGIN, ADMIN_PASS);
     	NewsItem news = new NewsItem("Nueva noticia", Calendar.getInstance(), "http://ficonlan/nuevaNoticia", 2);
     	Calendar dateStart = Calendar.getInstance();
     	Calendar dateEnd = Calendar.getInstance();
@@ -350,7 +350,7 @@ public class EventServiceTest {
     @Test
     public void getLastNewsTest() throws ServiceException, InterruptedException {
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	Session s = userService.login(ADMIN_LOGIN, ADMIN_PASS);
     	Calendar dateStart = Calendar.getInstance();
     	Calendar dateEnd = Calendar.getInstance();
     	dateEnd.add(Calendar.MINUTE, 2);
@@ -390,7 +390,7 @@ public class EventServiceTest {
     @Test
     public void removeNewsTest() throws ServiceException {
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	Session s = userService.login(ADMIN_LOGIN, ADMIN_PASS);
     	NewsItem news = new NewsItem("Nueva noticia", Calendar.getInstance(), "http://ficonlan/nuevaNoticia", 2);
     	Calendar dateStart = Calendar.getInstance();
     	Calendar dateEnd = Calendar.getInstance();
@@ -412,7 +412,7 @@ public class EventServiceTest {
     @Test
     public void getRegistrationTest() throws ServiceException{
     	Session anonymousSession = userService.newAnonymousSession();
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	Session s = userService.login(ADMIN_LOGIN, ADMIN_PASS);
     	Calendar regCloseDate = Calendar.getInstance();
     	regCloseDate.add(Calendar.DAY_OF_YEAR, 1);
     	Calendar dateStart = Calendar.getInstance();
@@ -443,7 +443,7 @@ public class EventServiceTest {
     	eventDao.save(event);
     	
     	Session anonymousSession = userService.newAnonymousSession(); 
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	Session s = userService.login(ADMIN_LOGIN, ADMIN_PASS);
     	
     	User user1 = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "123456781", "user1@gmail.com"	  , "690047407", "L"));
     	User user2 = userService.addUser(anonymousSession.getSessionId(), new User("User2", "login2", "pass", "123456782", "user2@gmail.com"	  , "690047407", "L"));
@@ -614,7 +614,7 @@ public class EventServiceTest {
     	eventDao.save(event);
     	
     	Session anonymousSession = userService.newAnonymousSession(); 
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	Session s = userService.login(ADMIN_LOGIN, ADMIN_PASS);
     	
     	User user1 = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "123456781", "user1@gmail.com"	  , "690047407", "L"));
     	User user2 = userService.addUser(anonymousSession.getSessionId(), new User("User2", "login2", "pass", "123456782", "user2@gmail.com"	  , "690047407", "L"));
@@ -807,7 +807,7 @@ public class EventServiceTest {
     	eventDao.save(event);
     	
     	Session anonymousSession = userService.newAnonymousSession(); 
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	Session s = userService.login(ADMIN_LOGIN, ADMIN_PASS);
     	
     	User user1 = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "123456781", "userfol1@yopmail.com", "690047407", "L"));
     	User user2 = userService.addUser(anonymousSession.getSessionId(), new User("User2", "login2", "pass", "123456782", "userfol2@yopmail.com", "690047407", "L"));
@@ -883,7 +883,7 @@ public class EventServiceTest {
     	eventDao.save(event);
     	
     	Session anonymousSession = userService.newAnonymousSession(); 
-    	Session s = userService.login(anonymousSession.getSessionId(), ADMIN_LOGIN, ADMIN_PASS);
+    	Session s = userService.login(ADMIN_LOGIN, ADMIN_PASS);
     	
     	User user1 = userService.addUser(anonymousSession.getSessionId(), new User("User1", "login1", "pass", "123456781", "user1@gmail.com"	  , "690047407", "L"));
     	Calendar age = Calendar.getInstance();
