@@ -4,25 +4,25 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import es.ficonlan.web.backend.entities.Adress;
+import es.ficonlan.web.backend.entities.Address;
 
 /**
  * @author Miguel Ángel Castillo Bellagona
  * @version 1.0
  */
 @Repository("AdressDao")
-public class AdressDaoHibernate extends GenericDaoHibernate<Adress,Integer> implements AdressDao {
+public class AdressDaoHibernate extends GenericDaoHibernate<Address,Integer> implements AdressDao {
 
 	@Override
-	public Adress findAdressByName(String adressName) {
-		return (Adress) getSession()
+	public Address findAdressByName(String adressName) {
+		return (Address) getSession()
 				.createQuery("SELECT a FROM Adress a WHERE a.usuarioCorreo = :adressName")
 				.setParameter("adressName", adressName).uniqueResult();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Adress> getAllAdress() {
+	public List<Address> getAllAdress() {
 		return getSession().createQuery(
 	        	"SELECT a " +
 		        "FROM Adress a " +

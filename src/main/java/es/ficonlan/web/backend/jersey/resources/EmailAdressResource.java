@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import es.ficonlan.web.backend.entities.Adress;
+import es.ficonlan.web.backend.entities.Address;
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import es.ficonlan.web.backend.services.emailservice.EmailService;
@@ -36,7 +36,7 @@ public class EmailAdressResource {
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
-	public Adress addAdress(@HeaderParam("sessionId") String sessionId, Adress adress) throws ServiceException {
+	public Address addAdress(@HeaderParam("sessionId") String sessionId, Address adress) throws ServiceException {
 		return emailService.addAdress(sessionId, adress);
 	}
 	
@@ -44,20 +44,20 @@ public class EmailAdressResource {
 	@PUT
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
-	public Adress modifyAdress(@HeaderParam("sessionId") String sessionId, @PathParam("adressId") int adressId, Adress adress) throws ServiceException {
+	public Address modifyAdress(@HeaderParam("sessionId") String sessionId, @PathParam("adressId") int adressId, Address adress) throws ServiceException {
 		return emailService.modifyAdress(sessionId, adressId, adress);
 	}
 	
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<Adress> getAllAdress(@HeaderParam("sessionId") String sessionId) throws ServiceException {
+	public List<Address> getAllAdress(@HeaderParam("sessionId") String sessionId) throws ServiceException {
 			return emailService.getAllAdress(sessionId);
 	}
 	
 	@Path("/{adressId}")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public Adress getAdress(@HeaderParam("sessionId") String sessionId, @PathParam("adressId") int adressId) throws ServiceException {
+	public Address getAdress(@HeaderParam("sessionId") String sessionId, @PathParam("adressId") int adressId) throws ServiceException {
 			return emailService.getAdress(sessionId,adressId);
 	}
 	

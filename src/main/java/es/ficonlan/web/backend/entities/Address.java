@@ -14,27 +14,27 @@ import javax.persistence.Table;
  * @version 2.0
  */
 @Entity
-@Table(name="Adress")
-public class Adress {
+@Table(name="Address")
+public class Address {
 	
-	protected int adresslId;
+	protected int addresslId;
 	
 	protected String usuarioCorreo;
 	protected String password;
 	
-	@Column(name = "Adress_Id")
-	@SequenceGenerator(name = "adressIdGenerator", sequenceName = "adressSeq")
+	@Column(name = "Address_Id")
+	@SequenceGenerator(name = "addressIdGenerator", sequenceName = "addressSeq")
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "adressIdGenerator")
-	public int getAdresslId() {
-		return adresslId;
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "addressIdGenerator")
+	public int getAddresslId() {
+		return addresslId;
 	}
 	
-	public void setAdresslId(int adresslId) {
-		this.adresslId = adresslId;
+	public void setAddresslId(int adresslId) {
+		this.addresslId = adresslId;
 	}
 	
-	@Column(name = "Adress_User")
+	@Column(name = "Address_User")
 	public String getUsuarioCorreo() {
 		return usuarioCorreo;
 	}
@@ -43,7 +43,7 @@ public class Adress {
 		this.usuarioCorreo = usuarioCorreo;
 	}
 	
-	@Column(name = "Adress_Password")
+	@Column(name = "Address_Password")
 	public String getPassword() {
 		return password;
 	}

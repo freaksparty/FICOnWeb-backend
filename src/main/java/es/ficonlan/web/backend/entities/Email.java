@@ -20,8 +20,6 @@ import javax.mail.internet.MimeMultipart;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import es.ficonlan.web.backend.model.email.SendMailThread;
-
 /**
  * @author Miguel Ángel Castillo Bellagona
  * @version 2.1
@@ -134,12 +132,12 @@ public class Email {
 		this.sendDate = sendDate;
 	}
 
-	public boolean sendMailThread() {
-
-		SendMailThread thread = new SendMailThread(this);
-		thread.start();
-		return true;
-	}
+//	public boolean sendMailThread() {
+//
+//		SendMailThread thread = new SendMailThread(this);
+//		thread.start();
+//		return true;
+//	}
 
 	public boolean sendMail() throws MessagingException {
 
@@ -184,10 +182,6 @@ public class Email {
 		message.setSubject(this.getAsunto());
 		message.setContent(multiParte);
 
-		//Transport t = session.getTransport("smtp");
-		//t.connect(userSend, passSend);
-		//t.sendMessage(message, message.getAllRecipients());
-		//t.close();
 		Transport.send(message);
 
 		this.setSendDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")));

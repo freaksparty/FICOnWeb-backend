@@ -77,14 +77,12 @@ public class UserServiceImpl implements UserService {
 			throw new RuntimeException(e.getMessage());
 		}
 	}
-	
+		
 	/**
 	 * Crea los usuarios, roles y casos de uso por defecto, en caso de que no estén creados aún.
 	 */
 	@Transactional
 	public void initialize(){
-		
-		SessionManager.setDefaultSession(new Session(userDao.findUserByLogin("anonymous")));
 		
 //		for(Method m:UserService.class.getMethods()){
 //			UseCase uc = useCaseDao.findByName(m.getName());
@@ -138,11 +136,16 @@ public class UserServiceImpl implements UserService {
 	    	userDao.save(anonymous);
 		}
 		
+		Role eventController = roleDao.findByName("EventController");
+		
 		User admin = userDao.findUserByLogin(ADMIN_LOGIN);
 		if (admin == null) admin = new User("Administrador", ADMIN_LOGIN, hashPassword(INITIAL_ADMIN_PASS), "0", "adminMail", "-", "-");
 		if(!admin.getRoles().contains(adminRole)) admin.getRoles().add(adminRole);
 		if(!admin.getRoles().contains(userRole)) admin.getRoles().add(userRole);
+		if(!admin.getRoles().contains(eventController)) admin.getRoles().add(eventController);
     	userDao.save(admin);
+    	
+		SessionManager.setDefaultSession(new Session(userDao.findUserByLogin("anonymous")));
 	}
 	
 	@Transactional

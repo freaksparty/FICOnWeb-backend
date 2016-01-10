@@ -35,7 +35,7 @@
 		<mapping class="es.ficonlan.web.backend.entities.Activity" />
 		<mapping class="es.ficonlan.web.backend.entities.NewsItem" />
 		<mapping class="es.ficonlan.web.backend.entities.SupportedLanguage" />
-		<mapping class="es.ficonlan.web.backend.entities.Adress" />
+		<mapping class="es.ficonlan.web.backend.entities.Address" />
 		<mapping class="es.ficonlan.web.backend.entities.Sponsor" />
 		<mapping class="es.ficonlan.web.backend.entities.EmailTemplate" />
 	</session-factory>

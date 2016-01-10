@@ -3,19 +3,19 @@ package es.ficonlan.web.backend.services.emailservice;
 import java.util.List;
 
 import es.ficonlan.web.backend.dao.EmailTemplateDao.TypeEmail;
-import es.ficonlan.web.backend.entities.Adress;
+import es.ficonlan.web.backend.entities.Address;
 import es.ficonlan.web.backend.entities.EmailTemplate;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 
 public interface EmailService {
 	
-	public List<Adress> getAllAdress(String sessionId) throws ServiceException;
+	public List<Address> getAllAdress(String sessionId) throws ServiceException;
 	
-	public Adress addAdress(String sessionId, Adress adress) throws ServiceException;
+	public Address addAdress(String sessionId, Address adress) throws ServiceException;
 	
-	public Adress getAdress(String sessionId, int adressId) throws ServiceException;
+	public Address getAdress(String sessionId, int adressId) throws ServiceException;
 	
-	public Adress modifyAdress(String sessionId, int adressId, Adress newAdress) throws ServiceException;
+	public Address modifyAdress(String sessionId, int adressId, Address newAdress) throws ServiceException;
 	
 	public void deleteAdress(String sessionId, int adressId) throws ServiceException;
 	

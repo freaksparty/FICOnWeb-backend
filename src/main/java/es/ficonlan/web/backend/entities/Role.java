@@ -60,9 +60,9 @@ public class Role {
 
 	@JsonIgnore
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "Role_UserCase", joinColumns = {
-			@JoinColumn(name = "Role_UserCase_Role_id")}, inverseJoinColumns = {
-	        @JoinColumn(name = "Role_UserCase_UserCase_id")})
+	@JoinTable(name = "Role_UseCase", joinColumns = {
+			@JoinColumn(name = "Role_UseCase_Role_id")}, inverseJoinColumns = {
+	        @JoinColumn(name = "Role_UseCase_UseCase_id")})
 	public Set<UseCase> getUseCases() {
 		return useCases;
 	}

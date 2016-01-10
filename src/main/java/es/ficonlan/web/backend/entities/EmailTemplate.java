@@ -28,7 +28,7 @@ public class EmailTemplate {
 	
 	private int emailtemplateid;
 	private String name;
-	private Adress adress;
+	private Address adress;
 	private String filepath;
 	private String filename;
 	private String asunto;
@@ -60,11 +60,11 @@ public class EmailTemplate {
 	@JsonSerialize(using = JsonEntityIdSerializer.class)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "EmailTemplate_adress_id")
-	public Adress getAdress() {
+	public Address getAdress() {
 		return adress;
 	}
 
-	public void setAdress(Adress adress) {
+	public void setAdress(Address adress) {
 		this.adress = adress;
 	}
 

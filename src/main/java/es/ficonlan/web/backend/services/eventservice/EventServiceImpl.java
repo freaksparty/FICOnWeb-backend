@@ -20,15 +20,15 @@ import es.ficonlan.web.backend.dao.RegistrationDao;
 import es.ficonlan.web.backend.dao.SponsorDao;
 import es.ficonlan.web.backend.dao.UserDao;
 import es.ficonlan.web.backend.entities.Activity;
+import es.ficonlan.web.backend.entities.Activity.ActivityType;
 import es.ficonlan.web.backend.entities.Email;
 import es.ficonlan.web.backend.entities.EmailTemplate;
 import es.ficonlan.web.backend.entities.Event;
 import es.ficonlan.web.backend.entities.NewsItem;
 import es.ficonlan.web.backend.entities.Registration;
+import es.ficonlan.web.backend.entities.Registration.RegistrationState;
 import es.ficonlan.web.backend.entities.Sponsor;
 import es.ficonlan.web.backend.entities.User;
-import es.ficonlan.web.backend.entities.Activity.ActivityType;
-import es.ficonlan.web.backend.entities.Registration.RegistrationState;
 import es.ficonlan.web.backend.model.email.EmailFIFO;
 import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
@@ -211,8 +211,6 @@ public class EventServiceImpl implements EventService {
     			if(event.getOnQueueTemplate()!=null) 
     			{
     				Email email = event.getOnQueueTemplate().generateEmail(user, tabla);
-    				//email.sendMailThread();
-    				//email.sendMail();
     				EmailFIFO.addEmailToQueue(email);
     			}
     			
@@ -231,8 +229,6 @@ public class EventServiceImpl implements EventService {
     			if(event.getOnQueueTemplate()!=null) 
     			{
     				Email email = event.getOnQueueTemplate().generateEmail(user, tabla);
-    				//email.sendMailThread();
-    				//email.sendMail();
     				EmailFIFO.addEmailToQueue(email);
     			}
     		}

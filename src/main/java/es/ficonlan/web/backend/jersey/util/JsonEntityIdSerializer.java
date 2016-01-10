@@ -7,7 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
-import es.ficonlan.web.backend.entities.Adress;
+import es.ficonlan.web.backend.entities.Address;
 import es.ficonlan.web.backend.entities.EmailTemplate;
 import es.ficonlan.web.backend.entities.Event;
 import es.ficonlan.web.backend.entities.Registration;
@@ -24,7 +24,7 @@ public class JsonEntityIdSerializer extends JsonSerializer<Object> {
 		if(entity==null) gen.writeNull();
 		else if(entity instanceof Event) gen.writeString(String.valueOf(((Event) entity).getEventId()));	
 		else if(entity instanceof User)  gen.writeString(String.valueOf(((User) entity).getUserId()));
-		else if(entity instanceof Adress)  gen.writeString(String.valueOf(((Adress) entity).getAdresslId()));
+		else if(entity instanceof Address)  gen.writeString(String.valueOf(((Address) entity).getAddresslId()));
 		else if(entity instanceof Registration)  gen.writeString(String.valueOf(((Registration) entity).getRegistrationId()));
 		else if(entity instanceof EmailTemplate) gen.writeNumber(((EmailTemplate)entity).getEmailtemplateid());
 	}

@@ -14,7 +14,7 @@ import javax.persistence.Table;
  * @version 1.0
  */
 @Entity
-@Table(name="UserCase")
+@Table(name="UseCase")
 public class UseCase {
 	
 	private int useCaseId;
@@ -28,10 +28,10 @@ public class UseCase {
 		this.useCaseName = name;
 	}
 	
-	@Column(name = "userCase_id")
-	@SequenceGenerator(name = "userCaseIdGenerator", sequenceName = "userCaseSeq")
+	@Column(name = "useCase_id")
+	@SequenceGenerator(name = "useCaseIdGenerator", sequenceName = "useCaseSeq")
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "userCaseIdGenerator")
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "useCaseIdGenerator")
 	public int getUserCaseId() {
 		return this.useCaseId;
 	}
@@ -41,7 +41,7 @@ public class UseCase {
 		this.useCaseId = newId;
 	}
 	
-	@Column(name = "userCase_name")
+	@Column(name = "useCase_name")
 	public String getUseCaseName()
 	{
 		return this.useCaseName;

@@ -18,6 +18,7 @@ public class ServiceExceptionMapper implements ExceptionMapper<Exception> {
 
 	class ErrorMessage{
 		private int exceptionCode;
+		private String user;
 		private String useCase;
 		private String errorMessage;
 		private String field;

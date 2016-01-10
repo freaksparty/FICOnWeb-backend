@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import es.ficonlan.web.backend.dao.AdressDao;
 import es.ficonlan.web.backend.dao.EmailTemplateDao;
 import es.ficonlan.web.backend.dao.EmailTemplateDao.TypeEmail;
-import es.ficonlan.web.backend.entities.Adress;
+import es.ficonlan.web.backend.entities.Address;
 import es.ficonlan.web.backend.entities.EmailTemplate;
 import es.ficonlan.web.backend.model.util.exceptions.InstanceException;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
@@ -39,7 +39,7 @@ public class EmailServiceImpl implements EmailService {
 	
 	@Transactional(readOnly = true)
 	@Override
-	public List<Adress> getAllAdress(String sessionId) throws ServiceException {
+	public List<Address> getAllAdress(String sessionId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getAllAdress")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		
@@ -48,7 +48,7 @@ public class EmailServiceImpl implements EmailService {
 
 	@Transactional
 	@Override
-	public Adress addAdress(String sessionId, Adress adress) throws ServiceException {
+	public Address addAdress(String sessionId, Address adress) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "addAdress")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		
@@ -58,7 +58,7 @@ public class EmailServiceImpl implements EmailService {
 	
 	@Transactional(readOnly = true)
 	@Override
-	public Adress getAdress(String sessionId, int adressId) throws ServiceException {
+	public Address getAdress(String sessionId, int adressId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getAdress")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		
@@ -74,13 +74,13 @@ public class EmailServiceImpl implements EmailService {
 
 	@Transactional
 	@Override
-	public Adress modifyAdress(String sessionId, int adressId, Adress newAdress) throws ServiceException {
+	public Address modifyAdress(String sessionId, int adressId, Address newAdress) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "modifyAdress")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		
 		try
 		{
-			Adress a = adressDao.find(adressId);
+			Address a = adressDao.find(adressId);
 			if(newAdress.getUsuarioCorreo()!=null) a.setUsuarioCorreo(newAdress.getUsuarioCorreo());
 			if(newAdress.getPassword()!=null) a.setPassword(newAdress.getPassword());
 			adressDao.save(a);

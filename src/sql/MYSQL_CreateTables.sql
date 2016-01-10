@@ -5,16 +5,19 @@ DROP TABLE IF EXISTS Event;
 DROP TABLE IF EXISTS Role;
 DROP TABLE IF EXISTS User;
 DROP TABLE IF EXISTS UserCase;
+DROP TABLE IF EXISTS UseCase;
 DROP TABLE IF EXISTS Activity;
 DROP TABLE IF EXISTS User_Activity;
 DROP TABLE IF EXISTS Role_User;
 DROP TABLE IF EXISTS Role_UserCase;
+DROP TABLE IF EXISTS Role_UseCase;
 DROP TABLE IF EXISTS NewsItem;
 DROP TABLE IF EXISTS Registration;
-DROP TABLE IF EXISTS Event_NewsItem;
+-- DROP TABLE IF EXISTS Event_NewsItem;
 DROP TABLE IF EXISTS Language;
 DROP TABLE IF EXISTS Adress;
-DROP TABLE IF EXISTS Email;
+DROP TABLE IF EXISTS Address;
+-- DROP TABLE IF EXISTS Email;
 DROP TABLE IF EXISTS EmailTemplate;
 DROP TABLE IF EXISTS Sponsor;
 SET foreign_key_checks = 1;
@@ -89,14 +92,14 @@ CREATE TABLE Event (
  
   -- ------------------------------ USERCase -------------------------------------
  
- CREATE TABLE UserCase ( 
-	UserCase_id                   bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
-	UserCase_name                 varchar(150)  NOT NULL  ,
-	CONSTRAINT pk_user_case PRIMARY KEY ( UserCase_id )  ,
-	CONSTRAINT UserCase_name_UNIQUE UNIQUE ( UserCase_name )
+ CREATE TABLE UseCase ( 
+	UseCase_id                   bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
+	UseCase_name                 varchar(150)  NOT NULL  ,
+	CONSTRAINT pk_user_case PRIMARY KEY ( UseCase_id )  ,
+	CONSTRAINT UseCase_name_UNIQUE UNIQUE ( UseCase_name )
  ) engine=InnoDB;
  
- CREATE INDEX UserCaseIndexByUserCase_name ON UserCase (UserCase_name);
+ CREATE INDEX UseCaseIndexByUseCase_name ON UseCase (UseCase_name);
  
   -- ------------------------------ ACTIVITY -------------------------------------
  
@@ -146,15 +149,15 @@ CREATE TABLE Event (
  
   -- ------------------------------ ROLE_USERCASE ----------------------------------
 
- CREATE TABLE Role_UserCase ( 
-	Role_UserCase_id                    bigint UNSIGNED NOT NULL AUTO_INCREMENT,
-	Role_UserCase_UserCase_id           bigint UNSIGNED NOT NULL  ,
-	Role_UserCase_Role_id               bigint UNSIGNED NOT NULL  ,
-	CONSTRAINT pk_ole_UserCase PRIMARY KEY ( Role_UserCase_id )
+ CREATE TABLE Role_UseCase ( 
+	Role_UseCase_id                    bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+	Role_UseCase_UseCase_id            bigint UNSIGNED NOT NULL  ,
+	Role_UseCase_Role_id               bigint UNSIGNED NOT NULL  ,
+	CONSTRAINT pk_Role_UseCase PRIMARY KEY ( Role_UseCase_id )
  );
 
- CREATE INDEX Role_UserCaseIndexByRole_UserCase_Role_id ON Role_UserCase (Role_UserCase_Role_id);
- CREATE INDEX Role_UserCaseIndexByRole_UserCase_UserPrifile_id  ON Role_UserCase (Role_UserCase_UserCase_id);
+ CREATE INDEX Role_UseCaseIndexByRole_UseCase_Role_id ON Role_UseCase (Role_UseCase_Role_id);
+ CREATE INDEX Role_UseCaseIndexByRole_UseCase_UserPrifile_id  ON Role_UseCase (Role_UseCase_UseCase_id);
  
 -- ------------------------------ NEWSITEM -------------------------------------
  
@@ -200,15 +203,14 @@ CREATE TABLE Language (
 ) engine=InnoDB;
 
 
--- ------------------------------ Adress -------------------------------------
+-- ------------------------------ Address -------------------------------------
 
-
-CREATE TABLE Adress (
-    Adress_id 				bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
-    Adress_user 			varchar(64) NOT NULL,
-	Adress_password 		varchar(256) NOT NULL,
-    CONSTRAINT pk_adress PRIMARY KEY(Adress_id),
-    CONSTRAINT CategoryUniqueKey UNIQUE (Adress_user)
+CREATE TABLE Address (
+    Address_id 				bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
+    Address_user 			varchar(64) NOT NULL,
+	Address_password 		varchar(256) NOT NULL,
+    CONSTRAINT pk_adress PRIMARY KEY(Address_id),
+    CONSTRAINT CategoryUniqueKey UNIQUE (Address_user)
 ) engine=InnoDB;
 
 -- ------------------------------ EmailTemplate -------------------------------------
@@ -224,7 +226,7 @@ CREATE TABLE EmailTemplate (
     CONSTRAINT pk_email PRIMARY KEY(EmailTemplate_id)
 ) engine=InnoDB;
 
- CREATE INDEX EmailTemplateByAdressId ON EmailTemplate (EmailTemplate_adress_id);
+ CREATE INDEX EmailTemplateByAddressId ON EmailTemplate (EmailTemplate_adress_id);
  CREATE INDEX EmailTemplateByname ON EmailTemplate (EmailTemplate_name);
 
 -- ------------------------------ Sponsor -------------------------------------
@@ -249,7 +251,7 @@ CREATE TABLE Sponsor (
 
  ALTER TABLE Sponsor ADD CONSTRAINT fk_sponsor_event FOREIGN KEY ( Sponsor_event_id ) REFERENCES Event (Event_id) ON DELETE CASCADE ON UPDATE CASCADE;
 
- ALTER TABLE EmailTemplate ADD CONSTRAINT fk_emailtemplate_adress FOREIGN KEY ( EmailTemplate_adress_id ) REFERENCES Adress (Adress_id) ON DELETE SET NULL ON UPDATE CASCADE;
+ ALTER TABLE EmailTemplate ADD CONSTRAINT fk_emailtemplate_adress FOREIGN KEY ( EmailTemplate_adress_id ) REFERENCES Address (Address_id) ON DELETE SET NULL ON UPDATE CASCADE;
  
  ALTER TABLE Activity ADD CONSTRAINT fk_activity_event FOREIGN KEY ( Activity_Event_id ) REFERENCES Event( Event_id ) ON DELETE CASCADE ON UPDATE CASCADE;
  
@@ -259,8 +261,8 @@ CREATE TABLE Sponsor (
  ALTER TABLE Role_User ADD CONSTRAINT fk_role_user_role FOREIGN KEY ( Role_User_Role_id ) REFERENCES Role( Role_id ) ON DELETE CASCADE ON UPDATE CASCADE;
  ALTER TABLE Role_User ADD CONSTRAINT fk_role_user_user FOREIGN KEY ( Role_User_User_id ) REFERENCES User( User_id ) ON DELETE CASCADE ON UPDATE CASCADE;
  
- ALTER TABLE Role_UserCase ADD CONSTRAINT fk_role_userCase_userCase FOREIGN KEY ( Role_UserCase_UserCase_id ) REFERENCES UserCase( UserCase_id ) ON DELETE CASCADE ON UPDATE CASCADE;
- ALTER TABLE Role_UserCase ADD CONSTRAINT fk_role_userCase_role FOREIGN KEY ( Role_UserCase_Role_id  ) REFERENCES Role( Role_id ) ON DELETE CASCADE ON UPDATE CASCADE;
+ ALTER TABLE Role_UseCase ADD CONSTRAINT fk_role_userCase_userCase FOREIGN KEY ( Role_UseCase_UseCase_id ) REFERENCES UseCase( UseCase_id ) ON DELETE CASCADE ON UPDATE CASCADE;
+ ALTER TABLE Role_UseCase ADD CONSTRAINT fk_role_userCase_role FOREIGN KEY ( Role_UseCase_Role_id  ) REFERENCES Role( Role_id ) ON DELETE CASCADE ON UPDATE CASCADE;
  
  ALTER TABLE NewsItem ADD CONSTRAINT fk_newsItem_event FOREIGN KEY ( NewsItem_Event_id ) REFERENCES Event( Event_id ) ON DELETE CASCADE ON UPDATE CASCADE;
  ALTER TABLE NewsItem ADD CONSTRAINT fk_newsItem_user FOREIGN KEY ( NewsItem_User_id ) REFERENCES User( User_id ) ON DELETE CASCADE ON UPDATE CASCADE;
