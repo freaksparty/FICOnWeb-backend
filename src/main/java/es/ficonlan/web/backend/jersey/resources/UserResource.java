@@ -20,7 +20,7 @@ import es.ficonlan.web.backend.entities.User;
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import es.ficonlan.web.backend.services.userservice.UserService;
-import es.ficonlan.web.backend.util.direcionCorreo;
+import es.ficonlan.web.backend.util.DireccionCorreo;
 
 /**
  * @author Daniel Gómez Silva
@@ -92,7 +92,7 @@ public class UserResource {
 	@Path("/passwordrecover/")
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
-	public boolean passwordRecover(@HeaderParam("sessionId") String sessionId, direcionCorreo email) throws ServiceException {
+	public boolean passwordRecover(@HeaderParam("sessionId") String sessionId, DireccionCorreo email) throws ServiceException {
 		return userService.passwordRecover(sessionId, email.getContenido());
 	}
 	

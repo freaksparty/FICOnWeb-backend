@@ -122,8 +122,8 @@ public class EventResource {
 
 	@GET
 	@Path("/{eventId}")
-	@Produces(MediaType.APPLICATION_JSON)
 	@UseCasePermission("getEvent")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response getEvent(@PathParam("eventId") int eventId, @Context Request request) {
 		
 		EventData result = null;
@@ -168,18 +168,18 @@ public class EventResource {
 	}
 	
 	@POST
+	@UseCasePermission("createEvent")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
-	@UseCasePermission("createEvent")
 	public Event createEvent(@HeaderParam("sessionId") String sessionId, Event event) throws ServiceException {
 		return eventService.createEvent(event);
 	}
 	
-	@Path("/{eventId}")
 	@PUT
+	@Path("/{eventId}")
+	@UseCasePermission("changeEventData")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
-	@UseCasePermission("changeEventData")
 	public Event changeData(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, Event eventData) throws ServiceException {
 		//Delete cache
 		eventCache = new ArrayList<EventData>(3);

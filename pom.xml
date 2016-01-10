@@ -325,29 +325,29 @@
 						</includes>
 					</fileset>
 				</configuration>
-				<executions>
-					<execution>
-						<id>create-tables-for-testing</id>
-						<phase>process-test-resources</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<driver>${jdbcDriver.className}</driver>
-							<url>${testDataSource.url}</url>
-							<username>${testDataSource.user}</username>
-							<password>${testDataSource.password}</password>
-							<autocommit>true</autocommit>
-							<onError>continue</onError>
-							<fileset>
-								<basedir>${basedir}</basedir>
-								<includes>
-									<include>src/sql/${dataSource.createTablesScript}</include>
-								</includes>
-							</fileset>
-						</configuration>
-					</execution>
-				</executions>
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<id>create-tables-for-testing</id> -->
+<!-- 						<phase>process-test-resources</phase> -->
+<!-- 						<goals> -->
+<!-- 							<goal>execute</goal> -->
+<!-- 						</goals> -->
+<!-- 						<configuration> -->
+<!-- 							<driver>${jdbcDriver.className}</driver> -->
+<!-- 							<url>${testDataSource.url}</url> -->
+<!-- 							<username>${testDataSource.user}</username> -->
+<!-- 							<password>${testDataSource.password}</password> -->
+<!-- 							<autocommit>true</autocommit> -->
+<!-- 							<onError>continue</onError> -->
+<!-- 							<fileset> -->
+<!-- 								<basedir>${basedir}</basedir> -->
+<!-- 								<includes> -->
+<!-- 									<include>src/sql/${dataSource.createTablesScript}</include> -->
+<!-- 								</includes> -->
+<!-- 							</fileset> -->
+<!-- 						</configuration> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
 			</plugin>
 		</plugins>
 		<resources>

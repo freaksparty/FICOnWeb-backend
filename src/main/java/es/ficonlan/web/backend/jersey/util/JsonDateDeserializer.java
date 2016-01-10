@@ -5,7 +5,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonParser;
@@ -19,13 +18,12 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
  */
 @Component
 public class JsonDateDeserializer extends JsonDeserializer<Calendar> {
+	private static final SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy/HH:mm:ss");
 
 	@Override
 	public Calendar deserialize(JsonParser jsonparser, DeserializationContext deserializationcontext) 
 			throws IOException, JsonProcessingException {
-
-		//SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy/HH:mm:ss");
-		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy/HH:mm:ss");
+		
 		//format.setTimeZone(TimeZone.getTimeZone("UTC"));
 		
 		String date = jsonparser.getText();

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
 import es.ficonlan.web.backend.entities.Adress;
+import es.ficonlan.web.backend.entities.EmailTemplate;
 import es.ficonlan.web.backend.entities.Event;
 import es.ficonlan.web.backend.entities.Registration;
 import es.ficonlan.web.backend.entities.User;;
@@ -25,6 +26,7 @@ public class JsonEntityIdSerializer extends JsonSerializer<Object> {
 		else if(entity instanceof User)  gen.writeString(String.valueOf(((User) entity).getUserId()));
 		else if(entity instanceof Adress)  gen.writeString(String.valueOf(((Adress) entity).getAdresslId()));
 		else if(entity instanceof Registration)  gen.writeString(String.valueOf(((Registration) entity).getRegistrationId()));
+		else if(entity instanceof EmailTemplate) gen.writeNumber(((EmailTemplate)entity).getEmailtemplateid());
 	}
 
 }

@@ -3,13 +3,13 @@ package es.ficonlan.web.backend.util;
 /**
  * @author Miguel Ángel Castillo Bellagona
  */
-public class direcionCorreo {
+public class DireccionCorreo {
 	
 	String contenido;
 	
-	public direcionCorreo() {};
+	public DireccionCorreo() {};
 	
-	public direcionCorreo(String contenido) {
+	public DireccionCorreo(String contenido) {
 		this.contenido = contenido;
 	}
 

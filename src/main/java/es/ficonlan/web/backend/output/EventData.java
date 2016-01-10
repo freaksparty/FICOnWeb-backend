@@ -57,13 +57,13 @@ public class EventData implements Cacheable {
     public Calendar endDate;
     @JsonSerialize(using = JsonDateSerializer.class)
     public Calendar openInscriptionDate;
+    @JsonSerialize(using = JsonDateSerializer.class)
+    private Calendar closeInscriptionDate;
     public String rules;
     public List<ActivityDataShort> tournaments = new ArrayList<ActivityDataShort>();
     public List<ActivityDataShort> conferences = new ArrayList<ActivityDataShort>();
     public List<ActivityDataShort> productions = new ArrayList<ActivityDataShort>();
     public List<SponsorDataShort> sponsors = new ArrayList<SponsorDataShort>();
-    @JsonIgnore
-    private Calendar closeInscriptionDate;
     @JsonIgnore
     private EntityTag tag;
     //Set when Inscriptions are open, it is not calculated all the time to preserve tag coherence.

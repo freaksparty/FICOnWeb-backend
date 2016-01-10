@@ -13,12 +13,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import es.ficonlan.web.backend.jersey.util.JsonDateDeserializer;
 import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
-import es.ficonlan.web.backend.jersey.util.JsonEntityIdSerializer;
 
 /**
  * @author Miguel Ángel Castillo Bellagona
@@ -170,7 +170,8 @@ public class Event {
         this.registrationCloseDate = registrationCloseDate;
     }
     
-    @JsonSerialize(using=JsonEntityIdSerializer.class)
+//    @JsonSerialize(using=JsonEntityIdSerializer.class)
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Event_setPaidTemplate_id")
 	public EmailTemplate getSetPaidTemplate() {
@@ -181,7 +182,8 @@ public class Event {
 		this.setPaidTemplate = setPaidTemplate;
 	}
 
-    @JsonSerialize(using=JsonEntityIdSerializer.class)
+//    @JsonSerialize(using=JsonEntityIdSerializer.class)
+	@JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Event_onQueueTemplate_id")
 	public EmailTemplate getOnQueueTemplate() {
@@ -192,7 +194,8 @@ public class Event {
 		this.onQueueTemplate = onQueueTemplate;
 	}
 
-    @JsonSerialize(using=JsonEntityIdSerializer.class)
+//    @JsonSerialize(using=JsonEntityIdSerializer.class)
+	@JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Event_outstandingTemplate_id")
 	public EmailTemplate getOutstandingTemplate() {
@@ -203,7 +206,8 @@ public class Event {
 		this.outstandingTemplate = outstandingTemplate;
 	}
 
-    @JsonSerialize(using=JsonEntityIdSerializer.class)
+//    @JsonSerialize(using=JsonEntityIdSerializer.class)
+	@JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Event_outOfDateTemplate_id")
 	public EmailTemplate getOutOfDateTemplate() {
@@ -214,7 +218,8 @@ public class Event {
 		this.outOfDateTemplate = outOfDateTemplate;
 	}
 
-    @JsonSerialize(using=JsonEntityIdSerializer.class)
+//    @JsonSerialize(using=JsonEntityIdSerializer.class)
+	@JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Event_fromQueueToOutstanding_id")
 	public EmailTemplate getFromQueueToOutstanding() {
