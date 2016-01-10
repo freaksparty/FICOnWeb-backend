@@ -208,8 +208,8 @@ CREATE TABLE Language (
 CREATE TABLE Address (
     Address_id 				bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
     Address_user 			varchar(64) NOT NULL,
-	Address_password 		varchar(256) NOT NULL,
-    CONSTRAINT pk_adress PRIMARY KEY(Address_id),
+    Address_password 		varchar(256) NOT NULL,
+    CONSTRAINT pk_address PRIMARY KEY(Address_id),
     CONSTRAINT CategoryUniqueKey UNIQUE (Address_user)
 ) engine=InnoDB;
 
@@ -218,7 +218,7 @@ CREATE TABLE Address (
 CREATE TABLE EmailTemplate (
 	EmailTemplate_id             bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
 	EmailTemplate_name           varchar(128) NOT NULL UNIQUE, 
-	EmailTemplate_adress_id      bigint UNSIGNED ,
+	EmailTemplate_address_id     bigint UNSIGNED NOT NULL,
 	EmailTemplate_file           varchar(128), 
 	EmailTemplate_fileName       varchar(128), 
 	EmailTemplate_case           varchar(128) NOT NULL,
@@ -226,8 +226,10 @@ CREATE TABLE EmailTemplate (
     CONSTRAINT pk_email PRIMARY KEY(EmailTemplate_id)
 ) engine=InnoDB;
 
- CREATE INDEX EmailTemplateByAddressId ON EmailTemplate (EmailTemplate_adress_id);
+ CREATE INDEX EmailTemplateByAddressId ON EmailTemplate (EmailTemplate_address_id);
  CREATE INDEX EmailTemplateByname ON EmailTemplate (EmailTemplate_name);
+ 
+ ALTER TABLE EmailTemplate ADD CONSTRAINT fk_emailtemplate_address FOREIGN KEY ( EmailTemplate_address_id ) REFERENCES Address (Address_id) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- ------------------------------ Sponsor -------------------------------------
 
@@ -250,8 +252,6 @@ CREATE TABLE Sponsor (
  ALTER TABLE Event ADD CONSTRAINT fk_event_fromQueueToOutstanding FOREIGN KEY ( Event_fromQueueToOutstanding_id ) REFERENCES EmailTemplate (EmailTemplate_id) ON DELETE SET NULL ON UPDATE CASCADE;
 
  ALTER TABLE Sponsor ADD CONSTRAINT fk_sponsor_event FOREIGN KEY ( Sponsor_event_id ) REFERENCES Event (Event_id) ON DELETE CASCADE ON UPDATE CASCADE;
-
- ALTER TABLE EmailTemplate ADD CONSTRAINT fk_emailtemplate_adress FOREIGN KEY ( EmailTemplate_adress_id ) REFERENCES Address (Address_id) ON DELETE SET NULL ON UPDATE CASCADE;
  
  ALTER TABLE Activity ADD CONSTRAINT fk_activity_event FOREIGN KEY ( Activity_Event_id ) REFERENCES Event( Event_id ) ON DELETE CASCADE ON UPDATE CASCADE;
  

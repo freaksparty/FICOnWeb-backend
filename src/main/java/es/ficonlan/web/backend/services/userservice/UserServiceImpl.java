@@ -109,25 +109,9 @@ public class UserServiceImpl implements UserService {
 //			}
 //		}
 		
-		Role userRole  = roleDao.findByName("User");
-//		if (userRole==null){
-//			userRole = new Role("User");
-//			roleDao.save(userRole);
-//		}
-		
-		Role adminRole  = roleDao.findByName("Admin");
-//		if (adminRole==null)adminRole = new Role("Admin");
-//		for(UseCase uc:useCaseDao.getAll()){
-//			if(!adminRole.getUseCases().contains(uc)) adminRole.getUseCases().add(uc);
-//		}
-//		roleDao.save(adminRole);
-		
+		Role userRole  = roleDao.findByName("User");		
+		Role adminRole  = roleDao.findByName("Admin");		
 		Role anonymousRole = roleDao.findByName("Anonymous");
-//		if (anonymousRole==null){
-//			anonymousRole = new Role("Anonymous");
-//			anonymousRole.getUseCases().add(useCaseDao.findByName("addUser"));
-//			roleDao.save(anonymousRole);
-//		}
 		
 		User anonymous = userDao.findUserByLogin("anonymous");
 		if (anonymous == null){
@@ -136,13 +120,17 @@ public class UserServiceImpl implements UserService {
 	    	userDao.save(anonymous);
 		}
 		
-		Role eventController = roleDao.findByName("EventController");
+//		Role eventController = roleDao.findByName("EventController");
+//		Role newsController = roleDao.findByName("NewsController");
+//		Role sponsorController = roleDao.findByName("SponsorController");
 		
 		User admin = userDao.findUserByLogin(ADMIN_LOGIN);
 		if (admin == null) admin = new User("Administrador", ADMIN_LOGIN, hashPassword(INITIAL_ADMIN_PASS), "0", "adminMail", "-", "-");
 		if(!admin.getRoles().contains(adminRole)) admin.getRoles().add(adminRole);
 		if(!admin.getRoles().contains(userRole)) admin.getRoles().add(userRole);
-		if(!admin.getRoles().contains(eventController)) admin.getRoles().add(eventController);
+//		if(!admin.getRoles().contains(eventController)) admin.getRoles().add(eventController);
+//		if(!admin.getRoles().contains(newsController)) admin.getRoles().add(newsController);
+//		if(!admin.getRoles().contains(sponsorController)) admin.getRoles().add(sponsorController);
     	userDao.save(admin);
     	
 		SessionManager.setDefaultSession(new Session(userDao.findUserByLogin("anonymous")));
@@ -285,8 +273,6 @@ public class UserServiceImpl implements UserService {
 	
 	@Transactional
 	public boolean passwordRecover(String sessionId, String email) throws ServiceException {
-		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "passwordRecover")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		
 		int minutos = 30;
 		int passtam = 12;

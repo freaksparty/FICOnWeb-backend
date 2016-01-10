@@ -1,5 +1,6 @@
 START TRANSACTION;
 INSERT INTO Address VALUES (0, "email@user.is", "PutYourPasswordHere");
+SELECT @AddressId := LAST_INSERT_ID();
 
 -- Roles básicos
 INSERT INTO Role (Role_name) VALUES ('Anonymous'), ('Admin'), ('User');
@@ -150,17 +151,17 @@ INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseC
 
 
 
-INSERT INTO EmailTemplate VALUES ( 0, "passwordRecover", ( SELECT Address_id FROM Address WHERE Address_user =  "no-responder@freaksparty.org" ), "", "", "Recuperación contraseña plataforma Freak's Party webs",
+INSERT INTO EmailTemplate VALUES ( 0, "passwordRecover", @AddressId, "", "", "Recuperación contraseña plataforma Freak's Party webs",
  "La nueva contraseña para la cuenta #loginusuario es #nuevapas esta contraseña solo será válida durante #tiemporestante minutos, recuerda cambiarla.");
  
  
-INSERT INTO EmailTemplate VALUES ( 0, "OnQueueTemplate", ( SELECT Address_id FROM Address WHERE Address_user =  "no-responder@freaksparty.org" ), "", "", "Estado del registro FicOnLan",
+INSERT INTO EmailTemplate VALUES ( 0, "OnQueueTemplate", @AddressId, "", "", "Estado del registro FicOnLan",
  "El estado actual de tu registro es En cola.
 
 Tu puesto en la cola de espera es #plazaencola.");
  
  
- INSERT INTO EmailTemplate VALUES ( 0, "OutstandingTemplate", ( SELECT Address_id FROM Address WHERE Address_user =  "no-responder@freaksparty.org" ), "", "", "Estado del registro FicOnLan",
+ INSERT INTO EmailTemplate VALUES ( 0, "OutstandingTemplate", @AddressId, "", "", "Estado del registro FicOnLan",
  "Felicidades #nombreusuario , has conseguido la plaza número #plazaenevento en #nombreevento . 
 
 El estado actual de tu registro es Pendiente de pago, así que para confirmar tu inscripción deberás realizar un ingreso de #precio€  poniendo como concepto tu DNI en la cuenta Nº CUENTA: 0049 6795 53 2395124147 del banco Santander con titular ASOCIACION CULTURAL FREAKS PARTY, en un plazo de tres días. Si pasado ese tiempo no hemos recibido ese ingreso la organización entenderá que renuncias a a tu plaza y tu registro será borrado.
@@ -170,7 +171,7 @@ Recordamos que para acceder al evento hay que ser mayor de 16 años y que los me
 La autorización se puede descargar de este enlace http://ficonlan.es/download/autorizacion.pdf");
 
 
- INSERT INTO EmailTemplate VALUES ( 0, "FromQueueToOutstanding", ( SELECT Address_id FROM Address WHERE Address_user =  "no-responder@freaksparty.org" ), "", "", "Estado del registro FicOnLan",
+ INSERT INTO EmailTemplate VALUES ( 0, "FromQueueToOutstanding", @AddressId, "", "", "Estado del registro FicOnLan",
  "Felicidades #nombreusuario , has conseguido la plaza número #plazaenevento en #nombreevento . 
 
 El estado actual de tu registro es Pendiente de pago, así que para confirmar tu inscripción deberás realizar un ingreso de #precio€  poniendo como concepto tu DNI en la cuenta Nº CUENTA: 0049 6795 53 2395124147 del banco Santander con titular ASOCIACION CULTURAL FREAKS PARTY, en un plazo de tres días. Si pasado ese tiempo no hemos recibido ese ingreso la organización entenderá que renuncias a a tu plaza y tu registro será borrado.
@@ -180,14 +181,14 @@ Recordamos que para acceder al evento hay que ser mayor de 16 años y que los me
 La autorización se puede descargar de este enlace http://ficonlan.es/download/autorizacion.pdf");
 
 
-INSERT INTO EmailTemplate VALUES ( 0, "SetPaidTemplate", ( SELECT Address_id FROM Address WHERE Address_user =  "no-responder@freaksparty.org" ), "", "", "Estado del registro FicOnLan",
+INSERT INTO EmailTemplate VALUES ( 0, "SetPaidTemplate", @AddressId, "", "", "Estado del registro FicOnLan",
  "Felicidades #nombreusuario, el pago de la entrada de #nombreevento ha sido confirmado.
 
 Recordamos que para acceder al evento hay que ser mayor de 16 años y que los menores de 18 años tienen que traer una autorización firmada por sus padres o tutores a la entrada, o no se les dejará entrar.
 
 La autorización se puede descargar de este enlace http://ficonlan.es/download/autorizacion.pdf");
 
- INSERT INTO EmailTemplate VALUES ( 0, "OutOfDateTemplate", ( SELECT Address_id FROM Address WHERE Address_user =  "no-responder@freaksparty.org" ), "", "", "Estado del registro FicOnLan",
+ INSERT INTO EmailTemplate VALUES ( 0, "OutOfDateTemplate", @AddressId, "", "", "Estado del registro FicOnLan",
  "No has realizado el pago de la entrada a tiempo, por ello tu estado ha pasado de Pendiente de pago a No registrado. 
  Si tienes algún problema ponte en contacto con  nosotros a través de la web.");
  

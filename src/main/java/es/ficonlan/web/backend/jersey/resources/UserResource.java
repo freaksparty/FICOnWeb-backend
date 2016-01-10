@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import es.ficonlan.web.backend.annotations.UseCasePermission;
 import es.ficonlan.web.backend.entities.Role;
 import es.ficonlan.web.backend.entities.User;
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
@@ -89,8 +90,9 @@ public class UserResource {
 		userService.changeUserPassword(sessionId, userId, data.getOldPassword(), data.getNewPassword());
 	}
 	
-	@Path("/passwordrecover/")
 	@POST
+	@Path("/passwordrecover")
+	@UseCasePermission("passwordRecover")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public boolean passwordRecover(@HeaderParam("sessionId") String sessionId, DireccionCorreo email) throws ServiceException {
 		return userService.passwordRecover(sessionId, email.getContenido());

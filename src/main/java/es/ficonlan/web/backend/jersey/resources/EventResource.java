@@ -215,7 +215,7 @@ public class EventResource {
 				result = new NewsList(eventService.getPublishedNewsForEvent(eventId, startIndex, cont), size);
 				Calendar next = eventService.nextNewsUpdate(eventId);
 				result.setExpiration(next);
-				
+				newsCache.insert(uriInfo.getPath(), result);
 			}
 			
 			return Response.status(200).entity(result)
@@ -431,13 +431,13 @@ public class EventResource {
     	else throw new ServiceException(ServiceException.INCORRECT_FIELD,"state");
 		return userService.getUsersByEventTAM(sessionId, eventId, st);
 	}
-	
-			
-	@Path("/news/{eventId}")
+		
 	@POST
+	@Path("/news/{eventId}")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
 	public NewsItem add(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, NewsItem newsItem) throws ServiceException{
+		newsCache.clear();
 		return eventService.addNews(sessionId, eventId, newsItem);
 	}
 

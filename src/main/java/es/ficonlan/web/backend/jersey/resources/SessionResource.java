@@ -53,7 +53,7 @@ public class SessionResource {
 		return userService.getCurrenUser(sessionId);
 	}
 	
-	@Path("/isvalid/")
+	@Path("/isvalid")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public boolean validSesion(@HeaderParam("sessionId") String sessionId) throws ServiceException {

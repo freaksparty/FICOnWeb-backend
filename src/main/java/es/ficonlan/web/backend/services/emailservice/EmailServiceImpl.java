@@ -116,7 +116,7 @@ public class EmailServiceImpl implements EmailService {
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "createEmailTemplate")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		
 		try {
-			emailTemplate.setAdress(adressDao.find(adressId));
+			emailTemplate.setAddress(adressDao.find(adressId));
 		
 			if(emailTemplate.getAsunto()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"asunto");
 			if(emailTemplate.getContenido()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"contenido");

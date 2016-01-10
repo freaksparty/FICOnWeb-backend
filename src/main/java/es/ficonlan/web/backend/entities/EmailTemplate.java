@@ -28,7 +28,7 @@ public class EmailTemplate {
 	
 	private int emailtemplateid;
 	private String name;
-	private Address adress;
+	private Address address;
 	private String filepath;
 	private String filename;
 	private String asunto;
@@ -59,13 +59,13 @@ public class EmailTemplate {
 
 	@JsonSerialize(using = JsonEntityIdSerializer.class)
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "EmailTemplate_adress_id")
-	public Address getAdress() {
-		return adress;
+	@JoinColumn(name = "EmailTemplate_address_id")
+	public Address getAddress() {
+		return address;
 	}
 
-	public void setAdress(Address adress) {
-		this.adress = adress;
+	public void setAddress(Address adress) {
+		this.address = adress;
 	}
 
 	@Column(name = "EmailTemplate_file")
@@ -117,7 +117,8 @@ public class EmailTemplate {
 		  contenido = contenido.replace(clave, valor);
 		}
 		
-		return new Email(this.getAdress().getUsuarioCorreo(),this.getAdress().getPassword(),this.getFilepath(),this.getFilename(),destinatario.getEmail(),this.getAsunto(),contenido);
+		return new Email(this.getAddress().getUsuarioCorreo(), this.getAddress().getPassword(),
+				this.getFilepath(), this.getFilename(),destinatario.getEmail(), this.getAsunto(), contenido);
 
 	}
 	
