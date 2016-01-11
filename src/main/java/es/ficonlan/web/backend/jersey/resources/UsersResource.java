@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import es.ficonlan.web.backend.annotations.UseCasePermission;
 import es.ficonlan.web.backend.entities.User;
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
@@ -38,8 +39,9 @@ public class UsersResource {
 		l.add(s[0]);l.add(s[1]);l.add(s[2]);l.add(s[3]);l.add(s[4]);l.add(s[5]);l.add(s[6]);l.add(s[7]);
 	}
 	
-	@Path("/all/query")
 	@GET
+	@Path("/all/query")
+	@UseCasePermission("getAllUsers")
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<User> getAll(@HeaderParam("sessionId") String sessionId,
 			@DefaultValue("1") @QueryParam("page") int page, 
@@ -52,19 +54,20 @@ public class UsersResource {
 		int cont = pageTam;
 		boolean b = true;
 		if(desc==0) b = false;
-		return userService.getAllUsers(sessionId, startIndex, cont, orderBy, b);
+		return userService.getAllUsers(startIndex, cont, orderBy, b);
 	}
 	
-	@Path("/all/size")
 	@GET
+	@Path("/all/size")
+	@UseCasePermission("getAllUsers")
 	@Produces({MediaType.APPLICATION_JSON})
 	public long getAllTAM(@HeaderParam("sessionId") String sessionId) throws ServiceException {
-		return userService.getAllUsersTAM(sessionId);
+		return userService.getAllUsersTAM();
 
 	}
 	
-	@Path("/findByName/{name}/{statrtIndex}/{maxResults}")
 	@GET
+	@Path("/findByName/{name}/{statrtIndex}/{maxResults}")
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<User> findByName(@HeaderParam("sessionId") String sessionId, @PathParam("name") String name, @PathParam("startIndex") int startIndex,  
 			                     @PathParam("maxResults") int maxResults) throws ServiceException {

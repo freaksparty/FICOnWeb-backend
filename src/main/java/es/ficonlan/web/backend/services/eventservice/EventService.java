@@ -4,13 +4,13 @@ import java.util.Calendar;
 import java.util.List;
 
 import es.ficonlan.web.backend.entities.Activity;
+import es.ficonlan.web.backend.entities.Activity.ActivityType;
 import es.ficonlan.web.backend.entities.Event;
 import es.ficonlan.web.backend.entities.NewsItem;
 import es.ficonlan.web.backend.entities.Registration;
+import es.ficonlan.web.backend.entities.Registration.RegistrationState;
 import es.ficonlan.web.backend.entities.Sponsor;
 import es.ficonlan.web.backend.entities.User;
-import es.ficonlan.web.backend.entities.Activity.ActivityType;
-import es.ficonlan.web.backend.entities.Registration.RegistrationState;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import es.ficonlan.web.backend.util.EventRegistrationState;
 import es.ficonlan.web.backend.util.RegistrationData;
@@ -21,7 +21,7 @@ import es.ficonlan.web.backend.util.ShirtData;
  * @author Daniel Gómez Silva
  * @author Miguel Ángel Castillo Bellagona
  */
-public interface EventService {   
+public interface EventService {
 
 	public Event createEvent(Event event) throws ServiceException;
 	
@@ -55,9 +55,9 @@ public interface EventService {
 	
 	public void eventNumParticipantsChanged(int eventId) throws ServiceException;
 	
-	public List<RegistrationData> getRegistrationByEvent(String sessionId, int eventId, RegistrationState state, int startindex, int maxResults, String orderBy, boolean desc) throws ServiceException;
+	public List<RegistrationData> getRegistrationByEvent(int eventId, RegistrationState state, int startindex, int maxResults, String orderBy, boolean desc) throws ServiceException;
 	
-	public long getRegistrationByEventTAM(String sessionId, int eventId, RegistrationState state) throws ServiceException;
+	public long getRegistrationByEventTAM(int eventId, RegistrationState state) throws ServiceException;
 	
 	public List<ShirtData> getShirtSizes(String sessionId, int eventId) throws ServiceException;
 	
@@ -95,7 +95,9 @@ public interface EventService {
     
     public List<NewsItem> getAllNewsItem(String sessionId) throws ServiceException;
     
-    public List<NewsItem> getAllNewsItemFormEvent(String sessionId, int eventId, int startIndex, int cont, String orderBy, boolean desc) throws ServiceException;
+    public List<NewsItem> getAllNewsItemFormEvent(int eventId, int startIndex, int cont, String orderBy, boolean desc) throws ServiceException;
+    
+    public long getAllNewsItemFromEventTam(int eventId) throws ServiceException;
     
     public List<NewsItem> getPublishedNewsForEvent(int eventId, int startIndex, int cont) throws ServiceException;
     
@@ -105,8 +107,6 @@ public interface EventService {
      * Returns the publishion time of the next non-published NewsItem
      */
     public Calendar nextNewsUpdate(int eventId) throws ServiceException;
-    
-    public long getAllNewsItemFromEventTam(String sessionId, int eventId) throws ServiceException;
     
     public List<NewsItem> getLastNews(String sessionId, Calendar dateLimit, boolean onlyOutstandingNews) throws ServiceException;
     

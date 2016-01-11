@@ -2,15 +2,20 @@ START TRANSACTION;
 INSERT INTO Address VALUES (0, "email@user.is", "PutYourPasswordHere");
 SELECT @AddressId := LAST_INSERT_ID();
 
+-- How to add a New role to a user manually (as first action to have an functional admin user)
+-- INSERT INTO Role_User (Role_User_Role_id, Role_User_User_id) VALUES ((SELECT Role_id FROM Role WHERE Role_name = 'RegistrationController'), (SELECT User_id FROM User WHERE User_login = 'admin'));
+-- How to manually check user roles
+-- SELECT User_login, Role_name  FROM Role_User ru INNER JOIN Role r ON r.Role_id = ru.Role_User_Role_id JOIN User u ON ru.Role_User_User_id = u.User_id  WHERE User_login = 'admin'
+
 -- Roles básicos
 INSERT INTO Role (Role_name) VALUES ('Anonymous'), ('Admin'), ('User');
 
 -- Casos de uso
 INSERT INTO UseCase (UseCase_name) VALUES ('login'), ('addUser'), ('closeSession'), ('closeAllUserSessions'), ('passwordRecover'), ('changeUserPassword'), ('getAllUsers'), ('changeUserData'), ('removeUser'),
                                           ('getEvent'),  ('getAllEvents'), ('createEvent'), ('removeEvent'), ('changeEventData'), ('addParticipantToEvent'), ('getEventRegistrationState'),
-                                          ('getNewsItem'), ('addNews'), ('changeNewsData'), ('removeNews'),
-                                          ('getActivity'), ('addActivity'), ('removeActivity'), ('changeActivityData'),
-                                          ('getRegistration'), ('changeRegistrationState'),
+                                          ('getNewsItem'), ('getAllNewsItem'), ('addNews'), ('changeNewsData'), ('removeNews'),
+                                          ('getActivity'), ('addActivity'), ('removeActivity'), ('changeActivityData'), ('getAllActitivies'),
+                                          ('getRegistration'), ('changeRegistrationState'), ('getRegistrationByEvent'),
                                           ('addSponsor'), ('removeSponsor'), ('getSponsors');
 
 -- Configuración de los Roles
@@ -42,7 +47,7 @@ INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseC
 -- INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "findEventByName" ), ( SELECT Role_id FROM Role WHERE Role_name =  "User" ) );
 -- INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "getEventRules" ), ( SELECT Role_id FROM Role WHERE Role_name =  "User" ) );
 -- INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "eventIsOpen" ), ( SELECT Role_id FROM Role WHERE Role_name =  "User" ) );
--- INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "getActivity" ), ( SELECT Role_id FROM Role WHERE Role_name =  "User" ) );
+INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "getActivity" ), ( SELECT Role_id FROM Role WHERE Role_name =  "User" ) );
 -- INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "getAllActivities" ), ( SELECT Role_id FROM Role WHERE Role_name =  "User" ) );
 -- INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "getActivitiesByEvent" ), ( SELECT Role_id FROM Role WHERE Role_name =  "User" ) );
 -- INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "getActivityParticipants" ), ( SELECT Role_id FROM Role WHERE Role_name =  "User" ) );
@@ -75,7 +80,7 @@ INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseC
 INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "removeActivity" ), ( SELECT Role_id FROM Role WHERE Role_name =  "ActivityController" ) );
 INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "changeActivityData" ), ( SELECT Role_id FROM Role WHERE Role_name =  "ActivityController" ) );
 -- INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "getActivity" ), ( SELECT Role_id FROM Role WHERE Role_name =  "ActivityController" ) );
--- INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "getAllActivities" ), ( SELECT Role_id FROM Role WHERE Role_name =  "ActivityController" ) );
+INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "getAllActivities" ), ( SELECT Role_id FROM Role WHERE Role_name =  "ActivityController" ) );
 -- INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "getActivitiesByEvent" ), ( SELECT Role_id FROM Role WHERE Role_name =  "ActivityController" ) );
 -- INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "addParticipantToActivity" ), ( SELECT Role_id FROM Role WHERE Role_name =  "ActivityController" ) );
 -- INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "removeParticipantFromActivity" ), ( SELECT Role_id FROM Role WHERE Role_name =  "ActivityController" ) );
@@ -91,7 +96,7 @@ INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseC
 INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "changeRegistrationState" ), ( SELECT Role_id FROM Role WHERE Role_name =  "RegistrationController" ) );
 -- INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "eventNumParticipantsChanged" ), ( SELECT Role_id FROM Role WHERE Role_name =  "RegistrationController" ) );
 -- INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "getShirtSizes" ), ( SELECT Role_id FROM Role WHERE Role_name =  "RegistrationController" ) );
--- INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "getRegistrationByEvent" ), ( SELECT Role_id FROM Role WHERE Role_name =  "RegistrationController" ) );
+INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "getRegistrationByEvent" ), ( SELECT Role_id FROM Role WHERE Role_name =  "RegistrationController" ) );
 -- INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "getRegistrationByEventTAM" ), ( SELECT Role_id FROM Role WHERE Role_name =  "RegistrationController" ) );
 
 -- INSERT INTO Role VALUES ( 0, "MailController");

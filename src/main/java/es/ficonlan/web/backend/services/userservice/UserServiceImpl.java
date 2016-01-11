@@ -81,18 +81,19 @@ public class UserServiceImpl implements UserService {
 	/**
 	 * Crea los usuarios, roles y casos de uso por defecto, en caso de que no estén creados aún.
 	 */
+	@Override
 	@Transactional
 	public void initialize(){
 		
 //		for(Method m:UserService.class.getMethods()){
 //			UseCase uc = useCaseDao.findByName(m.getName());
-//			if (uc==null && !m.getName().contentEquals("initialize") && 
+//			if (uc==null && !m.getName().contentEquals("initialize") &&
 //				!m.getName().contentEquals("login") && !m.getName().contentEquals("getCurrenUser")){
 //				uc=new UseCase(m.getName());
 //				useCaseDao.save(uc);
 //			}
 //		}
-//		
+//
 //		for(Method m:EventService.class.getMethods()){
 //			UseCase uc = useCaseDao.findByName(m.getName());
 //			if (uc==null){
@@ -100,7 +101,7 @@ public class UserServiceImpl implements UserService {
 //				useCaseDao.save(uc);
 //			}
 //		}
-//		
+//
 //		for(Method m:EmailService.class.getMethods()){
 //			UseCase uc = useCaseDao.findByName(m.getName());
 //			if (uc==null){
@@ -109,8 +110,8 @@ public class UserServiceImpl implements UserService {
 //			}
 //		}
 		
-		Role userRole  = roleDao.findByName("User");		
-		Role adminRole  = roleDao.findByName("Admin");		
+		Role userRole  = roleDao.findByName("User");
+		Role adminRole  = roleDao.findByName("Admin");
 		Role anonymousRole = roleDao.findByName("Anonymous");
 		
 		User anonymous = userDao.findUserByLogin("anonymous");
@@ -136,6 +137,7 @@ public class UserServiceImpl implements UserService {
 		SessionManager.setDefaultSession(new Session(userDao.findUserByLogin("anonymous")));
 	}
 	
+	@Override
 	@Transactional
 	public Session newAnonymousSession() {
 		User user = userDao.findUserByLogin("anonymous");
@@ -144,6 +146,7 @@ public class UserServiceImpl implements UserService {
 		return s;
 	}
 	
+	@Override
 	@Transactional
 	public User addUser(String sessionId, User user) throws ServiceException{
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -160,14 +163,15 @@ public class UserServiceImpl implements UserService {
 		if (u != null) throw new ServiceException(ServiceException.DUPLICATED_FIELD,"email");
 		if(user.getEmail()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"email");
 		if(user.getDob()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"fecha nacimiento"); //FIXME
-		user.getRoles().add(roleDao.findByName("User"));	
+		user.getRoles().add(roleDao.findByName("User"));
 		String pass = hashPassword(user.getPassword());
 		user.setPassword(pass);
 		user.setSecondPassword(pass);
 		userDao.save(user);
-		return user;	
+		return user;
 	}
 	
+	@Override
 	@Transactional(readOnly=true)
 	public Session login(String login, String password) throws ServiceException {
 //		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -181,7 +185,7 @@ public class UserServiceImpl implements UserService {
 		if (user == null) throw new ServiceException(ServiceException.INCORRECT_FIELD,"");
 		if (!user.getPassword().contentEquals(hashPassword(password))) {
 			if ((user.getSecondPasswordExpDate()==null) || (user.getSecondPasswordExpDate().before(Calendar.getInstance(TimeZone.getTimeZone("UTC")))) || (!user.getSecondPassword().contentEquals(hashPassword(password)))) {
-				throw new ServiceException(ServiceException.INCORRECT_FIELD,""); 
+				throw new ServiceException(ServiceException.INCORRECT_FIELD,"");
 			}
 			else secondPass = true;
 		}
@@ -192,12 +196,14 @@ public class UserServiceImpl implements UserService {
 		return session;
 	}
 	
+	@Override
 	public void closeAllUserSessions(String sessionId, int userId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "closeAllUserSessions")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		SessionManager.closeAllUserSessions(userId);
 	}
 	
+	@Override
 	public User getCurrenUser(String sessionId) throws ServiceException {
 		if (!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		Session session = SessionManager.getSession(sessionId);
@@ -213,11 +219,13 @@ public class UserServiceImpl implements UserService {
 		//return session.getUser();
 	}
 
+	@Override
 	public void closeSession(String sessionId) throws ServiceException {
 		if (!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		SessionManager.removeSession(sessionId);
 	}
 
+	@Override
 	@Transactional
 	public void changeUserData(String sessionId, int userId, User userData) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -229,8 +237,8 @@ public class UserServiceImpl implements UserService {
 			if(userData.getName()!=null) user.setName(userData.getName());
 			if(session.getUserId()!=userData.getUserId()) if(userData.getDni()!=null) user.setDni(userData.getDni());
 			User u = userDao.findUserByEmail(userData.getEmail());
-			if(u!=null) 
-				if(!(u.getUserId()==user.getUserId())) 
+			if(u!=null)
+				if(!(u.getUserId()==user.getUserId()))
 					throw new ServiceException(ServiceException.DUPLICATED_FIELD,"email");
 			if(userData.getEmail()!=null) user.setEmail(userData.getEmail());
 			if(userData.getPhoneNumber()!=null )user.setPhoneNumber(userData.getPhoneNumber());
@@ -244,9 +252,10 @@ public class UserServiceImpl implements UserService {
 	}
 
 	/**
-	 * Password changed by the user -> Old password required.<br> 
+	 * Password changed by the user -> Old password required.<br>
 	 * Password changed by an admin -> Old password not required.
 	 */
+	@Override
 	@Transactional
 	public void changeUserPassword(String sessionId, int userId, String oldPassword, String newPassword) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -257,9 +266,9 @@ public class UserServiceImpl implements UserService {
 			User user = userDao.find(userId);
 			if(session.getUserId() == userId)
 			{
-				if(!hashPassword(oldPassword).contentEquals(user.getPassword())) 
-						if ((user.getSecondPasswordExpDate()==null) || (user.getSecondPasswordExpDate().before(Calendar.getInstance(TimeZone.getTimeZone("UTC")))) || (!user.getSecondPassword().contentEquals(hashPassword(oldPassword)))) 
-							throw new ServiceException(ServiceException.INCORRECT_FIELD,"pass"); 
+				if(!hashPassword(oldPassword).contentEquals(user.getPassword()))
+						if ((user.getSecondPasswordExpDate()==null) || (user.getSecondPasswordExpDate().before(Calendar.getInstance(TimeZone.getTimeZone("UTC")))) || (!user.getSecondPassword().contentEquals(hashPassword(oldPassword))))
+							throw new ServiceException(ServiceException.INCORRECT_FIELD,"pass");
 				user.setSecondPasswordExpDate(null);
 			}
 			user.setPassword(hashPassword(newPassword));
@@ -268,9 +277,10 @@ public class UserServiceImpl implements UserService {
 			
 		} catch (InstanceException e) {
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
-		}	
+		}
 	}
 	
+	@Override
 	@Transactional
 	public boolean passwordRecover(String sessionId, String email) throws ServiceException {
 		
@@ -280,7 +290,7 @@ public class UserServiceImpl implements UserService {
 		User user = userDao.findUserByEmail(email);
 		EmailTemplate template = emailTemplateDao.findByName("passwordRecover");
 		
-		if((user!=null) && (template!=null)) { 
+		if((user!=null) && (template!=null)) {
 			char[] elementos={'0','1','2','3','4','5','6','7','8','9' ,'a',
 					'b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t',
 					'u','v','w','x','y','z'};
@@ -289,7 +299,7 @@ public class UserServiceImpl implements UserService {
 			
 			for(int i=0;i<passtam;i++){
 				int el = (int)(Math.random()*35);
-				conjunto[i] = (char)elementos[el];
+				conjunto[i] = elementos[el];
 			}
 			String pass = new String(conjunto);
 			
@@ -317,34 +327,31 @@ public class UserServiceImpl implements UserService {
 		return false;
 	}
 
+	@Override
 	@Transactional(readOnly=true)
-	public List<User> getUsersByEvent(String sessionId, int eventId, RegistrationState state, int startindex, int maxResults, String orderBy, boolean desc) throws ServiceException {
-		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getUsersByEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+	public List<User> getUsersByEvent(int eventId, RegistrationState state, int startindex, int maxResults, String orderBy, boolean desc) throws ServiceException {
 		return userDao.getUsersByEvent(eventId,state,startindex,maxResults,orderBy,desc);
 	}
 	
+	@Override
 	@Transactional(readOnly=true)
-	public long getUsersByEventTAM(String sessionId, int eventId, RegistrationState state) throws ServiceException {
-		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getUsersByEventTAM")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+	public long getUsersByEventTAM(int eventId, RegistrationState state) throws ServiceException {
 		return userDao.getUsersByEventTAM(eventId, state);
 	}
 	
+	@Override
 	@Transactional(readOnly=true)
-	public List<User> getAllUsers(String sessionId, int startindex, int maxResults, String orderBy, boolean desc) throws ServiceException {
-		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getAllUsers")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-		return userDao.getAllUsers(startindex, maxResults,orderBy,desc);
+	public List<User> getAllUsers(int startindex, int maxResults, String orderBy, boolean desc) throws ServiceException {
+		return userDao.getAllUsers(startindex, maxResults, orderBy, desc);
 	}
 	
+	@Override
 	@Transactional(readOnly=true)
-	public long getAllUsersTAM(String sessionId) throws ServiceException {
-		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getAllUsersTAM")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+	public long getAllUsersTAM() throws ServiceException {
 		return userDao.getAllUsersTAM();
 	}
 	
+	@Override
 	@Transactional(readOnly=true)
 	public List<User> findUsersByName(String sessionId, String name, int startindex, int maxResults) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -352,6 +359,7 @@ public class UserServiceImpl implements UserService {
 		return userDao.findUsersByName(name, startindex, maxResults);
 	}
 
+	@Override
 	@Transactional
 	public void addUserToBlackList(String sessionId, int userId) throws ServiceException{
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -362,9 +370,10 @@ public class UserServiceImpl implements UserService {
 			userDao.save(user);
 		} catch (InstanceException e) {
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
-		}	
+		}
 	}
 
+	@Override
 	@Transactional
 	public void removeUserFromBlackList(String sessionId, int userId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -378,13 +387,15 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 	
+	@Override
 	@Transactional(readOnly=true)
 	public List<User> getBlacklistedUsers(String sessionId, int startIndex, int maxResults) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getBlacklistedUsers")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		return userDao.getBlacklistedUsers(startIndex, maxResults);
-	}	
+	}
 	
+	@Override
 	@Transactional
 	public void setDefaultLanguage(String sessionId, int userId, int languageId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -397,9 +408,10 @@ public class UserServiceImpl implements UserService {
 		} catch (InstanceException e) {
 			if (e.getClassName().contentEquals("User")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
 			else throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Language");
-		}	
+		}
 	}
 
+	@Override
 	@Transactional
 	public void removeUser(String sessionId, int userId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -412,6 +424,7 @@ public class UserServiceImpl implements UserService {
 			}
 	}
 	
+	@Override
 	@Transactional
 	public Role createRole(String sessionId, String rolename) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -429,22 +442,24 @@ public class UserServiceImpl implements UserService {
 		
 	}
 	
+	@Override
 	@Transactional
 	public void removeRole(String sessionId, int roleid) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "removeRole")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 
-		try 
+		try
 		{
 			roleDao.remove(roleid);
 		}
-		catch (InstanceException e) 
+		catch (InstanceException e)
 		{
 			throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"role");
 		}
 		
 	}
 
+	@Override
 	@Transactional
 	public void addRole(String sessionId, int roleId, int userId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -460,6 +475,7 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	@Override
 	@Transactional
 	public void removeRole(String sessionId, int roleId, int userId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -476,6 +492,7 @@ public class UserServiceImpl implements UserService {
 		
 	}
 	
+	@Override
 	@Transactional(readOnly=true)
 	public Set<Role> getUserRoles(String sessionId, int userId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -488,6 +505,7 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 	
+	@Override
 	@Transactional(readOnly=true)
 	public List<Role> getAllRoles(String sessionId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -495,6 +513,7 @@ public class UserServiceImpl implements UserService {
 		return roleDao.getAllRoles();
 	}
 
+	@Override
 	@Transactional
 	public UseCase createUseCase(String sessionId, String useCaseName) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -504,6 +523,7 @@ public class UserServiceImpl implements UserService {
 		return useCase;
 	}
 
+	@Override
 	@Transactional
 	public void addPermission(String sessionId, int roleId, int useCaseId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -520,6 +540,7 @@ public class UserServiceImpl implements UserService {
 		
 	}
 
+	@Override
 	@Transactional
 	public void removePermission(String sessionId, int roleId, int useCaseId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
@@ -536,7 +557,8 @@ public class UserServiceImpl implements UserService {
 		
 	}
 	
-	@Transactional(readOnly=true)	
+	@Override
+	@Transactional(readOnly=true)
 	public Set<UseCase> getRolePermissions(String sessionId, int roleId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getRolePermissions")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
@@ -548,7 +570,8 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 	
-	@Transactional(readOnly=true)	
+	@Override
+	@Transactional(readOnly=true)
 	public List<UseCase> getAllUseCases(String sessionId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getAllUseCases")) throw new ServiceException(ServiceException.PERMISSION_DENIED);

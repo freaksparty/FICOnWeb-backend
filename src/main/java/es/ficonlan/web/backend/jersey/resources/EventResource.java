@@ -3,7 +3,6 @@ package es.ficonlan.web.backend.jersey.resources;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import javax.inject.Singleton;
@@ -241,15 +240,15 @@ public class EventResource {
 		eventService.removeEvent(sessionId, eventId);
 	}
 		
-	@Path("/resgistrationIsOpen/{eventId}")
-	@GET
-	@UseCasePermission("getEvent")
-	public boolean eventIsOpen(@PathParam("eventId") int eventId) throws ServiceException {
-		return eventService.eventIsOpen(eventId);
-	}
+//	@Path("/resgistrationIsOpen/{eventId}")
+//	@GET
+//	@UseCasePermission("getEvent")
+//	public boolean eventIsOpen(@PathParam("eventId") int eventId) throws ServiceException {
+//		return eventService.eventIsOpen(eventId);
+//	}
 	
-	@Path("/{eventId}/activity")
 	@POST
+	@Path("/{eventId}/activity")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
 	public Activity addActivity(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, Activity activity) throws ServiceException {
@@ -283,8 +282,9 @@ public class EventResource {
 		return eventService.getActivitiesByEvent(sessionId, eventId, startIndex, cont, orderBy, b, t);
 	}*/
 	
-	@Path("/{eventId}/activityHeaders/query")
 	@GET
+	@Path("/{eventId}/activityHeaders/query")
+	@UseCasePermission("getAll")
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<ActivityHeader> getActivityHeaderByEvent(@HeaderParam("sessionId") String sessionId,
 			@PathParam("eventId") int eventId,
@@ -308,8 +308,8 @@ public class EventResource {
 		return eventService.getActivitiesByEvent(sessionId, eventId, startIndex, cont, orderBy, b, t).stream().map(Activity::generateActivityHeader).collect(Collectors.toList());
 	}
 	
-	@Path("/{eventId}/activityTAM/{type}")
 	@GET
+	@Path("/{eventId}/activityTAM/{type}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public long getActivityByEventTAM(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("type") String type) throws ServiceException {
 		ActivityType t = null;
@@ -321,8 +321,8 @@ public class EventResource {
 		return eventService.getActivitiesByEventTAM(sessionId, eventId, t);
 	}
 	
-	@Path("/sponsor/{eventId}")
 	@POST
+	@Path("/sponsor/{eventId}")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
 	public Sponsor addSponsor(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, Sponsor sponsor) throws ServiceException {
@@ -345,8 +345,9 @@ public class EventResource {
 		return eventService.getShirtSizes(sessionId, eventId);
 	}
 	
-	@Path("/users/{eventId}/query")
 	@GET
+	@Path("/users/{eventId}/query")
+	@UseCasePermission("getAllUsers")
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<User> getUsersByEvent(@HeaderParam("sessionId") String sessionId,
 			@PathParam("eventId") int eventId,
@@ -368,11 +369,12 @@ public class EventResource {
 		int cont = pageTam;
 		boolean b = true;
 		if(desc==0) b = false;
-		return userService.getUsersByEvent(sessionId, eventId, st, startIndex,cont,orderBy,b);
+		return userService.getUsersByEvent(eventId, st, startIndex,cont,orderBy,b);
 	}
 	
-	@Path("/registrations/{eventId}/query")
 	@GET
+	@Path("/registrations/{eventId}/query")
+	@UseCasePermission("getRegistrationByEvent")
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<RegistrationData> getRegistrationByEvent(@HeaderParam("sessionId") String sessionId,
 			@PathParam("eventId") int eventId,
@@ -400,11 +402,12 @@ public class EventResource {
 			case "dni"				: ord = "user.dni";		break;
 		}
 		
-		return eventService.getRegistrationByEvent(sessionId, eventId, st, startIndex, cont, ord, b);
+		return eventService.getRegistrationByEvent(eventId, st, startIndex, cont, ord, b);
 	}
 	
-	@Path("/registrations/size/{eventId}/{state}")
 	@GET
+	@Path("/registrations/size/{eventId}/{state}")
+	@UseCasePermission("getRegistrationByEvent")
 	@Produces({MediaType.APPLICATION_JSON})
 	public long getRegistrationByEventTAM(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("state") String state) throws ServiceException {
 		
@@ -415,11 +418,12 @@ public class EventResource {
     	else if(state.toLowerCase().contentEquals("paid")) st=RegistrationState.paid;
     	else if(state.toLowerCase().contentEquals("all")) st=null;
     	
-		return eventService.getRegistrationByEventTAM(sessionId, eventId, st);
+		return eventService.getRegistrationByEventTAM(eventId, st);
 	}
 	
-	@Path("/users/size/{eventId}/{state}/")
 	@GET
+	@Path("/users/size/{eventId}/{state}/")
+	@UseCasePermission("getAllUsers")
 	@Produces(MediaType.APPLICATION_JSON)
 	public long getUsersByEventTAM(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("state") String state) throws ServiceException {
 		RegistrationState st;
@@ -429,7 +433,7 @@ public class EventResource {
     	else if(state.toLowerCase().contentEquals("paid")) st=RegistrationState.paid;
     	else if(state.toLowerCase().contentEquals("all")) st=null;
     	else throw new ServiceException(ServiceException.INCORRECT_FIELD,"state");
-		return userService.getUsersByEventTAM(sessionId, eventId, st);
+		return userService.getUsersByEventTAM(eventId, st);
 	}
 		
 	@POST
@@ -442,8 +446,9 @@ public class EventResource {
 	}
 
 	
-	@Path("/{eventId}/news/query")
 	@GET
+	@Path("/{eventId}/news/query")
+	@UseCasePermission("getAllNewsItem")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<NewsItem> getAllNewsItem(@HeaderParam("sessionId") String sessionId,
 			@PathParam("eventId") int eventId,
@@ -457,30 +462,31 @@ public class EventResource {
 		int cont = pageTam;
 		boolean b = true;
 		if(desc==0) b = false;
-		return eventService.getAllNewsItemFormEvent(sessionId,eventId,startIndex,cont,orderBy,b);
+		return eventService.getAllNewsItemFormEvent(eventId, startIndex, cont, orderBy, b);
 	}
 		
-	@Path("/news/all/size/{eventId}/")
 	@GET
+	@Path("/news/all/size/{eventId}/")
+	@UseCasePermission("getAllNewsItem")
 	@Produces(MediaType.APPLICATION_JSON)
 	public long getAllNewsItemFromEventTam(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
-		return eventService.getAllNewsItemFromEventTam(sessionId,eventId);
+		return eventService.getAllNewsItemFromEventTam(eventId);
 	}
 	
-	@Path("/news/{eventId}/last/{days}")
+//	@GET
+//	@Path("/news/{eventId}/last/{days}")
+//	@Consumes({MediaType.APPLICATION_JSON})
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public List<NewsItem> lastNews(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("days") int days) throws ServiceException{
+//		Calendar limitDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+//		limitDate.add(Calendar.DAY_OF_YEAR, -1*days);
+//		return eventService.getLastNewsFromEvent(sessionId, eventId, limitDate, false);
+//	}
+	
 	@GET
-	@Consumes({MediaType.APPLICATION_JSON})
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<NewsItem> lastNews(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("days") int days) throws ServiceException{
-		Calendar limitDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-		limitDate.add(Calendar.DAY_OF_YEAR, -1*days);
-		return eventService.getLastNewsFromEvent(sessionId, eventId, limitDate, false);
-	}
-	
 	@Path("/{eventId}/getEmailTemplates")
-	@Produces(MediaType.APPLICATION_JSON)
-	@GET
 	@UseCasePermission("changeEventData")
+	@Produces(MediaType.APPLICATION_JSON)
 	public EmailTemplatesForEvent getEmailTemplates(@PathParam("eventId") int eventId) throws ServiceException {
 		EmailTemplatesForEvent result = new EmailTemplatesForEvent();
 		//Event ev = eventService.getEvent(eventId);

@@ -87,11 +87,11 @@ public class EventServiceImpl implements EventService {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "removeEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
 		
-		try 
+		try
 		{
 			eventDao.remove(eventId);
-		} 
-		catch (InstanceException e) 
+		}
+		catch (InstanceException e)
 		{
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
 		}
@@ -100,11 +100,11 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional(readOnly = true)
     public Event getEvent(int eventId) throws ServiceException {
-    	try 
+    	try
 		{
 			return eventDao.find(eventId);
-		} 
-		catch (InstanceException e) 
+		}
+		catch (InstanceException e)
 		{
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
 		}
@@ -120,7 +120,7 @@ public class EventServiceImpl implements EventService {
     		return event.getNormas();
     	} catch (InstanceException e) {
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
-		}	
+		}
     }*/
     
     @Override
@@ -133,7 +133,7 @@ public class EventServiceImpl implements EventService {
     		else return false;
     	} catch (InstanceException e) {
     		throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
-    	}	
+    	}
     }
 
     @Override
@@ -148,7 +148,7 @@ public class EventServiceImpl implements EventService {
     	    if(eventData.getMinimunAge()>=0) event.setMinimunAge(eventData.getMinimunAge());
     	    if(eventData.getPrice()>=0) event.setPrice(eventData.getPrice());
     		if(eventData.getStartDate()!=null) event.setStartDate(eventData.getStartDate());
-    		if(eventData.getEndDate()!=null) event.setEndDate(eventData.getEndDate()); 
+    		if(eventData.getEndDate()!=null) event.setEndDate(eventData.getEndDate());
     		if(eventData.getRegistrationOpenDate()!=null) event.setRegistrationOpenDate(eventData.getRegistrationOpenDate());
     		if(eventData.getRegistrationCloseDate()!=null) event.setRegistrationCloseDate(eventData.getRegistrationCloseDate());
     		if(eventData.getNormas()!=null) event.setNormas(eventData.getNormas());
@@ -165,11 +165,11 @@ public class EventServiceImpl implements EventService {
 	@Transactional
 	public Registration addParticipantToEvent(String sessionId, int userId, int eventId) throws ServiceException {
 		if (!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), userId, "addParticipantToEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);		
-		try{ 
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), userId, "addParticipantToEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+		try{
     		User user = userDao.find(userId);
   	
-    		Event event = eventDao.find(eventId); 
+    		Event event = eventDao.find(eventId);
     		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     		if(!((now.after(event.getRegistrationOpenDate()) && now.before(event.getRegistrationCloseDate())))) throw new ServiceException(9,"addParticipantToEvent");
     		//System.out.println(now.getTime()); System.out.println(event.getRegistrationOpenDate().getTime()); System.out.println(event.getRegistrationCloseDate().getTime());
@@ -183,7 +183,7 @@ public class EventServiceImpl implements EventService {
     		if (registration==null) registration = new Registration(user, event);
     		else throw new  ServiceException(ServiceException.DUPLICATED_FIELD,"Registration");
     		
-    		int currentParticipants = registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.registered) + 
+    		int currentParticipants = registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.registered) +
     								  registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.paid);
     		int queueParticipants =   registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.inQueue);
     		
@@ -199,7 +199,7 @@ public class EventServiceImpl implements EventService {
     		tabla.put("#edadminima", Integer.toString(event.getMinimunAge()));
     		tabla.put("#precio", Integer.toString(event.getPrice()));
  
-    		if(currentParticipants>=event.getNumParticipants()) 
+    		if(currentParticipants>=event.getNumParticipants())
     		{
     			registration.setPlaceOnQueue(1 +  queueParticipants); //FIXME SIN TESTEAR
     			registration.setState(RegistrationState.inQueue);
@@ -208,14 +208,14 @@ public class EventServiceImpl implements EventService {
     			tabla.put("#plazaenevento", "");
     			
     			//FIXME: Mandar correo electrónico
-    			if(event.getOnQueueTemplate()!=null) 
+    			if(event.getOnQueueTemplate()!=null)
     			{
     				Email email = event.getOnQueueTemplate().generateEmail(user, tabla);
     				EmailFIFO.addEmailToQueue(email);
     			}
     			
     		}
-    		else if(user.isInBlackList()) 
+    		else if(user.isInBlackList())
     		{
     			registration.setPlaceOnQueue(event.getNumParticipants() + 200); //FIXME SIN TESTEAR
     			registration.setState(RegistrationState.inQueue);
@@ -226,7 +226,7 @@ public class EventServiceImpl implements EventService {
     			tabla.put("#plazaenevento", "");
     			
     			//FIXME: Mandar correo electrónico
-    			if(event.getOnQueueTemplate()!=null) 
+    			if(event.getOnQueueTemplate()!=null)
     			{
     				Email email = event.getOnQueueTemplate().generateEmail(user, tabla);
     				EmailFIFO.addEmailToQueue(email);
@@ -242,7 +242,7 @@ public class EventServiceImpl implements EventService {
     			tabla.put("#plazaenevento", Integer.toString(registration.getPlace()));
     			
     			//FIXME: Mandar correo electrónico
-    			if(event.getOutstandingTemplate()!=null) 
+    			if(event.getOutstandingTemplate()!=null)
     			{
     				Email email = event.getOutstandingTemplate().generateEmail(user, tabla);
     				//email.sendMailThread();
@@ -257,7 +257,7 @@ public class EventServiceImpl implements EventService {
     	} catch (InstanceException e) {
 			if (e.getClassName().contentEquals("User")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
 			else throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
-		}	
+		}
 		
 	}
 
@@ -265,7 +265,7 @@ public class EventServiceImpl implements EventService {
 	@Transactional
 	public void removeParticipantFromEvent(String sessionId, int userId, int eventId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "removeParticipantFromEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);	
+		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "removeParticipantFromEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
     	Registration registration = registrationDao.findByUserAndEvent(userId, eventId);
     	if (registration==null) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Registration");
 
@@ -301,7 +301,7 @@ public class EventServiceImpl implements EventService {
     			
     			Registration firstInQueue = registrationDao.getFirstInQueue(eventId);
     			 
-    		    if(firstInQueue!=null) {	
+    		    if(firstInQueue!=null) {
     		        firstInQueue.setState(RegistrationState.registered);
     		        firstInQueue.setPlace(registration.getPlace());
     		        	
@@ -322,7 +322,7 @@ public class EventServiceImpl implements EventService {
     		        tabla2.put("#plazaencola", "");
     				tabla2.put("#plazaenevento", Integer.toString(registration.getPlace()));
     					
-    				if(event.getFromQueueToOutstanding()!=null) 
+    				if(event.getFromQueueToOutstanding()!=null)
     				{
     					Email email = event.getFromQueueToOutstanding().generateEmail(firstInQueue.getUser(), tabla2);
     					//email.sendMail();
@@ -330,7 +330,7 @@ public class EventServiceImpl implements EventService {
     					EmailFIFO.addEmailToQueue(email);
     				}
     				registrationDao.save(firstInQueue);
-    		       }			
+    		       }
 			}
 			
 			registrationDao.remove(registration.getRegistrationId());
@@ -357,7 +357,7 @@ public class EventServiceImpl implements EventService {
     	User user = registration.getUser();
     	Event event = registration.getEvent();
 
-		if(event.getSetPaidTemplate()!=null) 
+		if(event.getSetPaidTemplate()!=null)
 		{
 			Hashtable<String,String> tabla = new Hashtable<String,String>();
 			tabla.put("#nombreusuario", user.getName());
@@ -378,7 +378,7 @@ public class EventServiceImpl implements EventService {
 			//email.sendMailThread();
 			//email.sendMail();
 			EmailFIFO.addEmailToQueue(email);
-		}	
+		}
 		registrationDao.save(registration);
 	}
 	
@@ -400,8 +400,8 @@ public class EventServiceImpl implements EventService {
 			else registration.setPlaceOnQueue(0);
 			
 			return registration;
-		} 
-		catch (InstanceException e) 
+		}
+		catch (InstanceException e)
 		{
 			return null;
 		}
@@ -414,7 +414,7 @@ public class EventServiceImpl implements EventService {
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), userId, "sendRegistrationMail")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
     	try {
 			User user = userDao.find(userId);
-			Event event = eventDao.find(eventId); 
+			Event event = eventDao.find(eventId);
 			Registration registration =  getRegistration(sessionId,userId,userId);
 
 			Hashtable<String,String> tabla = new Hashtable<String,String>();
@@ -433,7 +433,7 @@ public class EventServiceImpl implements EventService {
 			tabla.put("#plazaenevento", Integer.toString(registration.getPlace()));
 			
 			if(registration.getState()==RegistrationState.inQueue) {
-				if(event.getOnQueueTemplate()!=null) 
+				if(event.getOnQueueTemplate()!=null)
     			{
     				Email email = event.getOnQueueTemplate().generateEmail(user, tabla);
     				//email.sendMailThread();
@@ -443,17 +443,17 @@ public class EventServiceImpl implements EventService {
 			}
 			else
 			if(registration.getState()==RegistrationState.paid) {
-				if(event.getSetPaidTemplate()!=null) 
+				if(event.getSetPaidTemplate()!=null)
 				{
 					Email email = event.getSetPaidTemplate().generateEmail(user, tabla);
-					//email.sendMailThread();		
+					//email.sendMailThread();
 					//email.sendMail();
 					EmailFIFO.addEmailToQueue(email);
 				}
 			}
 			else
 			if(registration.getState()==RegistrationState.registered) {
-				if(event.getOutstandingTemplate()!=null) 
+				if(event.getOutstandingTemplate()!=null)
 				{
 					Email email = event.getOutstandingTemplate().generateEmail(user, tabla);
 					//email.sendMailThread();
@@ -494,18 +494,18 @@ public class EventServiceImpl implements EventService {
     public void eventNumParticipantsChanged(int eventId) throws ServiceException {
     	
 		Event event = null;
-		try 
+		try
 		{
 			event = eventDao.find(eventId);
-		} 
-		catch (InstanceException e) 
+		}
+		catch (InstanceException e)
 		{
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
 		}
 		
         if (!eventIsOpen(eventId)) return;
 
-		int currentParticipants = registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.registered) + 
+		int currentParticipants = registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.registered) +
 				  registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.paid);
 		int queueParticipants = registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.inQueue);
 
@@ -522,7 +522,7 @@ public class EventServiceImpl implements EventService {
 	        	
 	        	User user = firstInQueue.getUser();
 
-				if(event.getFromQueueToOutstanding()!=null) 
+				if(event.getFromQueueToOutstanding()!=null)
 				{
 					Hashtable<String,String> tabla = new Hashtable<String,String>();
 		    		tabla.put("#nombreusuario", user.getName());
@@ -547,14 +547,12 @@ public class EventServiceImpl implements EventService {
     
     @Override
    	@Transactional(readOnly = true)
-	public List<RegistrationData> getRegistrationByEvent(String sessionId, int eventId, RegistrationState state, int startindex, int maxResults, String orderBy, boolean desc) throws ServiceException {
-    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getRegistrationByEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+	public List<RegistrationData> getRegistrationByEvent(int eventId, RegistrationState state, int startindex, int maxResults, String orderBy, boolean desc) throws ServiceException {
 		List<Registration> list = registrationDao.getRegistrationByEvent(eventId, state, startindex, maxResults, orderBy, desc);
 		
 		if(orderBy=="placeOnQueue") {
-			if(desc==false) list = (List<Registration>)list.stream().sorted((e1, e2) -> Integer.compare(e1.getPlaceOnQueue(),e2.getPlaceOnQueue())).collect(Collectors.toList());
-			else list = (List<Registration>)list.stream().sorted((e1, e2) -> Integer.compare(e2.getPlaceOnQueue(),e1.getPlaceOnQueue())).collect(Collectors.toList());
+			if(desc==false) list = list.stream().sorted((e1, e2) -> Integer.compare(e1.getPlaceOnQueue(),e2.getPlaceOnQueue())).collect(Collectors.toList());
+			else list = list.stream().sorted((e1, e2) -> Integer.compare(e2.getPlaceOnQueue(),e1.getPlaceOnQueue())).collect(Collectors.toList());
 		}
 		
 		List<RegistrationData> rd = new ArrayList<RegistrationData>();
@@ -571,9 +569,7 @@ public class EventServiceImpl implements EventService {
     
     @Override
 	@Transactional(readOnly = true)
-    public long getRegistrationByEventTAM(String sessionId, int eventId, RegistrationState state) throws ServiceException {
-    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getRegistrationByEventTAM")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+    public long getRegistrationByEventTAM(int eventId, RegistrationState state) throws ServiceException {
 		return registrationDao.getRegistrationByEventTAM(eventId, state);
     }
 
@@ -704,7 +700,7 @@ public class EventServiceImpl implements EventService {
 			return activity;
 		} catch (InstanceException e) {
 			throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Activity");
-		}	
+		}
 	}
     
     @Override
@@ -782,7 +778,7 @@ public class EventServiceImpl implements EventService {
 		} catch (InstanceException e) {
 			if (e.getClassName().contentEquals("User")) throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"User");
 			else throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Activity");
-		}	
+		}
 	}
     
     @Override
@@ -841,10 +837,10 @@ public class EventServiceImpl implements EventService {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getNewsItem")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
     	
-		try 
+		try
 		{
 			return newsDao.find(newsItemId);
-		} 
+		}
 		catch (InstanceException e) {
 			throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"NewsItem");
 		}
@@ -861,11 +857,14 @@ public class EventServiceImpl implements EventService {
     
     @Override
     @Transactional(readOnly = true)
-    public List<NewsItem> getAllNewsItemFormEvent(String sessionId, int eventId, int startIndex, int cont, String orderBy, boolean desc) throws ServiceException {
-    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getAllNewsItemFormEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-    	
+    public List<NewsItem> getAllNewsItemFormEvent(int eventId, int startIndex, int cont, String orderBy, boolean desc) throws ServiceException {    	
 		return newsDao.getAllNewsItemFromEvent(eventId,startIndex,cont,orderBy,desc);
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public long getAllNewsItemFromEventTam(int eventId) throws ServiceException {
+    	return newsDao.getAllPublishedNewsItemFromEventTam(eventId);
     }
 
     @Override
@@ -885,15 +884,6 @@ public class EventServiceImpl implements EventService {
     public Calendar nextNewsUpdate(int eventId) throws ServiceException {
     	return newsDao.getNextPublicationTime(eventId);
     }
-    
-    @Override
-    @Transactional(readOnly = true)
-    public long getAllNewsItemFromEventTam(String sessionId, int eventId) throws ServiceException {
-    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getAllNewsItemFromEventTam")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-    	return newsDao.getAllPublishedNewsItemFromEventTam(eventId);
-    }
-
       
     @Override
     @Transactional(readOnly = true)
@@ -965,7 +955,7 @@ public class EventServiceImpl implements EventService {
     }
     
     @Override
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public List<Sponsor> getSponsors(String sessionId, int startIndex, int cont, String orderBy, boolean desc) throws ServiceException {
     	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getSponsors")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
@@ -990,7 +980,7 @@ public class EventServiceImpl implements EventService {
 	public void setPaidTemplate(String sessionId, int eventId, int emailTemplateId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "setPaidTemplate")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-		try 
+		try
 		{
 			Event event = eventDao.find(eventId);
 			EmailTemplate emailtemplate = emailTemplateDao.find(emailTemplateId);
@@ -1007,7 +997,7 @@ public class EventServiceImpl implements EventService {
 	public void onQueueTemplate(String sessionId, int eventId, int emailTemplateId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "onQueueTemplate")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-		try 
+		try
 		{
 			Event event = eventDao.find(eventId);
 			EmailTemplate emailtemplate = emailTemplateDao.find(emailTemplateId);
@@ -1024,7 +1014,7 @@ public class EventServiceImpl implements EventService {
 	public void outstandingTemplate(String sessionId, int eventId, int emailTemplateId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "outstandingTemplate")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-		try 
+		try
 		{
 			Event event = eventDao.find(eventId);
 			EmailTemplate emailtemplate = emailTemplateDao.find(emailTemplateId);
@@ -1041,7 +1031,7 @@ public class EventServiceImpl implements EventService {
 	public void outOfDateTemplate(String sessionId, int eventId, int emailTemplateId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "outOfDateTemplate")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-		try 
+		try
 		{
 			Event event = eventDao.find(eventId);
 			EmailTemplate emailtemplate = emailTemplateDao.find(emailTemplateId);
@@ -1058,7 +1048,7 @@ public class EventServiceImpl implements EventService {
 	public void fromQueueToOutstanding(String sessionId, int eventId, int emailTemplateId) throws ServiceException {
 		if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "fromQueueToOutstanding")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
-		try 
+		try
 		{
 			Event event = eventDao.find(eventId);
 			EmailTemplate emailtemplate = emailTemplateDao.find(emailTemplateId);
