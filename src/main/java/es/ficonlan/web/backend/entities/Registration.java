@@ -35,7 +35,7 @@ public class Registration {
 	
 	public enum RegistrationState {registered, inQueue, paid};
 	
-	private final boolean open = true;
+	private boolean open = true;
 	private int registrationId;
 	private User user;
 	private Event event;
