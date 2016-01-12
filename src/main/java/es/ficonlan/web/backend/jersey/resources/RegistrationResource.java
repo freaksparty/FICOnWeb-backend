@@ -17,6 +17,7 @@ import es.ficonlan.web.backend.entities.Registration;
 import es.ficonlan.web.backend.entities.Registration.RegistrationState;
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
+import es.ficonlan.web.backend.output.EventRegistrationData;
 import es.ficonlan.web.backend.services.eventservice.EventService;
 import es.ficonlan.web.backend.util.EventRegistrationState;
 
@@ -44,8 +45,8 @@ public class RegistrationResource {
 	@Path("/{eventId}/{userId}")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
-	public Registration addParticipant(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("userId") int userId) throws ServiceException {
-		return eventService.addParticipantToEvent(sessionId, userId, eventId);
+	public EventRegistrationData addParticipant(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("userId") int userId) throws ServiceException {
+		return new EventRegistrationData(eventService.addParticipantToEvent(sessionId, userId, eventId));
 	}
 	
 	@DELETE
@@ -75,8 +76,8 @@ public class RegistrationResource {
 	@GET
 	@Path("/{eventId}/{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Registration getRegistration(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("userId") int userId) throws ServiceException {
-		return eventService.getRegistration(sessionId, userId, eventId);
+	public EventRegistrationData getRegistration(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("userId") int userId) throws ServiceException {
+		return new EventRegistrationData(eventService.getRegistration(sessionId, userId, eventId));
 	}
 	
 	@GET

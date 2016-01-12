@@ -35,8 +35,6 @@ public class Registration {
 	
 	public enum RegistrationState {registered, inQueue, paid};
 	
-	@Transient
-	private boolean open = true;
 	private int registrationId;
 	private User user;
 	private Event event;
@@ -158,11 +156,4 @@ public class Registration {
 		this.placeOnQueue = placeOnQueue;
 	}
 
-	public void setOpen(boolean b) {
-		this.open = b;
-	}	
-	
-	public boolean isOpen() {
-		return open;
-	}
 }
