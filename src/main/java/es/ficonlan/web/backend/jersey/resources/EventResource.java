@@ -284,7 +284,7 @@ public class EventResource {
 	
 	@GET
 	@Path("/{eventId}/activityHeaders/query")
-	@UseCasePermission("getAll")
+	@UseCasePermission("getAllActivities")
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<ActivityHeader> getActivityHeaderByEvent(@HeaderParam("sessionId") String sessionId,
 			@PathParam("eventId") int eventId,
@@ -305,12 +305,13 @@ public class EventResource {
     		if(type.toLowerCase().contentEquals("production")) t=ActivityType.Production;
     		if(type.toLowerCase().contentEquals("conference")) t=ActivityType.Conference;
 		}
-		return eventService.getActivitiesByEvent(sessionId, eventId, startIndex, cont, orderBy, b, t).stream().map(Activity::generateActivityHeader).collect(Collectors.toList());
+		return eventService.getActivitiesByEvent(eventId, startIndex, cont, orderBy, b, t).stream().map(Activity::generateActivityHeader).collect(Collectors.toList());
 	}
 	
 	@GET
 	@Path("/{eventId}/activityTAM/{type}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@UseCasePermission("getAllActivities")
 	public long getActivityByEventTAM(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("type") String type) throws ServiceException {
 		ActivityType t = null;
 		if(type!=null){
@@ -318,7 +319,7 @@ public class EventResource {
     		if(type.toLowerCase().contentEquals("production")) t=ActivityType.Production;
     		if(type.toLowerCase().contentEquals("conference")) t=ActivityType.Conference;
 		}
-		return eventService.getActivitiesByEventTAM(sessionId, eventId, t);
+		return eventService.getActivitiesByEventTAM(eventId, t);
 	}
 	
 	@POST

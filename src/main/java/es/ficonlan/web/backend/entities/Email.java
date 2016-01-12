@@ -29,6 +29,8 @@ import javax.persistence.Table;
 public class Email {
 
 	protected int		emailId;
+	
+	private int sendingErrors = 0;
 
 	//TODO: make private userSend, passSend. Maybe those should not be here?
 	public String	userSend;
@@ -131,6 +133,14 @@ public class Email {
 	public void setSendDate(Calendar sendDate) {
 		this.sendDate = sendDate;
 	}
+	
+	public int getSendingErrors() {
+		return sendingErrors;
+	}
+	
+	public void onError() {
+		sendingErrors++;
+	}
 
 //	public boolean sendMailThread() {
 //
@@ -187,7 +197,10 @@ public class Email {
 		this.setSendDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
 
 		return true;
-
+	}
+	
+	public String toShortString() {
+		return "destinatario: " + this.destinatario + ", origen:" + this.userSend;
 	}
 
 }

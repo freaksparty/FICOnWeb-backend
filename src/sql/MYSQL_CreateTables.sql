@@ -135,17 +135,24 @@ CREATE TABLE Event (
  CREATE INDEX User_ActivityIndexByUser_Activity_User_id  ON User_Activity (User_Activity_User_id);
  CREATE INDEX User_ActivityIndexByUser_Activity_Activity_id  ON User_Activity (User_Activity_Activity_id);
  
+ ALTER TABLE User_Activity ADD CONSTRAINT fk_user_activity_user FOREIGN KEY ( User_Activity_User_id ) REFERENCES User( User_id ) ON DELETE CASCADE ON UPDATE CASCADE;
+ ALTER TABLE User_Activity ADD CONSTRAINT fk_user_activity_activity FOREIGN KEY ( User_Activity_Activity_id ) REFERENCES Activity( Activity_id ) ON DELETE CASCADE ON UPDATE CASCADE;
+ 
  -- ------------------------------ ROLE_USER -------------------------------------
  
  CREATE TABLE Role_User ( 
 	Role_User_id            bigint UNSIGNED NOT NULL  AUTO_INCREMENT,
 	Role_User_Role_id       bigint UNSIGNED NOT NULL  ,
 	Role_User_User_id       bigint UNSIGNED NOT NULL  ,
-	CONSTRAINT pk_role_user PRIMARY KEY ( Role_User_id )
+	CONSTRAINT pk_role_user PRIMARY KEY ( Role_User_id ),
+	CONSTRAINT uq_role_user UNIQUE ( Role_User_Role_id, Role_User_User_id)
  ) engine=InnoDB;
  
  CREATE INDEX Role_UserIndexByRole_User_Role_id ON Role_User (Role_User_Role_id);
- CREATE INDEX Role_UserIndexByRole_User_User_id  ON Role_User (Role_User_User_id);
+ CREATE INDEX Role_UserIndexByRole_User_User_id ON Role_User (Role_User_User_id);
+ 
+ ALTER TABLE Role_User ADD CONSTRAINT fk_role_user_role FOREIGN KEY ( Role_User_Role_id ) REFERENCES Role( Role_id ) ON DELETE CASCADE ON UPDATE CASCADE;
+ ALTER TABLE Role_User ADD CONSTRAINT fk_role_user_user FOREIGN KEY ( Role_User_User_id ) REFERENCES User( User_id ) ON DELETE CASCADE ON UPDATE CASCADE;
  
   -- ------------------------------ ROLE_USERCASE ----------------------------------
 
@@ -177,6 +184,9 @@ CREATE TABLE NewsItem (
  CREATE INDEX NewsItemIndexByNewsItemEvent_id ON NewsItem (NewsItem_Event_id);
  CREATE INDEX NewsItemIndexByNewsItemUser_id ON NewsItem (NewsItem_User_id);
  
+ ALTER TABLE NewsItem ADD CONSTRAINT fk_newsItem_event FOREIGN KEY ( NewsItem_Event_id ) REFERENCES Event( Event_id ) ON DELETE CASCADE ON UPDATE CASCADE;
+ ALTER TABLE NewsItem ADD CONSTRAINT fk_newsItem_user FOREIGN KEY ( NewsItem_User_id ) REFERENCES User( User_id ) ON DELETE CASCADE ON UPDATE CASCADE;
+ 
 -- ------------------------------ REGISTRATION -------------------------------------
  
  CREATE TABLE Registration ( 
@@ -193,6 +203,9 @@ CREATE TABLE NewsItem (
  
  CREATE INDEX RegistrationIndexByRegistrationUser_id ON Registration (Registration_User_id);
  CREATE INDEX RegistrationIndexByRegistrationEvent_id ON Registration (Registration_Event_id);
+  
+ ALTER TABLE Registration ADD CONSTRAINT fk_registration_user FOREIGN KEY ( Registration_User_id ) REFERENCES User( User_id ) ON DELETE CASCADE ON UPDATE CASCADE;
+ ALTER TABLE Registration ADD CONSTRAINT fk_registration_event FOREIGN KEY ( Registration_Event_id ) REFERENCES Event( Event_id ) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- ------------------------------ LANGUAGE ----------------------------------
 
@@ -243,31 +256,18 @@ CREATE TABLE Sponsor (
 ) engine=InnoDB;
 
  CREATE INDEX SponsorByEvent ON Sponsor (Sponsor_event_id);
-
-
+ 
+ ALTER TABLE Sponsor ADD CONSTRAINT fk_sponsor_event FOREIGN KEY ( Sponsor_event_id ) REFERENCES Event (Event_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ 
+ ALTER TABLE Activity ADD CONSTRAINT fk_activity_event FOREIGN KEY ( Activity_Event_id ) REFERENCES Event( Event_id ) ON DELETE CASCADE ON UPDATE CASCADE;
+ 
+ ALTER TABLE Role_UseCase ADD CONSTRAINT fk_role_userCase_userCase FOREIGN KEY ( Role_UseCase_UseCase_id ) REFERENCES UseCase( UseCase_id ) ON DELETE CASCADE ON UPDATE CASCADE;
+ ALTER TABLE Role_UseCase ADD CONSTRAINT fk_role_userCase_role FOREIGN KEY ( Role_UseCase_Role_id  ) REFERENCES Role( Role_id ) ON DELETE CASCADE ON UPDATE CASCADE;
+ 
  ALTER TABLE Event ADD CONSTRAINT fk_event_setPaidTemplate FOREIGN KEY ( Event_setPaidTemplate_id ) REFERENCES EmailTemplate (EmailTemplate_id) ON DELETE SET NULL ON UPDATE CASCADE;
  ALTER TABLE Event ADD CONSTRAINT fk_event_onQueueTemplate FOREIGN KEY ( Event_onQueueTemplate_id ) REFERENCES EmailTemplate (EmailTemplate_id) ON DELETE SET NULL ON UPDATE CASCADE;
  ALTER TABLE Event ADD CONSTRAINT fk_event_outstandingTemplate FOREIGN KEY (Event_outstandingTemplate_id ) REFERENCES EmailTemplate (EmailTemplate_id) ON DELETE SET NULL ON UPDATE CASCADE;
  ALTER TABLE Event ADD CONSTRAINT fk_event_outOfDateTemplate FOREIGN KEY ( Event_outOfDateTemplate_id ) REFERENCES EmailTemplate (EmailTemplate_id) ON DELETE SET NULL ON UPDATE CASCADE;
  ALTER TABLE Event ADD CONSTRAINT fk_event_fromQueueToOutstanding FOREIGN KEY ( Event_fromQueueToOutstanding_id ) REFERENCES EmailTemplate (EmailTemplate_id) ON DELETE SET NULL ON UPDATE CASCADE;
-
- ALTER TABLE Sponsor ADD CONSTRAINT fk_sponsor_event FOREIGN KEY ( Sponsor_event_id ) REFERENCES Event (Event_id) ON DELETE CASCADE ON UPDATE CASCADE;
- 
- ALTER TABLE Activity ADD CONSTRAINT fk_activity_event FOREIGN KEY ( Activity_Event_id ) REFERENCES Event( Event_id ) ON DELETE CASCADE ON UPDATE CASCADE;
- 
- ALTER TABLE User_Activity ADD CONSTRAINT fk_user_activity_user FOREIGN KEY ( User_Activity_User_id ) REFERENCES User( User_id ) ON DELETE CASCADE ON UPDATE CASCADE;
- ALTER TABLE User_Activity ADD CONSTRAINT fk_user_activity_activity FOREIGN KEY ( User_Activity_Activity_id ) REFERENCES Activity( Activity_id ) ON DELETE CASCADE ON UPDATE CASCADE;
- 
- ALTER TABLE Role_User ADD CONSTRAINT fk_role_user_role FOREIGN KEY ( Role_User_Role_id ) REFERENCES Role( Role_id ) ON DELETE CASCADE ON UPDATE CASCADE;
- ALTER TABLE Role_User ADD CONSTRAINT fk_role_user_user FOREIGN KEY ( Role_User_User_id ) REFERENCES User( User_id ) ON DELETE CASCADE ON UPDATE CASCADE;
- 
- ALTER TABLE Role_UseCase ADD CONSTRAINT fk_role_userCase_userCase FOREIGN KEY ( Role_UseCase_UseCase_id ) REFERENCES UseCase( UseCase_id ) ON DELETE CASCADE ON UPDATE CASCADE;
- ALTER TABLE Role_UseCase ADD CONSTRAINT fk_role_userCase_role FOREIGN KEY ( Role_UseCase_Role_id  ) REFERENCES Role( Role_id ) ON DELETE CASCADE ON UPDATE CASCADE;
- 
- ALTER TABLE NewsItem ADD CONSTRAINT fk_newsItem_event FOREIGN KEY ( NewsItem_Event_id ) REFERENCES Event( Event_id ) ON DELETE CASCADE ON UPDATE CASCADE;
- ALTER TABLE NewsItem ADD CONSTRAINT fk_newsItem_user FOREIGN KEY ( NewsItem_User_id ) REFERENCES User( User_id ) ON DELETE CASCADE ON UPDATE CASCADE;
- 
- ALTER TABLE Registration ADD CONSTRAINT fk_registration_user FOREIGN KEY ( Registration_User_id ) REFERENCES User( User_id ) ON DELETE CASCADE ON UPDATE CASCADE;
- ALTER TABLE Registration ADD CONSTRAINT fk_registration_event FOREIGN KEY ( Registration_Event_id ) REFERENCES Event( Event_id ) ON DELETE CASCADE ON UPDATE CASCADE;
  
  ALTER TABLE User ADD CONSTRAINT fk_default_language FOREIGN KEY ( User_defaultLanguage ) REFERENCES Language( Language_id ) ON DELETE CASCADE ON UPDATE CASCADE;

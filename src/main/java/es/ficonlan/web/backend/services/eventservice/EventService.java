@@ -76,9 +76,9 @@ public interface EventService {
     
     public List<Activity> getActivitiesByEvent(int eventId, ActivityType type);
     
-    public List<Activity> getActivitiesByEvent(String sessionId, int eventId, int startIndex, int cont, String orderBy, boolean desc, ActivityType type) throws ServiceException;
+    public List<Activity> getActivitiesByEvent(int eventId, int startIndex, int cont, String orderBy, boolean desc, ActivityType type) throws ServiceException;
     
-    public long getActivitiesByEventTAM(String sessionId, int eventId, ActivityType type) throws ServiceException;
+    public long getActivitiesByEventTAM(int eventId, ActivityType type) throws ServiceException;
     
     public void addParticipantToActivity(String sessionId, int userId, int activityId) throws ServiceException;
     

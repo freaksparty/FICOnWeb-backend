@@ -24,11 +24,18 @@ public class EmailFIFO {
 								//System.out.println("Email Enviado " + email.getAsunto());
 							}
 							catch (Exception e1) {
-								emails.add(email);
-								//System.out.println("Error al enviar el Email " + email.getAsunto());
-								System.err.println("Could not send email.");
-								e1.printStackTrace();
-								Thread.sleep(15*60*1000);
+								if(e1.getCause() instanceof com.sun.mail.smtp.SMTPAddressFailedException) {
+									// The recipient address <adminMail> is not a valid RFC-5321 address
+									System.err.println("Could not send email. Dirección incorrecta.");
+									System.err.println(email.toShortString());
+								} else {
+									emails.add(email);
+									//System.out.println("Error al enviar el Email " + email.getAsunto());
+									System.err.println("Could not send email.");
+									e1.printStackTrace();
+									email.onError();
+									Thread.sleep(15*60*1000);
+								}
 							}
 							Thread.sleep(10*1000);
 						}

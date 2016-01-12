@@ -723,9 +723,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
-	public List<Activity> getActivitiesByEvent(String sessionId, int eventId, int startIndex, int cont, String orderBy, boolean desc, ActivityType type) throws ServiceException {
-    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getActivitiesByEvent")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+	public List<Activity> getActivitiesByEvent(int eventId, int startIndex, int cont, String orderBy, boolean desc, ActivityType type) throws ServiceException {
     	try {
 			eventDao.find(eventId);
 		} catch (InstanceException e) {
@@ -736,9 +734,7 @@ public class EventServiceImpl implements EventService {
     
     @Override
     @Transactional(readOnly = true)
-    public long getActivitiesByEventTAM(String sessionId, int eventId, ActivityType type) throws ServiceException {
-    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getActivitiesByEventTAM")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+    public long getActivitiesByEventTAM(int eventId, ActivityType type) throws ServiceException {
 		try {
 			eventDao.find(eventId);
 		} catch (InstanceException e) {

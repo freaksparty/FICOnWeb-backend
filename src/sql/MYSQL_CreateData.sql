@@ -7,6 +7,15 @@ SELECT @AddressId := LAST_INSERT_ID();
 -- How to manually check user roles
 -- SELECT User_login, Role_name  FROM Role_User ru INNER JOIN Role r ON r.Role_id = ru.Role_User_Role_id JOIN User u ON ru.Role_User_User_id = u.User_id  WHERE User_login = 'admin'
 
+-- Use this to set Admin roles once created
+-- INSERT INTO Role_User (Role_User_Role_id, Role_User_User_id) VALUES ((SELECT Role_id FROM Role WHERE Role_name = 'User'), (SELECT User_id FROM User WHERE User_login = 'admin'));
+-- INSERT INTO Role_User (Role_User_Role_id, Role_User_User_id) VALUES ((SELECT Role_id FROM Role WHERE Role_name = 'EventController'), (SELECT User_id FROM User WHERE User_login = 'admin'));
+-- INSERT INTO Role_User (Role_User_Role_id, Role_User_User_id) VALUES ((SELECT Role_id FROM Role WHERE Role_name = 'ActivityController'), (SELECT User_id FROM User WHERE User_login = 'admin'));
+-- INSERT INTO Role_User (Role_User_Role_id, Role_User_User_id) VALUES ((SELECT Role_id FROM Role WHERE Role_name = 'RegistrationController'), (SELECT User_id FROM User WHERE User_login = 'admin'));
+-- INSERT INTO Role_User (Role_User_Role_id, Role_User_User_id) VALUES ((SELECT Role_id FROM Role WHERE Role_name = 'NewsController'), (SELECT User_id FROM User WHERE User_login = 'admin'));
+-- INSERT INTO Role_User (Role_User_Role_id, Role_User_User_id) VALUES ((SELECT Role_id FROM Role WHERE Role_name = 'SponsorController'), (SELECT User_id FROM User WHERE User_login = 'admin'));
+-- INSERT INTO Role_User (Role_User_Role_id, Role_User_User_id) VALUES ((SELECT Role_id FROM Role WHERE Role_name = 'UserController'), (SELECT User_id FROM User WHERE User_login = 'admin'));
+
 -- Roles básicos
 INSERT INTO Role (Role_name) VALUES ('Anonymous'), ('Admin'), ('User');
 
@@ -14,7 +23,7 @@ INSERT INTO Role (Role_name) VALUES ('Anonymous'), ('Admin'), ('User');
 INSERT INTO UseCase (UseCase_name) VALUES ('login'), ('addUser'), ('closeSession'), ('closeAllUserSessions'), ('passwordRecover'), ('changeUserPassword'), ('getAllUsers'), ('changeUserData'), ('removeUser'),
                                           ('getEvent'),  ('getAllEvents'), ('createEvent'), ('removeEvent'), ('changeEventData'), ('addParticipantToEvent'), ('getEventRegistrationState'),
                                           ('getNewsItem'), ('getAllNewsItem'), ('addNews'), ('changeNewsData'), ('removeNews'),
-                                          ('getActivity'), ('addActivity'), ('removeActivity'), ('changeActivityData'), ('getAllActitivies'),
+                                          ('getActivity'), ('addActivity'), ('removeActivity'), ('changeActivityData'), ('getAllActivities'),
                                           ('getRegistration'), ('changeRegistrationState'), ('getRegistrationByEvent'),
                                           ('addSponsor'), ('removeSponsor'), ('getSponsors');
 
@@ -118,7 +127,7 @@ INSERT INTO Role VALUES ( 0, "NewsController");
 INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "addNews" ), ( SELECT Role_id FROM Role WHERE Role_name =  "NewsController" ) );
 INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "changeNewsData" ), ( SELECT Role_id FROM Role WHERE Role_name =  "NewsController" ) );
 INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "getNewsItem" ), ( SELECT Role_id FROM Role WHERE Role_name =  "NewsController" ) );
--- INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "getAllNewsItem" ), ( SELECT Role_id FROM Role WHERE Role_name =  "NewsController" ) );
+INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "getAllNewsItem" ), ( SELECT Role_id FROM Role WHERE Role_name =  "NewsController" ) );
 -- INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "getAllNewsItemFormEvent" ), ( SELECT Role_id FROM Role WHERE Role_name =  "NewsController" ) );
 -- INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "getAllPublishedNewsItemFormEvent" ), ( SELECT Role_id FROM Role WHERE Role_name =  "NewsController" ) );
 -- INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "getAllPublishedNewsItemFromEventTam" ), ( SELECT Role_id FROM Role WHERE Role_name =  "NewsController" ) );
