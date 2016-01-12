@@ -24,7 +24,7 @@ INSERT INTO UseCase (UseCase_name) VALUES ('login'), ('addUser'), ('closeSession
                                           ('getEvent'),  ('getAllEvents'), ('createEvent'), ('removeEvent'), ('changeEventData'), ('addParticipantToEvent'), ('getEventRegistrationState'),
                                           ('getNewsItem'), ('getAllNewsItem'), ('addNews'), ('changeNewsData'), ('removeNews'),
                                           ('getActivity'), ('addActivity'), ('removeActivity'), ('changeActivityData'), ('getAllActivities'),
-                                          ('getRegistration'), ('changeRegistrationState'), ('getRegistrationByEvent'),
+                                          ('getRegistration'), ('changeRegistrationState'), ('getRegistrationByEvent'), ('setPaid')
                                           ('addSponsor'), ('removeSponsor'), ('getSponsors');
 
 -- Configuración de los Roles
@@ -100,7 +100,7 @@ INSERT INTO Role VALUES ( 0, "RegistrationController");
 
 -- INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "addParticipantToEvent" ), ( SELECT Role_id FROM Role WHERE Role_name =  "RegistrationController" ) );
 -- INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "removeParticipantFromEvent" ), ( SELECT Role_id FROM Role WHERE Role_name =  "RegistrationController" ) );
--- INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "setPaid" ), ( SELECT Role_id FROM Role WHERE Role_name =  "RegistrationController" ) );
+INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "setPaid" ), ( SELECT Role_id FROM Role WHERE Role_name =  "RegistrationController" ) );
 INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "getRegistration" ), ( SELECT Role_id FROM Role WHERE Role_name =  "RegistrationController" ) );
 INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "changeRegistrationState" ), ( SELECT Role_id FROM Role WHERE Role_name =  "RegistrationController" ) );
 -- INSERT INTO Role_UseCase VALUES ( 0, ( SELECT UseCase_id FROM UseCase WHERE UseCase_name =  "eventNumParticipantsChanged" ), ( SELECT Role_id FROM Role WHERE Role_name =  "RegistrationController" ) );

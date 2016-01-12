@@ -3,6 +3,7 @@ package es.ficonlan.web.backend.jersey.resources;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import javax.inject.Singleton;
@@ -231,8 +232,8 @@ public class EventResource {
 		return eventService.getAllEvents(sessionId);
 	}
 		
-	@Path("/{eventId}")
 	@DELETE
+	@Path("/{eventId}")
 	public void removeEvent(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
 		//Delete cache
 		eventCache = new ArrayList<EventData>(3);
@@ -404,6 +405,33 @@ public class EventResource {
 		}
 		
 		return eventService.getRegistrationByEvent(eventId, st, startIndex, cont, ord, b);
+	}
+	
+	@GET
+	@Path("/{eventId}/timeToOpen")
+	@UseCasePermission("getEvent")
+	@Produces({MediaType.APPLICATION_JSON})
+	public long timeToOpen(@PathParam("eventId") int eventId) {
+		for(EventData cache : eventCache) {
+			if(cache.eventId == eventId) {
+				return cache.timeToOpen;
+			}
+		}
+		
+		Event event;
+		try {
+			event = eventService.getEvent(eventId);
+		} catch (ServiceException e) {
+			return -1;
+		}
+		
+		if(event == null || event.getRegistrationOpenDate() == null) {
+			return -1;
+		} else {
+			Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+			return (now.getTimeInMillis() - event.getRegistrationOpenDate().getTimeInMillis()) / 1000;
+		}
+		
 	}
 	
 	@GET

@@ -40,22 +40,22 @@ public class RegistrationResource {
 		
 	}
 	
-	@Path("/{eventId}/{userId}")
 	@POST
+	@Path("/{eventId}/{userId}")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
 	public Registration addParticipant(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("userId") int userId) throws ServiceException {
 		return eventService.addParticipantToEvent(sessionId, userId, eventId);
 	}
 	
-	@Path("/{eventId}/{userId}")
 	@DELETE
+	@Path("/{eventId}/{userId}")
 	public void removeParticipant(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("userId") int userId) throws ServiceException {
 		eventService.removeParticipantFromEvent(sessionId, userId, eventId);
 	}
 	
-	@Path("/{eventId}/{userId}/{state}")
 	@PUT
+	@Path("/{eventId}/{userId}/{state}")
 	public void changeRegistrationState(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("userId") int userId, @PathParam("state") String state) throws ServiceException {
 		RegistrationState st=null;
 		if(state!=null){
@@ -66,28 +66,28 @@ public class RegistrationResource {
 		eventService.changeRegistrationState(sessionId, userId, eventId, st);
 	}
 	
-	@Path("/setPaid/{eventId}/{userId}")
 	@PUT
+	@Path("/setPaid/{eventId}/{userId}")
 	public void setPaid(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("userId") int userId) throws ServiceException {
 		eventService.setPaid(sessionId, userId, eventId);
 	}
 	
-	@Path("/{eventId}/{userId}")
 	@GET
+	@Path("/{eventId}/{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Registration getRegistration(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("userId") int userId) throws ServiceException {
 		return eventService.getRegistration(sessionId, userId, eventId);
 	}
 	
-	@Path("/state/{eventId}/{userId}")
 	@GET
+	@Path("/state/{eventId}/{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public EventRegistrationState getEventRegistrationState(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("userId") int userId) throws ServiceException {
 		return eventService.getEventRegistrationState(sessionId, eventId, userId);
 	}
 	
-	@Path("/sendmail/{eventId}/{userId}")
 	@POST
+	@Path("/sendmail/{eventId}/{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public void sendRegistrationMail(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("userId") int userId) throws ServiceException {
 		eventService.sendRegistrationMail(sessionId, userId, eventId);
