@@ -44,14 +44,14 @@ public class ActivityResource {
 //			return sharedCacheControl;
 //		}
 //	}
-	SimpleMemCache<Integer, Activity> activityCache;
+	//SimpleMemCache<Integer, Activity> activityCache;
 	
 	@Autowired
 	private EventService eventService;
 	
 	public ActivityResource(){
 		this.eventService = ApplicationContextProvider.getApplicationContext().getBean(EventService.class);
-		this.activityCache = new SimpleMemCache<Integer, Activity>(20);
+		//this.activityCache = new SimpleMemCache<Integer, Activity>(20);
 	}
 	
 	@Path("/{activityId}")
@@ -59,7 +59,7 @@ public class ActivityResource {
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
 	public Activity changeData(@HeaderParam("sessionId") String sessionId, @PathParam("activityId") int activityId, Activity activityData) throws ServiceException {
-		activityCache.remove(activityId);
+		//activityCache.remove(activityId);
 		return eventService.changeActivityData(sessionId, activityId, activityData);
 	}
 
@@ -68,12 +68,12 @@ public class ActivityResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@UseCasePermission("getEvent")
 	public Activity getActivity(@PathParam("activityId") int activityId) throws ServiceException {
-		Activity a = activityCache.get(activityId);
-		if(a == null) {
+		Activity a;// = activityCache.get(activityId);
+//		if(a == null) {
 			a = eventService.getActivity(activityId);
-			if(a!=null)
-				activityCache.insert(activityId, a);
-		}
+//			if(a!=null)
+//				activityCache.insert(activityId, a);
+//		}
 		return a;
 	}
 	
@@ -86,7 +86,7 @@ public class ActivityResource {
 	@Path("/{activityId}")
 	@DELETE
 	public void removeActivity(@HeaderParam("sessionId") String sessionId, @PathParam("activityId") int activityId) throws ServiceException {
-		activityCache.remove(activityId);
+//		activityCache.remove(activityId);
 		eventService.removeActivity(sessionId, activityId);
 	}
 	

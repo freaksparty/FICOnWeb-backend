@@ -5,7 +5,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class SimpleMemCache<KeyT, ValueT> implements SimpleCache<KeyT, ValueT> {
+public class SimpleMemCache<KeyT, ValueT extends Cacheable> implements SimpleCache<KeyT, ValueT> {
 
 	private Map<KeyT, ValueT> cache;
 	private Queue<KeyT> cacheFIFO;
@@ -45,7 +45,12 @@ public class SimpleMemCache<KeyT, ValueT> implements SimpleCache<KeyT, ValueT> {
 	
 	@Override
 	public ValueT get(KeyT key) {
-		return cache.get(key);
+		ValueT value = cache.get(key);
+		if(value.timeToExpire() < 0) {
+			this.remove(key);
+			return null;
+		}
+		return value;
 	}
 	
 	@Override
