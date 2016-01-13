@@ -89,6 +89,12 @@ public class EventData implements Cacheable {
 		tag = new EntityTag(Long.toString(System.currentTimeMillis()));
     }
     
+    public long getTimeToOpen() {
+    	Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    	timeToOpen = (now.getTimeInMillis() - openInscriptionDate.getTimeInMillis()) / 1000;
+    	return timeToOpen;
+    }
+    
     public void updateIsOpen() {
     	Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     	timeToOpen = (now.getTimeInMillis() - openInscriptionDate.getTimeInMillis()) / 1000;

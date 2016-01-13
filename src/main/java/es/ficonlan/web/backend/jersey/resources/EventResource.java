@@ -414,7 +414,7 @@ public class EventResource {
 	public long timeToOpen(@PathParam("eventId") int eventId) {
 		for(EventData cache : eventCache) {
 			if(cache.eventId == eventId) {
-				return cache.timeToOpen;
+				return cache.getTimeToOpen();
 			}
 		}
 		
