@@ -172,7 +172,8 @@ public class Email {
 		
 		Session session = Session.getDefaultInstance(props, auth);
 		BodyPart texto = new MimeBodyPart();
-		texto.setText(this.getMensaje());
+		texto.setContent(this.getMensaje(), "text/html; charset=utf-8");
+		//texto.setText(this.getMensaje());
 
 		BodyPart adjunto = new MimeBodyPart();
 		if (this.getRutaArchivo() != null) if (!this.getRutaArchivo().equals("")) {

@@ -41,7 +41,7 @@ public class EmailFIFO {
 						}
 						else {
 							//System.out.println("No hay Emails");
-							Thread.sleep(60*1000);
+							Thread.sleep(40*1000);
 						}
 					}
 				}
