@@ -46,7 +46,7 @@ public class SimpleMemCache<KeyT, ValueT extends Cacheable> implements SimpleCac
 	@Override
 	public ValueT get(KeyT key) {
 		ValueT value = cache.get(key);
-		if(value.timeToExpire() < 0) {
+		if(value != null && value.timeToExpire() < 0) {
 			this.remove(key);
 			return null;
 		}
