@@ -114,7 +114,7 @@ public class EventData implements Cacheable {
     				tournaments.add(new ActivityDataShort(a));
     				break;
     			case Production:
-    				tournaments.add(new ActivityDataShort(a));
+    				productions.add(new ActivityDataShort(a));
     				break;
     		}
     	}
