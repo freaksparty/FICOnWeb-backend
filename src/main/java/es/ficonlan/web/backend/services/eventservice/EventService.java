@@ -12,9 +12,9 @@ import es.ficonlan.web.backend.entities.Registration.RegistrationState;
 import es.ficonlan.web.backend.entities.Sponsor;
 import es.ficonlan.web.backend.entities.User;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
+import es.ficonlan.web.backend.output.ShirtData;
 import es.ficonlan.web.backend.util.EventRegistrationState;
 import es.ficonlan.web.backend.util.RegistrationData;
-import es.ficonlan.web.backend.util.ShirtData;
 
 /**
  * @author David Pereiro
@@ -59,7 +59,7 @@ public interface EventService {
 	
 	public long getRegistrationByEventTAM(int eventId, RegistrationState state) throws ServiceException;
 	
-	public List<ShirtData> getShirtSizes(String sessionId, int eventId) throws ServiceException;
+	public List<ShirtData> getShirtSizes(int eventId) throws ServiceException;
 	
 	public EventRegistrationState getEventRegistrationState(String sessionId, int eventId, int userId) throws ServiceException;
 	

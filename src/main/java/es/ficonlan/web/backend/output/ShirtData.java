@@ -1,4 +1,4 @@
-package es.ficonlan.web.backend.util;
+package es.ficonlan.web.backend.output;
 
 public class ShirtData {
 	

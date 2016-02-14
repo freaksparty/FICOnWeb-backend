@@ -43,12 +43,12 @@ import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
 import es.ficonlan.web.backend.output.EmailTemplatesForEvent;
 import es.ficonlan.web.backend.output.EventData;
 import es.ficonlan.web.backend.output.NewsList;
+import es.ficonlan.web.backend.output.ShirtData;
 import es.ficonlan.web.backend.services.emailservice.EmailService;
 import es.ficonlan.web.backend.services.eventservice.EventService;
 import es.ficonlan.web.backend.services.userservice.UserService;
 import es.ficonlan.web.backend.util.ActivityHeader;
 import es.ficonlan.web.backend.util.RegistrationData;
-import es.ficonlan.web.backend.util.ShirtData;
 import es.ficonlan.web.backend.util.cache.Cacheable;
 import es.ficonlan.web.backend.util.cache.SimpleMemCache;
 
@@ -332,19 +332,20 @@ public class EventResource {
 		return eventService.addSponsor(sessionId,eventId,sponsor);
 	}
 	
-	@Path("/{eventId}/sponsors")
 	@GET
+	@Path("/{eventId}/sponsors")
 	@Produces({MediaType.APPLICATION_JSON})
 	@UseCasePermission("getEvent")
 	public List<Sponsor> getSponsorsByEvent(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
 		return eventService.getSponsorsByEvent(eventId);
 	}
 
-	@Path("/getShirtSizes/{eventId}")
 	@GET
+	@Path("/{eventId}/getShirtSizes")
+	@UseCasePermission("getRegistrationByEvent")
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<ShirtData> getShirtSizes(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
-		return eventService.getShirtSizes(sessionId, eventId);
+	public List<ShirtData> getShirtSizes(@PathParam("eventId") int eventId) throws ServiceException {
+		return eventService.getShirtSizes(eventId);
 	}
 	
 	@GET
@@ -554,33 +555,4 @@ public class EventResource {
 		return result;
 	}
 	
-	/*@Path("/emailTemplates/setPaidTemplate/{eventId}/{emailTemplateId}")
-	@PUT
-	public void setPaidTemplate (@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("emailTemplateId") int emailTemplateId) throws ServiceException {
-		eventService.setPaidTemplate(sessionId, eventId, emailTemplateId);
-	}
-	
-	@Path("/emailTemplates/onQueueTemplate/{eventId}/{emailTemplateId}")
-	@PUT
-	public void onQueueTemplate (@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("emailTemplateId") int emailTemplateId) throws ServiceException {
-		eventService.onQueueTemplate(sessionId, eventId, emailTemplateId);
-	}
-	
-	@Path("/emailTemplates/outstandingTemplate/{eventId}/{emailTemplateId}")
-	@PUT
-	public void outstandingTemplate (@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("emailTemplateId") int emailTemplateId) throws ServiceException {
-		eventService.outstandingTemplate(sessionId, eventId, emailTemplateId);
-	}
-	
-	@Path("/emailTemplates/outOfDateTemplate/{eventId}/{emailTemplateId}")
-	@PUT
-	public void outOfDateTemplate (@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("emailTemplateId") int emailTemplateId) throws ServiceException {
-		eventService.outOfDateTemplate(sessionId, eventId, emailTemplateId);
-	}
-	
-	@Path("/emailTemplates/fromQueueToOutstanding/{eventId}/{emailTemplateId}")
-	@PUT
-	public void fromQueueToOutstanding (@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("emailTemplateId") int emailTemplateId) throws ServiceException {
-		eventService.fromQueueToOutstanding(sessionId, eventId, emailTemplateId);
-	}*/
 }

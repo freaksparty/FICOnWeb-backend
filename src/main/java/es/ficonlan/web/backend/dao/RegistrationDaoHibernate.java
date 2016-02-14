@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import es.ficonlan.web.backend.entities.Registration;
 import es.ficonlan.web.backend.entities.Registration.RegistrationState;
-import es.ficonlan.web.backend.util.ShirtData;
+import es.ficonlan.web.backend.output.ShirtData;
 
 /**
  * @author Daniel Gómez Silva
