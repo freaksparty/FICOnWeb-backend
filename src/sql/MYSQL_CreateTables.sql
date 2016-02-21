@@ -116,11 +116,10 @@ CREATE TABLE Event (
 	Activity_date_end             datetime  NOT NULL  ,
 	Activity_reg_date_open        datetime    ,
 	Activity_reg_date_close       datetime  NOT NULL  ,
-	CONSTRAINT pk_activity PRIMARY KEY ( Activity_id )  ,
-	CONSTRAINT Activity_name_UNIQUE UNIQUE ( Activity_name )
+	CONSTRAINT pk_activity PRIMARY KEY ( Activity_id )
  ) engine=InnoDB;
  
- CREATE INDEX ActivityIndexByActivity_name ON Activity (Activity_name);
+ -- CREATE INDEX ActivityIndexByActivity_name ON Activity (Activity_name); (I don't see usecase for this index)
  CREATE INDEX ActivityIndexByActivity_event_id  ON Activity (Activity_Event_id);
  
  -- ------------------------------ USER_ACTIVITY -------------------------------------
