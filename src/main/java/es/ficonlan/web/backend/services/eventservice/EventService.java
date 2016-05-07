@@ -35,9 +35,6 @@ public interface EventService {
 
     public List<Event> findEventByName(String sessionId, String name) throws ServiceException;
     
-    
-    //public String getEventRules(String sessionId, int eventId) throws ServiceException;
-    
     public boolean eventIsOpen(int eventId) throws ServiceException;
     
 		
@@ -64,11 +61,11 @@ public interface EventService {
 	public EventRegistrationState getEventRegistrationState(String sessionId, int eventId, int userId) throws ServiceException;
 	
     
-    public Activity addActivity(String sessionId, int eventId,  Activity activity) throws ServiceException;
+    public Activity addActivity(int eventId,  Activity activity) throws ServiceException;
     
     public void removeActivity(String sessionId, int activityId) throws ServiceException;
     
-    public Activity changeActivityData(String sessionId, int activityId, Activity activityData) throws ServiceException;
+    public Activity changeActivityData(int activityId, Activity activityData) throws ServiceException;
     
     public Activity getActivity(int activityId) throws ServiceException;
     

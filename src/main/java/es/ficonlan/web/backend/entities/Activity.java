@@ -38,7 +38,7 @@ import es.ficonlan.web.backend.util.ActivityHeader;
 public class Activity {
 
 	public enum ActivityType {
-		Production, Conference, Tournament
+		Production, Conference, Tournament, Workshop
 	};
 
 	private int activityId;

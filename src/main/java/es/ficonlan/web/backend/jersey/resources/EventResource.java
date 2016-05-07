@@ -252,10 +252,11 @@ public class EventResource {
 	@Path("/{eventId}/activity")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
-	public Activity addActivity(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, Activity activity) throws ServiceException {
+	@UseCasePermission("addActivity")
+	public Activity addActivity(@PathParam("eventId") int eventId, Activity activity) throws ServiceException {
 		//Delete cache
 		eventCache = new ArrayList<EventData>(3);
-		return eventService.addActivity(sessionId, eventId, activity);
+		return eventService.addActivity(eventId, activity);
 	}
 	
 	/*@Path("/activity{eventId}/query")

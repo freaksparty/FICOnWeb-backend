@@ -206,8 +206,8 @@ public class EventServiceTest {
     	dateEnd.add(Calendar.DAY_OF_YEAR, 1);
     	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd, null, null, null, null, null);
     	eventDao.save(event);
-    	Activity activity = eventService.addActivity(s.getSessionId(), event.getEventId(), 
-    													new Activity(event, "Torneo de Lol", "Torneo de Lol", 10, ActivityType.Tournament, true, dateStart,dateEnd,dateStart,dateEnd));
+    	Activity activity = eventService.addActivity(event.getEventId(), 
+		new Activity(event, "Torneo de Lol", "Torneo de Lol", 10, ActivityType.Tournament, true, dateStart,dateEnd,dateStart,dateEnd));
     	assertTrue(activityDao.find(activity.getActivityId()).getActivityId()==activity.getActivityId());
     }
     
@@ -220,7 +220,7 @@ public class EventServiceTest {
     	dateEnd.add(Calendar.DAY_OF_YEAR, 1);
     	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd, null, null, null, null, null);
     	eventDao.save(event);
-    	Activity activity = eventService.addActivity(s.getSessionId(), event.getEventId(), new Activity(event, "Torneo de Lol", "Torneo de Lol", 10, ActivityType.Tournament, true, dateStart,dateEnd,dateStart,dateEnd));
+    	Activity activity = eventService.addActivity(event.getEventId(), new Activity(event, "Torneo de Lol", "Torneo de Lol", 10, ActivityType.Tournament, true, dateStart,dateEnd,dateStart,dateEnd));
     	eventService.removeActivity(s.getSessionId(), activity.getActivityId());
     	try {
 			activityDao.find(activity.getActivityId());
@@ -237,10 +237,10 @@ public class EventServiceTest {
     	dateEnd.add(Calendar.DAY_OF_YEAR, 1);
     	Event event = new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd, null, null, null,null, null);
     	eventDao.save(event);
-    	Activity activity = eventService.addActivity(s.getSessionId(), event.getEventId(), new Activity(event, "Torneo de Lol", "Torneo de Lol", 10, ActivityType.Tournament, true, dateStart,dateEnd,dateStart,dateEnd));
+    	Activity activity = eventService.addActivity(event.getEventId(), new Activity(event, "Torneo de Lol", "Torneo de Lol", 10, ActivityType.Tournament, true, dateStart,dateEnd,dateStart,dateEnd));
     	dateStart.add(Calendar.HOUR, 1);
     	dateEnd.add(Calendar.HOUR, 2);
-    	eventService.changeActivityData(s.getSessionId(), activity.getActivityId(), new Activity(activity.getActivityId(), "Concurso de hacking", "Concurso de hacking", 20, ActivityType.Production, false, dateStart,dateEnd,dateStart,dateEnd));
+    	eventService.changeActivityData(activity.getActivityId(), new Activity(activity.getActivityId(), "Concurso de hacking", "Concurso de hacking", 20, ActivityType.Production, false, dateStart,dateEnd,dateStart,dateEnd));
     	assertTrue(activity.getName().contentEquals("Concurso de hacking"));
     	assertTrue(activity.getDescription().contentEquals("Concurso de hacking"));
     	assertTrue(activity.getNumParticipants()==20);
@@ -264,7 +264,7 @@ public class EventServiceTest {
     	
     	Event event = eventService.createEvent(new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd, null, null, null, null, null));
     	eventService.addParticipantToEvent(s.getSessionId(), user.getUserId(), event.getEventId());
-    	Activity activity = eventService.addActivity(s.getSessionId(), event.getEventId(), new Activity(event, "Torneo de Lol", "Torneo de Lol", 10, ActivityType.Tournament, true, dateStart,dateEnd,dateStart,dateEnd));
+    	Activity activity = eventService.addActivity(event.getEventId(), new Activity(event, "Torneo de Lol", "Torneo de Lol", 10, ActivityType.Tournament, true, dateStart,dateEnd,dateStart,dateEnd));
     	eventService.addParticipantToActivity(s.getSessionId(), user.getUserId(), activity.getActivityId());
     	assertTrue(activity.getParticipants().contains(user));
     }
@@ -281,7 +281,7 @@ public class EventServiceTest {
 
     	Event event = eventService.createEvent(new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd, null, null, null, null, null));
     	eventService.addParticipantToEvent(s.getSessionId(), user.getUserId(), event.getEventId());
-    	Activity activity = eventService.addActivity(s.getSessionId(), event.getEventId(), new Activity(event, "Torneo de Lol", "Torneo de Lol", 10, ActivityType.Tournament, true, dateStart,dateEnd,dateStart,dateEnd));
+    	Activity activity = eventService.addActivity(event.getEventId(), new Activity(event, "Torneo de Lol", "Torneo de Lol", 10, ActivityType.Tournament, true, dateStart,dateEnd,dateStart,dateEnd));
     	eventService.addParticipantToActivity(s.getSessionId(), user.getUserId(), activity.getActivityId());
     	assertTrue(activity.getParticipants().contains(user));
     	eventService.removeParticipantFromActivity(s.getSessionId(), user.getUserId(), activity.getActivityId());
@@ -303,7 +303,7 @@ public class EventServiceTest {
     	Event event = eventService.createEvent(new Event(0,"FicOnLan 2014","FicOnLan 2014",150,dateStart,dateEnd,dateStart,dateEnd, null, null, null, null, null));
     	eventService.addParticipantToEvent(s.getSessionId(), user1.getUserId(), event.getEventId());
     	eventService.addParticipantToEvent(s.getSessionId(), user2.getUserId(), event.getEventId());
-    	Activity activity = eventService.addActivity(s.getSessionId(), event.getEventId(), new Activity(event, "Torneo de Lol", "Torneo de Lol", 10, ActivityType.Tournament, true, dateStart,dateEnd,dateStart,dateEnd));
+    	Activity activity = eventService.addActivity(event.getEventId(), new Activity(event, "Torneo de Lol", "Torneo de Lol", 10, ActivityType.Tournament, true, dateStart,dateEnd,dateStart,dateEnd));
     	eventService.addParticipantToActivity(s.getSessionId(), user1.getUserId(), activity.getActivityId());
     	eventService.addParticipantToActivity(s.getSessionId(), user2.getUserId(), activity.getActivityId());
     	List<User> result = eventService.getActivityParticipants(s.getSessionId(), activity.getActivityId());

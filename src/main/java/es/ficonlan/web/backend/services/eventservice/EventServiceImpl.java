@@ -633,9 +633,7 @@ public class EventServiceImpl implements EventService {
    
     @Override
     @Transactional
-	public Activity addActivity(String sessionId, int eventId, Activity activity) throws ServiceException {
-    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "addActivity")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+	public Activity addActivity(int eventId, Activity activity) throws ServiceException {
 		Event event;
 		try {
 				event = eventDao.find(eventId);
@@ -670,9 +668,7 @@ public class EventServiceImpl implements EventService {
     
     @Override
     @Transactional
-	public Activity changeActivityData(String sessionId, int activityId, Activity activityData) throws ServiceException {
-    	if(!SessionManager.exists(sessionId)) throw new ServiceException(ServiceException.INVALID_SESSION);
-		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "changeActivityData")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
+	public Activity changeActivityData(int activityId, Activity activityData) throws ServiceException {
 		try {
 			Activity activity = activityDao.find(activityId);
 			activity.setActivityId(activityId);

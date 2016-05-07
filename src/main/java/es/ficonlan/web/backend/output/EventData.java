@@ -17,6 +17,8 @@ import es.ficonlan.web.backend.entities.Sponsor;
 import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
 import es.ficonlan.web.backend.util.cache.Cacheable;
 
+//TODO flexible way of defining the different Activity types. These should depend only on the DB and not in the program logic.
+
 /*
  * @author Siro González <xiromoreira>
  */
@@ -63,6 +65,7 @@ public class EventData implements Cacheable {
     public List<ActivityDataShort> tournaments = new ArrayList<ActivityDataShort>();
     public List<ActivityDataShort> conferences = new ArrayList<ActivityDataShort>();
     public List<ActivityDataShort> productions = new ArrayList<ActivityDataShort>();
+    public List<ActivityDataShort> workshops = new ArrayList<ActivityDataShort>();
     public List<SponsorDataShort> sponsors = new ArrayList<SponsorDataShort>();
     @JsonIgnore
     private EntityTag tag;
@@ -115,6 +118,9 @@ public class EventData implements Cacheable {
     				break;
     			case Production:
     				productions.add(new ActivityDataShort(a));
+    				break;
+    			case Workshop:
+    				workshops.add(new ActivityDataShort(a));
     				break;
     		}
     	}
