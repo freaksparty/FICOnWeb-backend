@@ -110,7 +110,7 @@ CREATE TABLE Event (
 	Activity_description          MEDIUMTEXT ,
 	Activity_imageurl             varchar(256),
 	Activity_num_participants     int  NOT NULL DEFAULT 1 ,
-	Activity_type_activity        int UNSIGNED   ,
+	Activity_type_activity        int UNSIGNED  NOT NULL,
 	Activity_official             bool DEFAULT 0   ,
 	Activity_date_start           datetime    ,
 	Activity_date_end             datetime  NOT NULL  ,

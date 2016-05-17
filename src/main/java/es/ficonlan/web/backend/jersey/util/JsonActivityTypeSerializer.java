@@ -14,7 +14,7 @@ import es.ficonlan.web.backend.entities.Activity.ActivityType;
 
 
 /**
- * @author Miguel Ángel Castillo Bellagona
+ * @author Siro Gonz&aacute;lez <xiromoreira>
  */
 @Component
 public class JsonActivityTypeSerializer extends JsonSerializer<ActivityType> {
@@ -22,10 +22,6 @@ public class JsonActivityTypeSerializer extends JsonSerializer<ActivityType> {
 	@Override
 	public void serialize(ActivityType at, JsonGenerator gen, SerializerProvider provider)
 			throws IOException, JsonProcessingException {
-		String activitytype = "";
-		if(at == ActivityType.Conference) activitytype = "Conference";
-		if(at == ActivityType.Production) activitytype = "Production";
-		if(at == ActivityType.Tournament) activitytype = "Tournament";
-		gen.writeString(activitytype);		
+		gen.writeString(at.name());
 	}
 }

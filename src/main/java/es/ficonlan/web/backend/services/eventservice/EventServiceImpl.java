@@ -633,26 +633,26 @@ public class EventServiceImpl implements EventService {
    
     @Override
     @Transactional
-	public Activity addActivity(int eventId, Activity activity) throws ServiceException {
-		Event event;
-		try {
-				event = eventDao.find(eventId);
-				activity.setEvent(event);
-				if(activity.getName()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"name");
-				if(activity.getNumParticipants()<1) throw new ServiceException(ServiceException.INCORRECT_FIELD,"numParticipants");
-				if(activity.getNumParticipants()<1) throw new ServiceException(ServiceException.INCORRECT_FIELD,"numParticipants");
-				if(activity.getStartDate()==null) activity.setStartDate(activity.getEvent().getStartDate());
-				if(activity.getStartDate().compareTo(activity.getEvent().getStartDate())<0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"startDate");
-				if(activity.getEndDate()==null) activity.setEndDate(activity.getEvent().getEndDate());
-				if(activity.getEndDate().compareTo(activity.getEvent().getEndDate())>0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"endDate");
-				if(activity.getRegDateOpen()==null) activity.setRegDateOpen(activity.getEvent().getStartDate());
-				if(activity.getRegDateClose()==null) activity.setRegDateClose(activity.getEvent().getEndDate());
-				activityDao.save(activity);
-				return activity;
-		} catch (InstanceException e) {
-			throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
-		}
-	}
+    public Activity addActivity(int eventId, Activity activity) throws ServiceException {
+    	Event event;
+    	try {
+    		event = eventDao.find(eventId);
+    		activity.setEvent(event);
+    		if(activity.getName()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"name");
+    		if(activity.getNumParticipants()<1) throw new ServiceException(ServiceException.INCORRECT_FIELD,"numParticipants");
+    		if(activity.getNumParticipants()<1) throw new ServiceException(ServiceException.INCORRECT_FIELD,"numParticipants");
+    		if(activity.getStartDate()==null) activity.setStartDate(activity.getEvent().getStartDate());
+    		if(activity.getStartDate().compareTo(activity.getEvent().getStartDate())<0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"startDate");
+    		if(activity.getEndDate()==null) activity.setEndDate(activity.getEvent().getEndDate());
+    		if(activity.getEndDate().compareTo(activity.getEvent().getEndDate())>0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"endDate");
+    		if(activity.getRegDateOpen()==null) activity.setRegDateOpen(activity.getEvent().getStartDate());
+    		if(activity.getRegDateClose()==null) activity.setRegDateClose(activity.getEvent().getEndDate());
+    		activityDao.save(activity);
+    		return activity;
+    	} catch (InstanceException e) {
+    		throw new ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Event");
+    	}
+    }
 
     @Override
     @Transactional

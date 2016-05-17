@@ -109,7 +109,6 @@ public class EventData implements Cacheable {
     
     public void addActivities(Collection<Activity> tl) {
     	for(Activity a : tl) {
-    		if(a==null) continue;
     		switch(a.getType()) {
     			case Conference:
     				conferences.add(new ActivityDataShort(a));

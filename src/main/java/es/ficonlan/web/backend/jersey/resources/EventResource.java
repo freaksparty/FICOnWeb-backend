@@ -73,6 +73,7 @@ public class EventResource {
 	private final String[] s4 = {"activityId","event","name","type","startDate","endDate"};
 	private final ArrayList<String> l4;
 	
+	//TODO: implement this in a proper way
 	ArrayList<EventData> eventCache;
 	SimpleMemCache<String, NewsList> newsCache;
 	
@@ -240,13 +241,6 @@ public class EventResource {
 		newsCache.clear();
 		eventService.removeEvent(sessionId, eventId);
 	}
-		
-//	@Path("/resgistrationIsOpen/{eventId}")
-//	@GET
-//	@UseCasePermission("getEvent")
-//	public boolean eventIsOpen(@PathParam("eventId") int eventId) throws ServiceException {
-//		return eventService.eventIsOpen(eventId);
-//	}
 	
 	@POST
 	@Path("/{eventId}/activity")
@@ -258,31 +252,6 @@ public class EventResource {
 		eventCache = new ArrayList<EventData>(3);
 		return eventService.addActivity(eventId, activity);
 	}
-	
-	/*@Path("/activity{eventId}/query")
-	@GET
-	@Produces({MediaType.APPLICATION_JSON})
-	public List<Activity> getByEvent(@HeaderParam("sessionId") String sessionId,
-			@PathParam("eventId") int eventId,
-			@DefaultValue("1") @QueryParam("page") int page,
-			@DefaultValue("0") @QueryParam("pageTam") int pageTam,
-			@DefaultValue("activityId") @QueryParam("orderBy") String orderBy,
-			@DefaultValue("1") @QueryParam("desc") int desc,
-			@DefaultValue(" ") @QueryParam("type") String type
-			) throws ServiceException {
-		if(l4.indexOf(orderBy)<0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"orderBy");
-		int startIndex = page*pageTam - pageTam;
-		int cont = pageTam;
-		boolean b = true;
-		if(desc==0) b = false;
-		ActivityType t = null;
-		if(type!=null){
-    		if(type.toLowerCase().contentEquals("tournament")) t=ActivityType.Tournament;
-    		if(type.toLowerCase().contentEquals("production")) t=ActivityType.Production;
-    		if(type.toLowerCase().contentEquals("conference")) t=ActivityType.Conference;
-		}
-		return eventService.getActivitiesByEvent(sessionId, eventId, startIndex, cont, orderBy, b, t);
-	}*/
 	
 	@GET
 	@Path("/{eventId}/activityHeaders/query")
