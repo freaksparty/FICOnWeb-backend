@@ -7,7 +7,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -22,8 +21,8 @@ import es.ficonlan.web.backend.entities.Activity;
 import es.ficonlan.web.backend.entities.User;
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
+import es.ficonlan.web.backend.output.ActivityData;
 import es.ficonlan.web.backend.services.eventservice.EventService;
-import es.ficonlan.web.backend.util.cache.SimpleMemCache;
 
 
 /**
@@ -57,16 +56,10 @@ public class ActivityResource {
 	@Path("/{activityId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@UseCasePermission("getEvent")
-	public Activity getActivity(@PathParam("activityId") int activityId) throws ServiceException {
+	public ActivityData getActivity(@PathParam("activityId") int activityId) throws ServiceException {
 		Activity a = eventService.getActivity(activityId);
-		return a;
+		return new ActivityData(a);
 	}
-	
-//	@GET
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public List<Activity> getAllActivities(@HeaderParam("sessionId") String sessionId) throws ServiceException {
-//		return eventService.getAllActivities(sessionId);
-//	}
 	
 	@DELETE
 	@Path("/{activityId}")

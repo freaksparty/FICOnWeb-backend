@@ -17,8 +17,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import es.ficonlan.web.backend.jersey.util.JsonDateDeserializer;
-import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
+import es.ficonlan.web.backend.jersey.util.serializer.JsonDateDeserializer;
+import es.ficonlan.web.backend.jersey.util.serializer.JsonDateSerializer;
 
 /**
  * @author Miguel Ángel Castillo Bellagona

@@ -37,7 +37,6 @@ public interface EventService {
     
     public boolean eventIsOpen(int eventId) throws ServiceException;
     
-		
 	public Registration addParticipantToEvent(String sessionId, int userId, int eventId) throws ServiceException;
 	
 	public void removeParticipantFromEvent(String sessionId, int userId, int eventId) throws ServiceException;
@@ -82,6 +81,14 @@ public interface EventService {
     public void removeParticipantFromActivity(String sessionId, int userId, int activityId) throws ServiceException;
     
     public List<User> getActivityParticipants(String sessionId, int activityId) throws ServiceException;
+    
+    /**
+     * Gets all the activities a given user is registered for a given event.
+     * @param eventId
+     * @param userId
+     * @return
+     */
+    public List<Integer> getActivitiesRegistered(int eventId, int userId);
     
     
     public NewsItem addNews(String sessionId, int eventId, NewsItem newsItem) throws ServiceException;

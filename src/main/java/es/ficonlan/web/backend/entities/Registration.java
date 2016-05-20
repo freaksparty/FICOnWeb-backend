@@ -20,11 +20,11 @@ import javax.persistence.Transient;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import es.ficonlan.web.backend.jersey.util.JsonDateDeserializer;
-import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
-import es.ficonlan.web.backend.jersey.util.JsonEntityIdSerializer;
-import es.ficonlan.web.backend.jersey.util.JsonRegistrationStateDeserializer;
-import es.ficonlan.web.backend.jersey.util.JsonRegistrationStateSerializer;
+import es.ficonlan.web.backend.jersey.util.serializer.JsonDateDeserializer;
+import es.ficonlan.web.backend.jersey.util.serializer.JsonDateSerializer;
+import es.ficonlan.web.backend.jersey.util.serializer.JsonEntityIdSerializer;
+import es.ficonlan.web.backend.jersey.util.serializer.JsonRegistrationStateDeserializer;
+import es.ficonlan.web.backend.jersey.util.serializer.JsonRegistrationStateSerializer;
 
 /**
  * @author Daniel Gómez Silva

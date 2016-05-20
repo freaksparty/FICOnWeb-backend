@@ -6,10 +6,10 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import es.ficonlan.web.backend.entities.Activity.ActivityType;
-import es.ficonlan.web.backend.jersey.util.JsonActivityTypeDeserializer;
-import es.ficonlan.web.backend.jersey.util.JsonActivityTypeSerializer;
-import es.ficonlan.web.backend.jersey.util.JsonDateDeserializer;
-import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
+import es.ficonlan.web.backend.jersey.util.serializer.JsonActivityTypeDeserializer;
+import es.ficonlan.web.backend.jersey.util.serializer.JsonActivityTypeSerializer;
+import es.ficonlan.web.backend.jersey.util.serializer.JsonDateDeserializer;
+import es.ficonlan.web.backend.jersey.util.serializer.JsonDateSerializer;
 
 public class ActivityHeader {
 	

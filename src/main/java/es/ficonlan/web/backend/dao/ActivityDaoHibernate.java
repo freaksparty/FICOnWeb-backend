@@ -6,8 +6,8 @@ import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 import es.ficonlan.web.backend.entities.Activity;
-import es.ficonlan.web.backend.entities.User;
 import es.ficonlan.web.backend.entities.Activity.ActivityType;
+import es.ficonlan.web.backend.entities.User;
 
 /**
  * @author Miguel Ángel Castillo Bellagona
@@ -104,6 +104,18 @@ public class ActivityDaoHibernate extends
 								+ "WHERE a.activityId=:activityId "
 								+ "ORDER BY p.login")
 				.setParameter("activityId", activityId).list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Integer> getActivitiesRegistered(int eventId, int userId) {
+		Query query = getSession().createQuery("SELECT ua.activity.activityId "
+				+ "FROM UserActivity ua "
+				+ "WHERE ua.user.userId = :userId "
+				+ "AND ua.activity.event.eventId = :eventId");
+		query.setParameter("userId", userId);
+		query.setParameter("eventId", eventId);
+		return query.list();
 	}
 	
 

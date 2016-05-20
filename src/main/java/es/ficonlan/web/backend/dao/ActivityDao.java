@@ -3,8 +3,8 @@ package es.ficonlan.web.backend.dao;
 import java.util.List;
 
 import es.ficonlan.web.backend.entities.Activity;
-import es.ficonlan.web.backend.entities.User;
 import es.ficonlan.web.backend.entities.Activity.ActivityType;
+import es.ficonlan.web.backend.entities.User;
 
 /**
  * @author Miguel Ángel Castillo Bellagona
@@ -21,5 +21,13 @@ public interface ActivityDao extends GenericDao<Activity, Integer> {
 	public List<Activity> findActivitiesByEvent(int eventId, ActivityType type);
 
 	public List<User> getParticipants(int activityId);
+	
+	/**
+     * Gets all the activities a given user is registered for a given event.
+     * @param eventId
+     * @param userId
+     * @return
+     */
+    public List<Integer> getActivitiesRegistered(int eventId, int userId);
 
 }

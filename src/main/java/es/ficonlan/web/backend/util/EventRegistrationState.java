@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import es.ficonlan.web.backend.entities.Registration.RegistrationState;
-import es.ficonlan.web.backend.jersey.util.JsonRegistrationStateDeserializer;
-import es.ficonlan.web.backend.jersey.util.JsonRegistrationStateSerializer;
+import es.ficonlan.web.backend.jersey.util.serializer.JsonRegistrationStateDeserializer;
+import es.ficonlan.web.backend.jersey.util.serializer.JsonRegistrationStateSerializer;
 
 public class EventRegistrationState {
 

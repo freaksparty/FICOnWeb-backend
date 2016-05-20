@@ -23,11 +23,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import es.ficonlan.web.backend.jersey.util.JsonActivityTypeDeserializer;
-import es.ficonlan.web.backend.jersey.util.JsonActivityTypeSerializer;
-import es.ficonlan.web.backend.jersey.util.JsonDateDeserializer;
-import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
-import es.ficonlan.web.backend.jersey.util.JsonEntityIdSerializer;
+import es.ficonlan.web.backend.jersey.util.serializer.JsonActivityTypeDeserializer;
+import es.ficonlan.web.backend.jersey.util.serializer.JsonActivityTypeSerializer;
+import es.ficonlan.web.backend.jersey.util.serializer.JsonDateDeserializer;
+import es.ficonlan.web.backend.jersey.util.serializer.JsonDateSerializer;
+import es.ficonlan.web.backend.jersey.util.serializer.JsonEntityIdSerializer;
 import es.ficonlan.web.backend.util.ActivityHeader;
 
 /**
@@ -84,9 +84,9 @@ public class Activity {
 
 	}
 
+	@Id
 	@Column(name = "Activity_id")
 	@SequenceGenerator(name = "ActivityIdGenerator", sequenceName = "ActivitySeq")
-	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "ActivityIdGenerator")
 	public int getActivityId() {
 		return activityId;
@@ -213,7 +213,7 @@ public class Activity {
 	}
 
 	@JsonIgnore
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "User_Activity", joinColumns = { @JoinColumn(name = "User_Activity_Activity_id") }, inverseJoinColumns = { @JoinColumn(name = "User_Activity_User_id") })
 	public List<User> getParticipants() {
 		return participants;

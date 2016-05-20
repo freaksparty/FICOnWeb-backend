@@ -777,6 +777,12 @@ public class EventServiceImpl implements EventService {
 		if(!SessionManager.checkPermissions(SessionManager.getSession(sessionId), "getActivityParticipants")) throw new ServiceException(ServiceException.PERMISSION_DENIED);
     	return activityDao.getParticipants(activityId);
 	}
+    
+    @Override
+    @Transactional(readOnly = true)
+    public List<Integer> getActivitiesRegistered(int eventId, int userId) {
+    	return activityDao.getActivitiesRegistered(eventId, userId);
+    }
 
 
     @Override

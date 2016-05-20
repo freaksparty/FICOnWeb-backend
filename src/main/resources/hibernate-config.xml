@@ -38,6 +38,7 @@
 		<mapping class="es.ficonlan.web.backend.entities.Address" />
 		<mapping class="es.ficonlan.web.backend.entities.Sponsor" />
 		<mapping class="es.ficonlan.web.backend.entities.EmailTemplate" />
+		<mapping class="es.ficonlan.web.backend.entities.UserActivity" />
 	</session-factory>
 
 </hibernate-configuration>

@@ -1,4 +1,4 @@
-package es.ficonlan.web.backend.jersey.util;
+package es.ficonlan.web.backend.jersey.util.serializer;
 
 import java.io.IOException;
 

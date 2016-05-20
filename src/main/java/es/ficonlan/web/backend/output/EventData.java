@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import es.ficonlan.web.backend.entities.Activity;
 import es.ficonlan.web.backend.entities.Event;
 import es.ficonlan.web.backend.entities.Sponsor;
-import es.ficonlan.web.backend.jersey.util.JsonDateSerializer;
+import es.ficonlan.web.backend.jersey.util.serializer.JsonDateSerializer;
 import es.ficonlan.web.backend.util.cache.Cacheable;
 
 //TODO flexible way of defining the different Activity types. These should depend only on the DB and not in the program logic.
@@ -67,13 +67,14 @@ public class EventData implements Cacheable {
     public List<ActivityDataShort> productions = new ArrayList<ActivityDataShort>();
     public List<ActivityDataShort> workshops = new ArrayList<ActivityDataShort>();
     public List<SponsorDataShort> sponsors = new ArrayList<SponsorDataShort>();
-    @JsonIgnore
-    private EntityTag tag;
+
     //Set when Inscriptions are open, it is not calculated all the time to preserve tag coherence.
     public boolean isOpen;
     
     @JsonIgnore
     public long timeToOpen;
+    @JsonIgnore
+    private EntityTag tag;
     
     public EventData(Event ev) {
     	eventId = ev.getEventId();

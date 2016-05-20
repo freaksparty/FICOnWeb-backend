@@ -18,6 +18,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -40,6 +41,7 @@ import es.ficonlan.web.backend.entities.Sponsor;
 import es.ficonlan.web.backend.entities.User;
 import es.ficonlan.web.backend.jersey.util.ApplicationContextProvider;
 import es.ficonlan.web.backend.model.util.exceptions.ServiceException;
+import es.ficonlan.web.backend.model.util.session.Session;
 import es.ficonlan.web.backend.output.EmailTemplatesForEvent;
 import es.ficonlan.web.backend.output.EventData;
 import es.ficonlan.web.backend.output.NewsList;
@@ -293,6 +295,24 @@ public class EventResource {
 		return eventService.getActivitiesByEventTAM(eventId, t);
 	}
 	
+	@GET
+	@Path("/{eventId}/activity/registered")
+	@UseCasePermission("getEvent")
+	@Produces(MediaType.APPLICATION_JSON)
+	/**
+	 * Gets all the activities the user is registered for the given event.
+	 * @param eventId
+	 * @return set of activities by id
+	 */
+	public List<Integer> getOwnActivities(@Context ContainerRequestContext crc, @PathParam("eventId") int eventId) {
+		if(crc == null || crc.getProperty("session") == null || !(crc.getProperty("session") instanceof Session)) {
+			//TODO: log error
+			Response.status(500).build();
+		}
+		Session session = (Session) crc.getProperty("session");
+		return eventService.getActivitiesRegistered(eventId, session.getUserId());
+	}
+	
 	@POST
 	@Path("/sponsor/{eventId}")
 	@Consumes({MediaType.APPLICATION_JSON})
@@ -472,16 +492,6 @@ public class EventResource {
 	public long getAllNewsItemFromEventTam(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {
 		return eventService.getAllNewsItemFromEventTam(eventId);
 	}
-	
-//	@GET
-//	@Path("/news/{eventId}/last/{days}")
-//	@Consumes({MediaType.APPLICATION_JSON})
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public List<NewsItem> lastNews(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId, @PathParam("days") int days) throws ServiceException{
-//		Calendar limitDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-//		limitDate.add(Calendar.DAY_OF_YEAR, -1*days);
-//		return eventService.getLastNewsFromEvent(sessionId, eventId, limitDate, false);
-//	}
 	
 	@GET
 	@Path("/{eventId}/getEmailTemplates")
