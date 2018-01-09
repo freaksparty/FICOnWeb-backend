@@ -299,7 +299,7 @@ public class EventServiceImpl implements EventService {
 					EmailFIFO.addEmailToQueue(email);
 				}
 
-				if(currentParticipants<event.getNumParticipants()) {	
+				if(currentParticipants<=event.getNumParticipants()) {	
 					Registration firstInQueue = registrationDao.getFirstInQueue(eventId);
 
 					if(firstInQueue!=null) {
