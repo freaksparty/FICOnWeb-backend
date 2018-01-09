@@ -289,50 +289,51 @@ public class EventServiceImpl implements EventService {
 			if ((registration.getState()==RegistrationState.registered) || (registration.getState()==RegistrationState.paid)) {
 				
 				tabla.put("#plazaencola", "");
-    			tabla.put("#plazaenevento", "");
-    			
-    			if((event.getOutOfDateTemplate()!=null) && (registration.getState()==RegistrationState.registered))
-    			{
-    				Email email = event.getOutOfDateTemplate().generateEmail(user, tabla);
-    				//email.sendMailThread();
-    				//email.sendMail();
-    				EmailFIFO.addEmailToQueue(email);
-    			}
-    			
-    			Registration firstInQueue = registrationDao.getFirstInQueue(eventId);
-    			 
-    		    if(firstInQueue!=null) {
-    		        firstInQueue.setState(RegistrationState.registered);
-    		        firstInQueue.setPlace(registration.getPlace());
-    		        	
-    		        //FIXME: Mandar correo electrónico
-    		        	
-    		        Hashtable<String,String> tabla2 = new Hashtable<String,String>();
-    		    	tabla2.put("#nombreusuario", firstInQueue.getUser().getName());
-    		    	tabla2.put("#loginusuario", firstInQueue.getUser().getLogin());
-    		    	tabla2.put("#dniusuario", firstInQueue.getUser().getDni());
-    		    	tabla2.put("#numerotelefonousuario", firstInQueue.getUser().getPhoneNumber());
-    		    	tabla2.put("#tallacamisetausuario", firstInQueue.getUser().getShirtSize());
-    		    	tabla2.put("#nombreevento", event.getName());
-    		    	tabla2.put("#fechainicioevento", event.getStartDate().toString());
-    		    	tabla2.put("#fechafinevento", event.getEndDate().toString());
-    		    	tabla2.put("#edadminima", Integer.toString(event.getMinimunAge()));
-    		    	tabla2.put("#precio", Integer.toString(event.getPrice()));
-    		        	
-    		        tabla2.put("#plazaencola", "");
-    				tabla2.put("#plazaenevento", Integer.toString(registration.getPlace()));
-    					
-    				if(event.getFromQueueToOutstanding()!=null)
-    				{
-    					Email email = event.getFromQueueToOutstanding().generateEmail(firstInQueue.getUser(), tabla2);
-    					//email.sendMail();
-    					//email.sendMailThread();
-    					EmailFIFO.addEmailToQueue(email);
-    				}
-    				registrationDao.save(firstInQueue);
-    		       }
+				tabla.put("#plazaenevento", "");
+
+				if((event.getOutOfDateTemplate()!=null) && (registration.getState()==RegistrationState.registered))
+				{
+					Email email = event.getOutOfDateTemplate().generateEmail(user, tabla);
+					//email.sendMailThread();
+					//email.sendMail();
+					EmailFIFO.addEmailToQueue(email);
+				}
+
+				if(currentParticipants<event.getNumParticipants()) {	
+					Registration firstInQueue = registrationDao.getFirstInQueue(eventId);
+
+					if(firstInQueue!=null) {
+						firstInQueue.setState(RegistrationState.registered);
+						firstInQueue.setPlace(registration.getPlace());
+
+						//FIXME: Mandar correo electrónico
+
+						Hashtable<String,String> tabla2 = new Hashtable<String,String>();
+						tabla2.put("#nombreusuario", firstInQueue.getUser().getName());
+						tabla2.put("#loginusuario", firstInQueue.getUser().getLogin());
+						tabla2.put("#dniusuario", firstInQueue.getUser().getDni());
+						tabla2.put("#numerotelefonousuario", firstInQueue.getUser().getPhoneNumber());
+						tabla2.put("#tallacamisetausuario", firstInQueue.getUser().getShirtSize());
+						tabla2.put("#nombreevento", event.getName());
+						tabla2.put("#fechainicioevento", event.getStartDate().toString());
+						tabla2.put("#fechafinevento", event.getEndDate().toString());
+						tabla2.put("#edadminima", Integer.toString(event.getMinimunAge()));
+						tabla2.put("#precio", Integer.toString(event.getPrice()));
+
+						tabla2.put("#plazaencola", "");
+						tabla2.put("#plazaenevento", Integer.toString(registration.getPlace()));
+
+						if(event.getFromQueueToOutstanding()!=null)
+						{
+							Email email = event.getFromQueueToOutstanding().generateEmail(firstInQueue.getUser(), tabla2);
+							//email.sendMail();
+							//email.sendMailThread();
+							EmailFIFO.addEmailToQueue(email);
+						}
+						registrationDao.save(firstInQueue);
+					}
+				}
 			}
-			
 			registrationDao.remove(registration.getRegistrationId());
 			
 		} catch (InstanceException e) {
