@@ -34,7 +34,7 @@ public class RegistrationResource {
 		this.eventService = ApplicationContextProvider.getApplicationContext().getBean(EventService.class);
 	}
 	
-	@Path("/deleteAll/{eventID}")
+	@Path("/deleteAll/{eventId}")
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	public void deleteAllFormEvent(@HeaderParam("sessionId") String sessionId, @PathParam("eventId") int eventId) throws ServiceException {

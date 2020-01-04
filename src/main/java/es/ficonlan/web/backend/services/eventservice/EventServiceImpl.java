@@ -183,8 +183,7 @@ public class EventServiceImpl implements EventService {
     		if (registration==null) registration = new Registration(user, event);
     		else throw new  ServiceException(ServiceException.DUPLICATED_FIELD,"Registration");
     		
-    		int currentParticipants = registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.registered) +
-    								  registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.paid);
+    		int currentParticipants = getCurrentParticipants(event);
     		int queueParticipants =   registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.inQueue);
     		
     		Hashtable<String,String> tabla = new Hashtable<String,String>();
@@ -299,6 +298,7 @@ public class EventServiceImpl implements EventService {
 					EmailFIFO.addEmailToQueue(email);
 				}
 
+				int currentParticipants = getCurrentParticipants(event);
 				if(currentParticipants<=event.getNumParticipants()) {	
 					Registration firstInQueue = registrationDao.getFirstInQueue(eventId);
 
@@ -339,6 +339,11 @@ public class EventServiceImpl implements EventService {
 		} catch (InstanceException e) {
 			 throw new  ServiceException(ServiceException.INSTANCE_NOT_FOUND,"Registration");
 		}
+	}
+
+	private int getCurrentParticipants(Event event) {
+		return registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.registered) +
+				registrationDao.geNumRegistrations(event.getEventId(),RegistrationState.paid);
 	}
 	
     @Override
@@ -551,8 +556,8 @@ public class EventServiceImpl implements EventService {
 	public List<RegistrationData> getRegistrationByEvent(int eventId, RegistrationState state, int startindex, int maxResults, String orderBy, boolean desc) throws ServiceException {
 		List<Registration> list = registrationDao.getRegistrationByEvent(eventId, state, startindex, maxResults, orderBy, desc);
 		
-		if(orderBy=="placeOnQueue") {
-			if(desc==false) list = list.stream().sorted((e1, e2) -> Integer.compare(e1.getPlaceOnQueue(),e2.getPlaceOnQueue())).collect(Collectors.toList());
+		if(orderBy.equals("placeOnQueue")) {
+			if(!desc) list = list.stream().sorted((e1, e2) -> Integer.compare(e1.getPlaceOnQueue(),e2.getPlaceOnQueue())).collect(Collectors.toList());
 			else list = list.stream().sorted((e1, e2) -> Integer.compare(e2.getPlaceOnQueue(),e1.getPlaceOnQueue())).collect(Collectors.toList());
 		}
 		
@@ -640,7 +645,6 @@ public class EventServiceImpl implements EventService {
     		event = eventDao.find(eventId);
     		activity.setEvent(event);
     		if(activity.getName()==null) throw new ServiceException(ServiceException.MISSING_FIELD,"name");
-    		if(activity.getNumParticipants()<1) throw new ServiceException(ServiceException.INCORRECT_FIELD,"numParticipants");
     		if(activity.getNumParticipants()<1) throw new ServiceException(ServiceException.INCORRECT_FIELD,"numParticipants");
     		if(activity.getStartDate()==null) activity.setStartDate(activity.getEvent().getStartDate());
     		if(activity.getStartDate().compareTo(activity.getEvent().getStartDate())<0) throw new ServiceException(ServiceException.INCORRECT_FIELD,"startDate");
