@@ -2,8 +2,6 @@
 # https://github.com/github/gitignore/
 #
 # Most of those rules were adapted for this Java project.
-#
-# Date[yyyy/mm/dd]: 2020-02-02
 
 
 ###############################################################################
@@ -130,9 +128,3 @@ nbdist/
 ###############################################################################
 
 backend.iml
-
-# Eclipse Core (missing on template)
-.project
-
-# Eclipse JDT (missing on template)
-.classpath
