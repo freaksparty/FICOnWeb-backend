@@ -72,7 +72,8 @@ public class Main {
 	 * @return Grizzly HTTP server.
 	 */
 	public static HttpServer startServer() {
-		// create a resource config that scans for JAX-RS resources and providers
+		// create a resource config that scans for JAX-RS resources and
+		// providers
 		// in es.ficonlan.web.prueba package
 		final ResourceConfig rc = new ResourceConfig();
 		//rc.packages("es.ficonlan.web.backend.jersey.resources");
@@ -105,8 +106,7 @@ public class Main {
 
 		// create and start a new instance of grizzly http server
 		// exposing the Jersey application at BASE_URI
-		return GrizzlyHttpServerFactory.createHttpServer(SERVER_URI, rc, IS_SECURE, 
-				new SSLEngineConfigurator(sslContext).setClientMode(false).setNeedClientAuth(true));
+		return GrizzlyHttpServerFactory.createHttpServer(SERVER_URI, rc, IS_SECURE, new SSLEngineConfigurator(sslContext).setClientMode(false).setNeedClientAuth(true));
 	}
 
 	/**
@@ -116,12 +116,7 @@ public class Main {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		/*try {
-			SaveImages.saveImage("http://koiora.net/wp-content/uploads/2012/05/xgn.pn", "/home/manu","prueba3");
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}*/
+
 		// Spring context initialization.
 		@SuppressWarnings("resource")
 		ApplicationContext ctx = new ClassPathXmlApplicationContext("spring-config.xml");
