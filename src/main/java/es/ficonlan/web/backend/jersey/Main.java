@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 Asociación Cultural Freak's Party
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package es.ficonlan.web.backend.jersey;
 
 import java.io.IOException;
@@ -72,7 +88,8 @@ public class Main {
 	 * @return Grizzly HTTP server.
 	 */
 	public static HttpServer startServer() {
-		// create a resource config that scans for JAX-RS resources and providers
+		// create a resource config that scans for JAX-RS resources and
+		// providers
 		// in es.ficonlan.web.prueba package
 		final ResourceConfig rc = new ResourceConfig();
 		//rc.packages("es.ficonlan.web.backend.jersey.resources");
@@ -105,8 +122,7 @@ public class Main {
 
 		// create and start a new instance of grizzly http server
 		// exposing the Jersey application at BASE_URI
-		return GrizzlyHttpServerFactory.createHttpServer(SERVER_URI, rc, IS_SECURE, 
-				new SSLEngineConfigurator(sslContext).setClientMode(false).setNeedClientAuth(true));
+		return GrizzlyHttpServerFactory.createHttpServer(SERVER_URI, rc, IS_SECURE, new SSLEngineConfigurator(sslContext).setClientMode(false).setNeedClientAuth(true));
 	}
 
 	/**
@@ -116,12 +132,7 @@ public class Main {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		/*try {
-			SaveImages.saveImage("http://koiora.net/wp-content/uploads/2012/05/xgn.pn", "/home/manu","prueba3");
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}*/
+
 		// Spring context initialization.
 		@SuppressWarnings("resource")
 		ApplicationContext ctx = new ClassPathXmlApplicationContext("spring-config.xml");
